@@ -21,7 +21,6 @@
   <img src="https://skillicons.dev/icons?i=js,html,css,python,github" />
 </p>
 ---
-```md
 ## Preview
 <p align="center">
   <img src="giphs/bGOrl9.gif" width="500"/>
