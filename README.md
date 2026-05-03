@@ -1,6 +1,6 @@
 <!-- HEADER / BANNER -->
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:00c6ff,100:0072ff&height=200&section=header&text=Your%20Project%20Name&fontSize=40&fontColor=ffffff&animation=fadeIn" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:00c6ff,100:0072ff&height=200&section=header&text=Null_X&fontSize=40&fontColor=ffffff&animation=fadeIn" />
 </p>
 
 <!-- TYPING ANIMATION -->
