@@ -1,11 +1,10 @@
-// Import game config
 import { games, getMostPopular } from './config.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ====================== BUTTONS ======================
-
-  // Sign In Button
+  // ====================== NAVIGATION ======================
+  
+  // Sign In (Login) Button
   const signInBtn = document.getElementById('signInBtn');
   if (signInBtn) {
     signInBtn.addEventListener('click', () => {
@@ -13,7 +12,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Settings Button
+  // Left Sidebar Navigation
+  const navHome = document.getElementById('nav-home');
+  const navGames = document.getElementById('nav-games');
+  const navFavorites = document.getElementById('nav-favorites');
+  const navUnblockers = document.getElementById('nav-unblockers');
+  const navCommunications = document.getElementById('nav-communications');
+
+  if (navHome) navHome.addEventListener('click', () => alert("You are already on Home"));
+  if (navGames) navGames.addEventListener('click', () => alert("All Games section coming soon"));
+  if (navFavorites) navFavorites.addEventListener('click', () => alert("Favorites coming soon"));
+  if (navUnblockers) navUnblockers.addEventListener('click', () => alert("Unblockers / Proxy section coming soon"));
+  if (navCommunications) navCommunications.addEventListener('click', () => alert("Communications / Chat coming soon"));
+
+  // Settings (Not functional yet as requested)
   const settingsBtn = document.getElementById('settingsBtn');
   if (settingsBtn) {
     settingsBtn.addEventListener('click', () => {
@@ -21,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Random Game Button (Now picks randomly from config.js)
+  // Random Game
   const randomBtn = document.getElementById('randomBtn');
   if (randomBtn) {
     randomBtn.addEventListener('click', () => {
@@ -31,59 +43,45 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       const randomGame = games[Math.floor(Math.random() * games.length)];
       alert(`Launching: ${randomGame.title}`);
-      // TODO: Later you can redirect to the actual game
     });
   }
 
-  // Play Featured Button
+  // Play Featured
   const playFeatured = document.getElementById('playFeatured');
   if (playFeatured) {
     playFeatured.addEventListener('click', () => {
       const popular = getMostPopular();
       if (popular.length > 0) {
-        const featured = popular[0];
-        alert(`Launching Featured Game: ${featured.title}`);
+        alert(`Launching: ${popular[0].title}`);
       }
     });
   }
 
-  // Search Input
+  // Search
   const searchInput = document.getElementById('searchInput');
   if (searchInput) {
     searchInput.addEventListener('keyup', (e) => {
-      if (e.key === 'Enter') {
-        const query = searchInput.value.trim();
-        if (query) {
-          console.log('Searching for:', query);
-          alert(`Searching for: ${query} (Feature coming soon)`);
-        }
+      if (e.key === 'Enter' && searchInput.value.trim()) {
+        alert(`Searching for: ${searchInput.value.trim()} (coming soon)`);
       }
     });
   }
 
-  // Dynamic Greeting
+  // Greeting
   const greeting = document.getElementById('greeting');
   if (greeting) {
-    greeting.innerHTML = `
-      <h1>Hello, Guest</h1>
-      <p>Find something fun to play.</p>
-    `;
+    greeting.innerHTML = `<h1>Hello, Guest</h1><p>Find something fun to play.</p>`;
   }
 
-  // Set Featured Game (most clicked)
+  // Set Featured Game
   function setFeaturedGame() {
     const popular = getMostPopular();
     if (popular.length > 0) {
-      const featured = popular[0];
-      const heroTitle = document.getElementById('hero-title');
-      const heroDesc = document.getElementById('hero-desc');
-      
-      if (heroTitle) heroTitle.textContent = featured.title;
-      if (heroDesc) heroDesc.textContent = featured.desc;
+      document.getElementById('hero-title').textContent = popular[0].title;
+      document.getElementById('hero-desc').textContent = popular[0].desc;
     }
   }
-
   setFeaturedGame();
 
-  console.log("%cNull_X Dashboard loaded successfully", "color: #c084fc; font-weight: bold");
+  console.log("%cNull_X loaded successfully", "color: #c084fc");
 });
