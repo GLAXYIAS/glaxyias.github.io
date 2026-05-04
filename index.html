@@ -8,10 +8,10 @@
 </head>
 <body>
   <div class="dashboard">
+    
     <!-- Left Sidebar -->
     <aside class="left-nav">
       <div class="logo">Null_X</div>
-      
       <nav>
         <a href="#" class="nav-item active">Home</a>
         <a href="#" class="nav-item">All Games</a>
@@ -23,6 +23,8 @@
 
     <!-- Main Content -->
     <main class="main-content">
+      
+      <!-- Top Bar -->
       <header class="top-bar">
         <div class="greeting" id="greeting">
           <h1>Hello, Guest</h1>
@@ -36,12 +38,13 @@
         <button class="signin-btn" id="signInBtn">Sign In</button>
       </header>
 
-      <!-- Hero Section -->
+      <!-- Featured / Hero Section -->
       <section class="hero">
         <div class="hero-content">
           <span class="badge">Featured</span>
-          <h2 id="hero-title">Epic Physics Battle</h2>
-          <p id="hero-desc">Intense action with smooth controls. Perfect for quick sessions.</p>
+          <h2 id="hero-title">Loading...</h2>
+          <p id="hero-desc">Please wait...</p>
+          
           <div class="hero-actions">
             <button class="play-btn" id="playFeatured">Play Now</button>
             <button class="secondary-btn">Discover More</button>
@@ -49,11 +52,11 @@
         </div>
       </section>
 
-      <!-- Games Section -->
+      <!-- Recommended Games -->
       <section class="section">
         <h2 class="section-title">Recommended Games</h2>
         <div class="game-grid" id="gameGrid">
-          <!-- JS will populate games here -->
+          <!-- Games will be populated by JS later -->
         </div>
       </section>
     </main>
@@ -72,6 +75,6 @@
     </aside>
   </div>
 
-  <script src="JS/main.js"></script>
+  <script type="module" src="JS/main.js"></script>
 </body>
 </html>
