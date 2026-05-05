@@ -182,3 +182,18 @@ body {
   font-weight: 600;
   cursor: pointer;
 }
+/* Logo Styling */
+.logo {
+  margin-bottom: 40px;
+  padding: 0 10px;
+}
+
+.site-logo {
+  width: 180px;           /* Adjust size as needed */
+  height: auto;
+  max-width: 100%;
+  border-radius: 8px;
+  filter: drop-shadow(0 4px 8px rgba(139, 0, 255, 0.3));
+}
+
+/* Make sure the image path is correct */
