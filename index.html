@@ -77,18 +77,18 @@
     <span class="close-x" id="closeSettings">&times;</span>
     <h1 class="glow">Settings</h1>
     
-    <div class="setting-section">
-      <h3>Appearance</h3>
-      <div class="theme-grid">
-        <div class="theme-card" data-theme="default">
-          <div class="preview purple-preview"></div>
-          <span>Default Purple</span>
-        </div>
-        <div class="theme-card" data-theme="midnight">
-          <div class="preview midnight-preview"></div>
-          <span>Midnight</span>
-        </div>
-      </div>
+   <div class="setting-section">
+  <h3>Panic Button</h3>
+  <div class="panic-inputs">
+    <p>Shortcut (e.g., 'p' or 'Escape'):</p>
+    <input type="text" id="panicShortcut" placeholder="Press a key..." readonly>
+    
+    <p>Redirect Link:</p>
+    <input type="text" id="panicLink" placeholder="https://classroom.google.com">
+    
+    <button id="savePanic" class="secondary-btn">Save Panic Settings</button>
+  </div>
+</div>
     </div>
   </div>
 </div>
