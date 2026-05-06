@@ -1,1 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - Null_X</title>
+  <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+  <div class="settings-container">
+    <a href="../index.html" class="close-x">&times;</a>
 
+    <h1 class="glow">Settings</h1>
+    <p class="subtitle">Customize your Null_X experience</p>
+
+    <div class="setting-section">
+      <h3>Appearance</h3>
+      <p>Select Theme Color:</p>
+      <div class="color-options">
+        <button class="color-btn purple active" data-color="#8b00ff" title="Purple"></button>
+        <button class="color-btn blue" data-color="#0077ff" title="Blue"></button>
+        <button class="color-btn green" data-color="#2ecc71" title="Green"></button>
+        <button class="color-btn red" data-color="#ff4d4d" title="Red"></button>
+      </div>
+    </div>
+
+    <div class="setting-section">
+      <h3>System</h3>
+      <button id="resetBtn" class="secondary-btn">Reset to Default</button>
+    </div>
+  </div>
+
+  <script src="settings.js"></script>
+</body>
+</html>
