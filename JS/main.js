@@ -7,9 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const savedCloak = localStorage.getItem('savedCloak');
     if (savedCloak && savedCloak !== "none") {
-        try {
-            applyCloak(savedCloak);
-        } catch (e) {}
+        try { applyCloak(savedCloak); } catch (e) {}
     }
 
     let savedShortcut = localStorage.getItem('panicKey') || "";
@@ -22,21 +20,64 @@ document.addEventListener('DOMContentLoaded', () => {
     const panicInput = document.getElementById('panicShortcut');
     const panicLinkInput = document.getElementById('panicLink');
     const savePanicBtn = document.getElementById('savePanic');
-    const gamesNavBtn = document.getElementById('nav-games');
+    
+    const navHome = document.getElementById('nav-home');
+    const navGames = document.getElementById('nav-games');
+    const heroSection = document.getElementById('heroSection');
+    const gameGrid = document.getElementById('gameGrid');
 
     function applyTheme(theme) {
         const root = document.documentElement;
         if (theme === 'midnight') {
             root.style.setProperty('--accent', '#ffffff');
             root.style.setProperty('--container-bg', '#000000');
-            root.style.setProperty('--bg-gradient', '#000000');
             document.body.style.background = "#000000";
         } else {
             root.style.setProperty('--accent', '#8b00ff');
             root.style.setProperty('--container-bg', 'rgba(15, 15, 25, 0.95)');
-            root.style.setProperty('--bg-gradient', 'linear-gradient(135deg, #0a0a0a, #1a0033)');
             document.body.style.background = "linear-gradient(135deg, #0a0a0a, #1a0033)";
         }
+    }
+
+    function launchGame(gameId) {
+        window.location.href = `Games/game-player.html?id=${gameId}`;
+    }
+
+    function showLibrary() {
+        if (heroSection) heroSection.style.display = 'none';
+        if (gameGrid) {
+            gameGrid.innerHTML = '';
+            gameGrid.style.display = 'grid';
+            games.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.innerHTML = `
+                    <h3>${game.title}</h3>
+                    <div class="game-desc-overlay">${game.desc}</div>
+                `;
+                card.onclick = () => launchGame(game.id);
+                gameGrid.appendChild(card);
+            });
+        }
+    }
+
+    function showHome() {
+        if (heroSection) heroSection.style.display = 'flex';
+        if (gameGrid) gameGrid.style.display = 'none';
+    }
+
+    if (navGames) {
+        navGames.addEventListener('click', (e) => {
+            e.preventDefault();
+            showLibrary();
+        });
+    }
+
+    if (navHome) {
+        navHome.addEventListener('click', (e) => {
+            e.preventDefault();
+            showHome();
+        });
     }
 
     document.querySelectorAll('.theme-card').forEach(card => {
@@ -88,27 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    if (settingsBtn) {
-        settingsBtn.addEventListener('click', () => settingsModal.style.display = 'flex');
-    }
-    if (closeSettings) {
-        closeSettings.addEventListener('click', () => settingsModal.style.display = 'none');
-    }
-
-    function launchGame(gameId) {
-        window.location.href = `Games/game-player.html?id=${gameId}`;
-    }
-
-    if (gamesNavBtn) {
-        gamesNavBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (games.length > 0) {
-                launchGame(games[0].id);
-            } else {
-                window.location.href = "Games/index.html";
-            }
-        });
-    }
+    if (settingsBtn) settingsBtn.onclick = () => settingsModal.style.display = 'flex';
+    if (closeSettings) closeSettings.onclick = () => settingsModal.style.display = 'none';
 
     const popular = getMostPopular();
     if (popular && popular.length > 0) {
@@ -116,24 +138,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const descEl = document.getElementById('hero-desc');
         if (titleEl) titleEl.textContent = popular[0].title;
         if (descEl) descEl.textContent = popular[0].desc;
-
-        const playBtn = document.querySelector('.play-btn'); 
-        if (playBtn) {
-            playBtn.addEventListener('click', () => {
-                launchGame(popular[0].id);
-            });
-        }
+        const playBtn = document.getElementById('playFeatured'); 
+        if (playBtn) playBtn.onclick = () => launchGame(popular[0].id);
     }
 
-    const signInBtn = document.getElementById('signInBtn');
-    if (signInBtn) {
-        signInBtn.addEventListener('click', () => {
-            window.location.href = "Login/login.html"; 
-        });
-    }
-
-    const greeting = document.getElementById('greeting');
-    if (greeting) {
-        greeting.innerHTML = `<h1>Hello, Guest</h1><p>Find something fun to play.</p>`;
+    const randomBtn = document.getElementById('randomBtn');
+    if (randomBtn) {
+        randomBtn.onclick = () => {
+            if (games.length > 0) {
+                const rand = games[Math.floor(Math.random() * games.length)];
+                launchGame(rand.id);
+            }
+        };
     }
 });
