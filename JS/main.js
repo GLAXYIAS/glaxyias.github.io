@@ -6,14 +6,21 @@ const _0xData = [
     id: "s_lp",
     title: atob("U2xvcGU="), 
     url: "Games/slope/index.html",
-    desc: "A fast-paced 3D platformer. Avoid obstacles and stay on the track!",
+    desc: "A fast-paced 3D platformer. Stay on the track!",
     popular: true
   },
   {
     id: "d_md",
     title: atob("RHJpdmUgTWFk"), 
     url: "Games/drivemad/index.html",
-    desc: "Drive your 4x4 to the finish line without flipping over! Challenging physics-based driving.",
+    desc: "Challenging physics-based driving. Don't flip your truck!",
+    popular: true
+  },
+  {
+    id: "b_ft",
+    title: atob("QnVsbGV0IEZvcmNl"), 
+    url: "Games/bulletforce/index.html",
+    desc: "Action-packed multiplayer FPS. Choose your weapons and dominate the battlefield.",
     popular: true
   }
 ];
