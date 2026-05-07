@@ -92,10 +92,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ====================== 5. MODAL CONTROL ======================
     if (settingsBtn) {
-        settingsBtn.addEventListener('click', () => settingsModal.style.display = 'flex');
+        settingsBtn.addEventListener('click', () => {
+            settingsModal.style.display = 'flex';
+        });
     }
     if (closeSettings) {
-        closeSettings.addEventListener('click', () => settingsModal.style.display = 'none');
+        closeSettings.addEventListener('click', () => {
+            settingsModal.style.display = 'none';
+        });
     }
 
     // ====================== 6. GAME LAUNCHER ======================
@@ -103,22 +107,24 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = `Games/game-player.html?id=${gameId}`;
     }
 
-    // Merged Random Game button logic
+    // Only define randomBtn ONCE
     const randomBtn = document.getElementById('randomBtn');
     if (randomBtn) {
         randomBtn.addEventListener('click', () => {
-            if (games.length === 0) return alert("No games available!");
-            const randomGame = games[Math.floor(Math.random() * games.length)];
-            launchGame(randomGame.id);
+            if (games && games.length > 0) {
+                const randomGame = games[Math.floor(Math.random() * games.length)];
+                launchGame(randomGame.id);
+            } else {
+                alert("No games found in config!");
+            }
         });
     }
 
-    // Featured Play button logic
     const playBtn = document.querySelector('.play-btn'); 
     if (playBtn) {
         playBtn.addEventListener('click', () => {
             const popular = getMostPopular();
-            if (popular.length > 0) {
+            if (popular && popular.length > 0) {
                 launchGame(popular[0].id);
             }
         });
@@ -137,16 +143,12 @@ document.addEventListener('DOMContentLoaded', () => {
         greeting.innerHTML = `<h1>Hello, Guest</h1><p>Find something fun to play.</p>`;
     }
 
-    function setFeaturedGame() {
-        const popular = getMostPopular();
-        if (popular.length > 0) {
-            const title = document.getElementById('hero-title');
-            const desc = document.getElementById('hero-desc');
-            if (title) title.textContent = popular[0].title;
-            if (desc) desc.textContent = popular[0].desc;
-        }
+    // This runs the featured game logic
+    const popular = getMostPopular();
+    if (popular && popular.length > 0) {
+        const titleEl = document.getElementById('hero-title');
+        const descEl = document.getElementById('hero-desc');
+        if (titleEl) titleEl.textContent = popular[0].title;
+        if (descEl) descEl.textContent = popular[0].desc;
     }
-    setFeaturedGame();
-
-    console.log("%cNull_X loaded successfully", "color: #c084fc");
 });
