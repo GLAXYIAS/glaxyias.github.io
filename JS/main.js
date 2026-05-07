@@ -2,9 +2,6 @@ import { games, getMostPopular } from './config.js';
 import { applyCloak } from '../Cloaks/cloak.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Null_X Dashboard Loaded");
-  
-    // ====================== 1. PERSISTENCE ======================
     const savedTheme = localStorage.getItem('selectedTheme');
     if (savedTheme) applyTheme(savedTheme);
 
@@ -14,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let savedShortcut = localStorage.getItem('panicKey') || "";
     let savedLink = localStorage.getItem('panicUrl') || "https://google.com";
 
-    // ====================== 2. THEME LOGIC ======================
     const settingsModal = document.getElementById('settingsModal');
     const settingsBtn = document.getElementById('settingsBtn');
     const closeSettings = document.getElementById('closeSettings');
@@ -43,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ====================== 3. TAB CLOAK LOGIC ======================
     const cloakSelector = document.getElementById('cloakSelector');
     if (cloakSelector) {
         if (savedCloak) cloakSelector.value = savedCloak;
@@ -57,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ====================== 4. PANIC BUTTON LOGIC ======================
     const panicInput = document.getElementById('panicShortcut');
     const panicLinkInput = document.getElementById('panicLink');
     const savePanicBtn = document.getElementById('savePanic');
@@ -78,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('panicUrl', panicLinkInput.value);
             savedShortcut = panicInput.value;
             savedLink = panicLinkInput.value;
-            alert("Panic settings saved!");
+            alert("Saved");
         });
     }
 
@@ -90,32 +84,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ====================== 5. MODAL CONTROL ======================
     if (settingsBtn) {
-        settingsBtn.addEventListener('click', () => {
-            settingsModal.style.display = 'flex';
-        });
+        settingsBtn.addEventListener('click', () => { settingsModal.style.display = 'flex'; });
     }
     if (closeSettings) {
-        closeSettings.addEventListener('click', () => {
-            settingsModal.style.display = 'none';
-        });
+        closeSettings.addEventListener('click', () => { settingsModal.style.display = 'none'; });
     }
 
-    // ====================== 6. GAME LAUNCHER ======================
     function launchGame(gameId) {
         window.location.href = `Games/game-player.html?id=${gameId}`;
     }
 
-    // Only define randomBtn ONCE
     const randomBtn = document.getElementById('randomBtn');
     if (randomBtn) {
         randomBtn.addEventListener('click', () => {
-            if (games && games.length > 0) {
+            if (games.length > 0) {
                 const randomGame = games[Math.floor(Math.random() * games.length)];
                 launchGame(randomGame.id);
-            } else {
-                alert("No games found in config!");
             }
         });
     }
@@ -124,13 +109,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (playBtn) {
         playBtn.addEventListener('click', () => {
             const popular = getMostPopular();
-            if (popular && popular.length > 0) {
+            if (popular.length > 0) {
                 launchGame(popular[0].id);
             }
         });
     }
 
-    // ====================== 7. UI ELEMENTS ======================
     const signInBtn = document.getElementById('signInBtn');
     if (signInBtn) {
         signInBtn.addEventListener('click', () => {
@@ -143,14 +127,11 @@ document.addEventListener('DOMContentLoaded', () => {
         greeting.innerHTML = `<h1>Hello, Guest</h1><p>Find something fun to play.</p>`;
     }
 
-    // This runs the featured game logic
     const popular = getMostPopular();
-    if (popular && popular.length > 0) {
+    if (popular.length > 0) {
         const titleEl = document.getElementById('hero-title');
         const descEl = document.getElementById('hero-desc');
         if (titleEl) titleEl.textContent = popular[0].title;
         if (descEl) descEl.textContent = popular[0].desc;
     }
 });
-
-
