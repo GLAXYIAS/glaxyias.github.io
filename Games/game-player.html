@@ -1,25 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Classes</title>
+    <title>Null_X</title>
     <style>
         body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; }
-        iframe { width: 100%; height: calc(100% - 40px); border: none; }
-        .nav { height: 40px; background: #111; display: flex; align-items: center; padding-left: 20px; }
-        a { color: white; text-decoration: none; font-family: sans-serif; font-size: 14px; border: 1px solid #333; padding: 5px 10px; }
+        iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
-    <div class="nav"><a href="../index.html">← Back</a></div>
-    <iframe id="target"></iframe>
+    <iframe id="game-frame"></iframe>
 
     <script>
-        // 1. Get ID from URL
+        // 1. LOCK THE TITLE (Stops game names from leaking)
+        const savedTitle = localStorage.getItem('cloakTitle') || "Null_X";
+        document.title = savedTitle;
+        
+        // Prevent game scripts from changing the title
+        Object.defineProperty(document, 'title', {
+            value: savedTitle,
+            writable: false
+        });
+
+        // 2. LOAD THE GAME
         const params = new URLSearchParams(window.location.search);
         const id = params.get('id');
-        const frame = document.getElementById('target');
+        const frame = document.getElementById('game-frame');
 
-        // 2. Hardcoded Paths
+        // Mapping IDs to folders (Must be exactly your folder names)
         const paths = {
             "s_lp": "slope/index.html",
             "d_md": "drivemad/index.html",
@@ -28,17 +35,12 @@
             "b_to": "brotato/index.html"
         };
 
-        // 3. Force Load
         if (id && paths[id]) {
             frame.src = paths[id];
         } else {
-            // If it fails, try to load Slope by default so you don't get a white screen
-            frame.src = "slope/index.html"; 
+            // Fallback to Slope if something goes wrong
+            frame.src = "slope/index.html";
         }
-
-        // 4. Quick Cloak (No external imports to prevent crashing)
-        const savedTitle = localStorage.getItem('cloakTitle');
-        if (savedTitle) document.title = savedTitle;
     </script>
 </body>
 </html>
