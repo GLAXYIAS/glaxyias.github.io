@@ -1,18 +1,25 @@
 <script type="module">
-    // --- 1. THE NUCLEAR STEALTH LOCK (Keep your existing lock code here) ---
+    // 1. CLOAK LOCK (Keep this for stealth!)
     const currentTitle = localStorage.getItem('cloakTitle') || "Null_X";
     const currentIcon = localStorage.getItem('cloakIcon') || "../imgs/favicon.png";
     document.title = currentTitle;
-    try { Object.defineProperty(document, 'title', { value: currentTitle, writable: false }); } catch (e) {}
+    try { Object.defineProperty(document, 'title', { value: currentTitle, writable: false }); } catch(e) {}
 
-    // --- 2. UNIVERSAL LOADING LOGIC ---
+    // 2. MAPPING (This is what you wanted back)
     const urlParams = new URLSearchParams(window.location.search);
-    const folderName = urlParams.get('folder'); // It pulls the folder name from the URL
+    const gameId = urlParams.get('id');
     const iframe = document.getElementById('game-frame');
 
-    if (folderName) {
-        // Automatically loads: folder/index.html
-        iframe.src = `${folderName}/index.html`;
+    const gamePaths = {
+        "s_lp": "slope/index.html",
+        "d_md": "drivemad/index.html",
+        "b_ft": "bulletforce/index.html",
+        "p_em": "pokemon-emerald/index.html",
+        "b_to": "brotato/index.html"
+    };
+
+    if (gameId && gamePaths[gameId]) {
+        iframe.src = gamePaths[gameId];
     } else {
         window.location.href = "../index.html";
     }
