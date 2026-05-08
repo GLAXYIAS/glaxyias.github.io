@@ -5,35 +5,30 @@ const _0xData = [
   {
     id: "s_lp",
     title: atob("U2xvcGU="), 
-    url: "Games/slope/index.html",
     desc: "A fast-paced 3D platformer. Stay on the track!",
     popular: true
   },
   {
     id: "d_md",
     title: atob("RHJpdmUgTWFk"), 
-    url: "Games/drivemad/index.html",
     desc: "Challenging physics-based driving. Don't flip your truck!",
     popular: true
   },
   {
     id: "b_ft",
     title: atob("QnVsbGV0IEZvcmNl"), 
-    url: "Games/bulletforce/index.html",
     desc: "Action-packed multiplayer FPS. Dominate the battlefield.",
     popular: true
   },
   {
     id: "p_em",
     title: atob("UG9rZW1vbiBFbWVyYWxk"), 
-    url: "Games/pokemon-emerald/index.html",
     desc: "The classic GBA adventure. Become the Hoenn Champion!",
     popular: true
   },
   {
     id: "b_to",
     title: atob("QnJvdGF0bw=="), 
-    url: "Games/brotato/index.html",
     desc: "A top-down arena shooter roguelite where you play a potato.",
     popular: true
   }
@@ -44,13 +39,13 @@ function getMostPopular() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. PERSISTENCE
+    // 1. PERSISTENCE (Theme & Cloak)
     const savedTheme = localStorage.getItem('selectedTheme');
     if (savedTheme) applyTheme(savedTheme);
 
     const savedCloak = localStorage.getItem('savedCloak');
     if (savedCloak && savedCloak !== "none") {
-        try { applyCloak(savedCloak); } catch (e) {}
+        try { applyCloak(savedCloak); } catch (e) { console.error("Cloak init error"); }
     }
 
     // 2. SELECTORS
@@ -76,11 +71,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 3. THE ORIGINAL LAUNCHER (Simple ID)
+    // 3. LAUNCHER (Standard ID Method)
     function launchGame(gameId) {
+        // Navigates to player with just the ID
         window.location.href = `Games/game-player.html?id=${gameId}`;
     }
 
+    // 4. UI RENDERING
     function showLibrary() {
         if (heroSection) heroSection.style.display = 'none';
         if (gameGrid) {
@@ -89,7 +86,10 @@ document.addEventListener('DOMContentLoaded', () => {
             _0xData.forEach(game => {
                 const card = document.createElement('div');
                 card.className = 'game-card';
-                card.innerHTML = `<h3>${game.title}</h3><div class="game-desc-overlay">${game.desc}</div>`;
+                card.innerHTML = `
+                    <h3>${game.title}</h3>
+                    <div class="game-desc-overlay">${game.desc}</div>
+                `;
                 card.onclick = () => launchGame(game.id);
                 gameGrid.appendChild(card);
             });
@@ -101,6 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (gameGrid) gameGrid.style.display = 'none';
     }
 
+    // 5. EVENT LISTENERS
     if (navGames) navGames.onclick = (e) => { e.preventDefault(); showLibrary(); };
     if (navHome) navHome.onclick = (e) => { e.preventDefault(); showHome(); };
 
@@ -122,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // PANIC BUTTON
+    // 6. PANIC BUTTON
     let savedShortcut = localStorage.getItem('panicKey') || "";
     let savedLink = localStorage.getItem('panicUrl') || "https://google.com";
     const panicInput = document.getElementById('panicShortcut');
@@ -135,20 +136,25 @@ document.addEventListener('DOMContentLoaded', () => {
         savePanicBtn.onclick = () => {
             localStorage.setItem('panicKey', panicInput.value);
             localStorage.setItem('panicUrl', panicLinkInput.value);
-            alert("Saved!");
+            alert("Panic settings saved!");
         };
     }
 
     window.onkeydown = (e) => {
-        if (e.key === localStorage.getItem('panicKey')) {
+        const isTyping = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
+        if (!isTyping && e.key === localStorage.getItem('panicKey')) {
             window.location.href = localStorage.getItem('panicUrl') || "https://google.com";
         }
     };
 
+    // 7. HERO INITIALIZATION
     const popular = getMostPopular();
     if (popular.length > 0) {
-        document.getElementById('hero-title').textContent = popular[0].title;
-        document.getElementById('hero-desc').textContent = popular[0].desc;
-        document.getElementById('playFeatured').onclick = () => launchGame(popular[0].id);
+        const titleEl = document.getElementById('hero-title');
+        const descEl = document.getElementById('hero-desc');
+        if (titleEl) titleEl.textContent = popular[0].title;
+        if (descEl) descEl.textContent = popular[0].desc;
+        const playBtn = document.getElementById('playFeatured'); 
+        if (playBtn) playBtn.onclick = () => launchGame(popular[0].id);
     }
 });
