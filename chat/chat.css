@@ -1,1 +1,142 @@
+:root {
+    --bg: #050505;
+    --sidebar-bg: #0a0a0a;
+    --accent: #8b00ff;
+    --text: #ffffff;
+    --msg-bg: #151515;
+    --border: #222;
+}
 
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.chat-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: 260px;
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.channel-list {
+    flex-grow: 1;
+    padding: 10px;
+}
+
+.channel {
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #888;
+    transition: 0.2s;
+}
+
+.channel.active, .channel:hover {
+    background: #1a1a1a;
+    color: var(--accent);
+}
+
+.user-profile {
+    padding: 15px;
+    background: #0d0d0d;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    border-radius: 50%;
+}
+
+/* Main Chat Area */
+.main-chat {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    padding: 15px 25px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    font-weight: bold;
+}
+
+.messages-container {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.message {
+    max-width: 80%;
+    padding: 10px 15px;
+    background: var(--msg-bg);
+    border-radius: 8px;
+    line-height: 1.4;
+    border-left: 3px solid var(--accent);
+}
+
+.message.system {
+    border: none;
+    background: transparent;
+    color: #555;
+    text-align: center;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+/* Input Area */
+.input-area {
+    padding: 20px;
+    display: flex;
+    gap: 10px;
+    background: var(--bg);
+}
+
+#message-input {
+    flex-grow: 1;
+    background: #111;
+    border: 1px solid var(--border);
+    color: white;
+    padding: 12px;
+    border-radius: 5px;
+    outline: none;
+}
+
+#message-input:focus {
+    border-color: var(--accent);
+}
+
+button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
