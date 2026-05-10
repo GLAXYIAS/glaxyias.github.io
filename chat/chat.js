@@ -2,7 +2,6 @@ const SUPABASE_URL = 'https://ukwjojxutcjkvabnybtj.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrd2pvanh1dGNqa3ZhYm55YnRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNzk5NDAsImV4cCI6MjA5Mzg1NTk0MH0.iLr9OrIZlRBrbcI1XDE0zl7t_wpwVg3ko3DgppxbUh8'; 
 
 const ADMIN_NAME = "glaeesas"; // Must be lowercase for comparison
-const ADMIN_SECRET = "TEST"; 
 
 document.addEventListener('DOMContentLoaded', () => {
     const user = localStorage.getItem('chatUser');
@@ -111,11 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchMessages();
     }
 
-    // --- DELETE LOGIC ---
+    // --- DELETE LOGIC (NO KEY) ---
     window.deleteMessage = async (messageId) => {
-        const pass = prompt("Enter Admin Secret Key to delete:");
-        if (pass !== ADMIN_SECRET) return alert("Wrong key.");
-
         await fetch(`${SUPABASE_URL}/rest/v1/messages?id=eq.${messageId}`, {
             method: 'PATCH',
             headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
@@ -124,10 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchMessages();
     };
 
-    // --- ADMIN ACTIONS (BAN/TAG) ---
+    // --- ADMIN ACTIONS (NO KEY) ---
     window.adminAction = async (type) => {
-        const pass = prompt("Enter Admin Secret Key:");
-        if (pass !== ADMIN_SECRET) return alert("Wrong key.");
         const target = document.getElementById('admin-target-user').value.trim();
         if (!target) return alert("Enter a username.");
 
@@ -139,6 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const date = mins > 0 ? new Date(Date.now() + mins * 60000).toISOString() : '3000-01-01T00:00:00Z';
             await saveRole(target, { is_banned: true, ban_until: date });
             alert(`Banned ${target}`);
+        } else if (type === 'warn') {
+            alert(`Warned ${target}.`);
         }
     };
 
