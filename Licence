@@ -1,0 +1,122 @@
+Alright — this one flips the idea completely: no forking, no copying, no reuse unless you explicitly allow it. I’ll keep the same long, nerdy, “official organization” tone with Null_X.
+
+Restricted Source License (RSL) v1.0
+Issued by The Null_X Foundation / Operation
+
+Preamble
+By directive of The Null_X Foundation / Operation, this repository is classified as a Restricted Digital Artifact. Unlike permissive or copyleft paradigms, this license enforces a doctrine of controlled non-propagation: the code contained herein is intended for observation only, not duplication, derivation, or redistribution.
+
+This repository exists as a readable construct, not a reusable resource. Access does not imply permission. Visibility does not imply transferability.
+
+All rights not explicitly granted are intentionally withheld.
+
+Section 1 — Definitions
+To eliminate ambiguity and semantic loopholes:
+
+“Repository” — all files, code, assets, commits, and metadata contained within this project.
+
+“Extraction” — copying, downloading, scraping, or otherwise obtaining any portion of the Repository for external use.
+
+“Fork” — any replication of the Repository via GitHub’s fork feature or equivalent systems.
+
+“Derivative Work” — any project, codebase, or artifact that incorporates, mimics, or is based on this Repository in whole or in part.
+
+“Explicit Authorization” — a direct, written, and verifiable statement issued by the Repository Owner or The Null_X Foundation granting specific permissions.
+
+Section 2 — Default Restrictions
+Unless Explicit Authorization has been granted, the following actions are strictly prohibited:
+
+Forking the Repository.
+
+Cloning or downloading the Repository for reuse.
+
+Copying any portion of the code, including snippets, structures, or logic.
+
+Creating derivative works based on this Repository.
+
+Re-uploading, mirroring, or redistributing this Repository in any form.
+
+This is a zero-permission baseline. Silence does not equal consent.
+
+Section 3 — Conditional Permission System
+Permissions may only exist under Explicit Authorization, which must:
+
+Be granted directly by the Repository Owner or Null_X authority.
+
+Clearly define the scope of allowed actions (e.g., fork, partial reuse, modification).
+
+Be specific to the requesting individual or entity.
+
+Absent this authorization, all restrictions remain fully enforced.
+
+Section 4 — No Implied Rights
+Interaction with this Repository — including viewing source code in a browser — does not grant:
+
+Rights to reuse logic or implementation patterns.
+
+Rights to replicate functionality.
+
+Rights to reinterpret code into another form or language.
+
+Even “inspiration-based” duplication that closely mirrors this code may be considered a Derivative Violation.
+
+Section 5 — Attribution Is Not Permission
+Providing credit does not override restriction.
+
+You may not use this code even if you fully attribute The Null_X Foundation.
+
+You may not fork, copy, or adapt this Repository under the premise of acknowledgment.
+
+Attribution without authorization remains non-compliant.
+
+Section 6 — Enforcement Clause
+Unauthorized use triggers the following classification:
+
+The violating project will be designated a Rogue Derivative Artifact.
+
+Rights granted under this license are immediately and permanently revoked.
+
+The Null_X Foundation reserves the right to publicly document violations within its Restricted Code Registry (RCR).
+
+Section 7 — Limited Viewing Rights
+You are permitted to:
+
+View the Repository via GitHub’s interface.
+
+Analyze its structure for educational understanding (without copying).
+
+This constitutes read-only cognitive access, not material access.
+
+Section 8 — Warranty Disclaimer
+This Repository is provided:
+
+Without warranty of any kind.
+
+Without obligation for support, updates, or clarification.
+
+The Null_X Foundation is not responsible for how you interpret or misunderstand the contents of this code.
+
+Section 9 — Authority and Control
+The Null_X Foundation / Operation retains full and exclusive control over:
+
+Distribution rights.
+
+Permission grants.
+
+Future licensing changes.
+
+No third party may override or reinterpret these terms.
+
+Section 10 — Affirmation
+By accessing this Repository, you acknowledge:
+
+“I observe but do not extract.
+I learn but do not replicate.
+I request permission, or I refrain.
+The code is not mine to take.”
+
+Issued under the authority of The Null_X Foundation / Operation
+License Version: RSL v1.0 (May 2026)
+Classification: Restricted - Non-Forkable - Authorization Required
+
+“Visibility is not permission.”
