@@ -1,1 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grades | Profile</title>
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <div class="profile-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>Grades</h2>
+            </div>
+            <div class="nav-links">
+                <a href="../chat/chat.html" class="nav-item">← Back to Chat</a>
+            </div>
+        </div>
 
+        <div class="main-content">
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="pfp-container">
+                        <img id="pfp-preview" src="https://via.placeholder.com/150" alt="Profile Picture">
+                        <label for="pfp-input" class="upload-btn">Change Photo</label>
+                        <input type="file" id="pfp-input" accept="image/*" style="display:none;">
+                    </div>
+                    <div class="user-info-basic">
+                        <h1 id="display-username">Username</h1>
+                        <p id="join-date">Member since: Loading...</p>
+                    </div>
+                </div>
+
+                <div class="profile-body">
+                    <div class="input-group">
+                        <label>Display Name</label>
+                        <input type="text" id="display-name-input" placeholder="Enter a nickname...">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Bio</label>
+                        <textarea id="bio-input" placeholder="Tell us about yourself..."></textarea>
+                    </div>
+
+                    <div class="stats-row">
+                        <div class="stat-box">
+                            <span class="stat-label">Status</span>
+                            <span class="stat-value" id="status-tag">Online</span>
+                        </div>
+                    </div>
+
+                    <button id="save-profile-btn">Save Changes</button>
+                    <p id="save-status"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="profile.js"></script>
+</body>
+</html>
