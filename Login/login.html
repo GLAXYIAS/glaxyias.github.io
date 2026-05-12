@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign In</title>
   <link rel="stylesheet" href="login.css">
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
-  <<div class="container">
+  <div class="container">
     <a href="../index.html" class="close-x">&times;</a>
   
     <h1 class="glow">Null_X</h1>
@@ -18,7 +19,6 @@
       <div class="tab" id="loginTab">Login</div>
     </div>
 
-    <!-- Sign Up Form -->
     <div id="signupForm">
       <div class="form-group">
         <label>Your Email</label>
@@ -37,11 +37,13 @@
           <span class="toggle-password" id="toggleSignupPassword">👁️</span>
         </div>
       </div>
+
+      <div class="g-recaptcha" data-sitekey="6LdzjuUAAAAALEgGETy8hptKr13TC-6oLKgDlE2" style="margin-bottom: 15px; display: flex; justify-content: center;"></div>
+
       <div id="signupMessage" class="feedback"></div>
       <button onclick="handleSignup()">Create Account</button>
     </div>
 
-    <!-- Login Form -->
     <div id="loginForm" class="hidden">
       <div class="form-group">
         <label>Username</label>
