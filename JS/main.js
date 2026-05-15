@@ -116,10 +116,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Updated launchGame to use Iframe Overlay with Red X
     function launchGame(gameId) {
         const game = _0xData.find(g => g.id === gameId);
-        if (game) {
-            window.location.href = game.url;
+        const runner = document.getElementById('gameRunner');
+        const frame = document.getElementById('gameFrame');
+        const exitBtn = document.getElementById('exitGame');
+
+        if (game && runner && frame) {
+            frame.src = game.url;
+            runner.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            
+            exitBtn.onclick = () => {
+                frame.src = "";
+                runner.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            };
         }
     }
 
@@ -181,7 +194,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (savePanicBtn) {
         savePanicBtn.onclick = () => {
-            const link = panicLinkInput.value || "https://classroom.google.com";
+            let link = panicLinkInput.value || "https://classroom.google.com";
+            // Ensure protocol is present
+            if (!link.startsWith('http')) link = 'https://' + link;
             localStorage.setItem('panicUrl', link);
             alert("Panic settings saved!");
         };
@@ -239,17 +254,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- GLOBAL PANIC LISTENER ---
-window.onkeydown = (e) => {
-    const panicKey = localStorage.getItem('panicKey');
-    if (panicKey && e.key === panicKey) {
-        let url = localStorage.getItem('panicUrl') || "https://classroom.google.com";
-        
-        // Fix: If the URL doesn't start with http, add it so it doesn't stay in the repo
-        if (!url.startsWith('http')) {
-            url = 'https://' + url;
+    window.onkeydown = (e) => {
+        const panicKey = localStorage.getItem('panicKey');
+        if (panicKey && e.key === panicKey) {
+            let url = localStorage.getItem('panicUrl') || "https://classroom.google.com";
+            if (!url.startsWith('http')) url = 'https://' + url;
+            window.location.href = url;
         }
-        
-        window.location.href = url;
-    }
-};
+    };
 });
