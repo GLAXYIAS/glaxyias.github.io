@@ -26,7 +26,7 @@ const _0xData = [
     id: "b_ft",
     title: atob("QnVsbGV0IEZvcmNl"), 
     url: "Games/bulletforce/index.html",
-    desc: "Action-packed multiplayer FPS. Dominate the battlefield.",
+    desc: "Action-packed multiplayer FPS. dominate the battlefield.",
     popular: true
   },
   {
@@ -55,6 +55,7 @@ window.openNullChat = function() {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Theme & Cloak Init ---
     const savedTheme = localStorage.getItem('selectedTheme');
     if (savedTheme) applyTheme(savedTheme);
 
@@ -63,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try { applyCloak(savedCloak); } catch (e) { console.error(e); }
     }
 
+    // --- Auth UI Logic ---
     const user = localStorage.getItem('chatUser');
     const welcomeText = document.getElementById('welcome-text');
     const signInBtn = document.getElementById('signInBtn');
@@ -83,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    // --- DOM Elements ---
     const settingsModal = document.getElementById('settingsModal');
     const settingsBtn = document.getElementById('settingsBtn');
     const closeSettings = document.getElementById('closeSettings');
@@ -92,7 +95,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const navComms = document.getElementById('nav-communications');
     const heroSection = document.getElementById('heroSection');
     const gameGrid = document.getElementById('gameGrid');
+    const stealthBtn = document.getElementById('stealthOpener');
+    
+    // Panic Button Elements
+    const panicShortcutInput = document.getElementById('panicShortcut');
+    const panicLinkInput = document.getElementById('panicLink');
+    const savePanicBtn = document.getElementById('savePanic');
 
+    // --- Functions ---
     function applyTheme(theme) {
         const root = document.documentElement;
         if (theme === 'midnight') {
@@ -136,6 +146,48 @@ document.addEventListener('DOMContentLoaded', () => {
         if (gameGrid) gameGrid.style.display = 'none';
     }
 
+    // --- STEALTH MODE (about:blank) ---
+    if (stealthBtn) {
+        stealthBtn.onclick = () => {
+            const url = window.location.href;
+            const win = window.open('about:blank', '_blank');
+            if (!win) {
+                alert("Please allow popups for Stealth Mode.");
+                return;
+            }
+            win.document.title = "Google Docs";
+            const iframe = win.document.createElement('iframe');
+            iframe.src = url;
+            iframe.style = "position:fixed; top:0; left:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden;";
+            win.document.body.appendChild(iframe);
+            window.location.replace("https://classroom.google.com");
+        };
+    }
+
+    // --- PANIC BUTTON SETUP ---
+    if (panicShortcutInput) {
+        panicShortcutInput.value = localStorage.getItem('panicKey') || "";
+        panicShortcutInput.onclick = () => {
+            panicShortcutInput.placeholder = "Press any key...";
+            const captureKey = (e) => {
+                e.preventDefault();
+                localStorage.setItem('panicKey', e.key);
+                panicShortcutInput.value = e.key;
+                window.removeEventListener('keydown', captureKey);
+            };
+            window.addEventListener('keydown', captureKey);
+        };
+    }
+
+    if (savePanicBtn) {
+        savePanicBtn.onclick = () => {
+            const link = panicLinkInput.value || "https://classroom.google.com";
+            localStorage.setItem('panicUrl', link);
+            alert("Panic settings saved!");
+        };
+    }
+
+    // --- EVENT LISTENERS ---
     if (navGames) navGames.onclick = (e) => { e.preventDefault(); showLibrary(); };
     if (navHome) navHome.onclick = (e) => { e.preventDefault(); showHome(); };
 
@@ -151,19 +203,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             <p>Encrypted Comms (Sign-in Required)</p>
                         </div>
                     </div>
-
                     <div class="form-wrapper" style="grid-column: 1 / -1; margin-top: 30px;">
                         <h2 class="form-title">🎮 Request a Game</h2>
-                        <p class="form-subtitle" style="text-align: center; color: #888; margin-bottom: 20px;">Suggest new content for Null_X</p>
-                        <iframe 
-                            src="https://docs.google.com/forms/d/e/1FAIpQLSdM5VOrjMSdmRv5udVq9PTP4olf6kBQtShX3ZT9-I45Uu0nfQ/viewform?embedded=true" 
-                            class="google-form-iframe"
-                            width="100%" 
-                            height="700" 
-                            frameborder="0"
-                            style="border-radius: 10px; background: #fff;">
-                            Loading…
-                        </iframe>
+                        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdM5VOrjMSdmRv5udVq9PTP4olf6kBQtShX3ZT9-I45Uu0nfQ/viewform?embedded=true" class="google-form-iframe" width="100%" height="700" frameborder="0" style="border-radius: 10px; background: #fff;"></iframe>
                     </div>
                 `;
                 gameGrid.style.display = 'grid';
@@ -179,14 +221,16 @@ document.addEventListener('DOMContentLoaded', () => {
         cloakSelector.onchange = (e) => {
             const val = e.target.value;
             if (val === "none") {
-                localStorage.clear();
+                localStorage.removeItem('savedCloak');
                 location.reload(); 
             } else {
+                localStorage.setItem('savedCloak', val);
                 applyCloak(val);
             }
         };
     }
 
+    // --- Hero Section Init ---
     const popular = getMostPopular();
     if (popular.length > 0) {
         document.getElementById('hero-title').textContent = popular[0].title;
@@ -194,10 +238,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('playFeatured').onclick = () => launchGame(popular[0].id);
     }
 
+    // --- GLOBAL PANIC LISTENER ---
     window.onkeydown = (e) => {
         const panicKey = localStorage.getItem('panicKey');
-        if (e.key === panicKey) {
-            window.location.href = localStorage.getItem('panicUrl') || "https://google.com";
+        if (panicKey && e.key === panicKey) {
+            window.location.href = localStorage.getItem('panicUrl') || "https://classroom.google.com";
         }
     };
 });
