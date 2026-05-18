@@ -2,7 +2,6 @@ import { applyCloak } from '../Cloaks/Cloaks.js';
 
 /**
  * Null_X Database / Game Registry
- * Note: Titles are Base64 encoded to avoid simple text filters.
  */
 const _0xData = [
   {
