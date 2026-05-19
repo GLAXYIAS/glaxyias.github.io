@@ -3,61 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In</title>
+  <title>Null_X sign in</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="stylesheet" href="login.css">
 </head>
 <body>
-  <div class="container">
-    <a href="../index.html" class="close-x">&times;</a>
-  
-    <h1 class="glow">Null_X</h1>
-    <p class="subtitle">Sign in for brand new features</p>
-    
-    <div class="tabs">
-      <div class="tab active" id="signupTab">Create Account</div>
-      <div class="tab" id="loginTab">Login</div>
-    </div>
 
-    <div id="signupForm">
-      <div class="form-group">
-        <label>Your Email</label>
-        <input type="email" id="signupEmail" placeholder="yourname@yourdomain.com" onblur="checkEmail()">
-        <div id="emailFeedback" class="feedback"></div>
-      </div>
-      <div class="form-group">
-        <label>Username</label>
-        <input type="text" id="signupUsername" placeholder="Choose a username" onblur="checkUsername()">
-        <div id="usernameFeedback" class="feedback"></div>
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <div class="password-container">
-          <input type="password" id="signupPassword" placeholder="At least 8 characters">
-          <span class="toggle-password" id="toggleSignupPassword">👁️</span>
-        </div>
-      </div>
+<div class="container">
+  <h1 class="glow">Null_X</h1>
+  <p class="subtitle">Sign in for brand new features</p>
 
-      <div id="signupMessage" class="feedback"></div>
-      <button onclick="handleSignup()">Create Account</button>
-    </div>
-
-    <div id="loginForm" class="hidden">
-      <div class="form-group">
-        <label>Username</label>
-        <input type="text" id="loginUsername" placeholder="Your username">
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <div class="password-container">
-          <input type="password" id="loginPassword" placeholder="Your password">
-          <span class="toggle-password" id="toggleLoginPassword">👁️</span>
-        </div>
-      </div>
-      <div id="loginMessage" class="feedback"></div>
-      <button onclick="handleLogin()">Login</button>
-    </div>
+  <div class="tabs">
+    <div class="tab active" id="signupTab">Create Account</div>
+    <div class="tab" id="loginTab">Login</div>
   </div>
 
-  <script src="login.js?v=100"></script>
+  <div id="signupForm">
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="signupUsername" placeholder="Choose a username">
+      <div id="usernameFeedback" class="feedback"></div>
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <div class="password-container">
+        <input type="password" id="signupPassword" placeholder="At least 8 characters">
+        <span class="toggle-password" id="toggleSignupPassword">👁️</span>
+      </div>
+    </div>
+
+    <div id="signupMessage" class="feedback"></div>
+    <button id="signupBtn">Create Account</button>
+  </div>
+
+  <div id="loginForm" class="hidden">
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="loginUsername" placeholder="Your username">
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <div class="password-container">
+        <input type="password" id="loginPassword" placeholder="Your password">
+        <span class="toggle-password" id="toggleLoginPassword">👁️</span>
+      </div>
+    </div>
+
+    <div id="loginMessage" class="feedback"></div>
+    <button id="loginBtn">Login</button>
+  </div>
+</div>
+
+  <script src="login.js"></script>
 </body>
-</html>
