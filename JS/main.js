@@ -149,6 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             launchStealthWindow(savedCloakSelection, savedEnvironmentSetting);
         }, 300);
+        return; // HALT LOCAL EXECUTION TO PREVENT RUNNING RESIDUAL CLOCK LOOPS REMOTELY
     }
 
     // --- 1. Educational Cloak Countdown Engine ---
@@ -267,6 +268,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    /**
+     * Populates and displays the game library
+     */
     function showLibrary() {
         if (heroSection) heroSection.style.display = 'none';
         if (gameGrid) {
@@ -449,5 +453,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
-```
