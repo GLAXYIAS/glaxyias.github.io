@@ -966,5 +966,54 @@ nav {
 .educational-scroll-body::-webkit-scrollbar-thumb {
   background: #000000;                    /* Pure black scrollbar runner */
 }
+/* ==========================================================================
+   Stealth Dropdown Styles
+   ========================================================================== */
+.stealth-menu-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.stealth-dropdown {
+  position: absolute;
+  bottom: 105%; /* Positions the dropdown right above the button */
+  left: 0;
+  width: 100%;
+  background: #0a0a0a;
+  border: 1px solid #8b00ff; /* Matches your default purple accent */
+  border-radius: 4px;
+  z-index: 999;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
+}
+
+.stealth-menu-item {
+  padding: 10px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-align: left;
+  transition: background 0.2s ease;
+}
+
+.stealth-menu-item:hover {
+  background: rgba(139, 0, 255, 0.2); /* Subtle purple tint on hover */
+}
+
+/* ==========================================================================
+   Auto-Launch Options Styles
+   ========================================================================== */
+#auto-launch-options {
+  margin-top: 10px;
+  padding-left: 5px;
+}
+
+/* ==========================================================================
+   Functional Utility Classes
+   ========================================================================== */
+.hidden {
+  display: none !important;
+}
 
 /*End OF Master CSS*/
