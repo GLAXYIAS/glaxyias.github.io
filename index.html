@@ -14,7 +14,7 @@
         <h1>Null_X: Interactive Cognitive Development Environment</h1>
         <div class="academic-subheading">Institutional Research Document & Terms of Engagement</div>
       </div>
-      
+       
       <div class="educational-scroll-body">
         <p>This platform is designed to support modern educational growth through interactive digital learning experiences and research-based technology integration. By encouraging cognitive development through problem-solving, pattern recognition, and critical thinking activities, students are able to strengthen important academic and real-world skills in an engaging environment.</p>
 
@@ -34,12 +34,12 @@
   </div>
 
   <div class="dashboard">
-    
+     
     <aside class="left-nav">
       <div class="logo">
         <img src="imgs/Screenshot 2026-01-27 8.17.07 PM.png" alt="Null_X Logo" class="site-logo">
       </div>
-      
+       
       <nav>
         <a href="index.html" id="nav-home" class="nav-item active">Home</a>
         <a href="#" id="nav-games" class="nav-item">Games</a>
@@ -51,13 +51,13 @@
     </aside>
 
     <main class="main-content">
-      
+       
       <header class="top-bar">
         <div class="greeting" id="greeting">
           <h1 id="welcome-text">Hello, Guest</h1>
           <p>Find something fun to play.</p>
         </div>
-        
+         
         <div class="search-bar">
           <input type="text" id="searchInput" placeholder="Search games...">
         </div>
@@ -68,7 +68,7 @@
           <span class="badge">Featured</span>
           <h2 id="hero-title">Loading...</h2>
           <p id="hero-desc">Please wait...</p>
-          
+           
           <div class="hero-actions">
             <button class="play-btn" id="playFeatured">Play Now</button>
             <button class="secondary-btn">Discover More</button>
@@ -93,7 +93,7 @@
           <div class="stealth-menu-item" data-stealth-type="blob">Open Blob URL</div>
         </div>
       </div>
-      
+       
       <button class="signin-btn" id="signInBtn">Sign In</button>
       <button class="settings-btn" id="settingsBtn">Settings</button>
 
@@ -176,6 +176,23 @@
           <option value="Google Classroom">Google Classroom</option>
           <option value="Google Drive">Google Drive</option>
         </select>
+      </div>
+
+      <div class="setting-section">
+        <h3>Auto-Launch</h3>
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+          <input type="checkbox" id="toggle-auto-launch" style="cursor: pointer; width: 18px; height: 18px;">
+          <label for="toggle-auto-launch" class="setting-label" style="margin: 0; cursor: pointer; font-size: 0.95rem;">
+            Automatically launch cloaked on next visit
+          </label>
+        </div>
+        <div id="auto-launch-options" style="margin-top: 10px;">
+          <p class="setting-label">Launch Type Target:</p>
+          <select id="auto-launch-environment" class="settings-input">
+            <option value="about:blank">about:blank</option>
+            <option value="blob">blob URL</option>
+          </select>
+        </div>
       </div>
 
       <div class="setting-section">
