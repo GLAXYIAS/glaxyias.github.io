@@ -65,47 +65,119 @@ window.openNullChat = function() {
 };
 
 /**
+ * Core Architecture Tab Cloaking Payload Engine
+ * Handles generation of both local blob objects and clean blank execution targets
+ */
+function launchStealthWindow(maskType, targetEnv) {
+    const currentUrl = window.location.href;
+    
+    // Resolve mask specifics
+    let title = "Google Docs";
+    let escapeRedirect = "https://classroom.google.com";
+
+    if (maskType === 'classroom') {
+        title = "Classes";
+        escapeRedirect = "https://classroom.google.com";
+    } else if (maskType === 'canvas') {
+        title = "Dashboard";
+        escapeRedirect = "https://canvas.instructure.com";
+    } else if (maskType === 'docs') {
+        title = "Google Docs";
+        escapeRedirect = "https://docs.google.com";
+    }
+
+    let targetTab;
+
+    if (targetEnv === 'blob') {
+        // --- BLOB GENERATION CORE ENGINE ---
+        const htmlPayload = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>${title}</title>
+                <style>
+                    body, html { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#000; }
+                    iframe { width:100%; height:100%; border:none; margin:0; padding:0; }
+                </style>
+            </head>
+            <body>
+                <iframe src="${currentUrl}"></iframe>
+            </body>
+            </html>
+        `;
+        const blob = new Blob([htmlPayload], { type: 'text/html' });
+        const blobUrl = URL.createObjectURL(blob);
+        targetTab = window.open(blobUrl, '_blank');
+    } else {
+        // --- ABOUT:BLANK CORE ENGINE ---
+        targetTab = window.open('about:blank', '_blank');
+        if (targetTab) {
+            targetTab.document.title = title;
+            const frame = targetTab.document.createElement('iframe');
+            frame.src = currentUrl;
+            frame.style = "position:fixed; top:0; left:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden;";
+            targetTab.document.body.appendChild(frame);
+        }
+    }
+
+    if (!targetTab) {
+        alert("Pop-up blocked! Please allow system popup permissions for deployment.");
+        return;
+    }
+
+    // Scrub tracking trails from the root window context node layout
+    window.location.replace(escapeRedirect);
+}
+
+/**
  * Main Initialization Logic
  */
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- 0. Educational Cloak Countdown Engine ---
+    // --- 0. INTERACTIVE INITIALIZATION: AUTO-LAUNCH SYSTEM CHECK ---
+    const autoLaunchEnabled = localStorage.getItem('autoLaunchStealth') === 'true';
+    const savedCloakSelection = localStorage.getItem('savedCloak') || 'docs';
+    const savedEnvironmentSetting = localStorage.getItem('autoLaunchEnv') || 'about:blank';
+
+    // Auto-Launch Deployment Vector Routing
+    if (autoLaunchEnabled) {
+        // Prevent continuous evaluation loop bugs on launch
+        localStorage.removeItem('autoLaunchStealth'); 
+        
+        // Let the viewport settle momentarily before breaking out frame contexts
+        setTimeout(() => {
+            launchStealthWindow(savedCloakSelection, savedEnvironmentSetting);
+        }, 300);
+    }
+
+    // --- 1. Educational Cloak Countdown Engine ---
     const cloakElement = document.getElementById('educational-cloak');
     const cloakTimerText = document.getElementById('cloak-timer');
     const cloakCheckbox = document.getElementById('toggle-study-cloak');
     
-    // Read preference flag from master memory storage
     const isCloakDisabled = localStorage.getItem('disableStudyCloak') === 'true';
     
-    // Configure settings checkbox component checkmark state to match
     if (cloakCheckbox) {
         cloakCheckbox.checked = isCloakDisabled;
-        
-        // Save changes whenever user manually alters input box value
         cloakCheckbox.addEventListener('change', (e) => {
             localStorage.setItem('disableStudyCloak', e.target.checked ? 'true' : 'false');
         });
     }
 
     if (isCloakDisabled) {
-        // Strip the element layout node completely if deactivated by preference settings
         if (cloakElement) cloakElement.style.display = 'none';
     } else {
-        // Run countdown sequence routine if overlay engine is active
         let clockSecondsLeft = 20;
-        
         const countdownLoop = setInterval(() => {
             clockSecondsLeft--;
             if (cloakTimerText) cloakTimerText.textContent = clockSecondsLeft;
             
             if (clockSecondsLeft <= 0) {
                 clearInterval(countdownLoop);
-                
                 if (cloakElement) {
                     cloakElement.style.opacity = '0';
                     cloakElement.style.visibility = 'hidden';
-                    
-                    // Detach from interactive visibility nodes upon termination complete
                     setTimeout(() => {
                         cloakElement.style.display = 'none';
                     }, 500);
@@ -114,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
     
-    // --- 1. Theme & Cloak Persistence ---
+    // --- 2. Theme & Cloak Persistence ---
     const savedTheme = localStorage.getItem('selectedTheme');
     if (savedTheme) applyTheme(savedTheme);
 
@@ -127,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- 2. Authentication UI Sync ---
+    // --- 3. Authentication UI Sync ---
     const user = localStorage.getItem('chatUser');
     const welcomeText = document.getElementById('welcome-text');
     const signInBtn = document.getElementById('signInBtn');
@@ -148,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // --- 3. DOM Element Selection ---
+    // --- 4. DOM Element Selection ---
     const settingsModal = document.getElementById('settingsModal');
     const settingsBtn = document.getElementById('settingsBtn');
     const closeSettings = document.getElementById('closeSettings');
@@ -159,20 +231,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroSection = document.getElementById('heroSection');
     const gameGrid = document.getElementById('gameGrid');
     
-    // Dropdown Architecture Selectors
+    // Dropdown Interface Accessors
     const stealthTrigger = document.getElementById('stealthTrigger');
     const stealthDropdown = document.getElementById('stealthDropdown');
+
+    // Persistent Configuration Element Hookups
+    const autoLaunchCheckbox = document.getElementById('toggle-auto-launch');
+    const autoLaunchOptionsDiv = document.getElementById('auto-launch-options');
+    const autoLaunchEnvSelect = document.getElementById('auto-launch-environment');
     
     // Panic Settings UI
     const panicShortcutInput = document.getElementById('panicShortcut');
     const panicLinkInput = document.getElementById('panicLink');
     const savePanicBtn = document.getElementById('savePanic');
 
-    // --- 4. Core Functions ---
+    // --- 5. Core View Functions ---
 
-    /**
-     * Updates visual CSS variables based on selected theme
-     */
     function applyTheme(theme) {
         const root = document.documentElement;
         if (theme === 'midnight') {
@@ -186,10 +260,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /**
-     * Direct Launch Logic (Old-School Reliable)
-     * Redirects current window to the game URL
-     */
     function launchGame(gameId) {
         const game = _0xData.find(g => g.id === gameId);
         if (game) {
@@ -197,9 +267,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /**
-     * Populates and displays the game library
-     */
     function showLibrary() {
         if (heroSection) heroSection.style.display = 'none';
         if (gameGrid) {
@@ -218,81 +285,68 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /**
-     * Restores the home/hero view
-     */
     function showHome() {
         if (heroSection) heroSection.style.display = 'flex';
         if (gameGrid) gameGrid.style.display = 'none';
     }
 
-    // --- 5. Stealth & Panic Logic ---
-
-    /**
-     * Core Stealth Launcher Core System
-     * Wraps current frame contents in a clean viewport layer and provides target masking
-     */
-    function executeStealthCloak(maskType) {
-        const currentUrl = window.location.href;
-        const targetTab = window.open('about:blank', '_blank');
-        
-        if (!targetTab) {
-            alert("Please allow popups for Stealth Mode to deploy.");
-            return;
-        }
-
-        // Establish the masking titles and icons based on dropdown selection
-        let documentTitle = "Google Docs";
-        let fallBackRedirect = "https://classroom.google.com";
-
-        if (maskType === 'classroom') {
-            documentTitle = "Classes";
-            fallBackRedirect = "https://classroom.google.com";
-        } else if (maskType === 'canvas') {
-            documentTitle = "Dashboard";
-            fallBackRedirect = "https://canvas.instructure.com";
-        } else if (maskType === 'docs') {
-            documentTitle = "Google Docs";
-            fallBackRedirect = "https://docs.google.com";
-        }
-
-        // Inject elements into new isolation window environment
-        targetTab.document.title = documentTitle;
-        const viewportContainer = targetTab.document.createElement('iframe');
-        viewportContainer.src = currentUrl;
-        viewportContainer.style = "position:fixed; top:0; left:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden;";
-        targetTab.document.body.appendChild(viewportContainer);
-        
-        // Scrub the traceable evidence node tab instantly
-        window.location.replace(fallBackRedirect);
-    }
-
-    // Toggle Dropdown Panel visibility layer
+    // --- 6. Stealth Dropdown Interaction Mapping ---
     if (stealthTrigger && stealthDropdown) {
         stealthTrigger.onclick = (e) => {
             e.stopPropagation();
-            const isOpen = !stealthDropdown.classList.contains('hidden');
-            if (isOpen) {
-                stealthDropdown.classList.add('hidden');
-            } else {
-                stealthDropdown.classList.remove('hidden');
-            }
+            stealthDropdown.classList.toggle('hidden');
         };
 
-        // Attach layout handlers to individual interactive nodes
-        const items = stealthDropdown.querySelectorAll('.stealth-menu-item');
-        items.forEach(item => {
-            item.onclick = (e) => {
+        const dropDownOptions = stealthDropdown.querySelectorAll('.stealth-menu-item');
+        dropDownOptions.forEach(option => {
+            option.onclick = (e) => {
                 e.stopPropagation();
-                const type = item.getAttribute('data-stealth-type');
-                executeStealthCloak(type);
+                const selectedMask = option.getAttribute('data-stealth-type');
+                
+                // Read current preferred environment parameters
+                const chosenEnv = localStorage.getItem('autoLaunchEnv') || 'about:blank';
+                
+                launchStealthWindow(selectedMask, chosenEnv);
                 stealthDropdown.classList.add('hidden');
             };
         });
 
-        // Global viewport window reset layer on lost cursor click focus
+        // Outside Click Boundary Escape Trigger
         window.addEventListener('click', () => {
             stealthDropdown.classList.add('hidden');
+        });
+    }
+
+    // --- 7. Persistent Configuration Settings State Management ---
+    if (autoLaunchCheckbox && autoLaunchOptionsDiv && autoLaunchEnvSelect) {
+        // Restore values from user profile history memory bank
+        autoLaunchCheckbox.checked = localStorage.getItem('autoLaunchEnvActive') === 'true';
+        autoLaunchEnvSelect.value = savedEnvironmentSetting;
+
+        // Sync visibility of conditional drop-down selectors instantly
+        if (autoLaunchCheckbox.checked) {
+            autoLaunchOptionsDiv.classList.remove('hidden');
+        }
+
+        autoLaunchCheckbox.addEventListener('change', (e) => {
+            const status = e.target.checked;
+            localStorage.setItem('autoLaunchEnvActive', status ? 'true' : 'false');
+            
+            if (status) {
+                localStorage.setItem('autoLaunchStealth', 'true');
+                autoLaunchOptionsDiv.classList.remove('hidden');
+            } else {
+                localStorage.removeItem('autoLaunchStealth');
+                autoLaunchOptionsDiv.classList.add('hidden');
+            }
+        });
+
+        autoLaunchEnvSelect.addEventListener('change', (e) => {
+            localStorage.setItem('autoLaunchEnv', e.target.value);
+            // Re-arm state if the selector changes environment types while enabled
+            if (autoLaunchCheckbox.checked) {
+                localStorage.setItem('autoLaunchStealth', 'true');
+            }
         });
     }
 
@@ -319,23 +373,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (savePanicBtn) {
         savePanicBtn.onclick = () => {
             let link = panicLinkInput.value || "https://classroom.google.com";
-            
-            // Critical Fix: Prevent the repo-path error by forcing https://
             if (!link.startsWith('http')) {
                 link = 'https://' + link;
             }
-            
             localStorage.setItem('panicUrl', link);
             alert("Panic settings saved!");
         };
     }
 
-    // --- 6. Event Handlers ---
-
+    // --- 8. Navigation Event Handlers ---
     if (navGames) navGames.onclick = (e) => { e.preventDefault(); showLibrary(); };
     if (navHome) navHome.onclick = (e) => { e.preventDefault(); showHome(); };
 
-    // Communications / Chat Tab Logic
     if (navComms) {
         navComms.onclick = (e) => {
             e.preventDefault();
@@ -360,11 +409,9 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // Settings Modal Toggles
     if (settingsBtn) settingsBtn.onclick = () => settingsModal.style.display = 'flex';
     if (closeSettings) closeSettings.onclick = () => settingsModal.style.display = 'none';
 
-    // Cloak Selection Listener
     if (cloakSelector) {
         if (savedCloak) cloakSelector.value = savedCloak;
         cloakSelector.onchange = (e) => {
@@ -379,9 +426,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // --- 7. Page Content Initialization ---
-
-    // Set Hero Section content based on featured game
+    // --- 9. Page Content Initialization ---
     const popular = getMostPopular();
     if (popular.length > 0) {
         const titleEl = document.getElementById('hero-title');
@@ -393,21 +438,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (playBtn) playBtn.onclick = () => launchGame(popular[0].id);
     }
 
-    /**
-     * GLOBAL PANIC KEY LISTENER
-     * Checks all keystrokes for the user-defined panic key
-     */
     window.addEventListener('keydown', (e) => {
         const panicKey = localStorage.getItem('panicKey');
         if (panicKey && e.key === panicKey) {
             let url = localStorage.getItem('panicUrl') || "https://classroom.google.com";
-            
-            // Protocol safety check
             if (!url.startsWith('http')) {
                 url = 'https://' + url;
             }
-            
             window.location.href = url;
         }
     });
 });
+
+```
