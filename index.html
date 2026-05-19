@@ -86,7 +86,13 @@
     </main>
 
     <aside class="right-sidebar">
-      <button class="cloak-btn" id="stealthOpener">Stealth Mode</button>
+      <div class="stealth-menu-wrapper">
+        <button class="cloak-btn" id="stealthOpener">Stealth Mode</button>
+        <div id="stealthOptionsDropdown" class="stealth-dropdown hidden">
+          <div class="stealth-menu-item" data-stealth-type="about:blank">Open about:blank</div>
+          <div class="stealth-menu-item" data-stealth-type="blob">Open Blob URL</div>
+        </div>
+      </div>
       
       <button class="signin-btn" id="signInBtn">Sign In</button>
       <button class="settings-btn" id="settingsBtn">Settings</button>
