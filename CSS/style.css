@@ -864,7 +864,7 @@ nav {
 }
 
 /* -------------------------------------------------------------------------- */
-/* UPDATED: FULLSCREEN CLINICAL WHITE ACADEMIC CLOAK OVERLAY                  */
+/* UPDATED: FULLSCREEN CLINICAL WHITE ACADEMIC CLOAK OVERLAY (PURE BLACK TEXT) */
 /* -------------------------------------------------------------------------- */
 #educational-cloak {
   position: fixed;
@@ -872,56 +872,99 @@ nav {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: #ffffff !important;   /* Solid medical crisp white */
-  background: #ffffff !important;         /* Lock out backdrop variables */
-  z-index: 2147483647 !important;         /* Absolute top window priority */
+  background-color: #ffffff !important;   /* Crisp white background */
+  background: #ffffff !important;
+  z-index: 2147483647 !important;         /* Ultimate window layout priority */
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Times New Roman', Times, serif; /* High educational credibility */
-  padding: 40px;
+  font-family: 'Times New Roman', Times, serif;
+  padding: 20px;
   box-sizing: border-box;
   transition: opacity 0.5s ease, visibility 0.5s ease;
   overflow: hidden;
 }
 
-.educational-content {
-  max-width: 650px;
-  text-align: left;
+/* Master Academic Container Box */
+.educational-content-card {
+  background: #ffffff !important;
+  border: 2px solid #000000;              /* Pure black outer border */
+  box-shadow: none;                       /* Removed shadow for flat academic look */
+  width: 90%;
+  max-width: 950px;                      
+  height: 85vh;                          
+  display: flex;
+  flex-direction: column;
+  border-radius: 0px;                     /* Sharp corners for formal document style */
+}
+
+/* Locked Header Elements */
+.educational-header {
+  padding: 25px 35px 15px 35px;
+  border-bottom: 2px solid #000000;       /* Pure black header line */
+  background: #ffffff;
+}
+
+.educational-header h1 {
+  font-size: 1.65rem;
+  margin: 0 0 6px 0;
+  color: #000000 !important;              /* Pure black title */
+  font-weight: bold;
+  letter-spacing: -0.5px;
+}
+
+.academic-subheading {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #000000 !important;              /* Changed from grey to pure black */
+  font-weight: bold;
+}
+
+/* Scrollable Document Text Field */
+.educational-scroll-body {
+  padding: 30px 35px;
+  overflow-y: auto;                      
+  flex-grow: 1;
+  text-align: justify;
   line-height: 1.6;
-  background: transparent !important;
 }
 
-/* Crisp high-contrast academic typography configuration */
-.educational-content h1 {
-  font-size: 1.9rem;
-  margin: 0 0 12px 0;
-  color: #000000 !important;              /* Solid plain black */
-  font-weight: bold;
-}
-
-.educational-content p {
+.educational-scroll-body p {
   font-size: 1.05rem;
-  margin: 0 0 16px 0;
-  color: #000000 !important;              /* Solid plain black */
+  margin: 0 0 20px 0;
+  color: #000000 !important;              /* Pure black body text */
 }
 
-.educational-content strong {
-  color: #000000 !important;
-  font-weight: bold;
-}
-
-.timer-subtext {
+/* Locked Bottom Status Bar & Countdown Timer Container */
+.timer-subtext-sticky {
+  padding: 15px 35px;
+  background: #ffffff;                    /* White background instead of grey */
+  border-top: 2px solid #000000;          /* Pure black separation line */
   font-style: italic;
   font-size: 0.95rem;
-  color: #444444 !important;              /* Deep slate gray for subtext metrics */
-  margin-top: 30px;
-  font-family: 'Times New Roman', Times, serif;
+  color: #000000 !important;              /* Changed from grey to pure black */
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;            
 }
 
-.timer-subtext span {
-  color: #000000 !important;
+.timer-subtext-sticky span {
+  color: #000000 !important;              /* Pure black countdown number */
   font-weight: bold;
+  margin-left: 5px;
+  font-size: 1.05rem;
 }
 
-/* End of Master CSS */
+/* Custom Minimalist Document Scrollbar UI */
+.educational-scroll-body::-webkit-scrollbar {
+  width: 8px;
+}
+.educational-scroll-body::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+.educational-scroll-body::-webkit-scrollbar-thumb {
+  background: #000000;                    /* Pure black scrollbar runner */
+}
+
+/*End OF Master CSS*/
