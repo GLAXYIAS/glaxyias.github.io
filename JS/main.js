@@ -158,7 +158,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const navComms = document.getElementById('nav-communications');
     const heroSection = document.getElementById('heroSection');
     const gameGrid = document.getElementById('gameGrid');
-    const stealthBtn = document.getElementById('stealthOpener');
+    
+    // Dropdown Architecture Selectors
+    const stealthTrigger = document.getElementById('stealthTrigger');
+    const stealthDropdown = document.getElementById('stealthDropdown');
     
     // Panic Settings UI
     const panicShortcutInput = document.getElementById('panicShortcut');
@@ -226,26 +229,71 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 5. Stealth & Panic Logic ---
 
     /**
-     * Stealth Mode Launcher
-     * Opens site in about:blank and replaces original tab with Classroom
+     * Core Stealth Launcher Core System
+     * Wraps current frame contents in a clean viewport layer and provides target masking
      */
-    if (stealthBtn) {
-        stealthBtn.onclick = () => {
-            const url = window.location.href;
-            const win = window.open('about:blank', '_blank');
-            if (!win) {
-                alert("Please allow popups for Stealth Mode.");
-                return;
+    function executeStealthCloak(maskType) {
+        const currentUrl = window.location.href;
+        const targetTab = window.open('about:blank', '_blank');
+        
+        if (!targetTab) {
+            alert("Please allow popups for Stealth Mode to deploy.");
+            return;
+        }
+
+        // Establish the masking titles and icons based on dropdown selection
+        let documentTitle = "Google Docs";
+        let fallBackRedirect = "https://classroom.google.com";
+
+        if (maskType === 'classroom') {
+            documentTitle = "Classes";
+            fallBackRedirect = "https://classroom.google.com";
+        } else if (maskType === 'canvas') {
+            documentTitle = "Dashboard";
+            fallBackRedirect = "https://canvas.instructure.com";
+        } else if (maskType === 'docs') {
+            documentTitle = "Google Docs";
+            fallBackRedirect = "https://docs.google.com";
+        }
+
+        // Inject elements into new isolation window environment
+        targetTab.document.title = documentTitle;
+        const viewportContainer = targetTab.document.createElement('iframe');
+        viewportContainer.src = currentUrl;
+        viewportContainer.style = "position:fixed; top:0; left:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden;";
+        targetTab.document.body.appendChild(viewportContainer);
+        
+        // Scrub the traceable evidence node tab instantly
+        window.location.replace(fallBackRedirect);
+    }
+
+    // Toggle Dropdown Panel visibility layer
+    if (stealthTrigger && stealthDropdown) {
+        stealthTrigger.onclick = (e) => {
+            e.stopPropagation();
+            const isOpen = !stealthDropdown.classList.contains('hidden');
+            if (isOpen) {
+                stealthDropdown.classList.add('hidden');
+            } else {
+                stealthDropdown.classList.remove('hidden');
             }
-            win.document.title = "Google Docs";
-            const iframe = win.document.createElement('iframe');
-            iframe.src = url;
-            iframe.style = "position:fixed; top:0; left:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden;";
-            win.document.body.appendChild(iframe);
-            
-            // Redirect the "evidence" tab immediately
-            window.location.replace("https://classroom.google.com");
         };
+
+        // Attach layout handlers to individual interactive nodes
+        const items = stealthDropdown.querySelectorAll('.stealth-menu-item');
+        items.forEach(item => {
+            item.onclick = (e) => {
+                e.stopPropagation();
+                const type = item.getAttribute('data-stealth-type');
+                executeStealthCloak(type);
+                stealthDropdown.classList.add('hidden');
+            };
+        });
+
+        // Global viewport window reset layer on lost cursor click focus
+        window.addEventListener('click', () => {
+            stealthDropdown.classList.add('hidden');
+        });
     }
 
     /**
@@ -301,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                     <div class="form-wrapper" style="grid-column: 1 / -1; margin-top: 30px;">
-                        <h2 class="form-title">🎮 Request a Game</h2>
+                        <h2 class="form-title">Request a Game</h2>
                         <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdM5VOrjMSdmRv5udVq9PTP4olf6kBQtShX3ZT9-I45Uu0nfQ/viewform?embedded=true" class="google-form-iframe" width="100%" height="700" frameborder="0" style="border-radius: 10px; background: #fff;">
                         Loading…
                         </iframe>
