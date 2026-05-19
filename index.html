@@ -7,6 +7,20 @@
   <link rel="stylesheet" href="CSS/style.css">
 </head>
 <body>
+
+  <div id="educational-cloak">
+    <div class="educational-content">
+        <h1>Null_X: Interactive Cognitive Development Environment</h1>
+        <hr style="border: 0; border-top: 1px solid #ccc; margin: 15px 0;">
+        <p><strong>System Status:</strong> Core Academic Module Operational</p>
+        <p>This digital application is optimized to serve as a focused study environment designed for computational reasoning, logic coordination, and tactical spatial problem-solving for children and early learners.</p>
+        
+        <p>By engaging with interactive visual spatial elements, students build robust algorithmic patterns, critical decision-making frameworks, and memory retention skills within a controlled, ad-free educational space.</p>
+        
+        <div class="timer-subtext">Initializing module... Please wait <span id="cloak-timer">10</span> seconds.</div>
+    </div>
+  </div>
+
   <div class="dashboard">
     
     <aside class="left-nav">
@@ -15,13 +29,13 @@
       </div>
       
       <nav>
-    <a href="index.html" id="nav-home" class="nav-item active">Home</a>
-    <a href="#" id="nav-games" class="nav-item">Games</a>
-    <a href="favorites.html" class="nav-item">Favorites</a>
-    <a href="unblockers.html" class="nav-item">Unblockers</a>
-    <a href="profile/profile.html" class="nav-item">Profile</a>
-    <a href="#" id="nav-communications" class="nav-item">Communications</a>
-</nav>
+        <a href="index.html" id="nav-home" class="nav-item active">Home</a>
+        <a href="#" id="nav-games" class="nav-item">Games</a>
+        <a href="favorites.html" class="nav-item">Favorites</a>
+        <a href="unblockers.html" class="nav-item">Unblockers</a>
+        <a href="profile/profile.html" class="nav-item">Profile</a>
+        <a href="#" id="nav-communications" class="nav-item">Communications</a>
+      </nav>
     </aside>
 
     <main class="main-content">
@@ -55,43 +69,42 @@
       </div>
 
       <section class="section">
-        <div class="game-grid" id="gameGrid">
-        </div>
+        <div class="game-grid" id="gameGrid"></div>
       </section>
     </main>
 
     <aside class="right-sidebar">
-  <button class="cloak-btn" id="stealthOpener">Stealth Mode</button>
-  
-  <button class="signin-btn" id="signInBtn">Sign In</button>
-  <button class="settings-btn" id="settingsBtn">Settings</button>
+      <button class="cloak-btn" id="stealthOpener">Stealth Mode</button>
+      
+      <button class="signin-btn" id="signInBtn">Sign In</button>
+      <button class="settings-btn" id="settingsBtn">Settings</button>
 
-  <div class="news-sidebar">
-    <h3 class="news-title">System News</h3>
-    <div class="news-feed" id="newsFeed">
-      <div class="news-card">
-        <span class="news-tag">Update</span>
-        <p>Added ghost logouts.</p>
-        <span class="news-date">May 18 6:20pm</span>
+      <div class="news-sidebar">
+        <h3 class="news-title">System News</h3>
+        <div class="news-feed" id="newsFeed">
+          <div class="news-card">
+            <span class="news-tag">Update</span>
+            <p>Added ghost logouts.</p>
+            <span class="news-date">May 18 6:20pm</span>
+          </div>
+          <div class="news-card">
+            <span class="news-tag">Update</span>
+            <p>Added in scrolling for news</p>
+            <span class="news-date">May 18</span>
+          </div>
+          <div class="news-card">
+            <span class="news-tag">Update</span>
+            <p>Streamlined authentication & credentials.</p>
+            <span class="news-date">May 18</span>
+          </div>
+          <div class="news-card">
+            <span class="news-tag">Update</span>
+            <p>Fixed Bullet Force (still takes a while to load)</p>
+            <span class="news-date">May 15</span>
+          </div>
+        </div>
       </div>
-      <div class="news-card">
-        <span class="news-tag">Update</span>
-        <p>Added in scrolling for news</p>
-        <span class="news-date">May 18</span>
-      </div>
-      <div class="news-card">
-        <span class="news-tag">Update</span>
-        <p>Added in hCaptcha</p>
-        <span class="news-date">May 18</span>
-      </div>
-      <div class="news-card">
-        <span class="news-tag">Update</span>
-        <p>Fixed Bullet Force (still takes a while to load)</p>
-        <span class="news-date">May 15</span>
-      </div>
-    </div>
-  </div>
-</aside>
+    </aside>
   </div>
 
   <div id="settingsModal" class="modal-overlay" style="display: none;">
@@ -114,6 +127,16 @@
             <div class="preview midnight-preview"></div>
             <span>Midnight</span>
           </div>
+        </div>
+      </div>
+
+      <div class="setting-section">
+        <h3>Startup Environment</h3>
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+          <input type="checkbox" id="toggle-study-cloak" style="cursor: pointer; width: 18px; height: 18px;">
+          <label for="toggle-study-cloak" class="setting-label" style="margin: 0; cursor: pointer; font-size: 0.95rem;">
+            Disable Academic Splash Screen on Launch
+          </label>
         </div>
       </div>
 
@@ -142,10 +165,11 @@
     </div>
   </div>
   
-<div id="gameRunner" class="hidden" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 99999;">
+  <div id="gameRunner" class="hidden" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 99999;">
     <span id="exitGame" style="position: absolute; top: 20px; right: 30px; color: #ff4d4d; font-size: 50px; font-weight: bold; cursor: pointer; z-index: 100000; text-shadow: 0 0 15px rgba(255, 77, 77, 0.6); transition: 0.3s;">&times;</span>
     <iframe id="gameFrame" src="" style="width: 100%; height: 100%; border: none;"></iframe>
-</div>
+  </div>
+
   <script type="module" src="JS/main.js"></script>
 </body>
 </html>
