@@ -38,9 +38,15 @@ const _0xData = [
     url: "Games/pokemon-emerald/index.html",
     desc: "The classic GBA adventure. Become the Hoenn Champion!",
     popular: true
+  },
+  {
+    id: "r_lg",
+    title: atob("Um9ja2V0IExlYWd1ZQ=="), 
+    url: "Games/rocket/index.html",
+    desc: "High-octane physics-based soccer with rocket-powered cars!",
+    popular: true
   }
 ];
-
 /**
  * Helper: Filter data for popular/featured games
  */
