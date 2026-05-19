@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cloakElement) cloakElement.style.display = 'none';
     } else {
         // Run countdown sequence routine if overlay engine is active
-        let clockSecondsLeft = 10;
+        let clockSecondsLeft = 20;
         
         const countdownLoop = setInterval(() => {
             clockSecondsLeft--;
