@@ -38,7 +38,7 @@ const _0xData = [
     url: "Games/pokemon-emerald/index.html",
     desc: "The classic GBA adventure. Become the Hoenn Champion!",
     popular: true
-  }
+  },
   {
   id: "b_st",
   title: atob("QmFza2V0IFN0YXJz"),
