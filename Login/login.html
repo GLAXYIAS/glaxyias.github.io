@@ -3,10 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Null_X Test Panel</title>
+  <title>Null_X sign in</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-    *, *::before, *::after { box-sizing: border-box; }
+    
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Inter', sans-serif;
       background: linear-gradient(135deg, #0a0a0a, #1a0033);
@@ -16,30 +20,157 @@
       align-items: center;
       min-height: 100vh;
       margin: 0;
+      padding: 20px;
+      overflow-y: auto;
     }
     .container {
       background: rgba(15, 15, 25, 0.95);
+      backdrop-filter: blur(12px);
       padding: 40px 35px;
       border-radius: 20px;
+      box-shadow: 0 0 40px rgba(128, 0, 255, 0.3);
       width: 100%;
       max-width: 420px;
       border: 2px solid #8b00ff;
+      position: relative;
+      margin: auto;
+      z-index: 1;
     }
-    .tabs { display: flex; margin-bottom: 30px; background: #1f1f2e; border-radius: 12px; padding: 4px; }
-    .tab { flex: 1; padding: 14px; text-align: center; cursor: pointer; border-radius: 10px; }
-    .tab.active { background: #8b00ff; color: white; }
-    .form-group { margin-bottom: 20px; }
-    label { display: block; margin-bottom: 6px; color: #c0c0c0; }
-    input { width: 100%; padding: 14px 16px; background: #1f1f2e; border: 1px solid #4b0082; border-radius: 10px; color: #e0e0e0; }
-    button { width: 100%; padding: 15px; background: linear-gradient(90deg, #8b00ff, #c084fc); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; margin-top: 10px; }
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #8b00ff, #ff00ff, #8b00ff);
+      border-radius: 22px;
+      z-index: -1;
+      opacity: 0.15;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 8px;
+      font-size: 28px;
+      background: linear-gradient(90deg, #c084fc, #e0bbff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p.subtitle {
+      text-align: center;
+      color: #b0b0b0;
+      margin-bottom: 30px;
+      font-size: 15px;
+    }
+    .tabs {
+      display: flex;
+      margin-bottom: 30px;
+      background: #1f1f2e;
+      border-radius: 12px;
+      padding: 4px;
+    }
+    .tab {
+      flex: 1;
+      padding: 14px;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 10px;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+    .tab.active {
+      background: #8b00ff;
+      color: white;
+      box-shadow: 0 4px 15px rgba(139, 0, 255, 0.4);
+    }
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: #c0c0c0;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      background: #1f1f2e;
+      border: 1px solid #4b0082;
+      border-radius: 10px;
+      color: #e0e0e0;
+      font-size: 16px;
+      transition: border 0.3s;
+    }
+    input:focus {
+      outline: none;
+      border-color: #c084fc;
+      box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.15);
+    }
+    .password-container {
+      position: relative;
+    }
+    .toggle-password {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 18px;
+      color: #aaa;
+      z-index: 5;
+    }
+    .feedback {
+      font-size: 14px;
+      margin: 6px 0 12px 0;
+      min-height: 22px;
+      padding-left: 4px;
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(90deg, #8b00ff, #c084fc);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 17px;
+      font-weight: 600;
+      margin-top: 10px;
+      transition: transform 0.2s;
+      position: relative;
+      z-index: 10;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(139, 0, 255, 0.5);
+    }
+    .error { color: #ff6b6b; }
+    .success { color: #4ade80; }
     .hidden { display: none !important; }
+    .glow {
+      text-shadow: 0 0 15px rgba(192, 132, 252, 0.6);
+    }
+    .status-badge {
+      text-align: center;
+      font-size: 11px;
+      color: #8b00ff;
+      margin-top: -15px;
+      margin-bottom: 20px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>Null_X Test</h1>
-  
+  <h1 class="glow">Null_X</h1>
+  <p class="subtitle">Sign in for brand new features</p>
+  <div id="connectionStatus" class="status-badge">CONNECTING TERMINAL...</div>
+
   <div class="tabs">
     <div class="tab active" id="signupTab">Create Account</div>
     <div class="tab" id="loginTab">Login</div>
@@ -48,43 +179,255 @@
   <div id="signupForm">
     <div class="form-group">
       <label>Username</label>
-      <input type="text" id="signupUsername">
+      <input type="text" id="signupUsername" placeholder="Choose a username">
+      <div id="usernameFeedback" class="feedback"></div>
     </div>
-    <button onclick="testSignup()">Create Account (Offline Test)</button>
+
+    <div class="form-group">
+      <label>Password</label>
+      <div class="password-container">
+        <input type="password" id="signupPassword" placeholder="At least 8 characters">
+        <span class="toggle-password" id="toggleSignupPassword">👁️</span>
+      </div>
+    </div>
+
+    <div id="signupMessage" class="feedback"></div>
+    <button id="signupBtn" onclick="handleSignup()">Create Account</button>
   </div>
 
   <div id="loginForm" class="hidden">
     <div class="form-group">
       <label>Username</label>
-      <input type="text" id="loginUsername">
+      <input type="text" id="loginUsername" placeholder="Your username">
     </div>
-    <button onclick="testLogin()">Login (Offline Test)</button>
+
+    <div class="form-group">
+      <label>Password</label>
+      <div class="password-container">
+        <input type="password" id="loginPassword" placeholder="Your password">
+        <span class="toggle-password" id="toggleLoginPassword">👁️</span>
+      </div>
+    </div>
+
+    <div id="loginMessage" class="feedback"></div>
+    <button id="loginBtn" onclick="handleLogin()">Login</button>
   </div>
 </div>
 
 <script>
-  // Simplified tab switching that doesn't use external networks
-  document.getElementById('signupTab').addEventListener('click', () => {
-    document.getElementById('signupForm').classList.remove('hidden');
-    document.getElementById('loginForm').classList.add('hidden');
-    document.getElementById('signupTab').classList.add('active');
-    document.getElementById('loginTab').classList.remove('active');
-  });
+// --- LOCAL DISK STORAGE CONFIGURATION ---
+let localUsers = JSON.parse(localStorage.getItem('null_x_local_users')) || [
+  { username: "demo_user", password: "password123" }
+];
 
-  document.getElementById('loginTab').addEventListener('click', () => {
-    document.getElementById('signupForm').classList.add('hidden');
-    document.getElementById('loginForm').classList.remove('hidden');
-    document.getElementById('signupTab').classList.remove('active');
-    document.getElementById('loginTab').classList.add('active');
-  });
+const SUPABASE_URL = 'https://ukwjoxhutcjkvabnybtj.supabase.co'; 
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrd2pvanh1dGNqa3ZhYm55YnRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNzk5NDAsImV4cCI6MjA5Mzg1NTk0MH0.iLr9OrIZlRBrbcI1XDE0zl7t_wpwVg3ko3DgppxbUh8';
+let supabase = null;
+let isOfflineMode = false;
 
-  function testSignup() {
-    alert("The create button works perfectly! The offline script is running fine.");
+// Safe dynamic loader to prevent CDN network blockages from crashing layout engine
+function initSupabase() {
+  const statusBadge = document.getElementById('connectionStatus');
+  try {
+    if (window.supabase && typeof window.supabase.createClient === 'function') {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      statusBadge.innerText = "DATABASE ONLINE";
+      statusBadge.style.color = "#4ade80";
+    } else {
+      setupOfflineFallback("Network Blocked");
+    }
+  } catch (e) {
+    setupOfflineFallback(e.message);
+  }
+}
+
+function setupOfflineFallback(reason) {
+  isOfflineMode = true;
+  const statusBadge = document.getElementById('connectionStatus');
+  statusBadge.innerText = "OFFLINE LOCAL TERMINAL MODE";
+  statusBadge.style.color = "#ffaa00";
+  console.warn("Supabase bypassed. Mode: Offline Backup. Reason:", reason);
+}
+
+// --- ACCOUNT SIGNUP ROUTINE ---
+async function handleSignup() {
+  const usernameInput = document.getElementById('signupUsername');
+  const passwordInput = document.getElementById('signupPassword');
+  const message = document.getElementById('signupMessage');
+  
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value;
+
+  if (!username || password.length < 8) {
+    message.innerHTML = '<span class="error">Username required & password must be 8+ characters</span>';
+    return;
   }
 
-  function testLogin() {
-    alert("The login button works perfectly!");
+  // A. OFFLINE ENGINE FALLBACK
+  if (isOfflineMode || !supabase) {
+    const userExists = localUsers.some(u => u.username.toLowerCase() === username.toLowerCase());
+    if (userExists) {
+      message.innerHTML = '<span class="error">Username already taken locally</span>';
+      return;
+    }
+    localUsers.push({ username, password });
+    localStorage.setItem('null_x_local_users', JSON.stringify(localUsers));
+    
+    message.innerHTML = '<span class="success">Local Account created! Switch to Login tab.</span>';
+    alert(`[Offline Mode] Account "${username}" saved successfully to browser storage!`);
+    usernameInput.value = '';
+    passwordInput.value = '';
+    return;
   }
+
+  // B. ONLINE SUPABASE ROUTINE
+  message.innerHTML = '<span style="color: #aaa;">Checking cloud records...</span>';
+  try {
+    const { data: existingUser, error: checkError } = await supabase
+      .from('users')
+      .select('username')
+      .eq('username', username)
+      .maybeSingle();
+
+    if (checkError) {
+      alert("Database error: " + checkError.message);
+      return;
+    }
+    if (existingUser) {
+      message.innerHTML = '<span class="error">Username already taken</span>';
+      return;
+    }
+
+    const { error } = await supabase
+      .from('users')
+      .insert([{ username: username, password: password }]);
+
+    if (error) {
+      alert(`Database insertion blocked: ${error.message}`);
+      return;
+    }
+
+    message.innerHTML = '<span class="success">Account created! Switch to Login tab.</span>';
+    alert("Success! Account written cleanly to your Supabase users table.");
+    usernameInput.value = '';
+    passwordInput.value = '';
+  } catch (err) {
+    alert("Submission execution failure: " + err.message);
+  }
+}
+
+// --- ACCOUNT LOGIN ROUTINE ---
+async function handleLogin() {
+  const usernameInput = document.getElementById('loginUsername');
+  const passwordInput = document.getElementById('loginPassword');
+  const message = document.getElementById('loginMessage');
+
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value;
+
+  if (!username || !password) {
+    message.innerHTML = '<span class="error">Please fill in all fields</span>';
+    return;
+  }
+
+  // A. OFFLINE ENGINE FALLBACK
+  if (isOfflineMode || !supabase) {
+    const localMatch = localUsers.find(u => u.username.toLowerCase() === username.toLowerCase() && u.password === password);
+    if (!localMatch) {
+      message.innerHTML = '<span class="error">Invalid offline credentials</span>';
+      return;
+    }
+    executeLoginRedirect(username);
+    return;
+  }
+
+  // B. ONLINE SUPABASE ROUTINE
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .select('username')
+      .eq('username', username)
+      .eq('password', password)
+      .maybeSingle();
+
+    if (error) {
+      alert("Login verification failure: " + error.message);
+      return;
+    }
+    if (!data) {
+      message.innerHTML = '<span class="error">Invalid username or password</span>';
+      return;
+    }
+
+    executeLoginRedirect(username);
+  } catch (err) {
+    alert("Authentication loop exception: " + err.message);
+  }
+}
+
+function executeLoginRedirect(username) {
+  const message = isOfflineMode ? document.getElementById('loginMessage') : document.getElementById('loginMessage');
+  message.innerHTML = `<span class="success">Welcome back, ${username}! Redirecting...</span>`;
+  localStorage.setItem('chatUser', username);
+  setTimeout(() => {
+    window.location.href = '../index.html';
+  }, 800);
+}
+
+// --- REAL-TIME USERNAME AVAILABILITY CHECK ---
+async function checkUsername() {
+  const usernameInput = document.getElementById('signupUsername');
+  const feedback = document.getElementById('usernameFeedback');
+  const username = usernameInput.value.trim();
+  
+  if (!username) {
+    feedback.innerHTML = '';
+    return;
+  }
+
+  if (isOfflineMode || !supabase) {
+    const exists = localUsers.some(u => u.username.toLowerCase() === username.toLowerCase());
+    feedback.innerHTML = exists ? '<span class="error">Taken locally</span>' : '<span class="success">Available locally</span>';
+    return;
+  }
+
+  try {
+    const { data } = await supabase.from('users').select('username').eq('username', username).maybeSingle();
+    feedback.innerHTML = data ? '<span class="error">Taken</span>' : '<span class="success">Available</span>';
+  } catch(e) {}
+}
+
+// --- STATIC EVENTS INTERACTION ATTACHMENTS ---
+document.getElementById('signupUsername').addEventListener('blur', checkUsername);
+
+document.getElementById('signupTab').addEventListener('click', () => {
+  document.getElementById('signupForm').classList.remove('hidden');
+  document.getElementById('loginForm').classList.add('hidden');
+  document.getElementById('signupTab').classList.add('active');
+  document.getElementById('loginTab').classList.remove('active');
+});
+
+document.getElementById('loginTab').addEventListener('click', () => {
+  document.getElementById('signupForm').classList.add('hidden');
+  document.getElementById('loginForm').classList.remove('hidden');
+  document.getElementById('signupTab').classList.remove('active');
+  document.getElementById('loginTab').classList.add('active');
+});
+
+function setupPasswordToggle(inputId, toggleId) {
+  const input = document.getElementById(inputId);
+  const toggle = document.getElementById(toggleId);
+  if (input && toggle) {
+    toggle.addEventListener('click', () => {
+      input.type = input.type === 'password' ? 'text' : 'password';
+    });
+  }
+}
+setupPasswordToggle('signupPassword', 'toggleSignupPassword');
+setupPasswordToggle('loginPassword', 'toggleLoginPassword');
+
+// Bootstrapping engine initialization checks on execution load
+window.addEventListener('load', initSupabase);
 </script>
 </body>
 </html>
