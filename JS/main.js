@@ -39,6 +39,13 @@ const _0xData = [
     desc: "The classic GBA adventure. Become the Hoenn Champion!",
     popular: true
   }
+  {
+  id: "b_st",
+  title: atob("QmFza2V0IFN0YXJz"),
+  url: "Games/basketstars/index.html",
+  desc: "A fast-paced basketball arcade game. Score, trick shots, and dominate the court!",
+  popular: true
+}
 ];
 
 /**
