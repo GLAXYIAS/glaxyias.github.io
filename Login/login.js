@@ -1,9 +1,8 @@
-// INITIALIZE SUPABASE CLIENT API WITH YOUR CREDENTIALS
+// FIXED INITIALIZATION: Changed 'Supabase' to lowercase 'supabase' to prevent execution crash
 const SUPABASE_URL = 'https://ukwjoxhutcjkvabnybtj.supabase.co'; 
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrd2pvanh1dGNqa3ZhYm55YnRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNzk5NDAsImV4cCI6MjA5Mzg1NTk0MH0.iLr9OrIZlRBrbcI1XDE0zl7t_wpwVg3ko3DgppxbUh8';
-const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Guard everything in a safe DOM load check so elements exist when code runs
 document.addEventListener('DOMContentLoaded', () => {
 
   // DOM ELEMENTS SELECTION
@@ -32,33 +31,39 @@ document.addEventListener('DOMContentLoaded', () => {
       return false;
     }
 
-    const { data, error } = await supabase
-      .from('users')
-      .select('username')
-      .eq('username', username)
-      .maybeSingle();
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('username')
+        .eq('username', username)
+        .maybeSingle();
 
-    if (error) {
-      console.error("Database query failed: ", error.message);
-      return false;
-    }
+      if (error) {
+        console.error("Database query failed: ", error.message);
+        return false;
+      }
 
-    if (data) {
-      usernameFeedback.innerHTML = '<span class="error">Username already taken</span>';
+      if (data) {
+        usernameFeedback.innerHTML = '<span class="error">Username already taken</span>';
+        return false;
+      } else {
+        usernameFeedback.innerHTML = '<span class="success">Username available</span>';
+        return true;
+      }
+    } catch (err) {
+      console.error("Lookup error:", err);
       return false;
-    } else {
-      usernameFeedback.innerHTML = '<span class="success">Username available</span>';
-      return true;
     }
   }
 
-  // Attach the validation event rule when the user clicks off the input box
   if (signupUsernameInput) {
     signupUsernameInput.addEventListener('blur', checkUsername);
   }
 
   // 2. ACCOUNT SIGNUP LOGIC Flow
-  async function handleSignup() {
+  async function handleSignup(e) {
+    if (e) e.preventDefault(); // Stop form submission defaults
+
     const username = signupUsernameInput.value.trim();
     const password = signupPasswordInput.value;
 
@@ -67,32 +72,51 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Direct database uniqueness check bypassing the text field reset bug
-    const { data: existingUser, error: checkError } = await supabase
-      .from('users')
-      .select('username')
-      .eq('username', username)
-      .maybeSingle();
+    signupMessage.innerHTML = '<span style="color: #bcbcbc;">Checking database uniqueness...</span>';
 
-    if (existingUser) {
-      signupMessage.innerHTML = '<span class="error">Please change your username</span>';
-      return;
+    try {
+      // Direct database uniqueness check bypassing the text field reset bug
+      const { data: existingUser, error: checkError } = await supabase
+        .from('users')
+        .select('username')
+        .eq('username', username)
+        .maybeSingle();
+
+      if (checkError) {
+        alert(`Database Check Failed: ${checkError.message}`);
+        signupMessage.innerHTML = `<span class="error">Check Error: ${checkError.message}</span>`;
+        return;
+      }
+
+      if (existingUser) {
+        signupMessage.innerHTML = '<span class="error">Please change your username</span>';
+        return;
+      }
+
+      signupMessage.innerHTML = '<span style="color: #bcbcbc;">Saving new account...</span>';
+
+      // Insert values cleanly into your columns layout
+      const { data, error } = await supabase
+        .from('users')
+        .insert([{ username: username, password: password }]);
+
+      if (error) {
+        // Direct Alert interface box showing precise Database error string
+        alert(`Supabase Database Rejection:\n\n${error.message}\n\nHint: Verify your table RLS Policy permits row insertions.`);
+        signupMessage.innerHTML = `<span class="error">Registration error: ${error.message}</span>`;
+        return;
+      }
+
+      signupMessage.innerHTML = '<span class="success">Account created! Switch to the Login tab.</span>';
+      alert("Account created successfully! Click 'OK' then select the Login tab to access your proxy portal.");
+      
+      signupUsernameInput.value = '';
+      signupPasswordInput.value = '';
+      usernameFeedback.innerHTML = '';
+
+    } catch (catchErr) {
+      alert(`Runtime Script Failure: ${catchErr.message}`);
     }
-
-    // Insert values cleanly into your columns layout
-    const { data, error } = await supabase
-      .from('users')
-      .insert([{ username: username, password: password }]);
-
-    if (error) {
-      signupMessage.innerHTML = `<span class="error">Registration error: ${error.message}</span>`;
-      return;
-    }
-
-    signupMessage.innerHTML = '<span class="success">Account created! Switch to the Login tab.</span>';
-    signupUsernameInput.value = '';
-    signupPasswordInput.value = '';
-    usernameFeedback.innerHTML = '';
   }
 
   if (signupBtn) {
@@ -100,7 +124,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 3. DATABASE USER LOGIN AUTH Flow
-  async function handleLogin() {
+  async function handleLogin(e) {
+    if (e) e.preventDefault();
+
     const username = loginUsernameInput.value.trim();
     const password = loginPasswordInput.value;
 
@@ -109,32 +135,38 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Query your users table to check for matching credentials
-    const { data, error } = await supabase
-      .from('users')
-      .select('username')
-      .eq('username', username)
-      .eq('password', password)
-      .maybeSingle();
+    try {
+      // Query your users table to check for matching credentials
+      const { data, error } = await supabase
+        .from('users')
+        .select('username')
+        .eq('username', username)
+        .eq('password', password)
+        .maybeSingle();
 
-    if (error) {
-      loginMessage.innerHTML = `<span class="error">Database error: ${error.message}</span>`;
-      return;
+      if (error) {
+        alert(`Login Database Error: ${error.message}`);
+        loginMessage.innerHTML = `<span class="error">Database error: ${error.message}</span>`;
+        return;
+      }
+
+      if (!data) {
+        loginMessage.innerHTML = '<span class="error">Invalid username or password</span>';
+        return;
+      }
+
+      loginMessage.innerHTML = `<span class="success">Welcome back, ${username}! Redirecting...</span>`;
+      
+      // FIXED STORAGE KEYS: Synchronized to 'chatUser' to instantly link home dashboard values
+      localStorage.setItem('chatUser', username);
+
+      setTimeout(() => {
+        window.location.href = '../index.html'; // Stepped down one level to jump from /Login directory to root index
+      }, 800);
+
+    } catch (catchErr) {
+      alert(`Login Runtime Error: ${catchErr.message}`);
     }
-
-    if (!data) {
-      loginMessage.innerHTML = '<span class="error">Invalid username or password</span>';
-      return;
-    }
-
-    loginMessage.innerHTML = `<span class="success">Welcome back, ${username}! Redirecting...</span>`;
-    
-    // Track credentials token key locally to handle hello greeting logic state 
-    localStorage.setItem('currentUser', username);
-
-    setTimeout(() => {
-      window.location.href = 'index.html';
-    }, 800);
   }
 
   if (loginBtn) {
