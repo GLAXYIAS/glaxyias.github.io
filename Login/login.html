@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Null_X sign in</title>
-  
-  <script src="supabase.js"></script>
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
@@ -159,7 +157,7 @@
     .status-badge {
       text-align: center;
       font-size: 11px;
-      color: #8b00ff;
+      color: #4ade80;
       margin-top: -15px;
       margin-bottom: 20px;
       font-weight: 600;
@@ -172,7 +170,7 @@
 <div class="container">
   <h1 class="glow">Null_X</h1>
   <p class="subtitle">Sign in for brand new features</p>
-  <div id="connectionStatus" class="status-badge">ROUTING NETWORK VIA CLOUDFLARE...</div>
+  <div id="connectionStatus" class="status-badge">DIRECT ENGINE ACTIVE</div>
 
   <div class="tabs">
     <div class="tab active" id="signupTab">Create Account</div>
@@ -218,30 +216,16 @@
 </div>
 
 <script>
-// Points directly to your unblocked worker gateway URL
-const WORKER_URL = 'https://supabasererouter.sparefornow2026.workers.dev'; 
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrd2pvanh1dGNqa3ZhYm55YnRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNzk5NDAsImV4cCI6MjA5Mzg1NTk0MH0.iLr9OrIZlRBrbcI1XDE0zl7t_wpwVg3ko3DgppxbUh8';
-let supabase = null;
+// direct keys for internal native routing
+const API_URL = 'https://ukwjoxhutcjkvabnybtj.supabase.co/rest/v1/users';
+const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrd2pvanh1dGNqa3ZhYm55YnRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNzk5NDAsImV4cCI6MjA5Mzg1NTk0MH0.iLr9OrIZlRBrbcI1XDE0zl7t_wpwVg3ko3DgppxbUh8';
 
-function initSupabase() {
-  const statusBadge = document.getElementById('connectionStatus');
-  try {
-    if (window.supabase && typeof window.supabase.createClient === 'function') {
-      // Configures the library engine to use your cloudflare worker as its base URL endpoints
-      supabase = window.supabase.createClient(WORKER_URL, SUPABASE_ANON_KEY, {
-        auth: { persistSession: false }
-      });
-      statusBadge.innerText = "TUNNEL ACTIVE (SECURE)";
-      statusBadge.style.color = "#4ade80";
-    } else {
-      statusBadge.innerText = "SCRIPT ERROR: LOCAL REPO DISCONNECTED";
-      statusBadge.style.color = "#ff6b6b";
-    }
-  } catch (e) {
-    statusBadge.innerText = "CONNECTION FAILURE: " + e.message;
-    statusBadge.style.color = "#ff6b6b";
-  }
-}
+// Configuration headers used for authentication
+const baseHeaders = {
+  'apikey': ANON_KEY,
+  'Authorization': `Bearer ${ANON_KEY}`,
+  'Content-Type': 'application/json'
+};
 
 async function handleSignup() {
   const usernameInput = document.getElementById('signupUsername');
@@ -256,39 +240,42 @@ async function handleSignup() {
     return;
   }
 
-  message.innerHTML = '<span style="color: #aaa;">Routing database lookup...</span>';
+  message.innerHTML = '<span style="color: #aaa;">Scanning records...</span>';
   try {
-    const { data: existingUser, error: checkError } = await supabase
-      .from('users')
-      .select('username')
-      .eq('username', username)
-      .maybeSingle();
+    // 1. Direct fetch verify lookup
+    const checkRes = await fetch(`${API_URL}?username=eq.${encodeURIComponent(username)}&select=username`, {
+      method: 'GET',
+      headers: baseHeaders
+    });
 
-    if (checkError) {
-      alert("Proxy tunnel error: " + checkError.message);
-      return;
-    }
-    if (existingUser) {
+    if (!checkRes.ok) throw new Error(`Lookup status error: ${checkRes.status}`);
+    const usersFound = await checkRes.json();
+
+    if (usersFound && usersFound.length > 0) {
       message.innerHTML = '<span class="error">Username already taken</span>';
       return;
     }
 
-    message.innerHTML = '<span style="color: #aaa;">Saving database record...</span>';
+    message.innerHTML = '<span style="color: #aaa;">Writing user row...</span>';
 
-    const { error } = await supabase
-      .from('users')
-      .insert([{ username: username, password: password }]);
+    // 2. Direct data insertion
+    const insertRes = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        ...baseHeaders,
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify({ username: username, password: password })
+    });
 
-    if (error) {
-      alert(`Database rejected entry: ${error.message}`);
-      return;
-    }
+    if (!insertRes.ok) throw new Error(`Insert status error: ${insertRes.status}`);
 
     message.innerHTML = '<span class="success">Account created! Switch to Login tab.</span>';
     usernameInput.value = '';
     passwordInput.value = '';
   } catch (err) {
-    alert("Connection exception: " + err.message);
+    message.innerHTML = `<span class="error">Network exception: Check your firewall connection rules</span>`;
+    console.error(err);
   }
 }
 
@@ -305,19 +292,18 @@ async function handleLogin() {
     return;
   }
 
+  message.innerHTML = '<span style="color: #aaa;">Verifying credentials...</span>';
   try {
-    const { data, error } = await supabase
-      .from('users')
-      .select('username')
-      .eq('username', username)
-      .eq('password', password)
-      .maybeSingle();
+    // Direct row validation fetch query
+    const res = await fetch(`${API_URL}?username=eq.${encodeURIComponent(username)}&password=eq.${encodeURIComponent(password)}&select=username`, {
+      method: 'GET',
+      headers: baseHeaders
+    });
 
-    if (error) {
-      alert("Proxy tunnel verification error: " + error.message);
-      return;
-    }
-    if (!data) {
+    if (!res.ok) throw new Error(`Validation rejected: ${res.status}`);
+    const data = await res.json();
+
+    if (!data || data.length === 0) {
       message.innerHTML = '<span class="error">Invalid username or password</span>';
       return;
     }
@@ -328,14 +314,13 @@ async function handleLogin() {
       window.location.href = '../index.html';
     }, 800);
   } catch (err) {
-    alert("Auth validation stack exception: " + err.message);
+    message.innerHTML = `<span class="error">Authentication down: Endpoint unreachable</span>`;
+    console.error(err);
   }
 }
 
 // Attach operational triggers on window completion
 window.addEventListener('load', () => {
-  initSupabase();
-  
   document.getElementById('signupBtn').addEventListener('click', handleSignup);
   document.getElementById('loginBtn').addEventListener('click', handleLogin);
   
