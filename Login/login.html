@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Null_X sign in</title>
+  
+  <script src="supabase.js"></script>
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
     
@@ -169,7 +172,7 @@
 <div class="container">
   <h1 class="glow">Null_X</h1>
   <p class="subtitle">Sign in for brand new features</p>
-  <div id="connectionStatus" class="status-badge">CONNECTING TERMINAL...</div>
+  <div id="connectionStatus" class="status-badge">INITIALIZING MATRIX...</div>
 
   <div class="tabs">
     <div class="tab active" id="signupTab">Create Account</div>
@@ -215,38 +218,27 @@
 </div>
 
 <script>
-// --- LOCAL DISK STORAGE CONFIGURATION ---
-let localUsers = JSON.parse(localStorage.getItem('null_x_local_users')) || [
-  { username: "demo_user", password: "password123" }
-];
-
+// Your project database parameters
 const SUPABASE_URL = 'https://ukwjoxhutcjkvabnybtj.supabase.co'; 
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrd2pvanh1dGNqa3ZhYm55YnRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNzk5NDAsImV4cCI6MjA5Mzg1NTk0MH0.iLr9OrIZlRBrbcI1XDE0zl7t_wpwVg3ko3DgppxbUh8';
 let supabase = null;
-let isOfflineMode = false;
 
-// Safe dynamic loader to prevent CDN network blockages from crashing layout engine
 function initSupabase() {
   const statusBadge = document.getElementById('connectionStatus');
   try {
+    // Verifies if the local file successfully registered the library to the window
     if (window.supabase && typeof window.supabase.createClient === 'function') {
       supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       statusBadge.innerText = "DATABASE ONLINE";
       statusBadge.style.color = "#4ade80";
     } else {
-      setupOfflineFallback("Network Blocked");
+      statusBadge.innerText = "SCRIPT TERMINATED: LOCAL FILE ERROR";
+      statusBadge.style.color = "#ff6b6b";
     }
   } catch (e) {
-    setupOfflineFallback(e.message);
+    statusBadge.innerText = "FATAL ERROR: " + e.message;
+    statusBadge.style.color = "#ff6b6b";
   }
-}
-
-function setupOfflineFallback(reason) {
-  isOfflineMode = true;
-  const statusBadge = document.getElementById('connectionStatus');
-  statusBadge.innerText = "OFFLINE LOCAL TERMINAL MODE";
-  statusBadge.style.color = "#ffaa00";
-  console.warn("Supabase bypassed. Mode: Offline Backup. Reason:", reason);
 }
 
 // --- ACCOUNT SIGNUP ROUTINE ---
@@ -263,25 +255,12 @@ async function handleSignup() {
     return;
   }
 
-  // A. OFFLINE ENGINE FALLBACK
-  if (isOfflineMode || !supabase) {
-    const userExists = localUsers.some(u => u.username.toLowerCase() === username.toLowerCase());
-    if (userExists) {
-      message.innerHTML = '<span class="error">Username already taken locally</span>';
-      return;
-    }
-    localUsers.push({ username, password });
-    localStorage.setItem('null_x_local_users', JSON.stringify(localUsers));
-    
-    message.innerHTML = '<span class="success">Local Account created! Switch to Login tab.</span>';
-    alert(`[Offline Mode] Account "${username}" saved successfully to browser storage!`);
-    usernameInput.value = '';
-    passwordInput.value = '';
+  if (!supabase) {
+    message.innerHTML = '<span class="error">Database pipeline offline. Cannot register rows.</span>';
     return;
   }
 
-  // B. ONLINE SUPABASE ROUTINE
-  message.innerHTML = '<span style="color: #aaa;">Checking cloud records...</span>';
+  message.innerHTML = '<span style="color: #aaa;">Scanning database records...</span>';
   try {
     const { data: existingUser, error: checkError } = await supabase
       .from('users')
@@ -290,7 +269,7 @@ async function handleSignup() {
       .maybeSingle();
 
     if (checkError) {
-      alert("Database error: " + checkError.message);
+      alert("Database error during lookup: " + checkError.message);
       return;
     }
     if (existingUser) {
@@ -298,12 +277,14 @@ async function handleSignup() {
       return;
     }
 
+    message.innerHTML = '<span style="color: #aaa;">Saving user index...</span>';
+
     const { error } = await supabase
       .from('users')
       .insert([{ username: username, password: password }]);
 
     if (error) {
-      alert(`Database insertion blocked: ${error.message}`);
+      alert(`Database insertion rejected: ${error.message}`);
       return;
     }
 
@@ -312,7 +293,7 @@ async function handleSignup() {
     usernameInput.value = '';
     passwordInput.value = '';
   } catch (err) {
-    alert("Submission execution failure: " + err.message);
+    alert("Execution error: " + err.message);
   }
 }
 
@@ -330,18 +311,11 @@ async function handleLogin() {
     return;
   }
 
-  // A. OFFLINE ENGINE FALLBACK
-  if (isOfflineMode || !supabase) {
-    const localMatch = localUsers.find(u => u.username.toLowerCase() === username.toLowerCase() && u.password === password);
-    if (!localMatch) {
-      message.innerHTML = '<span class="error">Invalid offline credentials</span>';
-      return;
-    }
-    executeLoginRedirect(username);
+  if (!supabase) {
+    message.innerHTML = '<span class="error">Database pipeline offline. Login locked.</span>';
     return;
   }
 
-  // B. ONLINE SUPABASE ROUTINE
   try {
     const { data, error } = await supabase
       .from('users')
@@ -351,7 +325,7 @@ async function handleLogin() {
       .maybeSingle();
 
     if (error) {
-      alert("Login verification failure: " + error.message);
+      alert("Login validation error: " + error.message);
       return;
     }
     if (!data) {
@@ -359,23 +333,19 @@ async function handleLogin() {
       return;
     }
 
-    executeLoginRedirect(username);
+    message.innerHTML = `<span class="success">Welcome back, ${username}! Redirecting...</span>`;
+    localStorage.setItem('chatUser', username);
+    setTimeout(() => {
+      window.location.href = '../index.html';
+    }, 800);
   } catch (err) {
-    alert("Authentication loop exception: " + err.message);
+    alert("Auth stack exception: " + err.message);
   }
-}
-
-function executeLoginRedirect(username) {
-  const message = isOfflineMode ? document.getElementById('loginMessage') : document.getElementById('loginMessage');
-  message.innerHTML = `<span class="success">Welcome back, ${username}! Redirecting...</span>`;
-  localStorage.setItem('chatUser', username);
-  setTimeout(() => {
-    window.location.href = '../index.html';
-  }, 800);
 }
 
 // --- REAL-TIME USERNAME AVAILABILITY CHECK ---
 async function checkUsername() {
+  if (!supabase) return;
   const usernameInput = document.getElementById('signupUsername');
   const feedback = document.getElementById('usernameFeedback');
   const username = usernameInput.value.trim();
@@ -385,21 +355,15 @@ async function checkUsername() {
     return;
   }
 
-  if (isOfflineMode || !supabase) {
-    const exists = localUsers.some(u => u.username.toLowerCase() === username.toLowerCase());
-    feedback.innerHTML = exists ? '<span class="error">Taken locally</span>' : '<span class="success">Available locally</span>';
-    return;
-  }
-
   try {
     const { data } = await supabase.from('users').select('username').eq('username', username).maybeSingle();
     feedback.innerHTML = data ? '<span class="error">Taken</span>' : '<span class="success">Available</span>';
   } catch(e) {}
 }
 
-// --- STATIC EVENTS INTERACTION ATTACHMENTS ---
 document.getElementById('signupUsername').addEventListener('blur', checkUsername);
 
+// --- TAB LAYOUT CONTROLS ---
 document.getElementById('signupTab').addEventListener('click', () => {
   document.getElementById('signupForm').classList.remove('hidden');
   document.getElementById('loginForm').classList.add('hidden');
@@ -426,7 +390,6 @@ function setupPasswordToggle(inputId, toggleId) {
 setupPasswordToggle('signupPassword', 'toggleSignupPassword');
 setupPasswordToggle('loginPassword', 'toggleLoginPassword');
 
-// Bootstrapping engine initialization checks on execution load
 window.addEventListener('load', initSupabase);
 </script>
 </body>
