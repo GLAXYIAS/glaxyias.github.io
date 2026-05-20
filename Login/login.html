@@ -172,7 +172,7 @@
 <div class="container">
   <h1 class="glow">Null_X</h1>
   <p class="subtitle">Sign in for brand new features</p>
-  <div id="connectionStatus" class="status-badge">INITIALIZING MATRIX...</div>
+  <div id="connectionStatus" class="status-badge">ROUTING NETWORK VIA CLOUDFLARE...</div>
 
   <div class="tabs">
     <div class="tab active" id="signupTab">Create Account</div>
@@ -195,7 +195,7 @@
     </div>
 
     <div id="signupMessage" class="feedback"></div>
-    <button id="signupBtn" onclick="handleSignup()">Create Account</button>
+    <button id="signupBtn">Create Account</button>
   </div>
 
   <div id="loginForm" class="hidden">
@@ -213,35 +213,36 @@
     </div>
 
     <div id="loginMessage" class="feedback"></div>
-    <button id="loginBtn" onclick="handleLogin()">Login</button>
+    <button id="loginBtn">Login</button>
   </div>
 </div>
 
 <script>
-// Your project database parameters
-const SUPABASE_URL = 'https://ukwjoxhutcjkvabnybtj.supabase.co'; 
+// Points directly to your unblocked worker gateway URL
+const WORKER_URL = 'https://supabasererouter.sparefornow2026.workers.dev'; 
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrd2pvanh1dGNqa3ZhYm55YnRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNzk5NDAsImV4cCI6MjA5Mzg1NTk0MH0.iLr9OrIZlRBrbcI1XDE0zl7t_wpwVg3ko3DgppxbUh8';
 let supabase = null;
 
 function initSupabase() {
   const statusBadge = document.getElementById('connectionStatus');
   try {
-    // Verifies if the local file successfully registered the library to the window
     if (window.supabase && typeof window.supabase.createClient === 'function') {
-      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      statusBadge.innerText = "DATABASE ONLINE";
+      // Configures the library engine to use your cloudflare worker as its base URL endpoints
+      supabase = window.supabase.createClient(WORKER_URL, SUPABASE_ANON_KEY, {
+        auth: { persistSession: false }
+      });
+      statusBadge.innerText = "TUNNEL ACTIVE (SECURE)";
       statusBadge.style.color = "#4ade80";
     } else {
-      statusBadge.innerText = "SCRIPT TERMINATED: LOCAL FILE ERROR";
+      statusBadge.innerText = "SCRIPT ERROR: LOCAL REPO DISCONNECTED";
       statusBadge.style.color = "#ff6b6b";
     }
   } catch (e) {
-    statusBadge.innerText = "FATAL ERROR: " + e.message;
+    statusBadge.innerText = "CONNECTION FAILURE: " + e.message;
     statusBadge.style.color = "#ff6b6b";
   }
 }
 
-// --- ACCOUNT SIGNUP ROUTINE ---
 async function handleSignup() {
   const usernameInput = document.getElementById('signupUsername');
   const passwordInput = document.getElementById('signupPassword');
@@ -255,12 +256,7 @@ async function handleSignup() {
     return;
   }
 
-  if (!supabase) {
-    message.innerHTML = '<span class="error">Database pipeline offline. Cannot register rows.</span>';
-    return;
-  }
-
-  message.innerHTML = '<span style="color: #aaa;">Scanning database records...</span>';
+  message.innerHTML = '<span style="color: #aaa;">Routing database lookup...</span>';
   try {
     const { data: existingUser, error: checkError } = await supabase
       .from('users')
@@ -269,7 +265,7 @@ async function handleSignup() {
       .maybeSingle();
 
     if (checkError) {
-      alert("Database error during lookup: " + checkError.message);
+      alert("Proxy tunnel error: " + checkError.message);
       return;
     }
     if (existingUser) {
@@ -277,27 +273,25 @@ async function handleSignup() {
       return;
     }
 
-    message.innerHTML = '<span style="color: #aaa;">Saving user index...</span>';
+    message.innerHTML = '<span style="color: #aaa;">Saving database record...</span>';
 
     const { error } = await supabase
       .from('users')
       .insert([{ username: username, password: password }]);
 
     if (error) {
-      alert(`Database insertion rejected: ${error.message}`);
+      alert(`Database rejected entry: ${error.message}`);
       return;
     }
 
     message.innerHTML = '<span class="success">Account created! Switch to Login tab.</span>';
-    alert("Success! Account written cleanly to your Supabase users table.");
     usernameInput.value = '';
     passwordInput.value = '';
   } catch (err) {
-    alert("Execution error: " + err.message);
+    alert("Connection exception: " + err.message);
   }
 }
 
-// --- ACCOUNT LOGIN ROUTINE ---
 async function handleLogin() {
   const usernameInput = document.getElementById('loginUsername');
   const passwordInput = document.getElementById('loginPassword');
@@ -311,11 +305,6 @@ async function handleLogin() {
     return;
   }
 
-  if (!supabase) {
-    message.innerHTML = '<span class="error">Database pipeline offline. Login locked.</span>';
-    return;
-  }
-
   try {
     const { data, error } = await supabase
       .from('users')
@@ -325,7 +314,7 @@ async function handleLogin() {
       .maybeSingle();
 
     if (error) {
-      alert("Login validation error: " + error.message);
+      alert("Proxy tunnel verification error: " + error.message);
       return;
     }
     if (!data) {
@@ -333,64 +322,46 @@ async function handleLogin() {
       return;
     }
 
-    message.innerHTML = `<span class="success">Welcome back, ${username}! Redirecting...</span>`;
+    message.innerHTML = `<span class="success">Welcome, ${username}! Entering app...</span>`;
     localStorage.setItem('chatUser', username);
     setTimeout(() => {
       window.location.href = '../index.html';
     }, 800);
   } catch (err) {
-    alert("Auth stack exception: " + err.message);
+    alert("Auth validation stack exception: " + err.message);
   }
 }
 
-// --- REAL-TIME USERNAME AVAILABILITY CHECK ---
-async function checkUsername() {
-  if (!supabase) return;
-  const usernameInput = document.getElementById('signupUsername');
-  const feedback = document.getElementById('usernameFeedback');
-  const username = usernameInput.value.trim();
+// Attach operational triggers on window completion
+window.addEventListener('load', () => {
+  initSupabase();
   
-  if (!username) {
-    feedback.innerHTML = '';
-    return;
-  }
+  document.getElementById('signupBtn').addEventListener('click', handleSignup);
+  document.getElementById('loginBtn').addEventListener('click', handleLogin);
+  
+  document.getElementById('signupTab').addEventListener('click', () => {
+    document.getElementById('signupForm').classList.remove('hidden');
+    document.getElementById('loginForm').classList.add('hidden');
+    document.getElementById('signupTab').classList.add('active');
+    document.getElementById('loginTab').classList.remove('active');
+  });
 
-  try {
-    const { data } = await supabase.from('users').select('username').eq('username', username).maybeSingle();
-    feedback.innerHTML = data ? '<span class="error">Taken</span>' : '<span class="success">Available</span>';
-  } catch(e) {}
-}
-
-document.getElementById('signupUsername').addEventListener('blur', checkUsername);
-
-// --- TAB LAYOUT CONTROLS ---
-document.getElementById('signupTab').addEventListener('click', () => {
-  document.getElementById('signupForm').classList.remove('hidden');
-  document.getElementById('loginForm').classList.add('hidden');
-  document.getElementById('signupTab').classList.add('active');
-  document.getElementById('loginTab').classList.remove('active');
+  document.getElementById('loginTab').addEventListener('click', () => {
+    document.getElementById('signupForm').classList.add('hidden');
+    document.getElementById('loginForm').classList.remove('hidden');
+    document.getElementById('signupTab').classList.remove('active');
+    document.getElementById('loginTab').classList.add('active');
+  });
+  
+  document.getElementById('toggleSignupPassword').addEventListener('click', () => {
+    const el = document.getElementById('signupPassword');
+    el.type = el.type === 'password' ? 'text' : 'password';
+  });
+  document.getElementById('toggleLoginPassword').addEventListener('click', () => {
+    const el = document.getElementById('loginPassword');
+    el.type = el.type === 'password' ? 'text' : 'password';
+  });
 });
-
-document.getElementById('loginTab').addEventListener('click', () => {
-  document.getElementById('signupForm').classList.add('hidden');
-  document.getElementById('loginForm').classList.remove('hidden');
-  document.getElementById('signupTab').classList.remove('active');
-  document.getElementById('loginTab').classList.add('active');
-});
-
-function setupPasswordToggle(inputId, toggleId) {
-  const input = document.getElementById(inputId);
-  const toggle = document.getElementById(toggleId);
-  if (input && toggle) {
-    toggle.addEventListener('click', () => {
-      input.type = input.type === 'password' ? 'text' : 'password';
-    });
-  }
-}
-setupPasswordToggle('signupPassword', 'toggleSignupPassword');
-setupPasswordToggle('loginPassword', 'toggleLoginPassword');
-
-window.addEventListener('load', initSupabase);
 </script>
 </body>
 </html>
