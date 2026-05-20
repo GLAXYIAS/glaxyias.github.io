@@ -38,15 +38,9 @@ const _0xData = [
     url: "Games/pokemon-emerald/index.html",
     desc: "The classic GBA adventure. Become the Hoenn Champion!",
     popular: true
-  },
-  {
-    id: "r_lg",
-    title: atob("Um9ja2V0IExlYWd1ZQ=="), 
-    url: "Games/rocket/index.html",
-    desc: "High-octane physics-based soccer with rocket-powered cars!",
-    popular: true
   }
 ];
+
 /**
  * Helper: Filter data for popular/featured games
  */
@@ -72,24 +66,66 @@ window.openNullChat = function() {
 
 /**
  * Core Architecture Tab Cloaking Payload Engine
- * Handles generation of both local blob objects and clean blank execution targets
+ * Handles generation of both local data assets and execution containers
  */
 function launchStealthWindow(maskType, targetEnv) {
     const currentUrl = window.location.href;
     
-    // Resolve mask specifics
+    // Resolve custom institutional cloaking assets dynamically
     let title = "Google Docs";
-    let escapeRedirect = "https://classroom.google.com";
+    let escapeRedirect = "https://docs.google.com";
 
-    if (maskType === 'classroom') {
+    if (maskType === 'Google Classroom') {
         title = "Classes";
         escapeRedirect = "https://classroom.google.com";
-    } else if (maskType === 'canvas') {
+    } else if (maskType === 'Google Drive') {
+        title = "My Drive - Google Drive";
+        escapeRedirect = "https://drive.google.com";
+    } else if (maskType === 'Gmail') {
+        title = "Inbox";
+        escapeRedirect = "https://mail.google.com";
+    } else if (maskType === 'Canvas') {
         title = "Dashboard";
         escapeRedirect = "https://canvas.instructure.com";
-    } else if (maskType === 'docs') {
-        title = "Google Docs";
-        escapeRedirect = "https://docs.google.com";
+    } else if (maskType === 'Canva') {
+        title = "Home - Canva";
+        escapeRedirect = "https://www.canva.com";
+    } else if (maskType === 'Microsoft 365') {
+        title = "Microsoft 365";
+        escapeRedirect = "https://www.office.com";
+    } else if (maskType === 'NoRedInk') {
+        title = "NoRedInk";
+        escapeRedirect = "https://www.noredink.com";
+    } else if (maskType === 'Neptune Navigate') {
+        title = "Neptune Navigate";
+        escapeRedirect = "https://neptunenavigate.com";
+    } else if (maskType === 'Pear Assessment') {
+        title = "Pear Assessment";
+        escapeRedirect = "https://www.pearassessment.com";
+    } else if (maskType === 'Membean') {
+        title = "Membean: Dashboard";
+        escapeRedirect = "https://membean.com";
+    } else if (maskType === 'i-Ready Reading' || maskType === 'i-Ready Math') {
+        title = "i-Ready";
+        escapeRedirect = "https://login.i-ready.com";
+    } else if (maskType === 'DeltaMath') {
+        title = "DeltaMath";
+        escapeRedirect = "https://www.deltamath.com";
+    } else if (maskType === 'ExploreLearning Gizmos') {
+        title = "Gizmos Dashboard";
+        escapeRedirect = "https://www.explorelearning.com";
+    } else if (maskType === 'Progress Learning') {
+        title = "Progress Learning";
+        escapeRedirect = "https://progresslearning.com";
+    } else if (maskType === 'Student Support Time') {
+        title = "Student Support Time";
+        escapeRedirect = "https://studentsupporttime.com";
+    } else if (maskType === 'Kahoot') {
+        title = "Enter Game PIN - Kahoot!";
+        escapeRedirect = "https://kahoot.it";
+    } else if (maskType === 'Nearpod') {
+        title = "Nearpod";
+        escapeRedirect = "https://nearpod.com";
     }
 
     let targetTab;
@@ -132,7 +168,7 @@ function launchStealthWindow(maskType, targetEnv) {
         return;
     }
 
-    // Scrub tracking trails from the root window context node layout
+    // Scrub routing trails from root window node layout
     window.location.replace(escapeRedirect);
 }
 
@@ -143,19 +179,17 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- 0. INTERACTIVE INITIALIZATION: AUTO-LAUNCH SYSTEM CHECK ---
     const autoLaunchEnabled = localStorage.getItem('autoLaunchStealth') === 'true';
-    const savedCloakSelection = localStorage.getItem('savedCloak') || 'docs';
+    const savedCloakSelection = localStorage.getItem('savedCloak') || 'Google Classroom';
     const savedEnvironmentSetting = localStorage.getItem('autoLaunchEnv') || 'about:blank';
 
     // Auto-Launch Deployment Vector Routing
     if (autoLaunchEnabled) {
-        // Prevent continuous evaluation loop bugs on launch
         localStorage.removeItem('autoLaunchStealth'); 
         
-        // Let the viewport settle momentarily before breaking out frame contexts
         setTimeout(() => {
             launchStealthWindow(savedCloakSelection, savedEnvironmentSetting);
         }, 300);
-        return; // HALT LOCAL EXECUTION TO PREVENT RUNNING RESIDUAL CLOCK LOOPS REMOTELY
+        return; // HALT LOCAL EXECUTION RADICALLY TO RUN CLEANLY ON TARGET DESTINATION IF ENABLED
     }
 
     // --- 1. Educational Cloak Countdown Engine ---
@@ -238,9 +272,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroSection = document.getElementById('heroSection');
     const gameGrid = document.getElementById('gameGrid');
     
-    // Dropdown Interface Accessors
-    const stealthTrigger = document.getElementById('stealthTrigger');
-    const stealthDropdown = document.getElementById('stealthDropdown');
+    // Stealth Direct Action Hook
+    const stealthOpener = document.getElementById('stealthOpener');
 
     // Persistent Configuration Element Hookups
     const autoLaunchCheckbox = document.getElementById('toggle-auto-launch');
@@ -274,9 +307,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /**
-     * Populates and displays the game library
-     */
     function showLibrary() {
         if (heroSection) heroSection.style.display = 'none';
         if (gameGrid) {
@@ -300,42 +330,26 @@ document.addEventListener('DOMContentLoaded', () => {
         if (gameGrid) gameGrid.style.display = 'none';
     }
 
-    // --- 6. Stealth Dropdown Interaction Mapping ---
-    if (stealthTrigger && stealthDropdown) {
-        stealthTrigger.onclick = (e) => {
-            e.stopPropagation();
-            stealthDropdown.classList.toggle('hidden');
+    // --- 6. Direct Stealth Action Trigger ---
+    if (stealthOpener) {
+        stealthOpener.onclick = (e) => {
+            e.preventDefault();
+            // Pull settings from selection configurations
+            const currentCloak = localStorage.getItem('savedCloak') || 'Google Classroom';
+            const currentEnv = localStorage.getItem('autoLaunchEnv') || 'about:blank';
+            launchStealthWindow(currentCloak, currentEnv);
         };
-
-        const dropDownOptions = stealthDropdown.querySelectorAll('.stealth-menu-item');
-        dropDownOptions.forEach(option => {
-            option.onclick = (e) => {
-                e.stopPropagation();
-                const selectedMask = option.getAttribute('data-stealth-type');
-                
-                // Read current preferred environment parameters
-                const chosenEnv = localStorage.getItem('autoLaunchEnv') || 'about:blank';
-                
-                launchStealthWindow(selectedMask, chosenEnv);
-                stealthDropdown.classList.add('hidden');
-            };
-        });
-
-        // Outside Click Boundary Escape Trigger
-        window.addEventListener('click', () => {
-            stealthDropdown.classList.add('hidden');
-        });
     }
 
     // --- 7. Persistent Configuration Settings State Management ---
     if (autoLaunchCheckbox && autoLaunchOptionsDiv && autoLaunchEnvSelect) {
-        // Restore values from user profile history memory bank
         autoLaunchCheckbox.checked = localStorage.getItem('autoLaunchEnvActive') === 'true';
         autoLaunchEnvSelect.value = savedEnvironmentSetting;
 
-        // Sync visibility of conditional drop-down selectors instantly
         if (autoLaunchCheckbox.checked) {
             autoLaunchOptionsDiv.classList.remove('hidden');
+        } else {
+            autoLaunchOptionsDiv.classList.add('hidden');
         }
 
         autoLaunchCheckbox.addEventListener('change', (e) => {
@@ -353,7 +367,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         autoLaunchEnvSelect.addEventListener('change', (e) => {
             localStorage.setItem('autoLaunchEnv', e.target.value);
-            // Re-arm state if the selector changes environment types while enabled
             if (autoLaunchCheckbox.checked) {
                 localStorage.setItem('autoLaunchStealth', 'true');
             }
