@@ -11,7 +11,7 @@
 ---
 
 ## About the Project
-> This is a UBG website fixing the Linewize issue of blocking stuff from `config.jsonc` for redirects.
+> This is a UBG website fixing the Linewize issue of blocking stuff from `config.jsonc` for redirects. if you see a game that is yours all credit to you, and if you want me to take it down email me at the email below
 
 ---
 
