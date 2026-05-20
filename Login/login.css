@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
+/* Apply global border-box calculation behavior to prevent unexpected element sizing overlaps */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Inter', sans-serif;
   background: linear-gradient(135deg, #0a0a0a, #1a0033);
@@ -10,7 +15,6 @@ body {
   min-height: 100vh;
   margin: 0;
   padding: 20px;
-  box-sizing: border-box;
 }
 
 .container {
@@ -22,6 +26,8 @@ body {
   width: 100%;
   max-width: 420px;
   border: 2px solid #8b00ff;
+  position: relative;
+  z-index: 1;
 }
 
 h1 {
@@ -46,6 +52,8 @@ p.subtitle {
   background: #1f1f2e;
   border-radius: 12px;
   padding: 4px;
+  position: relative;
+  z-index: 5;
 }
 
 .tab {
@@ -66,6 +74,7 @@ p.subtitle {
 
 .form-group {
   margin-bottom: 20px;
+  position: relative;
 }
 
 label {
@@ -85,7 +94,6 @@ input {
   color: #e0e0e0;
   font-size: 16px;
   transition: border 0.3s;
-  box-sizing: border-box;
 }
 
 input:focus {
@@ -93,8 +101,11 @@ input:focus {
   border-color: #c084fc;
 }
 
+/* FIXED: Explicitly constrain layout bounds to avoid vertical overlap leaks */
 .password-container {
   position: relative;
+  width: 100%;
+  display: block;
 }
 
 .toggle-password {
@@ -104,14 +115,19 @@ input:focus {
   transform: translateY(-50%);
   cursor: pointer;
   font-size: 18px;
+  z-index: 5;
 }
 
+/* FIXED: Prevent text expansion boxes from absorbing click interactions */
 .feedback {
   font-size: 14px;
   margin: 6px 0 12px 0;
   min-height: 22px;
+  position: relative;
+  z-index: 2;
 }
 
+/* FIXED: Forcing the buttons to render at the absolute front layer of the layout */
 button {
   width: 100%;
   padding: 15px;
@@ -124,6 +140,10 @@ button {
   font-weight: 600;
   margin-top: 10px;
   transition: all 0.2s;
+  
+  position: relative !important;
+  z-index: 99999 !important; /* Raises element above invisible container bounds */
+  pointer-events: auto !important; /* Assures browser handles mouse actions natively */
 }
 
 button:hover {
@@ -133,5 +153,5 @@ button:hover {
 
 .error { color: #ff6b6b; }
 .success { color: #4ade80; }
-.hidden { display: none; }
+.hidden { display: none !important; }
 .glow { text-shadow: 0 0 15px rgba(192, 132, 252, 0.6); }
