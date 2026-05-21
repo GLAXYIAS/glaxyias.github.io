@@ -59,6 +59,13 @@ const _0xData = [
   url: "Games/cookieclicker/Cookieclicker.html",
   desc: "An addictive incremental game where you click cookies to earn more cookies and unlock upgrades.",
   popular: true
+},
+  {
+  id: "b_rd",
+  title: atob("QmFza2V0IFJhbmRvbQ=="),
+  url: "Games/basketrandom/Basketrandom.html",
+  desc: "A chaotic basketball game with random physics, unpredictable jumps, and funny matches.",
+  popular: true
 }
 ];
 
