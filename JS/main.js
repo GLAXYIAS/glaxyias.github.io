@@ -59,6 +59,13 @@ const _0xData = [
   url: "Games/basketballstars/Basketballstars.html",
   desc: "A fast-paced 1v1 basketball game featuring flashy moves, quick matches, and competitive street-style gameplay.",
   popular: true
+},
+{
+  id: "c_cc",
+  title: atob("Q29va2llIENsaWNrZXI="),
+  url: "Games/cookieclicker/Cookieclicker.html",
+  desc: "An addictive incremental game where you click cookies to earn more cookies and unlock upgrades.",
+  popular: true
 }
 ];
 
