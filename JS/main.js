@@ -45,6 +45,13 @@ const _0xData = [
   url: "Games/basketstars/index.html",
   desc: "A fast-paced basketball arcade game. Score, trick shots, and dominate the court!",
   popular: true
+},
+{
+  id: "y_hh",
+  title: atob("WW9ob2hvLmlv"),
+  url: "Games/yohoho/index.html",
+  desc: "A pirate-themed battle royale game. Collect gold and become the last pirate standing!",
+  popular: true
 }
 ];
 
