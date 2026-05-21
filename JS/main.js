@@ -57,7 +57,7 @@ const _0xData = [
   id: "c_cc",
   title: atob("Q29va2llIENsaWNrZXI="),
   url: "Games/cookie clicker/Cookieclicker.html",
-  desc: "An addictive incremental game where you click cookies to earn more cookies and unlock upgrades.",
+  desc: "An addictive incremental game where you click cookies to earn more cookies and unlock upgrades. (doesn't work? working on fixing it)",
   popular: true
 },
   {
