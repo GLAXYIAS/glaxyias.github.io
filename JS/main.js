@@ -5,13 +5,6 @@ import { applyCloak } from '../Cloaks/Cloaks.js';
  */
 const _0xData = [
   {
-    id: "b_to",
-    title: atob("QnJvdGF0bw=="), 
-    url: "Games/brotato/index.html",
-    desc: "A top-down arena shooter roguelite where you play a potato wielding up to 6 weapons at a time.",
-    popular: true
-  },
-  {
     id: "s_lp",
     title: atob("U2xvcGU="), 
     url: "Games/slope/index.html",
