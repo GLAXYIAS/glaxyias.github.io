@@ -5,6 +5,13 @@ import { applyCloak } from '../Cloaks/Cloaks.js';
  */
 const _0xData = [
   {
+  id: "b_ap",
+  title: atob("QnJvdGF0byBBbGwgUGFpbiBObyBHYWlu"),
+  url: "Games/brotatoAPNG/Brotato.html",
+  desc: "The newest version of Brotato with the All Pain No Gain update.",
+  popular: true
+},
+  {
     id: "s_lp",
     title: atob("U2xvcGU="), 
     url: "Games/slope/index.html",
@@ -25,13 +32,6 @@ const _0xData = [
     desc: "Action-packed multiplayer FPS. dominate the battlefield.",
     popular: true
   },
-{
-  id: "b_ap",
-  title: atob("QnJvdGF0byBBbGwgUGFpbiBObyBHYWlu"),
-  url: "Games/brotatoAPNG/Brotato.html",
-  desc: "The newest version of Brotato with the All Pain No Gain update.",
-  popular: true
-},
   {
   id: "b_bb",
   title: atob("QmFzZWJhbGwgQnJvcw=="),
