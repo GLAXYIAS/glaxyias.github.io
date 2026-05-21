@@ -1,218 +1,318 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Null_X sign in</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-    *, *::before, *::after { box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #0a0a0a, #1a0033);
-      color: #e0e0e0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 20px;
-    }
-    .container {
-      background: rgba(15, 15, 25, 0.95);
-      backdrop-filter: blur(12px);
-      padding: 40px 35px;
-      border-radius: 20px;
-      box-shadow: 0 0 40px rgba(128, 0, 255, 0.3);
-      width: 100%;
-      max-width: 420px;
-      border: 2px solid #8b00ff;
-    }
-    h1 {
-      text-align: center;
-      margin: 0 0 8px 0;
-      font-size: 28px;
-      background: linear-gradient(90deg, #c084fc, #e0bbff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 15px rgba(192, 132, 252, 0.6);
-    }
-    p.subtitle { text-align: center; color: #b0b0b0; margin-bottom: 30px; font-size: 15px; }
-    .tabs { display: flex; margin-bottom: 30px; background: #1f1f2e; border-radius: 12px; padding: 4px; }
-    .tab { flex: 1; padding: 14px; text-align: center; cursor: pointer; border-radius: 10px; font-weight: 500; transition: all 0.3s; }
-    .tab.active { background: #8b00ff; color: white; box-shadow: 0 4px 15px rgba(139, 0, 255, 0.4); }
-    .form-group { margin-bottom: 20px; }
-    label { display: block; margin-bottom: 6px; font-size: 14px; color: #c0c0c0; }
-    input { width: 100%; padding: 14px 16px; background: #1f1f2e; border: 1px solid #4b0082; border-radius: 10px; color: #e0e0e0; font-size: 16px; }
-    input:focus { outline: none; border-color: #c084fc; }
-    .password-container { position: relative; }
-    .toggle-password { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #aaa; }
-    .feedback { font-size: 14px; margin: 6px 0 12px 0; min-height: 22px; }
-    button { width: 100%; padding: 15px; background: linear-gradient(90deg, #8b00ff, #c084fc); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 17px; font-weight: 600; }
-    .error { color: #ff6b6b; }
-    .success { color: #4ade80; }
-    .hidden { display: none !important; }
-    .status-badge { text-align: center; font-size: 11px; color: #4ade80; margin-top: -15px; margin-bottom: 20px; font-weight: 600; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Null_X - Sign In</title>
+    <style>
+        :root {
+            --bg-color: #0b0314;
+            --container-bg: #140e24;
+            --border-color: #8b3dff;
+            --text-color: #ffffff;
+            --text-secondary: #b3a1cf;
+            --btn-primary: #8b3dff;
+            --btn-secondary: #251b40;
+            --input-bg: #1c1433;
+            --input-border: #3b2d66;
+            --error-color: #ff4a4a;
+            --success-color: #00ff66;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: var(--container-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 40px;
+            width: 360px;
+            box-shadow: 0 0 25px rgba(139, 61, 255, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+
+        .status-badge {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--success-color);
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        .tab-container {
+            display: flex;
+            background-color: var(--btn-secondary);
+            border-radius: 10px;
+            margin-bottom: 30px;
+            padding: 5px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background-color: var(--btn-primary);
+            color: var(--text-color);
+            font-weight: bold;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            background-color: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--text-color);
+            font-size: 1rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            border-color: var(--border-color);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            user-select: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(45deg, #8b3dff, #b370ff);
+            border: none;
+            color: var(--text-color);
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(139, 61, 255, 0.4);
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        .message-box {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            min-height: 20px;
+        }
+
+        .error-msg { color: var(--error-color); }
+        .success-msg { color: var(--success-color); }
+    </style>
 </head>
 <body>
 
-<div class="container">
-  <h1>Null_X</h1>
-  <p class="subtitle">Sign in for brand new features</p>
-  <div id="connectionStatus" class="status-badge">CLOUDFLARE PROXY ACTIVATED</div>
+    <div class="login-container">
+        <h1>Null_X</h1>
+        <div class="subtitle">Sign in for brand new features</div>
+        <div class="status-badge" id="statusBadge">Direct Engine Active</div>
 
-  <div class="tabs">
-    <div class="tab active" id="signupTab">Create Account</div>
-    <div class="tab" id="loginTab">Login</div>
-  </div>
+        <div class="tab-container">
+            <button class="tab-btn active" id="tabCreate" onclick="setMode('signup')">Create Account</button>
+            <button class="tab-btn" id="tabLogin" onclick="setMode('login')">Login</button>
+        </div>
 
-  <div id="signupForm">
-    <div class="form-group">
-      <label>Username</label>
-      <input type="text" id="signupUsername" placeholder="Choose a username">
+        <form id="authForm" onsubmit="handleSubmit(event)">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" required autocomplete="username">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="password" required autocomplete="current-password">
+                    <span class="toggle-password" onclick="togglePasswordVis()">👁️</span>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">Create Account</button>
+        </form>
+
+        <div class="message-box" id="messageBox"></div>
     </div>
-    <div class="form-group">
-      <label>Password</label>
-      <div class="password-container">
-        <input type="password" id="signupPassword" placeholder="At least 8 characters">
-        <span class="toggle-password" id="toggleSignupPassword">👁️</span>
-      </div>
-    </div>
-    <div id="signupMessage" class="feedback"></div>
-    <button id="signupBtn">Create Account</button>
-  </div>
 
-  <div id="loginForm" class="hidden">
-    <div class="form-group">
-      <label>Username</label>
-      <input type="text" id="loginUsername" placeholder="Your username">
-    </div>
-    <div class="form-group">
-      <label>Password</label>
-      <div class="password-container">
-        <input type="password" id="loginPassword" placeholder="Your password">
-        <span class="toggle-password" id="toggleLoginPassword">👁️</span>
-      </div>
-    </div>
-    <div id="loginMessage" class="feedback"></div>
-    <button id="loginBtn">Login</button>
-  </div>
-</div>
+    <script>
+        // --- CONFIGURATION ---
+        // Automatically mapped to your verified project endpoint
+        const BASE_URL = 'https://ldojzaikkolrxkiwyqvq.supabase.co/rest/v1/users';
+        
+        // Your exact dashboard publishable key
+        const ANON_KEY = 'sb_publishable_b3YUWIgrmUX1-Dl_Ee_4fg_MbKUuzrO';
 
-<script>
-// We call your Cloudflare Worker app base route to mask the destination from Linewize
-const PROXY_URL = 'https://supabasererouter.sparefornow2026.workers.dev/rest/v1/users';
-const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrd2pvanh1dGNqa3ZhYm55YnRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNzk5NDAsImV4cCI6MjA5Mzg1NTk0MH0.iLr9OrIZlRBrbcI1XDE0zl7t_wpwVg3ko3DgppxbUh8';
+        const headers = {
+            'apikey': ANON_KEY,
+            'Authorization': `Bearer ${ANON_KEY}`,
+            'Content-Type': 'application/json'
+        };
 
-const headers = {
-  'apikey': ANON_KEY,
-  'Authorization': `Bearer ${ANON_KEY}`,
-  'Content-Type': 'application/json'
-};
+        let currentMode = 'signup';
 
-async function handleSignup() {
-  const usernameInput = document.getElementById('signupUsername');
-  const passwordInput = document.getElementById('signupPassword');
-  const message = document.getElementById('signupMessage');
-  
-  const username = usernameInput.value.trim();
-  const password = passwordInput.value;
+        // --- INTERFACE UTILITIES ---
+        function setMode(mode) {
+            currentMode = mode;
+            const tabCreate = document.getElementById('tabCreate');
+            const tabLogin = document.getElementById('tabLogin');
+            const submitBtn = document.getElementById('submitBtn');
+            document.getElementById('messageBox').textContent = '';
 
-  if (!username || password.length < 8) {
-    message.innerHTML = '<span class="error">Username required & password must be 8+ characters</span>';
-    return;
-  }
+            if (mode === 'signup') {
+                tabCreate.classList.add('active');
+                tabLogin.classList.remove('active');
+                submitBtn.textContent = 'Create Account';
+            } else {
+                tabLogin.classList.add('active');
+                tabCreate.classList.remove('active');
+                submitBtn.textContent = 'Login';
+            }
+        }
 
-  message.innerHTML = '<span style="color: #aaa;">Checking availability...</span>';
-  try {
-    const checkRes = await fetch(`${PROXY_URL}?username=eq.${encodeURIComponent(username)}&select=username`, {
-      method: 'GET',
-      headers: headers
-    });
+        function togglePasswordVis() {
+            const passwordInput = document.getElementById('password');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+            } else {
+                passwordInput.type = 'password';
+            }
+        }
 
-    const usersFound = await checkRes.json();
-    if (usersFound && usersFound.length > 0) {
-      message.innerHTML = '<span class="error">Username already taken</span>';
-      return;
-    }
+        function showMessage(text, isError = true) {
+            const msgBox = document.getElementById('messageBox');
+            msgBox.textContent = text;
+            msgBox.className = isError ? 'message-box error-msg' : 'message-box success-msg';
+        }
 
-    message.innerHTML = '<span style="color: #aaa;">Creating profile...</span>';
-    const insertRes = await fetch(PROXY_URL, {
-      method: 'POST',
-      headers: { ...headers, 'Prefer': 'return=representation' },
-      body: JSON.stringify({ username: username, password: password })
-    });
+        // --- REQUEST ROUTER ---
+        function handleSubmit(event) {
+            event.preventDefault();
+            const userVal = document.getElementById('username').value.trim();
+            const passVal = document.getElementById('password').value;
 
-    if (!insertRes.ok) throw new Error();
+            if (currentMode === 'signup') {
+                handleSignUp(userVal, passVal);
+            } else {
+                handleLogin(userVal, passVal);
+            }
+        }
 
-    message.innerHTML = '<span class="success">Account created! Switch to Login tab.</span>';
-    usernameInput.value = '';
-    passwordInput.value = '';
-  } catch (err) {
-    message.innerHTML = '<span class="error">Proxy connection failed.</span>';
-  }
-}
+        // --- SIGN UP / ACCOUNT CREATION ---
+        async function handleSignUp(username, password) {
+            try {
+                // 1. Check if username is already taken inside your users table
+                const checkUrl = `${BASE_URL}?username=eq.${encodeURIComponent(username)}&select=username`;
+                const checkRes = await fetch(checkUrl, { method: 'GET', headers: headers });
+                
+                if (!checkRes.ok) throw new Error(`Database rejected request. Status: ${checkRes.status}`);
+                const existingUsers = await checkRes.json();
+                
+                if (existingUsers.length > 0) {
+                    showMessage('Username is already taken!');
+                    return;
+                }
 
-async function handleLogin() {
-  const usernameInput = document.getElementById('loginUsername');
-  const passwordInput = document.getElementById('loginPassword');
-  const message = document.getElementById('loginMessage');
+                // 2. Insert new user credentials directly
+                const insertRes = await fetch(BASE_URL, {
+                    method: 'POST',
+                    headers: { ...headers, 'Prefer': 'return=representation' },
+                    body: JSON.stringify({ username: username, password: password })
+                });
 
-  const username = usernameInput.value.trim();
-  const password = passwordInput.value;
+                if (insertRes.ok) {
+                    showMessage('Account created successfully! Switching to login...', false);
+                    setTimeout(() => { setMode('login'); }, 2000);
+                } else {
+                    throw new Error(`Insert failed. Status: ${insertRes.status}`);
+                }
+            } catch (err) {
+                showMessage('Connection error: ' + err.message);
+                console.error(err);
+            }
+        }
 
-  if (!username || !password) {
-    message.innerHTML = '<span class="error">Please fill in all fields</span>';
-    return;
-  }
+        // --- USER LOGIN ---
+        async function handleLogin(username, password) {
+            try {
+                // Match the explicit username and password string combination
+                const loginUrl = `${BASE_URL}?username=eq.${encodeURIComponent(username)}&password=eq.${encodeURIComponent(password)}&select=*`;
+                const res = await fetch(loginUrl, { method: 'GET', headers: headers });
+                
+                if (!res.ok) throw new Error(`Server returned status: ${res.status}`);
+                const userMatches = await res.json();
 
-  message.innerHTML = '<span style="color: #aaa;">Verifying...</span>';
-  try {
-    const res = await fetch(`${PROXY_URL}?username=eq.${encodeURIComponent(username)}&password=eq.${encodeURIComponent(password)}&select=username`, {
-      method: 'GET',
-      headers: headers
-    });
-
-    const data = await res.json();
-    if (!data || data.length === 0) {
-      message.innerHTML = '<span class="error">Invalid username or password</span>';
-      return;
-    }
-
-    message.innerHTML = `<span class="success">Welcome, ${username}!</span>`;
-    localStorage.setItem('chatUser', username);
-    setTimeout(() => { window.location.href = '../index.html'; }, 800);
-  } catch (err) {
-    message.innerHTML = '<span class="error">Authentication unreachable.</span>';
-  }
-}
-
-window.addEventListener('load', () => {
-  document.getElementById('signupBtn').addEventListener('click', handleSignup);
-  document.getElementById('loginBtn').addEventListener('click', handleLogin);
-  
-  document.getElementById('signupTab').addEventListener('click', () => {
-    document.getElementById('signupForm').classList.remove('hidden');
-    document.getElementById('loginForm').classList.add('hidden');
-    document.getElementById('signupTab').classList.add('active');
-    document.getElementById('loginTab').classList.remove('active');
-  });
-  document.getElementById('loginTab').addEventListener('click', () => {
-    document.getElementById('signupForm').classList.add('hidden');
-    document.getElementById('loginForm').classList.remove('hidden');
-    document.getElementById('signupTab').classList.remove('active');
-    document.getElementById('loginTab').classList.add('active');
-  });
-  document.getElementById('toggleSignupPassword').addEventListener('click', () => {
-    const el = document.getElementById('signupPassword');
-    el.type = el.type === 'password' ? 'text' : 'password';
-  });
-  document.getElementById('toggleLoginPassword').addEventListener('click', () => {
-    const el = document.getElementById('loginPassword');
-    el.type = el.type === 'password' ? 'text' : 'password';
-  });
-});
-</script>
+                if (userMatches.length > 0) {
+                    showMessage('Login successful! Redirecting...', false);
+                    localStorage.setItem('currentUser', username);
+                    setTimeout(() => {
+                        window.location.href = 'chat.html';
+                    }, 1500);
+                } else {
+                    showMessage('Incorrect username or password.');
+                }
+            } catch (err) {
+                showMessage('Connection error: ' + err.message);
+                console.error(err);
+            }
+        }
+    </script>
 </body>
 </html>
