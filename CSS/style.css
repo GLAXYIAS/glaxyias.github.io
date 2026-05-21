@@ -760,17 +760,22 @@ nav {
   background: rgba(255, 255, 255, 0.05);
 }
 
-/* News Feed Container - ENABLED INTERNAL VERTICAL SCROLLBAR ONLY */
+/* News Feed Container - ENABLED INTERNAL VERTICAL SCROLLBAR ONLY ON HOVER */
 .news-feed {
   display: flex;
   flex-direction: column;
   gap: 15px;
   
   /* FIXED ISOLATED SCROLL PROPERTIES */
-  overflow-y: auto;
+  overflow-y: hidden; /* Hide the scrollbar entirely by default */
   overflow-x: hidden;
   padding-right: 5px;
   scroll-behavior: smooth;
+}
+
+/* Turn on vertical scrolling only when hovering over the news feed section */
+.news-feed:hover {
+  overflow-y: auto;
 }
 
 /* Custom Scrollbar Interface For The News Area */
@@ -874,7 +879,7 @@ nav {
   height: 100vh;
   background-color: #ffffff !important;   /* Crisp white background */
   background: #ffffff !important;
-  z-index: 2147483647 !important;         /* Ultimate window layout priority */
+  z-index: 2147483647 !important;          /* Ultimate window layout priority */
   display: flex;
   justify-content: center;
   align-items: center;
