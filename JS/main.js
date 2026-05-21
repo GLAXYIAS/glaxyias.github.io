@@ -299,6 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const navComms = document.getElementById('nav-communications');
     const heroSection = document.getElementById('heroSection');
     const gameGrid = document.getElementById('gameGrid');
+    const searchInput = document.getElementById('searchInput'); // Search bar
     
     // Stealth Direct Action Hook
     const stealthOpener = document.getElementById('stealthOpener');
@@ -323,6 +324,65 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = randomGame.url;
             }
         };
+    }
+
+    // --- SEARCH FUNCTIONALITY ---
+    let originalGridHTML = '';
+
+    function filterGames(query) {
+        const q = query.toLowerCase().trim();
+        
+        if (!q) {
+            // Show home view when search is empty
+            if (heroSection) heroSection.style.display = 'flex';
+            if (gameGrid) {
+                gameGrid.style.display = 'none';
+                gameGrid.innerHTML = originalGridHTML;
+            }
+            return;
+        }
+
+        // Hide hero and show filtered results
+        if (heroSection) heroSection.style.display = 'none';
+        if (gameGrid) {
+            gameGrid.style.display = 'grid';
+            gameGrid.innerHTML = '';
+
+            const filtered = _0xData.filter(game => 
+                game.title.toLowerCase().includes(q) || 
+                (game.desc && game.desc.toLowerCase().includes(q))
+            );
+
+            if (filtered.length === 0) {
+                gameGrid.innerHTML = `<div class="no-results" style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #aaa;">
+                    <h3>No games found for "${query}"</h3>
+                    <p>Try different keywords</p>
+                </div>`;
+            } else {
+                filtered.forEach(game => {
+                    const card = document.createElement('div');
+                    card.className = 'game-card';
+                    card.innerHTML = `
+                        <h3>${game.title}</h3>
+                        <div class="game-desc-overlay">${game.desc}</div>
+                    `;
+                    card.onclick = () => window.location.href = game.url;
+                    gameGrid.appendChild(card);
+                });
+            }
+        }
+    }
+
+    // Save original grid content for restoring
+    if (gameGrid) {
+        originalGridHTML = gameGrid.innerHTML;
+    }
+
+    // Attach search listener
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            filterGames(e.target.value);
+        });
     }
 
     // --- 5. Core View Functions ---
