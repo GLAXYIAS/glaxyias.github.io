@@ -45,6 +45,20 @@ const _0xData = [
   url: "Games/baseballbros/Baseballbros.html",
   desc: "A fun arcade-style baseball game with fast-paced action and competitive gameplay.",
   popular: true
+},
+  {
+  id: "b_kt",
+  title: atob("QmFza2V0QnJvcw=="),
+  url: "Games/basketbros/basketbros.html",
+  desc: "A chaotic multiplayer basketball game packed with crazy dunks and fast-paced matches.",
+  popular: true
+},
+  {
+  id: "b_sts",
+  title: atob("QmFza2V0YmFsbCBTdGFycw=="),
+  url: "Games/basketballstars/basketballstars.html",
+  desc: "A fast-paced 1v1 basketball game featuring flashy moves, quick matches, and competitive street-style gameplay.",
+  popular: true
 }
 ];
 
