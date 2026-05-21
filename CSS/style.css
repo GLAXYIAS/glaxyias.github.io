@@ -383,6 +383,7 @@ nav {
   height: 100vh;
   position: sticky;
   top: 0;
+  overflow: hidden; /* Stops right sidebar itself from creating double page-level scrollbars */
 }
 
 .signin-btn, .settings-btn {
@@ -730,15 +731,17 @@ nav {
 
 /* News Sidebar Container */
 .news-sidebar {
-  margin-top: 30px;
-  padding-top: 25px;
+  margin-top: 20px;
+  padding-top: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   text-align: left;
   
-  /* FIXED VIEWPORT LAYER CONSTRAINTS */
+  /* FORCE LAYOUT FLEXIBILITY INSIDE THE SIDEBAR MATRIX */
   display: flex;
   flex-direction: column;
-  max-height: calc(100vh - 240px); 
+  flex: 1;
+  min-height: 0; /* Critical CSS bug fix to let content compress and create internal scroll room */
+  max-height: calc(100vh - 200px); 
 }
 
 .news-title {
@@ -760,22 +763,24 @@ nav {
   background: rgba(255, 255, 255, 0.05);
 }
 
-/* News Feed Container - ENABLED INTERNAL VERTICAL SCROLLBAR ONLY ON HOVER */
+/* News Feed Container - STABILIZED TO SCROLL ON HOVER ONLY */
 .news-feed {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  flex-grow: 1;
   
-  /* FIXED ISOLATED SCROLL PROPERTIES */
-  overflow-y: hidden; /* Hide the scrollbar entirely by default */
-  overflow-x: hidden;
+  /* FORCE INTERNAL WRAPPING EXCLUSIVELY */
+  overflow-y: hidden !important; 
+  overflow-x: hidden !important;
   padding-right: 5px;
   scroll-behavior: smooth;
+  min-height: 0;
 }
 
-/* Turn on vertical scrolling only when hovering over the news feed section */
+/* Activate functional scrolling specifically when hovering directly over the feed window */
 .news-feed:hover {
-  overflow-y: auto;
+  overflow-y: auto !important;
 }
 
 /* Custom Scrollbar Interface For The News Area */
