@@ -20,7 +20,7 @@ const _0xData = [
   },
   {
     id: "d_md",
-    title: atob("RHJpdmUwYWQ="), 
+    title: atob("RHJpdmUgTWFk"), 
     url: "Games/drivemad/index.html",
     desc: "Challenging physics-based driving. Don't flip your truck!",
     popular: true
@@ -32,32 +32,18 @@ const _0xData = [
     desc: "Action-packed multiplayer FPS. dominate the battlefield.",
     popular: true
   },
-  {
-    id: "p_em",
-    title: atob("UG9rZW1vbiBFbWVyYWxk"), 
-    url: "Games/pokemon-emerald/index.html",
-    desc: "The classic GBA adventure. Become the Hoenn Champion!",
-    popular: true
-  },
-  {
-  id: "b_st",
-  title: atob("QmFza2V0IFN0YXJz"),
-  url: "Games/basketstars/index.html",
-  desc: "A fast-paced basketball arcade game. Score, trick shots, and dominate the court!",
-  popular: true
-},
-{
-  id: "y_hh",
-  title: atob("WW9ob2hvLmlv"),
-  url: "Games/yohoho/index.html",
-  desc: "A pirate-themed battle royale game. Collect gold and become the last pirate standing!",
-  popular: true
-},
 {
   id: "b_ap",
   title: atob("QnJvdGF0byBBbGwgUGFpbiBObyBHYWlu"),
   url: "Games/brotatoAPNG/brotato.html",
   desc: "The newest version of Brotato with the All Pain No Gain update.",
+  popular: true
+},
+  {
+  id: "b_bb",
+  title: atob("QmFzZWJhbGwgQnJvcw=="),
+  url: "Games/baseballbros/Baseballbros.html",
+  desc: "A fun arcade-style baseball game with fast-paced action and competitive gameplay.",
   popular: true
 }
 ];
