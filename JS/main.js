@@ -52,6 +52,13 @@ const _0xData = [
   url: "Games/yohoho/index.html",
   desc: "A pirate-themed battle royale game. Collect gold and become the last pirate standing!",
   popular: true
+},
+{
+  id: "b_ap",
+  title: atob("QnJvdGF0byBBbGwgUGFpbiBObyBHYWlu"),
+  url: "Games/brotatoAPNG/brotato.html",
+  desc: "The newest version of Brotato with the All Pain No Gain update.",
+  popular: true
 }
 ];
 
