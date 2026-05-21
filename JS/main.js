@@ -35,7 +35,7 @@ const _0xData = [
 {
   id: "b_ap",
   title: atob("QnJvdGF0byBBbGwgUGFpbiBObyBHYWlu"),
-  url: "Games/brotatoAPNG/brotato.html",
+  url: "Games/brotatoAPNG/Brotato.html",
   desc: "The newest version of Brotato with the All Pain No Gain update.",
   popular: true
 },
@@ -56,7 +56,7 @@ const _0xData = [
   {
   id: "b_sts",
   title: atob("QmFza2V0YmFsbCBTdGFycw=="),
-  url: "Games/basketballstars/basketballstars.html",
+  url: "Games/basketballstars/Basketballstars.html",
   desc: "A fast-paced 1v1 basketball game featuring flashy moves, quick matches, and competitive street-style gameplay.",
   popular: true
 }
