@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             launchStealthWindow(savedCloakSelection, savedEnvironmentSetting);
         }, 300);
-        return; // HALT LOCAL EXECUTION RADICALLY TO RUN CLEANLY ON TARGET DESTINATION IF ENABLED
+        return; // HALT LOCAL EXECUTION RADICALLY TO RUN CLEANLY ON TARGET DESTINATION IF ENABLEED
     }
 
     // --- 1. Educational Cloak Countdown Engine ---
@@ -305,6 +305,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const panicShortcutInput = document.getElementById('panicShortcut');
     const panicLinkInput = document.getElementById('panicLink');
     const savePanicBtn = document.getElementById('savePanic');
+
+    // --- NEW: Random Game Button ---
+    const randomBtn = document.getElementById('randomBtn');
+    if (randomBtn) {
+        randomBtn.onclick = () => {
+            if (_0xData.length > 0) {
+                const randomIndex = Math.floor(Math.random() * _0xData.length);
+                const randomGame = _0xData[randomIndex];
+                window.location.href = randomGame.url;
+            }
+        };
+    }
 
     // --- 5. Core View Functions ---
 
