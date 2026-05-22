@@ -15,14 +15,14 @@ const _0xData = [
     id: "s_lp",
     title: atob("U2xvcGU="), 
     url: "Games/slope/index.html",
-    desc: "A fast-paced 3D platformer. Stay on the track! (will fix soon)",
+    desc: "A fast-paced 3D platformer. Stay on the track!",
     popular: true
   },
   {
     id: "d_md",
     title: atob("RHJpdmUwYWQ="), 
     url: "Games/drivemad/index.html",
-    desc: "Challenging physics-based driving. Don't flip your truck! (will fix soon)",
+    desc: "Challenging physics-based driving. Don't flip your truck!",
     popular: true
   },
   {
@@ -36,13 +36,13 @@ const _0xData = [
   id: "b_bb",
   title: atob("QmFzZWJhbGwgQnJvcw=="),
   url: "Games/baseballbros/Baseballbros.html",
-  desc: "A fun arcade-style baseball game with fast-paced action and competitive gameplay. (will fix)",
+  desc: "A fun arcade-style baseball game with fast-paced action and competitive gameplay.",
   popular: true
 },
   {
   id: "b_kt",
   title: atob("QmFza2V0QnJvcw=="),
-  url: "Games/basketbros/Basketbros.html",
+  url: "Games/basketbros/basketbros.html",
   desc: "A chaotic multiplayer basketball game packed with crazy dunks and fast-paced matches.",
   popular: true
 },
@@ -223,9 +223,9 @@ function applyTheme(theme) {
 }
 
 /**
- * ROOTED SOURCE INJECTION SYSTEM WITH NAVIGATION RESTORATION
- * Fetches raw HTML code from directories, splices a floating overlay UI 
- * component to navigate back, and overrides the window workspace natively.
+ * OPTIMIZED ROOTED SOURCE INJECTION SYSTEM 
+ * Cleans up document structure writing to prevent canvas crashes while 
+ * adding a persistent return navigation button.
  */
 async function launchGame(gameId) {
     const game = _0xData.find(g => g.id === gameId);
@@ -234,53 +234,43 @@ async function launchGame(gameId) {
             const response = await fetch(game.url);
             if (!response.ok) throw new Error("Asset path resolution failure");
             
-            const rawHtmlText = await response.text();
+            let rawHtmlText = await response.text();
             
             // Re-route relative links if asset scopes are sub-nested in structural directories
-            const folderPath = game.url.substring(0, game.url.lastIndexOf('/') + 1);
+            const folderPath = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) + game.url.substring(0, game.url.lastIndexOf('/') + 1);
             
+            // Clean paths for assets, scripts, and links to make sure they resolve locally
             let optimizedHtml = rawHtmlText.replace(/(src|href)=["'](?!http|\/)([^"']+)["']/g, (match, type, path) => {
                 return `${type}="${folderPath}${path}"`;
             });
 
-            // Persistent UI Payload: Injects a floating return button on top of engine layers
-            const backButtonPayload = `
-                <div id="null-back-nav" style="
-                    position: fixed;
-                    top: 15px;
-                    left: 15px;
-                    z-index: 99999999;
-                    font-family: sans-serif;
-                ">
-                    <button onclick="window.location.reload();" style="
-                        background: #0a0a0a;
-                        color: #8b00ff;
-                        border: 2px solid #8b00ff;
-                        padding: 8px 14px;
-                        font-weight: bold;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        box-shadow: 0 0 10px rgba(139, 0, 255, 0.5);
-                        font-size: 13px;
-                        transition: all 0.2s ease;
-                    " 
-                    onmouseover="this.style.background='#8b00ff'; this.style.color='#fff';" 
-                    onmouseout="this.style.background='#0a0a0a'; this.style.color='#8b00ff';">
-                        ← Back to Games
-                    </button>
-                </div>
-            `;
-
-            optimizedHtml = backButtonPayload + optimizedHtml;
-
-            // Purge existing elements and swap document markup tree
+            // Cleanly replace document content to prevent script block breaking
             document.open();
             document.write(optimizedHtml);
             document.close();
+
+            // Append the navigation back button safely into the new body context
+            const backNavContainer = document.createElement('div');
+            backNavContainer.id = "null-back-nav";
+            backNavContainer.style = "position: fixed; top: 15px; left: 15px; z-index: 99999999; font-family: sans-serif;";
             
-            console.log(`Game system component initialized natively: ${game.id}`);
+            backNavContainer.innerHTML = `
+                <button onclick="window.location.reload();" style="
+                    background: #0a0a0a;
+                    color: #8b00ff;
+                    border: 2px solid #8b00ff;
+                    padding: 8px 14px;
+                    font-weight: bold;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    box-shadow: 0 0 10px rgba(139, 0, 255, 0.5);
+                    font-size: 13px;
+                ">← Back to Games</button>
+            `;
+            document.body.appendChild(backNavContainer);
+            
         } catch (error) {
-            console.error("Direct execution injection aborted:", error);
+            console.error("Direct injection optimization error, falling back:", error);
             window.location.href = game.url;
         }
     }
