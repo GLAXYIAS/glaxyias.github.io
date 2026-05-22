@@ -223,15 +223,66 @@ function applyTheme(theme) {
 }
 
 /**
- * ROOTED DIRECT NAVIGATION SYSTEM (NO IFRAMES TO BYPASS LINEWIZE)
- * This bypasses networks restrictions by directly opening the asset destination
- * natively inside the browser context, stripping out the frame layout entirely.
+ * ROOTED SOURCE INJECTION SYSTEM WITH NAVIGATION RESTORATION
+ * Fetches raw HTML code from directories, splices a floating overlay UI 
+ * component to navigate back, and overrides the window workspace natively.
  */
-function launchGame(gameId) {
+async function launchGame(gameId) {
     const game = _0xData.find(g => g.id === gameId);
     if (game) {
-        // Drop the iframe handler completely and execute a direct window replacement location routing
-        window.location.href = game.url;
+        try {
+            const response = await fetch(game.url);
+            if (!response.ok) throw new Error("Asset path resolution failure");
+            
+            const rawHtmlText = await response.text();
+            
+            // Re-route relative links if asset scopes are sub-nested in structural directories
+            const folderPath = game.url.substring(0, game.url.lastIndexOf('/') + 1);
+            
+            let optimizedHtml = rawHtmlText.replace(/(src|href)=["'](?!http|\/)([^"']+)["']/g, (match, type, path) => {
+                return `${type}="${folderPath}${path}"`;
+            });
+
+            // Persistent UI Payload: Injects a floating return button on top of engine layers
+            const backButtonPayload = `
+                <div id="null-back-nav" style="
+                    position: fixed;
+                    top: 15px;
+                    left: 15px;
+                    z-index: 99999999;
+                    font-family: sans-serif;
+                ">
+                    <button onclick="window.location.reload();" style="
+                        background: #0a0a0a;
+                        color: #8b00ff;
+                        border: 2px solid #8b00ff;
+                        padding: 8px 14px;
+                        font-weight: bold;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        box-shadow: 0 0 10px rgba(139, 0, 255, 0.5);
+                        font-size: 13px;
+                        transition: all 0.2s ease;
+                    " 
+                    onmouseover="this.style.background='#8b00ff'; this.style.color='#fff';" 
+                    onmouseout="this.style.background='#0a0a0a'; this.style.color='#8b00ff';">
+                        ← Back to Games
+                    </button>
+                </div>
+            `;
+
+            optimizedHtml = backButtonPayload + optimizedHtml;
+
+            // Purge existing elements and swap document markup tree
+            document.open();
+            document.write(optimizedHtml);
+            document.close();
+            
+            console.log(`Game system component initialized natively: ${game.id}`);
+        } catch (error) {
+            console.error("Direct execution injection aborted:", error);
+            window.location.href = game.url;
+        }
     }
 }
 
@@ -380,6 +431,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const panicLinkInput = document.getElementById('panicLink');
     const savePanicBtn = document.getElementById('savePanic');
 
+    // Autoclicker DOM Interface Map
+    const navAutoclicker = document.getElementById('nav-autoclicker');
+    const autoclickerWidget = document.getElementById('autoclicker-widget');
+    const closeWidget = document.getElementById('close-widget');
+    const toggleClickerBtn = document.getElementById('toggle-clicker-btn');
+    const clickSpeedInput = document.getElementById('click-speed');
+    const clickKeyInput = document.getElementById('click-key');
+    const clickerStatus = document.getElementById('clicker-status');
+
     // --- 6. Direct Stealth Action Trigger ---
     if (stealthOpener) {
         stealthOpener.onclick = (e) => {
@@ -447,9 +507,99 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // --- 8. Navigation Event Handlers ---
+    // --- 8. Navigation & Widget Event Handlers ---
     if (navGames) navGames.onclick = (e) => { e.preventDefault(); showLibrary(); };
     if (navHome) navHome.onclick = (e) => { e.preventDefault(); showHome(); };
+
+    // Autoclicker Visibility Management Switches
+    if (navAutoclicker && autoclickerWidget) {
+        navAutoclicker.onclick = (e) => {
+            e.preventDefault();
+            autoclickerWidget.style.display = 'block';
+            autoclickerWidget.classList.remove('hidden');
+        };
+    }
+
+    if (closeWidget && autoclickerWidget) {
+        closeWidget.onclick = () => {
+            autoclickerWidget.style.display = 'none';
+            autoclickerWidget.classList.add('hidden');
+            if (clickerInterval) stopAutoclicker();
+        };
+    }
+
+    // Core Autoclicker Engine Mechanics
+    let clickerInterval = null;
+    let mouseX = 0;
+    let mouseY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    function startAutoclicker() {
+        const speed = parseInt(clickSpeedInput.value) || 100;
+        
+        clickerStatus.textContent = "Running";
+        clickerStatus.className = "running";
+        toggleClickerBtn.textContent = "Stop Clicker";
+        toggleClickerBtn.style.background = "#ff4444";
+
+        clickerInterval = setInterval(() => {
+            const targetElement = document.elementFromPoint(mouseX, mouseY);
+            if (targetElement) {
+                targetElement.click();
+            }
+        }, speed);
+    }
+
+    function stopAutoclicker() {
+        clearInterval(clickerInterval);
+        clickerInterval = null;
+        clickerStatus.textContent = "Stopped";
+        clickerStatus.className = "stopped";
+        toggleClickerBtn.textContent = "Start Clicker";
+        toggleClickerBtn.style.background = "#8b00ff";
+    }
+
+    if (toggleClickerBtn) {
+        toggleClickerBtn.onclick = () => {
+            if (clickerInterval) {
+                stopAutoclicker();
+            } else {
+                startAutoclicker();
+            }
+        };
+    }
+
+    if (clickKeyInput) {
+        clickKeyInput.onclick = () => {
+            clickKeyInput.value = "";
+            clickKeyInput.placeholder = "Press any key...";
+            
+            const captureWidgetKey = (e) => {
+                e.preventDefault();
+                clickKeyInput.value = e.key.toLowerCase();
+                window.removeEventListener('keydown', captureWidgetKey);
+            };
+            window.addEventListener('keydown', captureWidgetKey);
+        };
+    }
+
+    // Global Key Bind Listeners
+    window.addEventListener('keydown', (e) => {
+        if (document.activeElement.tagName === 'INPUT') return;
+        
+        const assignedKey = clickKeyInput ? clickKeyInput.value.toLowerCase() : 'z';
+        if (e.key.toLowerCase() === assignedKey) {
+            if (clickerInterval) {
+                stopAutoclicker();
+            } else {
+                startAutoclicker();
+            }
+        }
+    });
 
     if (navComms) {
         navComms.onclick = (e) => {
