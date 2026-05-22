@@ -208,45 +208,16 @@ function applyTheme(theme) {
     }
 }
 
-/* ROOTED DIRECT FRAME RUNNER SYSTEM */
+/**
+ * ROOTED DIRECT NAVIGATION SYSTEM (NO IFRAMES TO BYPASS LINEWIZE)
+ * This bypasses networks restrictions by directly opening the asset destination
+ * natively inside the browser context, stripping out the frame layout entirely.
+ */
 function launchGame(gameId) {
     const game = _0xData.find(g => g.id === gameId);
     if (game) {
-        const runner = document.getElementById('gameRunner');
-        const frame = document.getElementById('gameFrame');
-        const closeXElement = document.getElementById('exitGame');
-        
-        // Hard extermination of the visual red cross close button element if found
-        if (closeXElement) {
-            closeXElement.style.setProperty('display', 'none', 'important');
-            closeXElement.remove(); 
-        }
-
-        if (runner && frame) {
-            // Apply clean layout configurations directly to root containment elements
-            runner.style.position = 'fixed';
-            runner.style.top = '0';
-            runner.style.left = '0';
-            runner.style.width = '100vw';
-            runner.style.height = '100vh';
-            runner.style.zIndex = '999999';
-            runner.style.backgroundColor = '#000000';
-            runner.style.overflow = 'hidden';
-            
-            // Clean framework execution settings for the embedded frame tree
-            frame.setAttribute('scrolling', 'no');
-            frame.style.width = '100%';
-            frame.style.height = '100%';
-            frame.style.border = 'none';
-            frame.style.overflow = 'hidden';
-            
-            frame.src = game.url;
-            runner.classList.remove('hidden');
-            runner.style.display = 'block';
-            
-            // Set focus inside frame tree natively so controls bind instantly
-            setTimeout(() => { frame.focus(); }, 100);
-        }
+        // Drop the iframe handler completely and execute a direct window replacement location routing
+        window.location.href = game.url;
     }
 }
 
@@ -386,9 +357,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroSection = document.getElementById('heroSection');
     const gameGrid = document.getElementById('gameGrid');
     
-    const gameRunner = document.getElementById('gameRunner');
-    const gameFrame = document.getElementById('gameFrame');
-    
     const stealthOpener = document.getElementById('stealthOpener');
     const autoLaunchCheckbox = document.getElementById('toggle-auto-launch');
     const autoLaunchOptionsDiv = document.getElementById('auto-launch-options');
@@ -397,18 +365,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const panicShortcutInput = document.getElementById('panicShortcut');
     const panicLinkInput = document.getElementById('panicLink');
     const savePanicBtn = document.getElementById('savePanic');
-
-    // --- 5. SYSTEM CONTROL EVENT: UNIFIED CLOSING FALLBACK (ESCAPE KEY) ---
-    window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            if (gameRunner && gameFrame && gameRunner.style.display !== 'none') {
-                gameFrame.src = "";
-                gameRunner.style.display = 'none';
-                gameRunner.classList.add('hidden');
-                console.log("Game structural environment unmounted via Esc callback.");
-            }
-        }
-    });
 
     // --- 6. Direct Stealth Action Trigger ---
     if (stealthOpener) {
