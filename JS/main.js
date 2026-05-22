@@ -94,6 +94,13 @@ const _0xData = [
   url: "Games/polytrack/index.html",
   desc: "A fast-paced low-poly racing game with smooth drifting, sharp turns, and high-speed action.",
   popular: true
+},
+ {
+  id: "a_gr",
+  title: atob("QWdhci5pbw=="),
+  url: "Games/agar/index.html",
+  desc: "A multiplayer cell-eating game where you grow larger by consuming smaller players and avoiding bigger ones. (may cause lag)",
+  popular: true
 }
 ];
 
