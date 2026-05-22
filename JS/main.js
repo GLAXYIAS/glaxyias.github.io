@@ -42,7 +42,7 @@ const _0xData = [
   {
   id: "b_kt",
   title: atob("QmFza2V0QnJvcw=="),
-  url: "Games/basketbros/basketbros.html",
+  url: "Games/basketbros/Basketbros.html",
   desc: "A chaotic multiplayer basketball game packed with crazy dunks and fast-paced matches.",
   popular: true
 },
