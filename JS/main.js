@@ -80,6 +80,13 @@ const _0xData = [
   url: "Games/amongus/Amongus.html",
   desc: "A social deduction game where crewmates complete tasks while impostors secretly sabotage the mission.",
   popular: true
+},
+ {
+  id: "d_dk",
+  title: atob("RG9raSBEb2tpIExpdGVyYXR1cmUgQ2x1Yg=="),
+  url: "Games/dokidoki/index.html",
+  desc: "A psychological horror visual novel that starts as a cute dating sim but quickly takes a dark turn.",
+  popular: true
 }
 ];
 
