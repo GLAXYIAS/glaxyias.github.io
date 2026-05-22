@@ -66,6 +66,13 @@ const _0xData = [
   url: "Games/basketrandom/Basketrandom.html",
   desc: "A chaotic basketball game with random physics, unpredictable jumps, and funny matches.",
   popular: true
+},
+ {
+  id: "r_bw",
+  title: atob("UmV0cm8gQm93bA=="),
+  url: "Games/retrobowl/Retrobowl.html",
+  desc: "A retro-style football game where you manage your team and lead them to championship glory.",
+  popular: true
 }
 ];
 
