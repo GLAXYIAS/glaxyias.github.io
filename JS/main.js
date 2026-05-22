@@ -230,58 +230,58 @@ function applyTheme(theme) {
 }
 
 /**
- * REPAIRED DIRECT LOCAL INJECTION ENGINE
- * Resolves directory structure mapping directly relative to the active hostname base route
+ * DIRECT DIRECTORY IFRAME LAUNCH SYSTEM
+ * Forces the document to cleanly render the target game directly from its actual 
+ * subdirectory path route without mutating inner script resources.
  */
-async function launchGame(gameId) {
+function launchGame(gameId) {
     const game = _0xData.find(g => g.id === gameId);
     if (game) {
-        try {
-            // Fetch game data relative to root folder execution path
-            const response = await fetch(game.url);
-            if (!response.ok) throw new Error("Asset path resolution failure");
-            
-            let rawHtmlText = await response.text();
-            
-            // Re-route relative assets cleanly back to domain environment path without stripping repos
-            const baseHrefLocation = window.location.href.split('?')[0].split('#')[0];
-            const baseDir = baseHrefLocation.substring(0, baseHrefLocation.lastIndexOf('/') + 1);
-            const folderPath = baseDir + game.url.substring(0, game.url.lastIndexOf('/') + 1);
-            
-            // Clean paths for assets, scripts, and links to make sure they resolve locally
-            let optimizedHtml = rawHtmlText.replace(/(src|href)=["'](?!http|\/)([^"']+)["']/g, (match, type, path) => {
-                return `${type}="${folderPath}${path}"`;
-            });
+        // Build absolute URL resolving exactly to your directory structural path
+        const baseHrefLocation = window.location.href.split('?')[0].split('#')[0];
+        const baseDir = baseHrefLocation.substring(0, baseHrefLocation.lastIndexOf('/') + 1);
+        const absoluteGameUrl = baseDir + game.url;
 
-            // Cleanly replace document content to prevent script block breaking
-            document.open();
-            document.write(optimizedHtml);
-            document.close();
+        // Clear the layout context completely to build the isolated window frame
+        document.open();
+        document.write(`
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>${game.title}</title>
+                <style>
+                    body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; }
+                    iframe { width: 100%; height: 100%; border: none; display: block; }
+                </style>
+            </head>
+            <body>
+                <iframe src="${absoluteGameUrl}"></iframe>
+            </body>
+            </html>
+        `);
+        document.close();
 
-            // Append the navigation back button safely into the new body context
-            const backNavContainer = document.createElement('div');
-            backNavContainer.id = "null-back-nav";
-            backNavContainer.style = "position: fixed; top: 15px; left: 15px; z-index: 99999999; font-family: sans-serif;";
-            
-            backNavContainer.innerHTML = `
-                <button onclick="window.location.reload();" style="
-                    background: #0a0a0a;
-                    color: #8b00ff;
-                    border: 2px solid #8b00ff;
-                    padding: 8px 14px;
-                    font-weight: bold;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    box-shadow: 0 0 10px rgba(139, 0, 255, 0.5);
-                    font-size: 13px;
-                ">← Back to Games</button>
-            `;
-            document.body.appendChild(backNavContainer);
-            
-        } catch (error) {
-            console.error("Direct injection optimization error, falling back:", error);
-            window.location.href = game.url;
-        }
+        // Inject navigation button wrapper overhead
+        const backNavContainer = document.createElement('div');
+        backNavContainer.id = "null-back-nav";
+        backNavContainer.style = "position: fixed; top: 15px; left: 15px; z-index: 99999999; font-family: sans-serif;";
+        
+        backNavContainer.innerHTML = `
+            <button onclick="window.location.reload();" style="
+                background: #0a0a0a;
+                color: #8b00ff;
+                border: 2px solid #8b00ff;
+                padding: 8px 14px;
+                font-weight: bold;
+                border-radius: 6px;
+                cursor: pointer;
+                box-shadow: 0 0 10px rgba(139, 0, 255, 0.5);
+                font-size: 13px;
+            ">← Back to Games</button>
+        `;
+        document.body.appendChild(backNavContainer);
     }
 }
 
