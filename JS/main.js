@@ -230,21 +230,23 @@ function applyTheme(theme) {
 }
 
 /**
- * OPTIMIZED ROOTED SOURCE INJECTION SYSTEM 
- * Cleans up document structure writing to prevent canvas crashes while 
- * adding a persistent return navigation button.
+ * REPAIRED DIRECT LOCAL INJECTION ENGINE
+ * Resolves directory structure mapping directly relative to the active hostname base route
  */
 async function launchGame(gameId) {
     const game = _0xData.find(g => g.id === gameId);
     if (game) {
         try {
+            // Fetch game data relative to root folder execution path
             const response = await fetch(game.url);
             if (!response.ok) throw new Error("Asset path resolution failure");
             
             let rawHtmlText = await response.text();
             
-            // Re-route relative links if asset scopes are sub-nested in structural directories
-            const folderPath = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) + game.url.substring(0, game.url.lastIndexOf('/') + 1);
+            // Re-route relative assets cleanly back to domain environment path without stripping repos
+            const baseHrefLocation = window.location.href.split('?')[0].split('#')[0];
+            const baseDir = baseHrefLocation.substring(0, baseHrefLocation.lastIndexOf('/') + 1);
+            const folderPath = baseDir + game.url.substring(0, game.url.lastIndexOf('/') + 1);
             
             // Clean paths for assets, scripts, and links to make sure they resolve locally
             let optimizedHtml = rawHtmlText.replace(/(src|href)=["'](?!http|\/)([^"']+)["']/g, (match, type, path) => {
