@@ -73,6 +73,13 @@ const _0xData = [
   url: "Games/retrobowl/Retrobowl.html",
   desc: "A retro-style football game where you manage your team and lead them to championship glory.",
   popular: true
+},
+ {
+  id: "a_us",
+  title: atob("QW1vbmcgVXM="),
+  url: "Games/amongus/Amongus.html",
+  desc: "A social deduction game where crewmates complete tasks while impostors secretly sabotage the mission.",
+  popular: true
 }
 ];
 
