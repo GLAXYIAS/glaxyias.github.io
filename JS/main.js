@@ -4,13 +4,13 @@ import { applyCloak } from '../Cloaks/Cloaks.js';
  * Null_X Database / Game Registry
  */
 const _0xData = [
-  {
-    id: "b_to",
-    title: atob("QnJvdGF0bw=="), 
-    url: "Games/brotato/index.html",
-    desc: "A top-down arena shooter roguelite where you play a potato wielding up to 6 weapons at a time.",
-    popular: true
-  },
+ {
+  id: "b_ap",
+  title: atob("QnJvdGF0byBBbGwgUGFpbiBObyBHYWlu"),
+  url: "Games/brotatoAPNG/brotato.html",
+  desc: "The newest version of Brotato with the All Pain No Gain update.",
+  popular: true
+},
   {
     id: "s_lp",
     title: atob("U2xvcGU="), 
@@ -33,19 +33,40 @@ const _0xData = [
     popular: true
   },
   {
-    id: "p_em",
-    title: atob("UG9rZW1vbiBFbWVyYWxk"), 
-    url: "Games/pokemon-emerald/index.html",
-    desc: "The classic GBA adventure. Become the Hoenn Champion!",
-    popular: true
-  }, // <-- Comma added here to fix structural script crash
+  id: "b_bb",
+  title: atob("QmFzZWJhbGwgQnJvcw=="),
+  url: "Games/baseballbros/Baseballbros.html",
+  desc: "A fun arcade-style baseball game with fast-paced action and competitive gameplay.",
+  popular: true
+},
   {
-    id: "b_st",
-    title: atob("QmFza2V0IFN0YXJz"),
-    url: "Games/basketstars/index.html",
-    desc: "A fast-paced basketball arcade game. Score, trick shots, and dominate the court!",
-    popular: true
-  }
+  id: "b_kt",
+  title: atob("QmFza2V0QnJvcw=="),
+  url: "Games/basketbros/basketbros.html",
+  desc: "A chaotic multiplayer basketball game packed with crazy dunks and fast-paced matches.",
+  popular: true
+},
+  {
+  id: "b_sts",
+  title: atob("QmFza2V0YmFsbCBTdGFycw=="),
+  url: "Games/basketballstars/Basketballstars.html",
+  desc: "A fast-paced 1v1 basketball game featuring flashy moves, quick matches, and competitive street-style gameplay.",
+  popular: true
+},
+  {
+  id: "c_cc",
+  title: atob("Q29va2llIENsaWNrZXI="),
+  url: "Games/cookie clicker/Cookieclicker.html",
+  desc: "An addictive incremental game where you click cookies to earn more cookies and unlock upgrades.",
+  popular: true
+},
+  {
+  id: "b_rd",
+  title: atob("QmFza2V0IFJhbmRvbQ=="),
+  url: "Games/basketrandom/Basketrandom.html",
+  desc: "A chaotic basketball game with random physics, unpredictable jumps, and funny matches.",
+  popular: true
+}
 ];
 
 /**
