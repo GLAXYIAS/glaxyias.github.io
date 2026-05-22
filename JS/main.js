@@ -87,6 +87,13 @@ const _0xData = [
   url: "Games/dokidoki/index.html",
   desc: "A psychological horror visual novel that starts as a cute dating sim but quickly takes a dark turn.",
   popular: true
+},
+ {
+  id: "p_tr",
+  title: atob("UG9seVRyYWNr"),
+  url: "Games/polytrack/index.html",
+  desc: "A fast-paced low-poly racing game with smooth drifting, sharp turns, and high-speed action.",
+  popular: true
 }
 ];
 
