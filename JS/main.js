@@ -15,14 +15,14 @@ const _0xData = [
     id: "s_lp",
     title: atob("U2xvcGU="), 
     url: "Games/slope/index.html",
-    desc: "A fast-paced 3D platformer. Stay on the track!",
+    desc: "A fast-paced 3D platformer. Stay on the track! (will fix soon)",
     popular: true
   },
   {
     id: "d_md",
     title: atob("RHJpdmUwYWQ="), 
     url: "Games/drivemad/index.html",
-    desc: "Challenging physics-based driving. Don't flip your truck!",
+    desc: "Challenging physics-based driving. Don't flip your truck! (will fix soon)",
     popular: true
   },
   {
@@ -36,7 +36,7 @@ const _0xData = [
   id: "b_bb",
   title: atob("QmFzZWJhbGwgQnJvcw=="),
   url: "Games/baseballbros/Baseballbros.html",
-  desc: "A fun arcade-style baseball game with fast-paced action and competitive gameplay.",
+  desc: "A fun arcade-style baseball game with fast-paced action and competitive gameplay. (will fix)",
   popular: true
 },
   {
