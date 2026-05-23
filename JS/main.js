@@ -108,6 +108,13 @@ const _0xData = [
   url: "Games/trucksim/index.html",
   desc: "An Indian truck driving simulator where you transport cargo across roads, manage balance, and navigate realistic driving challenges.",
   popular: true
+},
+ {
+  id: "j_be",
+  title: atob("SmVmZnJleSdzIEJhc2ljcy"),
+  url: "Games/JEBIEAK/index.html",
+  desc: "Baldi's basics but with Epstein",
+  popular: true
 }
 ];
 
