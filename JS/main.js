@@ -115,6 +115,13 @@ const _0xData = [
   url: "Games/JEBIEAK/index.html",
   desc: "Baldi's basics but with Epstein",
   popular: true
+},
+ {
+  id: "g_ta",
+  title: atob("R3JhbmQgVGhlZnQgQXV0bw=="),
+  url: "Games/GTA/index.html",
+  desc: "An open-world action game where you explore the city, complete missions, and cause chaos in a sandbox environment.",
+  popular: true
 }
 ];
 
