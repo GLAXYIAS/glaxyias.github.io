@@ -115,6 +115,13 @@ const _0xData = [
   url: "Games/ragdolldrop/index.html",
   desc: "A physics-based ragdoll game where you drop and crash characters in hilarious and chaotic ways.",
   popular: true
+},
+ {
+  id: "t_ts",
+  title: atob("VHJ1Y2sgU2lt"),
+  url: "Games/trucksim/index.html",
+  desc: "An Indian truck driving simulator where you transport cargo across roads, manage balance, and navigate realistic driving challenges.",
+  popular: true
 }
 ];
 
