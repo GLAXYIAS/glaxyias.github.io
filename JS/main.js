@@ -101,6 +101,13 @@ const _0xData = [
   url: "Games/agar/index.html",
   desc: "A multiplayer cell-eating game where you grow larger by consuming smaller players and avoiding bigger ones. (may cause lag)",
   popular: true
+},
+ {
+  id: "b_bp",
+  title: atob("Qml0UGxhbmVz"),
+  url: "Games/bitplanes/index.html",
+  desc: "A fast-paced aerial combat game where you pilot a plane and battle enemies in retro-style dogfights.",
+  popular: true
 }
 ];
 
