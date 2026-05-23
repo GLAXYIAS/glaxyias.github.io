@@ -111,7 +111,7 @@ const _0xData = [
 },
  {
   id: "j_be",
-  title: atob("SmVmZnJleSdzIEJhc2ljcy"),
+  title: atob("SmVmZmVyeSBFcHN0ZWluJ3MgQmFzaWNzIGluIEVkdWNhdGlvbiBhbmQgS2lkbmFwcGluZw=="),
   url: "Games/JEBIEAK/index.html",
   desc: "Baldi's basics but with Epstein",
   popular: true
