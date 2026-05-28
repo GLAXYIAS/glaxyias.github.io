@@ -117,13 +117,6 @@ const _0xData = [
   popular: true
 },
  {
-  id: "j_be",
-  title: atob("SmVmZmVyeSBFcHN0ZWluJ3MgQmFzaWNzIGluIEVkdWNhdGlvbiBhbmQgS2lkbmFwcGluZw=="),
-  url: "Games/JEBIEAK/index.html",
-  desc: "Baldi's basics but with Epstein",
-  popular: true
-},
- {
   id: "g_ta",
   title: atob("R3JhbmQgVGhlZnQgQXV0bw=="),
   url: "Games/GTA/index.html",
