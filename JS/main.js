@@ -157,6 +157,13 @@ const _0xData = [
   url: "Games/tungbaldibasics/index.html",
   desc: "A meme-inspired horror school game filled with strange characters, puzzles, and chaotic chases.",
   popular: true
+},
+ {
+  id: "w_dl",
+  title: atob("V29yZGxl"),
+  url: "Games/wordle/index.html",
+  desc: "A daily word puzzle game where you guess a hidden five-letter word in six tries using color hints.",
+  popular: true
 }
 ];
 
