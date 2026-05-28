@@ -241,6 +241,13 @@ const _0xData = [
   url: "Games/SliceMaster/index.html",
   desc: "A satisfying physics-based slicing game where you flip your knife and chop through obstacles with perfect timing.",
   popular: true
+},
+ {
+  id: "skinwalker",
+  title: atob("U2tpbndhbGtlcg=="),
+  url: "Games/Skinwalker/index.html",
+  desc: "A suspenseful horror-survival game where you must navigate the wilderness and evade a mythical creature tracking your every move.",
+  popular: true
 }
 ];
 
