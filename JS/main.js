@@ -129,6 +129,13 @@ const _0xData = [
   url: "Games/TAPA/index.html",
   desc: "A goofy physics-based game where you launch potatoes through chaotic obstacle-filled levels.",
   popular: true
+},
+ {
+  id: "t_p2",
+  title: atob("VGhyb3cgYSBQb3RhdG8gMg=="),
+  url: "Games/TAPA2/index.html",
+  desc: "The sequel to Throw a Potato, featuring crazier levels, bigger launches, and even more chaotic physics gameplay.",
+  popular: true
 }
 ];
 
