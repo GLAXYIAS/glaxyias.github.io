@@ -248,6 +248,13 @@ const _0xData = [
   url: "Games/skibshooter/index.html",
   desc: "An action-packed shooter game where you defend your territory against waves of quirky incoming enemies.",
   popular: true
+},
+ {
+  id: "ragdoll_drop",
+  title: atob("UmFnZG9sbCBEcm9w"),
+  url: "games/ragdrop/index.html",
+  desc: "A chaotic physics game where you drop ragdoll characters and watch them tumble through obstacles.",
+  popular: true
 }
 ];
 
