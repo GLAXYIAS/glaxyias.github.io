@@ -234,6 +234,13 @@ const _0xData = [
   url: "Games/Vex/Vex3/index.html",
   desc: "A classic entry in the Vex series featuring tight platforming and challenging level design.",
   popular: true
+},
+ {
+  id: "slice_master",
+  title: atob("U2xpY2UgTWFzdGVy"),
+  url: "Games/SliceMaster/index.html",
+  desc: "A satisfying physics-based slicing game where you flip your knife and chop through obstacles with perfect timing.",
+  popular: true
 }
 ];
 
