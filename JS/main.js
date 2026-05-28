@@ -122,6 +122,13 @@ const _0xData = [
   url: "Games/GTA/index.html",
   desc: "An open-world action game where you explore the city, complete missions, and cause chaos in a sandbox environment.",
   popular: true
+},
+ {
+  id: "t_pa",
+  title: atob("VGhyb3cgYSBQb3RhdG8="),
+  url: "Games/TAPA/index.html",
+  desc: "A goofy physics-based game where you launch potatoes through chaotic obstacle-filled levels.",
+  popular: true
 }
 ];
 
