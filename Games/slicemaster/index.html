@@ -1,0 +1,80 @@
+ <!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+<html>
+<base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@
+73062e5/slice-master/">
+<head>
+  <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover' />
+  <meta charset='utf-8'>
+  <link rel="stylesheet" type="text/css" href="styles.css"> 
+  <link rel="manifest" href="manifest.json">
+  <style></style>
+  <title>Slice Master</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <script src="playcanvas-stable.min.js"></script>
+  <meta name="robots" content="noindex">
+  <script src="__settings__.js"></script>
+
+  <style type="text/css">
+    .no-select {
+      -webkit-touch-callout: none;
+      /* iOS Safari */
+      -webkit-user-select: none;
+      /* Safari */
+      -khtml-user-select: none;
+      /* Konqueror HTML */
+      -moz-user-select: none;
+      /* Old versions of Firefox */
+      -ms-user-select: none;
+      /* Internet Explorer/Edge */
+      user-select: none;
+      /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+    }
+  </style>
+
+  <script type="text/javascript">
+    setTimeout(function() {
+      if (document.getElementsByTagName("canvas").length) {
+        document.getElementsByTagName("body")[0].classList.add("no-select")
+      }
+    }, 2000);
+  </script>
+
+  </script>
+</head>
+
+<body>
+  <script src="__modules__.js"></script>
+  <script src="__start__.js"></script>
+  <script src="__loading__.js"></script>
+  <script>
+    function fnSendMsg(evt) {
+      if (typeof window.parent.postMessage == 'function') {
+        window.parent.postMessage('keypress-from-game', '*');
+      } else if (typeof window.top.postMessage == 'function' && window.top != window.self) {
+        window.top.postMessage('keypress-from-game', '*');
+      }
+    }
+    document.body.addEventListener('click', function(event) {
+      fnSendMsg(event);
+    });
+    document.addEventListener('keypress', function(event) {
+      fnSendMsg(event);
+    });
+    document.addEventListener('keydown', function(e) {
+      fnSendMsg(event);
+    });
+    document.addEventListener('keyup', function(e) {
+      fnSendMsg(event);
+    });
+  </script>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"36842a64a44c47c8b55438dc59013b4d","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+
+</html>
