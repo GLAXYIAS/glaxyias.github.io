@@ -252,7 +252,7 @@ const _0xData = [
  {
   id: "ragdoll_drop",
   title: atob("UmFnZG9sbCBEcm9w"),
-  url: "games/ragdrop/index.html",
+  url: "Games/ragdrop/index.html",
   desc: "A chaotic physics game where you drop ragdoll characters and watch them tumble through obstacles.",
   popular: true
 }
