@@ -164,6 +164,76 @@ const _0xData = [
   url: "Games/wordle/index.html",
   desc: "A daily word puzzle game where you guess a hidden five-letter word in six tries using color hints.",
   popular: true
+},
+ {
+  id: "v_3x",
+  title: atob("VGV4IDMgWGFtYXM="),
+  url: "Games/Vex/Vex 3 Xmas/index.html",
+  desc: "A challenging stickman parkour platformer filled with traps, jumps, and precision movement.",
+  popular: true
+},
+{
+  id: "v_4",
+  title: atob("VGV4IDQ="),
+  url: "Games/Vex/Vex 4/index.html",
+  desc: "A fast-paced platformer where you run, jump, and climb through deadly obstacle courses.",
+  popular: true
+},
+{
+  id: "v_5",
+  title: atob("VGV4IDU="),
+  url: "Games/Vex/Vex 5/index.html",
+  desc: "More intense parkour levels with tougher traps and tighter timing challenges.",
+  popular: true
+},
+{
+  id: "v_6",
+  title: atob("VGV4IDY="),
+  url: "Games/Vex/Vex 6/index.html",
+  desc: "A refined platforming experience with new obstacles and smoother movement mechanics.",
+  popular: true
+},
+{
+  id: "v_7",
+  title: atob("VGV4IDc="),
+  url: "Games/Vex/Vex 7/index.html",
+  desc: "A highly difficult parkour platformer with complex level design and precision jumps.",
+  popular: true
+},
+{
+  id: "v_8",
+  title: atob("VGV4IDg="),
+  url: "Games/Vex/Vex 8/index.html",
+  desc: "The latest in the series with tougher levels, new mechanics, and faster gameplay.",
+  popular: true
+},
+{
+  id: "v_ch",
+  title: atob("VGV4IENoYWxsZW5nZXM="),
+  url: "Games/Vex/Vex Challenges/index.html",
+  desc: "Special challenge levels designed to test your timing, movement, and parkour skills.",
+  popular: true
+},
+{
+  id: "v_x2",
+  title: atob("VGV4IHgzTTIgMg=="),
+  url: "Games/Vex/Vex x3m 2/index.html",
+  desc: "A sequel expansion with harder levels and new parkour challenges.",
+  popular: true
+},
+{
+  id: "v_xm",
+  title: atob("VGV4IHgzbQ=="),
+  url: "Games/Vex/Vex x3m/index.html",
+  desc: "A fast-paced stickman parkour mode with tricky obstacle courses and momentum-based movement.",
+  popular: true
+},
+{
+  id: "v_3",
+  title: atob("VGV4Mw=="),
+  url: "Games/Vex/Vex3/index.html",
+  desc: "A classic entry in the Vex series featuring tight platforming and challenging level design.",
+  popular: true
 }
 ];
 
