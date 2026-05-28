@@ -11,6 +11,13 @@ const _0xData = [
   desc: "The newest version of Brotato with the All Pain No Gain update.",
   popular: true
 },
+ {
+  id: "y_io",
+  title: atob("WW9ob2hvLmlv"),
+  url: "Games/yohoho/index.html",
+  desc: "A pirate-themed battle royale game where you collect gold, fight opponents, and survive to become the strongest pirate.",
+  popular: true
+},
   {
     id: "s_lp",
     title: atob("U2xvcGU="), 
