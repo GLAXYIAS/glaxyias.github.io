@@ -3,105 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Null_X - Sign In</title>
-    <style>
+    <title>NULL GEOGRAPHY</title>
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
-            --bg-color: #0b0314;
-            --container-bg: #140e24;
-            --border-color: #8b3dff;
-            --text-color: #ffffff;
-            --text-secondary: #b3a1cf;
-            --btn-primary: #8b3dff;
-            --btn-secondary: #251b40;
-            --input-bg: #1c1433;
-            --input-border: #3b2d66;
-            --error-color: #ff4a4a;
-            --success-color: #00ff66;
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --accent-gold: #d4af37;
+            --accent-orange: #ff8c00;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --border-gold: #b8960f;
+            --error: #ff4444;
+            --success: #00d46a;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #1a0f0f 100%);
+            color: var(--text-primary);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
+        }
+
+        .auth-wrapper {
+            width: 100%;
             height: 100vh;
-            margin: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0f0f 50%, #0d0d0d 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .auth-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 140, 0, 0.08) 0%, transparent 50%);
+            pointer-events: none;
         }
 
         .login-container {
-            background-color: var(--container-bg);
-            border: 2px solid var(--border-color);
-            border-radius: 20px;
-            padding: 40px;
-            width: 360px;
-            box-shadow: 0 0 25px rgba(139, 61, 255, 0.3);
-            text-align: center;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.95) 0%, rgba(25, 15, 15, 0.95) 100%);
+            border: 2px solid var(--accent-gold);
+            border-radius: 16px;
+            padding: 50px 45px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 
+                0 0 50px rgba(212, 175, 55, 0.25),
+                0 0 100px rgba(255, 140, 0, 0.15),
+                inset 0 0 30px rgba(212, 175, 55, 0.05);
+            backdrop-filter: blur(10px);
         }
 
         h1 {
-            font-size: 2.5rem;
-            margin-bottom: 5px;
-            letter-spacing: 1px;
+            font-size: 2.8rem;
+            margin-bottom: 8px;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-orange) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            text-transform: uppercase;
         }
 
         .subtitle {
             color: var(--text-secondary);
             font-size: 0.95rem;
-            margin-bottom: 15px;
+            margin-bottom: 30px;
+            letter-spacing: 0.5px;
         }
 
         .status-badge {
-            font-size: 0.8rem;
-            font-weight: bold;
-            color: var(--success-color);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent-gold);
             text-transform: uppercase;
             margin-bottom: 30px;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            display: inline-block;
+            padding: 6px 14px;
+            border: 1px solid var(--accent-gold);
+            border-radius: 20px;
         }
 
         .tab-container {
             display: flex;
-            background-color: var(--btn-secondary);
-            border-radius: 10px;
-            margin-bottom: 30px;
-            padding: 5px;
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-gold);
+            border-radius: 12px;
+            margin-bottom: 35px;
+            padding: 4px;
+            gap: 4px;
         }
 
         .tab-btn {
             flex: 1;
-            background: none;
+            background: transparent;
             border: none;
             color: var(--text-secondary);
-            padding: 12px;
-            font-size: 1rem;
+            padding: 14px 16px;
+            font-size: 0.95rem;
             cursor: pointer;
-            border-radius: 8px;
+            border-radius: 10px;
             transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .tab-btn:hover {
+            color: var(--accent-gold);
         }
 
         .tab-btn.active {
-            background-color: var(--btn-primary);
-            color: var(--text-color);
-            font-weight: bold;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-orange) 100%);
+            color: #000;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
         }
 
         .form-group {
-            text-align: left;
-            margin-bottom: 20px;
-        }
-
-        /* Utility class to hide elements smoothly */
-        .hidden {
-            display: none;
+            margin-bottom: 22px;
         }
 
         label {
             display: block;
             color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            text-transform: uppercase;
         }
 
         .input-wrapper {
@@ -112,131 +165,439 @@
 
         input {
             width: 100%;
-            background-color: var(--input-bg);
-            border: 1px solid var(--input-border);
+            background-color: rgba(30, 30, 30, 0.8);
+            border: 1px solid var(--border-gold);
             border-radius: 8px;
-            padding: 12px;
-            color: var(--text-color);
+            padding: 14px 16px;
+            color: var(--text-primary);
             font-size: 1rem;
-            box-sizing: border-box;
+            transition: all 0.3s ease;
             outline: none;
-            transition: border-color 0.3s ease;
         }
-        
-        .password-input {
-            padding-right: 40px;
+
+        input::placeholder {
+            color: rgba(200, 200, 200, 0.5);
         }
 
         input:focus {
-            border-color: var(--border-color);
+            border-color: var(--accent-gold);
+            background-color: rgba(40, 35, 20, 0.6);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .password-input {
+            padding-right: 45px;
         }
 
         .toggle-password {
             position: absolute;
-            right: 12px;
+            right: 14px;
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
-            color: var(--text-secondary);
+            color: var(--accent-gold);
             display: flex;
             align-items: center;
             justify-content: center;
             user-select: none;
-            transition: color 0.2s ease;
+            transition: all 0.2s ease;
         }
 
         .toggle-password:hover {
-            color: var(--text-color);
+            color: var(--accent-orange);
+            transform: translateY(-50%) scale(1.1);
         }
 
         .submit-btn {
             width: 100%;
-            background: linear-gradient(45deg, #8b3dff, #b370ff);
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-orange) 100%);
             border: none;
-            color: var(--text-color);
-            padding: 14px;
+            color: #000;
+            padding: 16px 24px;
             font-size: 1rem;
-            font-weight: bold;
+            font-weight: 700;
             border-radius: 10px;
             cursor: pointer;
-            margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(139, 61, 255, 0.4);
-            transition: transform 0.2s ease, opacity 0.2s ease;
+            margin-top: 15px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 6px 25px rgba(212, 175, 55, 0.35);
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 140, 0, 0.4);
         }
 
         .submit-btn:active {
-            transform: scale(0.98);
+            transform: translateY(0);
         }
 
         .message-box {
-            margin-top: 15px;
+            margin-top: 20px;
             font-size: 0.9rem;
-            min-height: 20px;
+            min-height: 22px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            text-align: center;
+            letter-spacing: 0.3px;
         }
 
-        .error-msg { color: var(--error-color); }
-        .success-msg { color: var(--success-color); }
+        .error-msg {
+            color: var(--error);
+            background-color: rgba(255, 68, 68, 0.1);
+            border: 1px solid rgba(255, 68, 68, 0.3);
+        }
+
+        .success-msg {
+            color: var(--success);
+            background-color: rgba(0, 212, 106, 0.1);
+            border: 1px solid rgba(0, 212, 106, 0.3);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Reset Password Modal */
+        #resetPwModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        #resetPwModal.show {
+            display: flex;
+        }
+
+        #resetPwModal .rpw-box {
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.98) 0%, rgba(25, 15, 15, 0.98) 100%);
+            border: 2px solid var(--accent-gold);
+            border-radius: 16px;
+            padding: 40px 36px;
+            width: min(420px, 95vw);
+            text-align: center;
+            box-shadow: 0 0 60px rgba(212, 175, 55, 0.3);
+        }
+
+        #resetPwModal .rpw-box h2 {
+            margin: 0 0 12px;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-orange) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+        }
+
+        #resetPwModal .rpw-box p {
+            margin: 0 0 24px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        #resetPwModal .rpw-box label {
+            display: block;
+            text-align: left;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        #resetPwModal .rpw-box input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-gold);
+            background: rgba(30, 30, 30, 0.8);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        #resetPwModal .rpw-box input:focus {
+            border-color: var(--accent-gold);
+            background: rgba(40, 35, 20, 0.6);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+
+        #resetPwModal .rpw-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        #resetPwModal .rpw-actions button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        #resetPwModal .rpw-save {
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-orange) 100%);
+            color: #000;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        #resetPwModal .rpw-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 140, 0, 0.4);
+        }
+
+        #resetPwModal .rpw-cancel {
+            background: transparent;
+            color: var(--error);
+            border: 1px solid var(--error);
+        }
+
+        #resetPwModal .rpw-cancel:hover {
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        #resetPwModal #rpwMsg {
+            min-height: 1.2em;
+            font-size: 0.85rem;
+            margin-top: 12px;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 40px 28px;
+                max-width: 100%;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .tab-btn {
+                font-size: 0.85rem;
+                padding: 12px 12px;
+            }
+
+            input {
+                padding: 12px 14px;
+                font-size: 16px;
+            }
+
+            .submit-btn {
+                padding: 14px 20px;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="auth-wrapper">
+        <div class="login-container">
+            <h1>Null_X</h1>
+            <div class="subtitle">Enter the game</div>
+            <div class="status-badge">Ready</div>
 
-    <div class="login-container">
-        <h1>Null_X</h1>
-        <div class="subtitle">Sign in for brand new features</div>
-        <div class="status-badge" id="statusBadge">Direct Engine Active</div>
-
-        <div class="tab-container">
-            <button class="tab-btn active" id="tabCreate" onclick="setMode('signup')">Create Account</button>
-            <button class="tab-btn" id="tabLogin" onclick="setMode('login')">Login</button>
-        </div>
-
-        <form id="authForm" onsubmit="handleSubmit(event)">
-            <div class="form-group" id="handlerGroup">
-                <label for="handler">Handler</label>
-                <input type="text" id="handler" placeholder="@your_handler" autocomplete="off" maxlength="20">
+            <div class="tab-container">
+                <button class="tab-btn active" id="tabCreate" onclick="setMode('signup')">Create Account</button>
+                <button class="tab-btn" id="tabLogin" onclick="setMode('login')">Login</button>
             </div>
 
-            <div class="form-group">
-                <label id="usernameLabel" for="username">Display Name</label>
-                <input type="text" id="username" required autocomplete="username" maxlength="22">
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <div class="input-wrapper">
-                    <input type="password" id="password" class="password-input" required autocomplete="current-password">
-                    <span class="toggle-password" onclick="togglePasswordVis()">
-                        <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                        </svg>
-                    </span>
+            <form id="authForm" onsubmit="handleSubmit(event)">
+                <div class="form-group" id="handlerGroup">
+                    <label for="handler">Handler</label>
+                    <input type="text" id="handler" placeholder="@yourhandler" autocomplete="off" maxlength="20">
                 </div>
+
+                <div class="form-group">
+                    <label id="usernameLabel" for="username">Display Name</label>
+                    <input type="text" id="username" placeholder="Your name" required autocomplete="username" maxlength="22">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" class="password-input" placeholder="Enter password (any value if resetting)" required autocomplete="current-password">
+                        <span class="toggle-password" onclick="togglePasswordVis()">
+                            <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">Create Account</button>
+            </form>
+
+            <div class="message-box" id="messageBox"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/gh/Null-X-Team/badwordfilter@main/badword.js"></script>
+    <script src="username-filter.js"></script>
+
+    <div id="resetPwModal" role="dialog" aria-modal="true" aria-labelledby="rpwTitle">
+        <div class="rpw-box">
+            <h2 id="rpwTitle">Create New Password</h2>
+            <p>Your password was deleted (or never set). You are logged in — create a new password to continue.</p>
+            <label for="rpwUser">Account</label>
+            <input type="text" id="rpwUser" readonly>
+            <label for="rpwNew">New Password</label>
+            <input type="password" id="rpwNew" autocomplete="new-password" minlength="4" placeholder="At least 4 characters">
+            <label for="rpwConfirm">Confirm Password</label>
+            <input type="password" id="rpwConfirm" autocomplete="new-password" placeholder="Type it again">
+            <div class="rpw-actions">
+                <button type="button" class="rpw-save" id="rpwSaveBtn">Save & Login</button>
+                <button type="button" class="rpw-cancel" id="rpwCancelBtn">Cancel</button>
             </div>
-
-            <button type="submit" class="submit-btn" id="submitBtn">Create Account</button>
-        </form>
-
-        <div class="message-box" id="messageBox"></div>
+            <div id="rpwMsg"></div>
+        </div>
     </div>
 
     <script>
-        // --- CONFIGURATION ---
-        const SUPABASE_PROJECT_URL = 'https://ldojzaikkolrxkiwyqvq.supabase.co';
-        const RPC_URL = `${SUPABASE_PROJECT_URL}/rest/v1/rpc/verify_user_login`;
-        const SIGNUP_RPC_URL = `${SUPABASE_PROJECT_URL}/rest/v1/rpc/register_user_hashed`;
-        
-        const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxkb2p6YWlra29scnhraXd5cXZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMDM2NjksImV4cCI6MjA5NDg3OTY2OX0.CXZf1jaNJ3njQhIWoaYFxuJWx2J0HQ9CPF5imQoxtMw';
+        const TURSO_API_BASE = 'https://apithingy.jlsniperelite4.workers.dev';
+        const headers = { 'Content-Type': 'application/json' };
 
-        const headers = {
-            'apikey': ANON_KEY,
-            'Authorization': `Bearer ${ANON_KEY}`,
-            'Content-Type': 'application/json'
-        };
+        function unwrapUserPayload(data) {
+            if (!data) return null;
+            if (Array.isArray(data)) return data[0] || null;
+            if (data.users && Array.isArray(data.users)) return data.users[0] || null;
+            if (data.user) return data.user;
+            if (data.id !== undefined || data.username !== undefined) return data;
+            return null;
+        }
 
+        function unwrapUsersList(data) {
+            if (!data) return [];
+            if (Array.isArray(data)) return data;
+            if (data.users && Array.isArray(data.users)) return data.users;
+            return [];
+        }
+
+
+        async function sha256Hex(text) {
+            const data = new TextEncoder().encode(text);
+            const hash = await crypto.subtle.digest('SHA-256', data);
+            return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        function passwordsMatch(stored, typedPlain, typedHash) {
+            // Null / missing password = accept anything (user must reset after login)
+            if (isPasswordMissing(stored)) return true;
+            const s = String(stored);
+            return s === typedPlain || s === typedHash || s.toLowerCase() === typedHash.toLowerCase();
+        }
+
+        function isPasswordMissing(stored) {
+            if (stored === null || stored === undefined) return true;
+            // Turso/API sometimes returns { type: "null" } instead of real null
+            if (typeof stored === 'object') {
+                if (stored.type === 'null' || stored.type === 'undefined') return true;
+                if (stored.value === null || stored.value === undefined) return true;
+                if (!('value' in stored) && !('password' in stored) && stored.type) return true;
+                return false;
+            }
+            const s = String(stored).trim().toLowerCase();
+            return s === '' || s === 'null' || s === 'undefined' || s === 'none' || s === '[object object]';
+        }
+
+        let pendingResetUser = null;
         let currentMode = 'signup';
 
-        // --- INTERFACE UTILITIES ---
+        function openResetPasswordModal(user) {
+            pendingResetUser = user;
+            const modal = document.getElementById('resetPwModal');
+            document.getElementById('rpwUser').value = user.username || '';
+            document.getElementById('rpwNew').value = '';
+            document.getElementById('rpwConfirm').value = '';
+            document.getElementById('rpwMsg').textContent = '';
+            modal.classList.add('show');
+            setTimeout(() => document.getElementById('rpwNew').focus(), 50);
+        }
+
+        function closeResetPasswordModal() {
+            pendingResetUser = null;
+            document.getElementById('resetPwModal').classList.remove('show');
+        }
+
+        async function saveNewPasswordFromModal() {
+            const msg = document.getElementById('rpwMsg');
+            const pw = document.getElementById('rpwNew').value;
+            const conf = document.getElementById('rpwConfirm').value;
+
+            if (!pendingResetUser || (!pendingResetUser.id && !pendingResetUser.username)) {
+                msg.style.color = '#ff4444';
+                msg.textContent = 'Missing account info. Try logging in again.';
+                return;
+            }
+            if (!pw || pw.length < 4) {
+                msg.style.color = '#ff4444';
+                msg.textContent = 'Password must be at least 4 characters.';
+                return;
+            }
+            if (pw !== conf) {
+                msg.style.color = '#ff4444';
+                msg.textContent = 'Passwords do not match.';
+                return;
+            }
+
+            msg.style.color = '#d4af37';
+            msg.textContent = 'Saving...';
+
+            try {
+                const hashed = await sha256Hex(pw);
+                const res = await fetch(`${TURSO_API_BASE}/users`, {
+                    method: 'PATCH',
+                    headers: headers,
+                    body: JSON.stringify({
+                        ...(pendingResetUser.id != null ? { id: pendingResetUser.id } : {}),
+                        ...(pendingResetUser.username ? { username: pendingResetUser.username } : {}),
+                        password: hashed
+                    })
+                });
+                const body = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    throw new Error(body.error || ('HTTP ' + res.status));
+                }
+
+                localStorage.setItem('chatUser', pendingResetUser.username);
+                msg.style.color = '#00d46a';
+                msg.textContent = 'Password saved! Logging you in...';
+                setTimeout(() => {
+                    window.location.href = '../index.html';
+                }, 1000);
+            } catch (err) {
+                msg.style.color = '#ff4444';
+                msg.textContent = 'Could not save password: ' + (err.message || err);
+                console.error(err);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('rpwSaveBtn')?.addEventListener('click', saveNewPasswordFromModal);
+            document.getElementById('rpwCancelBtn')?.addEventListener('click', closeResetPasswordModal);
+            document.getElementById('rpwConfirm')?.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') saveNewPasswordFromModal();
+            });
+        });
+
         function setMode(mode) {
             currentMode = mode;
             const tabCreate = document.getElementById('tabCreate');
@@ -245,15 +606,13 @@
             const handlerGroup = document.getElementById('handlerGroup');
             const handlerInput = document.getElementById('handler');
             const usernameLabel = document.getElementById('usernameLabel');
-            
+
             document.getElementById('messageBox').textContent = '';
 
             if (mode === 'signup') {
                 tabCreate.classList.add('active');
                 tabLogin.classList.remove('active');
                 submitBtn.textContent = 'Create Account';
-                
-                // Show handler field for signup
                 handlerGroup.classList.remove('hidden');
                 handlerInput.required = true;
                 usernameLabel.textContent = 'Display Name';
@@ -261,11 +620,9 @@
                 tabLogin.classList.add('active');
                 tabCreate.classList.remove('active');
                 submitBtn.textContent = 'Login';
-                
-                // Hide handler field for login (assume they log in with Display Name or you can change to Handler)
                 handlerGroup.classList.add('hidden');
                 handlerInput.required = false;
-                usernameLabel.textContent = 'Display Name or Handler';
+                usernameLabel.textContent = 'Handler or Display Name';
             }
         }
 
@@ -287,7 +644,6 @@
             msgBox.className = isError ? 'message-box error-msg' : 'message-box success-msg';
         }
 
-        // --- REQUEST ROUTER ---
         function handleSubmit(event) {
             event.preventDefault();
             const userVal = document.getElementById('username').value.trim();
@@ -300,85 +656,159 @@
             }
 
             if (currentMode === 'signup') {
-                // Format handler to ensure it starts with @
                 if (!handlerVal.startsWith('@')) {
                     handlerVal = '@' + handlerVal;
                 }
-                
+
                 if (handlerVal.length < 3) {
                     showMessage('Handler must be at least 2 characters long.');
                     return;
                 }
-                
+
+                if (typeof window.nxUsernameIsClean === 'function') {
+                    if (!window.nxUsernameIsClean(userVal)) {
+                        showMessage('Display name contains inappropriate language. Please choose another.');
+                        return;
+                    }
+                    if (!window.nxUsernameIsClean(handlerVal)) {
+                        showMessage('Handler contains inappropriate language. Please choose another.');
+                        return;
+                    }
+                } else if (typeof window.containsBadWords === 'function') {
+                    const bareHandler = handlerVal.replace(/^@+/, '');
+                    if (window.containsBadWords(userVal) || window.containsBadWords(bareHandler) || window.containsBadWords(handlerVal)) {
+                        showMessage('That name is not allowed. Please choose a different username/handler.');
+                        return;
+                    }
+                }
+
                 handleSignUp(userVal, handlerVal, passVal);
             } else {
-                // For login, we just pass what they typed into the username box 
-                // (which could be a handler or a username depending on your backend setup)
-                handleLogin(userVal, passVal);
+                handleLogin(userVal, handlerVal, passVal);
             }
         }
 
-        // --- HASHED SIGN UP ROUTINE ---
         async function handleSignUp(username, handler, password) {
             try {
-                // Payload now includes new_handler
-                const response = await fetch(SIGNUP_RPC_URL, {
+                const existing = await fetch(`${TURSO_API_BASE}/users?username=${encodeURIComponent(username)}`, { headers });
+                if (existing.ok) {
+                    showMessage('Display Name is already taken!');
+                    return;
+                }
+
+                const passwordHash = await sha256Hex(password);
+                const newId = Date.now();
+
+                const response = await fetch(`${TURSO_API_BASE}/users`, {
                     method: 'POST',
                     headers: headers,
-                    body: JSON.stringify({ 
-                        new_username: username, 
-                        new_handler: handler,
-                        new_password: password 
+                    body: JSON.stringify({
+                        id: newId,
+                        username: username,
+                        password: passwordHash,
+                        handler: handler,
+                        created_at: new Date().toISOString()
                     })
                 });
 
                 if (!response.ok) {
                     const errorData = await response.json().catch(() => ({}));
-                    
-                    // Catch unique constraint errors based on Supabase RPC feedback
-                    if (errorData.message && errorData.message.includes('Username is already taken')) {
-                        showMessage('Display Name is already taken!');
-                    } else if (errorData.message && errorData.message.includes('Handler is already taken')) {
-                        showMessage('That Handler is already in use!');
+                    const msg = (errorData.error || errorData.message || errorData.details || '').toString();
+                    if (/unique|already|constraint|duplicate/i.test(msg)) {
+                        showMessage('Display Name or Handler is already taken!');
                     } else {
                         showMessage('Registration failed. Name or Handler might be taken.');
                     }
                     return;
                 }
 
-                // Store handler instead of display name for chat logic if you prefer
-                localStorage.setItem('chatUser', handler);
+                try {
+                    await fetch(`${TURSO_API_BASE}/user-roles`, {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify({
+                            id: newId,
+                            username: username,
+                            role_tag: 'User',
+                            is_admin: 0,
+                            is_banned: 0
+                        })
+                    });
+                } catch (e) {
+                    console.warn('Role row create skipped:', e);
+                }
+
+                localStorage.setItem('chatUser', username);
                 showMessage('Account created successfully! Logging you in...', false);
-                
+
                 setTimeout(() => {
                     window.location.href = '../index.html';
                 }, 1500);
-
             } catch (err) {
                 showMessage('Connection error: ' + err.message);
                 console.error(err);
             }
         }
 
-        // --- HASHED LOGIN ROUTINE ---
-        async function handleLogin(username, password) {
+        async function handleLogin(username, handler, password) {
             try {
-                const response = await fetch(RPC_URL, {
-                    method: 'POST',
-                    headers: headers,
-                    body: JSON.stringify({ 
-                        login_username: username, 
-                        login_password: password 
-                    })
-                });
-                
-                if (!response.ok) throw new Error(`Verification endpoint offline.`);
-                const isValid = await response.json();
+                let user = null;
+                let loginIdentifier = username;
 
-                if (isValid === true) {
-                    showMessage('Login successful! Redirecting...', false);
-                    localStorage.setItem('chatUser', username);
+                // Try login with handler first if in login mode
+                if (handler.trim()) {
+                    const handlerToTry = handler.startsWith('@') ? handler : '@' + handler;
+                    const handlerResponse = await fetch(`${TURSO_API_BASE}/users?handler=${encodeURIComponent(handlerToTry)}`, {
+                        method: 'GET',
+                        headers: headers
+                    });
                     
+                    if (handlerResponse.ok) {
+                        user = unwrapUserPayload(await handlerResponse.json());
+                        loginIdentifier = handlerToTry;
+                    }
+                }
+
+                // If handler didn't work, try username
+                if (!user) {
+                    const response = await fetch(`${TURSO_API_BASE}/users?username=${encodeURIComponent(username)}`, {
+                        method: 'GET',
+                        headers: headers
+                    });
+
+                    if (response.status === 404) {
+                        showMessage('Incorrect credentials.');
+                        return;
+                    }
+                    if (!response.ok) throw new Error('Verification endpoint offline.');
+
+                    user = unwrapUserPayload(await response.json());
+                    loginIdentifier = username;
+                }
+
+                if (!user) {
+                    showMessage('Incorrect credentials.');
+                    return;
+                }
+
+                const typedHash = await sha256Hex(password);
+                const needsPasswordReset = isPasswordMissing(user.password);
+
+                // Missing password: any typed password is accepted
+                if (needsPasswordReset || passwordsMatch(user.password, password, typedHash)) {
+                    localStorage.setItem('chatUser', user.username || loginIdentifier);
+
+                    if (needsPasswordReset) {
+                        showMessage('Logged in. Your password was deleted — please create a new one.', false);
+                        openResetPasswordModal({
+                            id: user.id,
+                            username: user.username || loginIdentifier
+                        });
+                        // Do not redirect until they set a password
+                        return;
+                    }
+
+                    showMessage('Login successful! Redirecting...', false);
                     setTimeout(() => {
                         window.location.href = '../index.html';
                     }, 1500);
