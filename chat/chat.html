@@ -7,6 +7,60 @@
     <link rel="icon" id="dynamic-favicon" href="data:,">
     <link rel="stylesheet" href="chat.css">
     <link rel="stylesheet" href="lightbox.css">
+
+<style>
+/* Notification permission prompt */
+#notif-prompt-modal {
+  position: fixed; inset: 0; z-index: 999999;
+  display: flex; align-items: center; justify-content: center;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+.notif-prompt-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(4px);
+}
+.notif-prompt-card {
+  position: relative;
+  background: #1a1520;
+  border: 1px solid #8b00ff55;
+  border-radius: 16px;
+  padding: 28px 32px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(139,0,255,0.25);
+  color: #eee;
+}
+.notif-prompt-icon { font-size: 40px; margin-bottom: 12px; }
+.notif-prompt-card h2 {
+  margin: 0 0 10px; font-size: 20px; color: #c084fc;
+}
+.notif-prompt-card p {
+  margin: 0 0 22px; font-size: 14px; line-height: 1.5; color: #b0b0b0;
+}
+.notif-prompt-actions {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.notif-btn-primary {
+  background: #8b00ff; color: #fff; border: none;
+  padding: 12px 16px; border-radius: 8px; font-weight: 600;
+  cursor: pointer; font-size: 14px;
+}
+.notif-btn-primary:hover { background: #a020f0; }
+.notif-btn-secondary {
+  background: transparent; color: #ccc;
+  border: 1px solid #444; padding: 10px 16px; border-radius: 8px;
+  cursor: pointer; font-size: 13px;
+}
+.notif-btn-secondary:hover { border-color: #888; color: #fff; }
+.notif-btn-ghost {
+  background: none; border: none; color: #666;
+  cursor: pointer; font-size: 12px; padding: 6px;
+}
+.notif-btn-ghost:hover { color: #999; }
+</style>
+
 </head>
 <body>
 
@@ -34,7 +88,7 @@
 
         <div class="user-profile">
             <a href="../profile/profile.html" class="user-avatar-link" title="View Profile Settings">
-                <img id="current-user-avatar" class="avatar" src="https://Glaxyias.github.io/imgs/download.jpeg" alt="My Profile">
+                <img id="current-user-avatar" class="avatar" src="https://null-x-team.github.io/imgs/download.jpeg" alt="My Profile">
             </a>
             <span id="username-display"></span>
         </div>
@@ -50,15 +104,15 @@
             <form id="chat-form" class="input-area">
                 <button type="button" id="attach-image-btn" class="attach-btn" title="Attach an image"><img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f4ce/emoji.svg" alt="attach"></button>
                 <input type="file" id="attach-image-input" accept="image/*" style="display:none;">
-                <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off" maxlength="250">
+                <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off" maxlength="1200">
                 <button type="submit">Send</button>
-                <span id="char-counter" style="font-size: 11px; color: var(--text-muted); margin-left: 10px; min-width: 50px; text-align: right;">0 / 250</span>
+                <span id="char-counter" style="font-size: 11px; color: var(--text-muted); margin-left: 10px; min-width: 50px; text-align: right;">0 / 1200</span>
+                <div id="image-preview-bar" class="image-preview-bar hidden">
+                    <img id="image-preview-thumb" src="" alt="preview">
+                    <span>Image attached — press Send</span>
+                    <button type="button" id="cancel-image-btn">✕</button>
+                </div>
             </form>
-            <div id="image-preview-bar" class="image-preview-bar hidden">
-                <img id="image-preview-thumb" src="" alt="preview">
-                <span>Image attached — press Send</span>
-                <button type="button" id="cancel-image-btn">✕</button>
-            </div>
         </div>
 
         <div id="users-view" style="display:none; padding: 40px; height: 100%; overflow-y: auto;">
@@ -89,14 +143,14 @@
                     <form id="pm-thread-form" class="input-area hidden">
                         <button type="button" id="pm-attach-image-btn" class="attach-btn" title="Attach an image"><img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f4ce/emoji.svg" alt="attach"></button>
                         <input type="file" id="pm-attach-image-input" accept="image/*" style="display:none;">
-                        <input type="text" id="pm-message-input" placeholder="Send your first message..." autocomplete="off" maxlength="250">
+                        <input type="text" id="pm-message-input" placeholder="Send your first message..." autocomplete="off" maxlength="1200">
                         <button type="submit">Send</button>
+                        <div id="pm-image-preview-bar" class="image-preview-bar hidden">
+                            <img id="pm-image-preview-thumb" src="" alt="preview">
+                            <span>Image attached — press Send</span>
+                            <button type="button" id="pm-cancel-image-btn">✕</button>
+                        </div>
                     </form>
-                    <div id="pm-image-preview-bar" class="image-preview-bar hidden">
-                        <img id="pm-image-preview-thumb" src="" alt="preview">
-                        <span>Image attached — press Send</span>
-                        <button type="button" id="pm-cancel-image-btn">✕</button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -369,8 +423,12 @@
     <p class="image-lightbox-hint">Scroll to zoom · Drag to pan · Esc or click outside to close</p>
 </div>
 
-<script src="https://cdn.jsdelivr.net/gh/Galethis/badwordfilter@main/badword.js"></script>
+<!-- Load proxy before other scripts so API calls use it -->
+<script src="https://cdn.jsdelivr.net/gh/Null-X-Team/badwordfilter/badword.js"></script>
+<script src="profanity-guard.js"></script>
+<script src="avatar-safe.js"></script>
 <script src="chat.js"></script>
+<script src="chat_admin_fixes.js"></script>
 <script src="lightbox.js"></script>
 <script>
 /* Overlay patch: keep --panel-bg-alpha in sync with the darkness slider */
