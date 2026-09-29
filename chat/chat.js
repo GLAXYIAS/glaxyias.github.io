@@ -1,16 +1,203 @@
-// --- CONFIGURATION CORRECTION ---
-const SUPABASE_URL = 'https://ldojzaikkolrxkiwyqvq.supabase.co'; 
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxkb2p6YWlra29scnhraXd5cXZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMDM2NjksImV4cCI6MjA5NDg3OTY2OX0.CXZf1jaNJ3njQhIWoaYFxuJWx2J0HQ9CPF5imQoxtMw'; 
+// --- CONFIGURATION: Turso via Vercel API (replaces Supabase) ---
+const TURSO_API_BASE = 'https://apithingy.jlsniperelite4.workers.dev';
+const TURSO_HEADERS = { 'Content-Type': 'application/json' };
 
-const DEFAULT_PFP = "https://Glaxyias.github.io/imgs/download.jpeg";
+/** Cloudflare may return { success, users/messages } or a raw array */
+function unwrapList(data, key) {
+    if (Array.isArray(data)) return data;
+    if (data && Array.isArray(data[key])) return data[key];
+    if (data && Array.isArray(data.data)) return data.data;
+    return [];
+}
+function unwrapOne(data, key) {
+    if (!data || typeof data !== 'object') return data;
+    if (Array.isArray(data)) return data[0] || null;
+    if (data[key] && Array.isArray(data[key])) return data[key][0] || null;
+    if (data.user) return data.user;
+    if (data.id !== undefined || data.username !== undefined) return data;
+    return data;
+}
+
+
+// --- ONLINE STATUS TRACKING (mouse movement) ---
+let lastMouseActivity = Date.now();
+let userActivityTrackingInterval = null;
+
+function trackUserActivity() {
+    lastMouseActivity = Date.now();
+}
+
+// Add mouse move listener globally to track activity
+document.addEventListener('mousemove', trackUserActivity);
+document.addEventListener('keypress', trackUserActivity);
+document.addEventListener('click', trackUserActivity);
+
+function isBannedFlag(val) {
+  if (val === true || val === 1 || val === "1") return true;
+  if (val == null) return false;
+  const s = String(val).toLowerCase().trim();
+  return s === "true" || s === "1" || s === "yes";
+}
+function isAdminFlag(val) {
+  if (val === true || val === 1 || val === "1") return true;
+  if (val == null) return false;
+  const s = String(val).toLowerCase().trim();
+  return s === "true" || s === "1" || s === "yes";
+}
+function isAdminRoleTag(tag) {
+  if (!tag) return false;
+  const s = String(tag).toLowerCase().trim();
+  return s === "admin" || s === "owner" || s === "mod" || s === "moderator" || s === "staff";
+}
+function isAdminProfile(profile) {
+  if (!profile) return false;
+  return isAdminFlag(profile.is_admin) || isAdminRoleTag(profile.role_tag);
+}
+
+
+
+async function patchUserRoleByUsername(username, fields) {
+  const clean = String(username || '').replace(/^@/, '').trim();
+  if (!clean) throw new Error('username required');
+
+  // PATCH API now accepts username in the query OR body
+  const res = await fetch(`${TURSO_API_BASE}/user-roles?username=${encodeURIComponent(clean)}`, {
+    method: 'PATCH',
+    headers: TURSO_HEADERS,
+    body: JSON.stringify({ username: clean, ...fields })
+  });
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(errText || ('HTTP ' + res.status));
+  }
+  return res;
+}
+
+
+/** Thin helpers matching old Supabase response shapes where practical */
+async function tursoGet(path) {
+  const res = await fetch(`${TURSO_API_BASE}${path}`, { headers: TURSO_HEADERS });
+  return res;
+}
+async function tursoJson(path, options = {}) {
+  const res = await fetch(`${TURSO_API_BASE}${path}`, {
+    headers: { ...TURSO_HEADERS, ...(options.headers || {}) },
+    ...options
+  });
+  const data = await res.json().catch(() => null);
+  return { res, data };
+}
+
+const DEFAULT_PFP = "https://null-x-team.github.io/imgs/download.jpeg";
 let allUsers = [];
 let lastMessageTime = 0;
+
+// --- BROWSER NOTIFICATIONS ---
+const NOTIF_PREF_KEY = 'nullchat_notifications';
+let knownMessageIds = new Set();
+let knownPmIds = new Set();
+let notificationsReady = false;
+
+function notificationsEnabled() {
+    return localStorage.getItem(NOTIF_PREF_KEY) === 'granted'
+        && typeof Notification !== 'undefined'
+        && Notification.permission === 'granted';
+}
+
+function showChatNotification(title, body, tag) {
+    if (!notificationsEnabled()) return;
+    try {
+        // Don't notify if the tab is focused
+        if (!document.hidden && document.hasFocus()) return;
+        const n = new Notification(title, {
+            body: body || '',
+            icon: 'https://null-x-team.github.io/imgs/download.jpeg',
+            tag: tag || 'nullchat',
+            renotify: true
+        });
+        n.onclick = () => {
+            window.focus();
+            n.close();
+        };
+        setTimeout(() => n.close(), 8000);
+    } catch (e) {
+        console.warn('Notification failed:', e);
+    }
+}
+
+function promptEnableNotifications() {
+    // Only ask once (unless they chose "ask later")
+    const pref = localStorage.getItem(NOTIF_PREF_KEY);
+    if (pref === 'granted' || pref === 'denied') return;
+    if (typeof Notification === 'undefined') return;
+
+    // If already granted at browser level, just save preference
+    if (Notification.permission === 'granted') {
+        localStorage.setItem(NOTIF_PREF_KEY, 'granted');
+        notificationsReady = true;
+        return;
+    }
+    if (Notification.permission === 'denied') {
+        localStorage.setItem(NOTIF_PREF_KEY, 'denied');
+        return;
+    }
+
+    // Show custom modal
+    const existing = document.getElementById('notif-prompt-modal');
+    if (existing) return;
+
+    const modal = document.createElement('div');
+    modal.id = 'notif-prompt-modal';
+    modal.innerHTML = `
+      <div class="notif-prompt-backdrop"></div>
+      <div class="notif-prompt-card">
+        <div class="notif-prompt-icon">🔔</div>
+        <h2>Enable chat notifications?</h2>
+        <p>Get notified when someone messages you in <strong>general</strong> or sends you a <strong>PM</strong>, even if this tab is in the background.</p>
+        <div class="notif-prompt-actions">
+          <button type="button" id="notif-allow-btn" class="notif-btn-primary">Enable notifications</button>
+          <button type="button" id="notif-later-btn" class="notif-btn-secondary">Not now</button>
+          <button type="button" id="notif-never-btn" class="notif-btn-ghost">Never ask again</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    document.getElementById('notif-allow-btn').onclick = async () => {
+        try {
+            const result = await Notification.requestPermission();
+            if (result === 'granted') {
+                localStorage.setItem(NOTIF_PREF_KEY, 'granted');
+                notificationsReady = true;
+                showChatNotification('Notifications enabled', 'You will be notified about new chat messages and PMs.', 'nullchat-setup');
+            } else {
+                localStorage.setItem(NOTIF_PREF_KEY, 'denied');
+            }
+        } catch (e) {
+            console.warn(e);
+            localStorage.setItem(NOTIF_PREF_KEY, 'denied');
+        }
+        modal.remove();
+    };
+    document.getElementById('notif-later-btn').onclick = () => {
+        // Ask again next session
+        modal.remove();
+    };
+    document.getElementById('notif-never-btn').onclick = () => {
+        localStorage.setItem(NOTIF_PREF_KEY, 'denied');
+        modal.remove();
+    };
+}
+
+
 let chatPollingInterval = null; 
 let heartbeatInterval = null;
 let pmPollingInterval = null;
+let lastFetchedMessagesHash = null; // Track message hash to prevent re-renders
 
 // Track active menu state
 let selectedChatUser = { username: '', handler: '' };
+let selectedMessageId = null; // Track for right-click message menu
 
 // Track the live authorization status dynamically from Supabase
 let currentUserIsAdmin = false;
@@ -40,6 +227,77 @@ function renderMessageBody(content) {
     }
     return content;
 }
+
+// ==========================================================================
+// RIGHT-CLICK MESSAGE MENU (edit, delete, recall)
+// ==========================================================================
+window.openMessageMenu = function(event, messageId, messageUsername) {
+    // Only allow user to right-click their own messages
+    if (messageUsername !== myUsernameGlobal) return;
+    
+    event.preventDefault();
+    event.stopPropagation();
+    selectedMessageId = messageId;
+
+    const menu = document.getElementById('message-context-menu');
+    if (!menu) return;
+
+    let posX = event.clientX;
+    let posY = event.clientY;
+    const menuWidth = 180;
+    const menuHeight = 120;
+    
+    if (posX + menuWidth > window.innerWidth) posX = window.innerWidth - menuWidth - 10;
+    if (posY + menuHeight > window.innerHeight) posY = window.innerHeight - menuHeight - 10;
+    
+    menu.style.left = `${posX}px`;
+    menu.style.top = `${posY}px`;
+    menu.classList.remove('hidden');
+};
+
+document.addEventListener('click', (e) => {
+    const menu = document.getElementById('message-context-menu');
+    if (menu && !e.target.closest('#message-context-menu')) {
+        menu.classList.add('hidden');
+    }
+});
+
+window.editMessage = async function() {
+    const input = document.getElementById('message-input');
+    if (!input) return;
+    // Populate input with message to edit (you'd need to fetch the message first)
+    input.focus();
+};
+
+window.deleteMessage = async function(messageId) {
+    if (!confirm("Delete this message?")) return;
+    try {
+        await fetch(`${TURSO_API_BASE}/messages`, {
+            method: 'PATCH',
+            headers: TURSO_HEADERS,
+            body: JSON.stringify({ id: messageId, content: "Message Was Deleted By Owner" })
+        });
+        window.refreshChatMessages?.();
+    } catch (err) {
+        console.error("Delete failed:", err);
+        alert("Failed to delete message.");
+    }
+};
+
+window.recallMessage = async function(messageId) {
+    if (!confirm("Recall this message? (Remove from everyone's view)")) return;
+    try {
+        await fetch(`${TURSO_API_BASE}/messages`, {
+            method: 'DELETE',
+            headers: TURSO_HEADERS,
+            body: JSON.stringify({ id: messageId })
+        });
+        window.refreshChatMessages?.();
+    } catch (err) {
+        console.error("Recall failed:", err);
+        alert("Failed to recall message.");
+    }
+};
 
 // ==========================================================================
 // IMAGE LIGHTBOX (enlarge + zoom + pan)
@@ -577,7 +835,7 @@ window.mentionUser = function(rawEncodedName) {
     const counter = document.getElementById('char-counter');
     if (counter) {
         const len = input.value.length;
-        counter.textContent = `${len} / 250`;
+        counter.textContent = `${len} / 1200`;
     }
 };
 
@@ -720,9 +978,6 @@ function renderPmUserSearchResults(term) {
         </div>
     `).join('');
 
-    // Bind click handlers directly instead of inline onclick, and stop the
-    // click from bubbling up to the modal-overlay "click outside to close"
-    // listener, which was racing with the PM-open logic below.
     container.querySelectorAll('.pm-user-result-item').forEach(item => {
         item.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -733,20 +988,10 @@ function renderPmUserSearchResults(term) {
 }
 
 window.startNewPm = function(username) {
-    // Guard the PM state against the background poller for a moment while
-    // we switch tabs and open the thread, so a fetch that lands mid-transition
-    // can't stomp on the conversation we're about to open.
     suppressPmRefresh = true;
-
     document.getElementById('new-pm-modal')?.classList.add('hidden');
-
-    // The modal previously only hid itself and opened the thread state,
-    // but never actually switched the visible view to the PMs tab. If the
-    // user opened "+ New PM" from anywhere other than the PMs tab, nothing
-    // appeared to happen — the modal just closed. Explicitly switch tabs first.
     if (window.switchTab) window.switchTab('pms');
     window.openPmWithUser?.(username);
-
     setTimeout(() => { suppressPmRefresh = false; }, 500);
 };
 
@@ -761,18 +1006,23 @@ window.initializeChatEngine = async function() {
 
     myUsernameGlobal = user;
     myHandleGlobal = usernameToHandle(user);
+    if (localStorage.getItem(NOTIF_PREF_KEY) === 'granted' && typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+        notificationsReady = true;
+    }
 
     if (chatPollingInterval) clearInterval(chatPollingInterval);
     if (heartbeatInterval) clearInterval(heartbeatInterval);
     if (pmPollingInterval) clearInterval(pmPollingInterval);
+    if (userActivityTrackingInterval) clearInterval(userActivityTrackingInterval);
 
     try {
-        const verifyRes = await fetch(`${SUPABASE_URL}/rest/v1/users?select=username`, {
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        const verifyRes = await fetch(`${TURSO_API_BASE}/users`, {
+            headers: TURSO_HEADERS
         });
         const verifyData = await verifyRes.json();
+        const verifyList = unwrapList(verifyData, 'users');
 
-        const userExists = verifyData && verifyData.some(u => u.username && u.username.trim().toLowerCase() === user.trim().toLowerCase());
+        const userExists = verifyList.some(u => u.username && u.username.trim().toLowerCase() === user.trim().toLowerCase());
         if (!userExists) {
             localStorage.removeItem('chatUser');
             localStorage.clear();
@@ -783,22 +1033,30 @@ window.initializeChatEngine = async function() {
         console.error("Security handshake failed:", authError);
     }
 
+    // --- IMPROVED ONLINE/OFFLINE TRACKING (mouse movement based) ---
     async function executePresenceHeartbeat() {
         try {
-            await fetch(`${SUPABASE_URL}/rest/v1/user_roles?username=eq.${encodeURIComponent(user)}`, {
-                method: 'PATCH',
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ last_seen: new Date().toISOString() })
-            });
+            // Calculate if user is "online" based on mouse activity
+            const timeSinceLastActivity = Date.now() - lastMouseActivity;
+            const isCurrentlyActive = timeSinceLastActivity < 5 * 60 * 1000; // 5 minutes
+            
+            // Only update if active
+            if (isCurrentlyActive) {
+                await fetch(`${TURSO_API_BASE}/user-roles?username=${encodeURIComponent(user)}`, {
+                    method: 'PATCH',
+                    headers: TURSO_HEADERS,
+                    body: JSON.stringify({ last_seen: new Date().toISOString() })
+                });
+            }
         } catch (e) { console.error("Heartbeat sync lost:", e); }
     }
     
     executePresenceHeartbeat();
-    heartbeatInterval = setInterval(executePresenceHeartbeat, 10000);
+    heartbeatInterval = setInterval(executePresenceHeartbeat, 15000); // Check every 15 seconds
 
     try {
-        const banRes = await fetch(`${SUPABASE_URL}/rest/v1/user_roles?select=username,is_banned,temp_ban_until,pfp_url,is_admin,role_tag,last_seen`, {
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+        const banRes = await fetch(`${TURSO_API_BASE}/user-roles`, {
+            headers: TURSO_HEADERS
         });
         const banData = await banRes.json();
         
@@ -806,9 +1064,9 @@ window.initializeChatEngine = async function() {
             const profile = banData.find(r => r.username && r.username.trim().toLowerCase() === user.trim().toLowerCase());
             
             if (profile) {
-                currentUserIsAdmin = (profile.is_admin === true || String(profile.is_admin).toLowerCase() === 'true' || String(profile.role_tag).toLowerCase() === 'admin');
+                currentUserIsAdmin = isAdminProfile(profile);
 
-                if (profile.is_banned === true || String(profile.is_banned).toLowerCase() === 'true') {
+                if (isBannedFlag(profile.is_banned)) {
                     alert("This account has been permanently banned from the server.");
                     localStorage.removeItem('chatUser');
                     window.location.href = "../Login/login.html";
@@ -930,8 +1188,8 @@ window.initializeChatEngine = async function() {
         if (!container || !currentUserIsAdmin) return;
 
         try {
-            const res = await fetch(`${SUPABASE_URL}/rest/v1/private_messages?select=*&order=created_at.desc`, {
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+            const res = await fetch(`${TURSO_API_BASE}/private-messages`, {
+                headers: TURSO_HEADERS
             });
             const pmData = await res.json();
 
@@ -970,9 +1228,9 @@ window.initializeChatEngine = async function() {
     window.deletePrivateMsg = async (id) => {
         if (!confirm("Are you sure you want to delete this private message?")) return;
         try {
-            await fetch(`${SUPABASE_URL}/rest/v1/private_messages?id=eq.${id}`, {
+            await fetch(`${TURSO_API_BASE}/private-messages`, {
                 method: 'DELETE',
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                headers: TURSO_HEADERS
             });
             fetchAdminPrivateMessages();
         } catch (e) { console.error("Deletion failed:", e); }
@@ -985,33 +1243,50 @@ window.initializeChatEngine = async function() {
     async function fetchMyPrivateConversations() {
         if (suppressPmRefresh) return;
         try {
-            const [sentRes, receivedRes] = await Promise.all([
-                fetch(`${SUPABASE_URL}/rest/v1/private_messages?sender_handle=eq.${encodeURIComponent(myHandleGlobal)}&order=created_at.asc`, {
-                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-                }),
-                fetch(`${SUPABASE_URL}/rest/v1/private_messages?recipient_handle=eq.${encodeURIComponent(myHandleGlobal)}&order=created_at.asc`, {
-                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-                })
-            ]);
-            const sent = await sentRes.json();
-            const received = await receivedRes.json();
-
-            const all = [...(sent || []), ...(received || [])].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+            const partners = new Set();
+            (allUsers || []).forEach(u => {
+                if (u && u.username && u.username !== myUsernameGlobal) partners.add(u.username);
+            });
+            if (activePmHandle) {
+                const uname = String(activePmHandle).replace(/^@/, '');
+                if (uname) partners.add(uname);
+            }
+            const all = [];
+            await Promise.all([...partners].map(async (otherUser) => {
+                try {
+                    const url = `${TURSO_API_BASE}/private-messages?sender_username=${encodeURIComponent(myUsernameGlobal)}&recipient_username=${encodeURIComponent(otherUser)}`;
+                    const r = await fetch(url, { headers: TURSO_HEADERS });
+                    if (!r.ok) return;
+                    const rows = await r.json();
+                    if (Array.isArray(rows)) all.push(...rows);
+                } catch (e) { /* skip partner */ }
+            }));
+            all.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
             const freshConversations = {};
             all.forEach(msg => {
-                const isMine = msg.sender_handle === myHandleGlobal;
-                const otherHandle = isMine ? msg.recipient_handle : msg.sender_handle;
+                const isMine = msg.sender_handle === myHandleGlobal || msg.sender_username === myUsernameGlobal;
+                const otherHandle = isMine
+                    ? (msg.recipient_handle || ('@' + String(msg.recipient_username || '').toLowerCase().replace(/\s+/g, '_')))
+                    : (msg.sender_handle || ('@' + String(msg.sender_username || '').toLowerCase().replace(/\s+/g, '_')));
                 if (!freshConversations[otherHandle]) {
                     freshConversations[otherHandle] = { otherHandle, otherUsername: handleToDisplayUsername(otherHandle), messages: [], unread: 0 };
                 }
                 freshConversations[otherHandle].messages.push(msg);
-                if (!isMine && !msg.is_read) freshConversations[otherHandle].unread++;
+                if (!isMine && !msg.is_read) {
+                    freshConversations[otherHandle].unread++;
+                    // Browser notification for new PM (skip first seed pass)
+                    if (msg.id && notificationsReady && knownPmIds.size > 0 && !knownPmIds.has(msg.id)) {
+                        const who = msg.sender_username || otherHandle || 'Someone';
+                        const preview = String(msg.content || '').replace(/^\[\[IMG\]\].*/, '[Image]').slice(0, 120);
+                        showChatNotification('PM from ' + who, preview || 'New private message', 'pm-' + msg.id);
+                    }
+                    if (msg.id) knownPmIds.add(msg.id);
+                } else if (msg.id) {
+                    knownPmIds.add(msg.id);
+                }
             });
 
-            // Preserve any conversation the user just opened locally (e.g. via
-            // "+ New PM") that has no messages yet, so a poll landing right
-            // after doesn't make the freshly-opened thread disappear.
             if (activePmHandle && !freshConversations[activePmHandle] && pmConversations[activePmHandle]) {
                 freshConversations[activePmHandle] = pmConversations[activePmHandle];
             }
@@ -1101,11 +1376,16 @@ window.initializeChatEngine = async function() {
         const convo = pmConversations[otherHandle];
         if (!convo || convo.unread === 0) return;
         try {
-            await fetch(`${SUPABASE_URL}/rest/v1/private_messages?recipient_handle=eq.${encodeURIComponent(myHandleGlobal)}&sender_handle=eq.${encodeURIComponent(otherHandle)}&is_read=eq.false`, {
-                method: 'PATCH',
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ is_read: true })
-            });
+            const unread = (convo.messages || []).filter(m => !m.is_read && m.sender_username !== myUsernameGlobal && m.sender_handle !== myHandleGlobal);
+            await Promise.all(unread.map(async (m) => {
+                const id = m.id || m.ID;
+                if (!id) return;
+                await fetch(`${TURSO_API_BASE}/private-messages`, {
+                    method: 'PATCH',
+                    headers: TURSO_HEADERS,
+                    body: JSON.stringify({ id })
+                });
+            }));
             convo.unread = 0;
             updatePmUnreadBadge();
         } catch (e) { console.error("Failed marking conversation read:", e); }
@@ -1169,16 +1449,49 @@ window.initializeChatEngine = async function() {
     async function sendPrivateMessage(content) {
         if (!activePmHandle) return;
         try {
-            await fetch(`${SUPABASE_URL}/rest/v1/private_messages`, {
+            const convo = pmConversations[activePmHandle];
+            const recipientUsername = (convo && convo.otherUsername)
+                ? convo.otherUsername
+                : String(activePmHandle).replace(/^@/, '');
+            const id = (typeof crypto !== 'undefined' && crypto.randomUUID)
+                ? crypto.randomUUID()
+                : ('pm_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10));
+            const createdAt = new Date().toISOString();
+            const res = await fetch(`${TURSO_API_BASE}/private-messages`, {
                 method: 'POST',
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+                headers: TURSO_HEADERS,
                 body: JSON.stringify({
-                    sender_handle: myHandleGlobal,
-                    recipient_handle: activePmHandle,
+                    id: id,
+                    sender_username: myUsernameGlobal,
+                    recipient_username: recipientUsername,
                     content: content,
-                    is_read: false
+                    is_read: 0,
+                    created_at: createdAt
                 })
             });
+            if (!res.ok) {
+                const errBody = await res.json().catch(() => ({}));
+                console.error("PM API error:", res.status, errBody);
+                throw new Error(errBody.error || ('HTTP ' + res.status));
+            }
+            if (!pmConversations[activePmHandle]) {
+                pmConversations[activePmHandle] = {
+                    otherHandle: activePmHandle,
+                    otherUsername: recipientUsername,
+                    messages: [],
+                    unread: 0
+                };
+            }
+            pmConversations[activePmHandle].messages.push({
+                id: id,
+                sender_username: myUsernameGlobal,
+                recipient_username: recipientUsername,
+                content: content,
+                is_read: 0,
+                created_at: createdAt
+            });
+            renderPmThread(activePmHandle);
+            renderPmConversationList();
             await fetchMyPrivateConversations();
         } catch (err) {
             console.error("Failed to send private message:", err);
@@ -1211,15 +1524,19 @@ window.initializeChatEngine = async function() {
     // --- USER DIRECTORY ---
     async function fetchAllUsers() {
         try {
-            const usersRes = await fetch(`${SUPABASE_URL}/rest/v1/users?select=username`, {
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+            const usersRes = await fetch(`${TURSO_API_BASE}/users`, {
+                headers: TURSO_HEADERS
             });
-            const usersData = await usersRes.json();
+            const usersDataRaw = await usersRes.json();
+            const usersData = unwrapList(usersDataRaw, 'users');
 
-            const rolesRes = await fetch(`${SUPABASE_URL}/rest/v1/user_roles?select=*`, {
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+            const rolesRes = await fetch(`${TURSO_API_BASE}/user-roles`, {
+                headers: TURSO_HEADERS
             });
-            const rolesData = await rolesRes.json();
+            const rolesDataRaw = await rolesRes.json();
+            const rolesData = unwrapList(rolesDataRaw, 'roles').length
+                ? unwrapList(rolesDataRaw, 'roles')
+                : (Array.isArray(rolesDataRaw) ? rolesDataRaw : (rolesDataRaw && rolesDataRaw.username ? [rolesDataRaw] : []));
 
             const uniqueNames = [...new Set(usersData.map(u => u.username))].filter(name => name != null);
             
@@ -1231,8 +1548,8 @@ window.initializeChatEngine = async function() {
                     pfp_url: foundProfile ? foundProfile.pfp_url : DEFAULT_PFP,
                     role_tag: foundProfile ? foundProfile.role_tag : 'User',
                     last_seen: foundProfile ? foundProfile.last_seen : null,
-                    is_banned: foundProfile ? (foundProfile.is_banned === true || String(foundProfile.is_banned).toLowerCase() === 'true') : false,
-                    is_admin: (checkAdminStatus === true || String(checkAdminStatus).toLowerCase() === 'true' || (foundProfile && String(foundProfile.role_tag).toLowerCase() === 'admin'))
+                    is_banned: isBannedFlag(foundProfile && foundProfile.is_banned),
+                    is_admin: isAdminProfile(foundProfile)
                 };
             });
             
@@ -1252,11 +1569,12 @@ window.initializeChatEngine = async function() {
         const filtered = allUsers.filter(u => u.username.toLowerCase().includes(filterTerm.toLowerCase()));
         
         listContainer.innerHTML = filtered.map(u => {
-            const displayTag = u.is_admin ? 'ADMIN' : u.role_tag;
+            const displayTag = isAdminProfile(u) ? (u.role_tag || 'ADMIN') : (u.role_tag || 'User');
             let onlineDot = "rgba(160, 146, 141, 0.4)";
             let statusLabel = "OFFLINE";
             if (u.last_seen) {
                 const diff = Date.now() - new Date(u.last_seen).getTime();
+                // Updated: 5 minutes instead of old hardcoded value
                 if (diff < 5 * 60 * 1000) { onlineDot = "#22c55e"; statusLabel = "ONLINE"; }
             }
 
@@ -1281,7 +1599,7 @@ window.initializeChatEngine = async function() {
         if (!row) return;
         const total = allUsers.length;
         const bannedCount = allUsers.filter(u => u.is_banned).length;
-        const adminCount = allUsers.filter(u => u.is_admin).length;
+        const adminCount = allUsers.filter(u => isAdminProfile(u)).length;
         const onlineCount = allUsers.filter(u => u.last_seen && (Date.now() - new Date(u.last_seen).getTime() < 5 * 60 * 1000)).length;
 
         row.innerHTML = `
@@ -1306,7 +1624,7 @@ window.initializeChatEngine = async function() {
         table.innerHTML = filtered.map(u => {
             let onlineDot = "rgba(160, 146, 141, 0.4)";
             if (u.last_seen && (Date.now() - new Date(u.last_seen).getTime() < 5 * 60 * 1000)) onlineDot = "#22c55e";
-            const tagLabel = u.is_admin ? 'ADMIN' : (u.role_tag || 'User');
+            const tagLabel = isAdminProfile(u) ? (u.role_tag || 'ADMIN') : (u.role_tag || 'User');
             const banLabel = u.is_banned ? `<span style="color:#ff4444; font-weight:bold;"> · BANNED</span>` : '';
             const safeName = u.username.replace(/'/g, "\\'");
 
@@ -1323,7 +1641,7 @@ window.initializeChatEngine = async function() {
                             ? `<button class="aur-btn unban" onclick="quickAdminAction('unban', '${safeName}')">Unban</button>`
                             : `<button class="aur-btn ban" onclick="quickAdminAction('ban', '${safeName}')">Ban</button>`
                         }
-                        <button class="aur-btn promote" onclick="quickAdminAction('${u.is_admin ? 'demote' : 'promote'}', '${safeName}')">${u.is_admin ? 'Demote' : 'Promote'}</button>
+                        <button class="aur-btn promote" onclick="quickAdminAction('${isAdminProfile(u) ? 'demote' : 'promote'}', '${safeName}')">${isAdminProfile(u) ? 'Demote' : 'Promote'}</button>
                     </div>
                 </div>
             `;
@@ -1346,11 +1664,7 @@ window.initializeChatEngine = async function() {
         else if (action === 'demote') data.is_admin = false;
 
         try {
-            const res = await fetch(`${SUPABASE_URL}/rest/v1/user_roles?username=eq.${encodeURIComponent(username)}`, {
-                method: 'PATCH',
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
+            const res = await patchUserRoleByUsername(username, data);
             if (!res.ok) throw new Error(await res.text());
 
             const target = allUsers.find(u => u.username === username);
@@ -1378,9 +1692,9 @@ window.initializeChatEngine = async function() {
         if (!text) return alert("Write an announcement message first.");
 
         try {
-            await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
+            await fetch(`${TURSO_API_BASE}/messages`, {
                 method: 'POST',
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+                headers: TURSO_HEADERS,
                 body: JSON.stringify({ username: `📢 ${user}`, content: `[ANNOUNCEMENT] ${text}` })
             });
             textEl.value = '';
@@ -1401,11 +1715,7 @@ window.initializeChatEngine = async function() {
         if (!tag) return alert("Enter a role tag value.");
 
         try {
-            const res = await fetch(`${SUPABASE_URL}/rest/v1/user_roles?username=eq.${encodeURIComponent(target)}`, {
-                method: 'PATCH',
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ role_tag: tag })
-            });
+            const res = await patchUserRoleByUsername(target, { role_tag: tag });
             if (!res.ok) throw new Error(await res.text());
             alert(`Role tag "${tag}" applied to ${target}.`);
             fetchAllUsers();
@@ -1427,7 +1737,7 @@ window.initializeChatEngine = async function() {
         URL.revokeObjectURL(url);
     };
 
-    // --- MESSAGE ENGINE (MAIN CHAT) ---
+    // --- MESSAGE ENGINE (MAIN CHAT) WITH ANTI-FLICKER OPTIMIZATION ---
     async function fetchMessages() {
         if (!document.getElementById('chat-messages')) {
             clearInterval(chatPollingInterval);
@@ -1435,14 +1745,38 @@ window.initializeChatEngine = async function() {
             return;
         }
         try {
-            const mRes = await fetch(`${SUPABASE_URL}/rest/v1/messages?select=*&order=created_at.asc`, { 
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+            const mRes = await fetch(`${TURSO_API_BASE}/messages?limit=200`, { 
+                headers: TURSO_HEADERS
             });
-            const rRes = await fetch(`${SUPABASE_URL}/rest/v1/user_roles?select=*`, { 
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+            const rRes = await fetch(`${TURSO_API_BASE}/user-roles`, { 
+                headers: TURSO_HEADERS
             });
-            const messages = await mRes.json();
-            const roles = await rRes.json();
+            const messagesRaw = await mRes.json();
+            const messages = Array.isArray(messagesRaw) ? messagesRaw : (messagesRaw && messagesRaw.messages) ? messagesRaw.messages : [];
+            const rolesRaw = await rRes.json();
+            const roles = Array.isArray(rolesRaw) ? rolesRaw : (rolesRaw ? [rolesRaw] : []);
+
+            // Calculate a hash of current messages to avoid re-rendering if nothing changed
+            const currentHash = JSON.stringify(messages.map(m => m.id));
+            if (currentHash === lastFetchedMessagesHash) {
+                return; // No new messages, skip re-render
+            }
+            // Notify about brand-new messages from other people
+            if (knownMessageIds.size > 0) {
+                messages.forEach(msg => {
+                    if (!msg || !msg.id) return;
+                    if (knownMessageIds.has(msg.id)) return;
+                    const fromMe = msg.username && msg.username.trim().toLowerCase() === myUsernameGlobal.trim().toLowerCase();
+                    if (!fromMe && msg.content !== "Message Was Deleted By Owner") {
+                        const preview = String(msg.content || '').replace(/^\[\[IMG\]\].*/, '[Image]').slice(0, 120);
+                        showChatNotification(msg.username || 'Someone', preview || 'New message in general chat', 'general-' + msg.id);
+                    }
+                });
+            }
+            // Seed / update known ids
+            messages.forEach(msg => { if (msg && msg.id) knownMessageIds.add(msg.id); });
+
+            lastFetchedMessagesHash = currentHash;
 
             const activeHeaderSpan = document.getElementById('room-status-indicator');
             if (activeHeaderSpan && roles) {
@@ -1467,10 +1801,10 @@ window.initializeChatEngine = async function() {
                 
                 const userPfp = role && role.pfp_url ? role.pfp_url : DEFAULT_PFP;
                 const evaluatedRole = role && role.role_tag ? role.role_tag : 'User';
-                const isMsgSenderAdmin = role ? (role.is_admin === true || String(role.is_admin).toLowerCase() === 'true' || String(role.role_tag).toLowerCase() === 'admin') : false;
+                const isMsgSenderAdmin = isAdminProfile(role);
                 
                 let tag = "";
-                if (isMsgSenderAdmin || evaluatedRole.toLowerCase() === 'admin') {
+                if (isMsgSenderAdmin || isAdminRoleTag(evaluatedRole)) {
                     tag = `<span class="badge admin-badge">ADMIN</span>`;
                 } else if (evaluatedRole && evaluatedRole.toLowerCase() !== 'user') {
                     tag = `<span class="badge custom-badge">[${evaluatedRole.toUpperCase()}]</span>`;
@@ -1502,7 +1836,7 @@ window.initializeChatEngine = async function() {
                             ${tag}
                             <span class="message-timestamp">${time}</span>
                         </div>
-                        <div class="message-text-bubble ${isMine ? 'my-bubble-color' : 'other-bubble-color'}${bubbleExtraClass}" style="${isDel ? 'font-style:italic; opacity:0.5;' : ''}">
+                        <div class="message-text-bubble ${isMine ? 'my-bubble-color' : 'other-bubble-color'}${bubbleExtraClass}" style="${isDel ? 'font-style:italic; opacity:0.5;' : ''}" oncontextmenu="openMessageMenu(event, '${msg.id}', '${msg.username}')">
                             ${bodyHtml}
                         </div>
                          ${(currentUserIsAdmin && !isDel) ? `<button style="background:none; color:red; font-size:10px; padding:0; margin-top:5px; cursor:pointer; width:auto; display:block;" onclick="deleteMsg('${msg.id}')">Delete</button>` : ""}
@@ -1522,7 +1856,7 @@ window.initializeChatEngine = async function() {
     if (msgInput && charCounter) {
         msgInput.oninput = (e) => {
             const len = e.target.value.length;
-            charCounter.textContent = `${len} / 250`;
+            charCounter.textContent = `${len} / 1200`;
             if (len >= 230) charCounter.style.color = "#ff4444";
             else if (len >= 200) charCounter.style.color = "var(--accent)";
             else charCounter.style.color = "var(--text-muted)";
@@ -1530,9 +1864,9 @@ window.initializeChatEngine = async function() {
     }
 
     async function sendPlainMessage(content) {
-        await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
+        await fetch(`${TURSO_API_BASE}/messages`, {
             method: 'POST',
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+            headers: TURSO_HEADERS,
             body: JSON.stringify({ username: user, content })
         });
     }
@@ -1544,13 +1878,24 @@ window.initializeChatEngine = async function() {
             const now = Date.now();
             const input = document.getElementById('message-input');
 
-            if (now - lastMessageTime < 2000 && !currentUserIsAdmin) return alert("Please wait between messages.");
+            if (!currentUserIsAdmin) {
+                // Active spam penalty (30s)
+                if (window._chatPenaltyUntil && now < window._chatPenaltyUntil) {
+                    const left = Math.ceil((window._chatPenaltyUntil - now) / 1000);
+                    return alert("Spam cooldown active. Wait " + left + " more seconds.");
+                }
+                // Normal minimum gap: 5 seconds
+                if (now - lastMessageTime < 5000) {
+                    window._chatPenaltyUntil = now + 30000; // 30 second penalty
+                    return alert("Please wait at least 5 seconds between messages. You tried too fast — wait 30 seconds.");
+                }
+            }
 
             const val = input.value.trim();
             const hasImage = !!pendingImageDataUrl;
 
             if (!val && !hasImage) return;
-            if (val.length > 250) return alert(`Your message is too long (${val.length}/250 characters). Please shorten it.`);
+            if (val.length > 1200) return alert(`Your message is too long (${val.length}/1200 characters). Please shorten it.`);
 
             input.disabled = true;
 
@@ -1577,10 +1922,11 @@ window.initializeChatEngine = async function() {
 
                 if (val) {
                     input.value = "";
-                    if (charCounter) charCounter.textContent = "0 / 250";
+                    if (charCounter) charCounter.textContent = "0 / 1200";
                     await sendPlainMessage(val);
                 }
 
+                lastFetchedMessagesHash = null; // Reset hash to force refresh after sending
                 fetchMessages().then(() => { msgContainer.scrollTop = msgContainer.scrollHeight; });
             } catch (err) {
                 console.error("Message send failed:", err);
@@ -1606,11 +1952,7 @@ window.initializeChatEngine = async function() {
         else if (action === 'warn') data.warned = true;
 
         try {
-            const res = await fetch(`${SUPABASE_URL}/rest/v1/user_roles?username=eq.${encodeURIComponent(target)}`, {
-                method: 'PATCH',
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
+            const res = await patchUserRoleByUsername(target, data);
             if (!res.ok) throw new Error(await res.text());
             alert("Action completed successfully!");
             fetchAllUsers();
@@ -1634,13 +1976,16 @@ window.initializeChatEngine = async function() {
         expiry.setMinutes(expiry.getMinutes() + duration);
 
         try {
-            const res = await fetch(`${SUPABASE_URL}/rest/v1/user_roles?username=eq.${encodeURIComponent(target)}`, {
-                method: 'PATCH',
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ last_action_type: 'temp_ban', last_action_reason: reason, temp_ban_until: expiry.toISOString() })
+            const res = await patchUserRoleByUsername(target, {
+                last_action_type: 'temp_ban',
+                last_action_reason: reason,
+                last_action_category: 'Temp Ban',
+                temp_ban_until: expiry.toISOString(),
+                is_banned: false
             });
             if (!res.ok) throw new Error(await res.text());
             alert("Temporary ban applied successfully!");
+            fetchAllUsers();
         } catch (err) {
             console.error("Temp ban failed:", err);
             alert("Failed to apply temp ban. Check console for details.");
@@ -1648,16 +1993,21 @@ window.initializeChatEngine = async function() {
     };
 
     window.deleteMsg = async (id) => {
-        await fetch(`${SUPABASE_URL}/rest/v1/messages?id=eq.${id}`, { 
+        await fetch(`${TURSO_API_BASE}/messages`, { 
             method: 'PATCH', 
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' }, 
+            headers: TURSO_HEADERS, 
             body: JSON.stringify({ content: "Message Was Deleted By Owner" })
         });
+        lastFetchedMessagesHash = null; // Force refresh
         fetchMessages();
     };
 
     const dirSearch = document.getElementById('directory-search');
     if (dirSearch) dirSearch.oninput = (e) => renderUserDirectory(e.target.value);
+
+
+    // Ask about notifications after login (once)
+    setTimeout(() => promptEnableNotifications(), 800);
 
     chatPollingInterval = setInterval(fetchMessages, 3000);
     fetchMessages().then(() => { msgContainer.scrollTop = msgContainer.scrollHeight; });
