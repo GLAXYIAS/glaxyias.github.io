@@ -1,11 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <script>
+    (function () {
+      var ALLOWED = ["null-x-team.github.io"];
+      var host = (location.hostname || "").toLowerCase();
+      if (ALLOWED.some(function (d) { return host === d; })) return;
+      try { window.stop(); } catch (e) {}
+      try {
+        var html = "<!DOCTYPE html><html><head><title>ERR</title><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"></head>"
+          + "<body style=\"background:#050505;color:#ff2b2b;font-family:monospace;display:flex;align-items:center;justify-content:center;height:100vh;margin:0\">"
+          + "<div style=\"text-align:center;padding:40px\"><h1>SITE LOCKED</h1><p>Unauthorized host.</p></div></body></html>";
+        document.open();
+        document.write(html);
+        document.close();
+      } catch (e) {}
+      try { Object.freeze(document); } catch (e) {}
+    })();
+  </script>
+<meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Null X</title>
-  <link rel="icon" type="image/png" href="https://glaxyias.github.io/imgs/Screenshot%202026-01-27%208.17.07%20PM.png">
+  <link rel="icon" type="image/png" href="https://null-x-team.github.io/imgs/Screenshot%202026-01-27%208.17.07%20PM.png">
   <link rel="stylesheet" href="CSS/style.css">
+  <link rel="stylesheet" href="CSS/game-enhancements.css">
   <link rel="stylesheet" href="themes/themes.css">
 
   <script>
@@ -21,6 +39,7 @@
   <link rel="stylesheet" href="./BAN/guard.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="Games/GameSaveData/auto-save.js"></script>
+  <script src="Games/GameSaveData/cloud-save-hotfix.js"></script>
 
   <style>
     /* =========================================================
@@ -436,6 +455,12 @@
   </style>
 </head>
 <body>
+<audio id="bgMusic" src="audio/emmraan-evil-heavy-metal-261243.mp3" autoplay loop></audio>
+
+<script>
+  const bgMusic = document.getElementById('bgMusic');
+  bgMusic.volume = 0.25;
+</script>
 
   <div id="educational-cloak">
     <div class="educational-content-card">
@@ -446,7 +471,7 @@
         
       <div class="educational-scroll-body">
         <p>This platform is designed to support modern educational growth through interactive digital learning experiences and research-based technology integration. By encouraging cognitive development through problem-solving, pattern recognition, and critical thinking activities, students are able to strengthen important academic and real-world skills in an engaging environment.</p>
-        <p>Technological advancements in education have made it possible for learners to access information more efficiently than ever before, promoting creativity, adaptability, and digital literacy that are essential in today’s rapidly evolving society.</p>
+        <p>Technological advancements in education have made it possible for learners to access information more efficiently than ever before, promoting creativity, adaptability, and digital literacy that are essential in today's rapidly evolving society.</p>
         <p>Student safety and responsible online engagement remain a core priority. The platform promotes a structured and secure learning environment that emphasizes appropriate digital citizenship, safe browsing practices, and constructive educational interaction. Through carefully organized resources and age-conscious content presentation, learners can explore educational tools while maintaining awareness of online safety standards and healthy technology habits.</p>
         <p>Research continues to demonstrate the importance of interactive learning in supporting memory retention, cognitive flexibility, and long-term academic success. Educational technology can help students develop collaboration skills, independent thinking, and curiosity-driven exploration while providing accessible opportunities for self-paced learning.</p>
         <p>By combining innovation with educational responsibility, modern digital platforms can contribute positively to student engagement, intellectual growth, and future readiness in an increasingly technology-focused world.</p>
@@ -484,10 +509,16 @@
           <p>Find something fun to play.</p>
         </div>
           
-        <div class="search-bar" style="display: flex; align-items: center; gap: 15px;">
+        <button type="button" id="system-news-btn" title="System News">
+          <span class="news-dot" aria-hidden="true"></span>
+          News
+        </button>
+
+        <div class="search-bar">
           <input type="text" id="searchBar" placeholder="Search games...">
+        </div>
           
-          <div class="top-bar-stats" style="display: flex; align-items: center; gap: 12px; font-family: monospace; font-size: 13px;">
+        <div class="top-bar-stats" style="display: flex; align-items: center; gap: 12px; font-family: monospace; font-size: 13px; flex-shrink: 0;">
             
             <div id="battery-widget" style="display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.04); padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); color: white;">
               <i class="fas fa-battery-three-quarters" id="battery-icon" style="color: #10b981;"></i>
@@ -501,52 +532,14 @@
             </div>
 
           </div>
-        </div>
       </header>
 
+      <!-- GAME FILTER BUTTONS -->
+      <div class="game-filters-container">
+        <span class="filter-label">Filter:</span>
+      </div>
+
       <section class="hero" id="heroSection" style="position: relative;">
-        <div class="countdown-overlay-container">
-          <div class="countdown-title">System Update</div>
-          <div class="flip-clock">
-            
-            <div class="flip-unit">
-              <div class="matrix-card" id="months-card">
-                <span class="matrix-value">00</span>
-              </div>
-              <div class="flip-label">Months</div>
-            </div>
-
-            <div class="flip-unit">
-              <div class="matrix-card" id="days-card">
-                <span class="matrix-value">00</span>
-              </div>
-              <div class="flip-label">Days</div>
-            </div>
-
-            <div class="flip-unit">
-              <div class="matrix-card" id="hours-card">
-                <span class="matrix-value">00</span>
-              </div>
-              <div class="flip-label">Hours</div>
-            </div>
-
-            <div class="flip-unit">
-              <div class="matrix-card" id="minutes-card">
-                <span class="matrix-value">00</span>
-              </div>
-              <div class="flip-label">Minutes</div>
-            </div>
-
-            <div class="flip-unit">
-              <div class="matrix-card" id="seconds-card">
-                <span class="matrix-value">00</span>
-              </div>
-              <div class="flip-label">Seconds</div>
-            </div>
-
-          </div>
-        </div>
-
         <div class="hero-content">
           <span class="badge">Featured</span>
           <h2 id="hero-title">Loading...</h2>
@@ -584,7 +577,7 @@
           <p style="color: #aaa; margin-bottom: 20px;">Manage your local account settings and save parameters.</p>
 
           <div class="avatar-upload-section">
-            <img id="pfp-preview" src="https://Glaxyias.github.io/imgs/download.jpeg" alt="Profile Picture">
+            <img id="pfp-preview" src="https://null-x-team.github.io/imgs/download.jpeg" alt="Profile Picture">
             <div class="upload-inputs">
               <label for="pfp-file-input">Upload Profile Picture</label>
               <input type="file" id="pfp-file-input" accept="image/*">
@@ -645,7 +638,7 @@
         
       <button class="signin-btn" id="signInBtn">Sign In</button>
       
-      <a href="../Settings/settings.html" class="settings-btn" id="settingsBtn" style="text-decoration: none; display: flex; align-items: center; justify-content: center; text-align: center;">Settings</a>
+      <a href="Settings/settings.html" class="settings-btn" id="settingsBtn" style="text-decoration: none; display: flex; align-items: center; justify-content: center; text-align: center;">Settings</a>
 
       <div style="background: rgba(139, 0, 255, 0.03); border: 1px solid rgba(139, 0, 255, 0.12); padding: 10px; border-radius: 6px; margin: 10px 0; font-family: 'Segoe UI', sans-serif; color: white;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
@@ -666,276 +659,7 @@
         </div>
       </div>
 
-      <div class="news-sidebar">
-        <h3 class="news-title">System News</h3>
-        <div class="news-feed" id="newsFeed">
-
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Supabase has a server side error, so you cannot access your save data right now, but I promise, your save data is safe.</p>
-            <span class="news-date">Aug. 25th</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>New Themes! YAY</p>
-            <span class="news-date">Aug 25th</span>
-          </div>
-
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Dear users of glaxyias I am sorry about the delay, there is something wrong with the code, I promise it will be up within the next 72 hours</p>
-            <span class="news-date">AUG 17th</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Save data isn't working and all three of us can't figure out how to fix it so... we're putting our Ai helper to get it to work</p>
-            <span class="news-date">August 4th</span>
-          </div>
-          
-           <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Me, Glaxyias, and Galethis are putting more work into the bitcoin clicker game, so there will be less updates on here. but don't worry, we haven't forgotten about you</p>
-            <span class="news-date">August 2nd</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>LISTEN! USERS OF GLAXYIAS, THERE MIGHT BE A CHANCE FOR ROBLOX TO EXIST ON THIS SITE. MIGHT. BUT STILL A POSSIBLITY...</p>
-            <span class="news-date">July 30th</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Hear me out, I might be able to add a way for people to watch youtube on this site. Might...</p>
-            <span class="news-date">July 23</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Added a lock screen, press ALT+L or Ctrl+L and create your pin. then press again, and then your screen is locked</p>
-            <span class="news-date">July 28th</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Me Glaeesas of all people fixed themes! we have 3 contributers and glaxyias has claude. How was I the only one to fix the themes issue?</p>
-            <span class="news-date">July 24th</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Your Progress now saves every 30 seconds and manual save was kept.</p>
-            <span class="news-date">July 23</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Fixed bans, fixed admin, added blocking, PMs, and friend requests, and added backup for when the openai ai key fails. also added handlers</p>
-            <span class="news-date">July 22nd</span>
-          </div>
-
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>This is a test to see if the service workers were the issue.</p>
-            <span class="news-date">July 21st</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Null AI Update</span>
-            <p>The ai is a work in progress, very hard to build. very slow. functions. but very very slow. (also the sync button that runs when a update is pushed no longer works, me or glaxyias know why. so that still remains but functtions off. the best option is when you see that pop up is the just clear the cache and reload.)</p>
-            <span class="news-date">July 17th</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Happy 1000th Commit!</p>
-            <span class="news-date">July 15th</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>CodeQL Now has it's own workflow, and the notification for site update is no longer launching before CodeQL</p>
-            <span class="news-date">July 15</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Multi-Update</span>
-            <p>Iframing my site will not work, ragdoll drop now works, working on making it work for a few others that can't load, games load in a new abt:blnk page.</p>
-            <span class="news-date">July 14th</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Games are going to launch in a new way because the old way had a 96.431% chance to crash on certain chromebooks, this push will fix that</p>
-            <span class="news-date">July 13th</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>The Ai will be delayed due to LLM responce tokens so the Ai will be more limited then I expected</p>
-            <span class="news-date">July 11</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Added a 404 Page for broken links</p>
-            <span class="news-date">July 11th</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>This ai will be very advanced so it won't be ready till the next major update. ;]</p>
-            <span class="news-date">July 9th</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Working on building Ai helper, and it's not on this repo so no-one can take my code.</p>
-            <span class="news-date">July 9th</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>This newest update is sooo cool!!!!</p>
-            <span class="news-date">July 8th</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Refactor modal settings for themes and auto-launch</p>
-            <span class="news-date">July 5th</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Working on fixing settIngs modal</p>
-            <span class="news-date">June 29</span>
-          </div>
-          
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Themes work 100% Try em out</p>
-            <span class="news-date">June 18</span>
-          </div>
-
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>New Themes, Working on perfecting them but there are new themes that work!</p>
-            <span class="news-date">June 13</span>
-          </div>
-            
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Adding in THEMES! (that actually work)</p>
-            <span class="news-date">June 13</span>
-          </div>
-            
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Did a bunch of stuff that has improved the site</p>
-            <span class="news-date">June 9</span>
-          </div>
-            
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Fixed login</p>
-            <span class="news-date">June 4</span>
-          </div>
-            
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Removed Baldi's Basics in Education and Learning</p>
-            <span class="news-date">May 28</span>
-          </div>
-            
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Added Baldi's Basics in Education and Learning</p>
-            <span class="news-date">May 22</span>
-          </div>
-            
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Issue for where for your first time opening a game it takes a while to load, and then it loads fine opening it the second time</p>
-            <span class="news-date">May 22</span>
-          </div>
-            
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Over The summer I am going to add many new games!</p>
-            <span class="news-date">May 22</span>
-          </div>
-
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Grok broke the code, don't worry, I had a backup. ;]</p>
-            <span class="news-date">May 22 8:06</span>
-          </div>
-            
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Fixed login!</p>
-            <span class="news-date">May 21 9:57</span>
-          </div>
-
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>The school's firewalls are making it impossible to make login work</p>
-            <span class="news-date">May 20 12:04</span>
-          </div>
-
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>figured out the sign in issue, so login and sign up should work again soon</p>
-            <span class="news-date">May 20 11:13</span>
-          </div>
-
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Added New Cloaks!</p>
-            <span class="news-date">May 19 7:25</span>
-          </div>
-
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Fixed sign in?</p>
-            <span class="news-date">May 19 8:57</span>
-          </div>
-
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Increased timer from 10 to 20.</p>
-            <span class="news-date">May 19 8:33</span>
-          </div>
-
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Added ghost logouts.</p>
-            <span class="news-date">May 18 6:20pm</span>
-          </div>
-
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Added in scrolling for news</p>
-            <span class="news-date">May 18</span>
-          </div>
-
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Streamlined authentication & credentials.</p>
-            <span class="news-date">May 18</span>
-          </div>
-
-          <div class="news-card">
-            <span class="news-tag">Update</span>
-            <p>Fixed Bullet Force (still takes a while to load)</p>
-            <span class="news-date">May 15</span>
-          </div>
-
-        </div>
-      </div>
+      
     </aside>
   </div>
 
@@ -1004,90 +728,32 @@
   <button id="console-toggle-btn">Console</button>
 
   <script>
-    const SUPABASE_PROJECT_URL = 'https://ldojzaikkolrxkiwyqvq.supabase.co';
-    const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxkb2p6YWlra29scnhraXd5cXZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMDM2NjksImV4cCI6MjA5NDg3OTY2OX0.CXZf1jaNJ3njQhIWoaYFxuJWx2J0HQ9CPF5imQoxtMw';
-
-    const targetDate = new Date("August 30, 2026 3:15:25");
-
-    function updateMatrixCard(cardId, value) {
-      const cardContainer = document.getElementById(cardId);
-      if (!cardContainer) return;
-      
-      const targetTextNode = cardContainer.querySelector('.matrix-value');
-      const paddedValue = String(value).padStart(2, '0');
-
-      if (targetTextNode.textContent !== paddedValue) {
-        targetTextNode.textContent = paddedValue;
-        
-        cardContainer.classList.remove('pulse');
-        void cardContainer.offsetWidth; 
-        cardContainer.classList.add('pulse');
-      }
+    // Turso via Vercel API (replaces Supabase)
+    const TURSO_API_BASE = 'https://apithingy.jlsniperelite4.workers.dev';
+    const TURSO_HEADERS = { 'Content-Type': 'application/json' };
+    function unwrapUserPayload(data) {
+      if (!data) return null;
+      if (Array.isArray(data)) return data[0] || null;
+      if (data.users && Array.isArray(data.users)) return data.users[0] || null;
+      if (data.user) return data.user;
+      if (data.id !== undefined || data.username !== undefined) return data;
+      return null;
     }
 
-    function runCountdown() {
-      const now = new Date();
-      const diff = targetDate - now;
-
-      if (diff <= 0) {
-        updateMatrixCard('months-card', 0);
-        updateMatrixCard('days-card', 0);
-        updateMatrixCard('hours-card', 0);
-        updateMatrixCard('minutes-card', 0);
-        updateMatrixCard('seconds-card', 0);
-        return;
-      }
-
-      let targetYear = targetDate.getFullYear();
-      let targetMonth = targetDate.getMonth();
-      let currentYear = now.getFullYear();
-      let currentMonth = now.getMonth();
-
-      let months = (targetYear - currentYear) * 12 + (targetMonth - currentMonth);
-      let tempNow = new Date(now.getTime());
-      tempNow.setMonth(tempNow.getMonth() + months);
-
-      if (tempNow > targetDate) {
-        months--;
-        tempNow = new Date(now.getTime());
-        tempNow.setMonth(tempNow.getMonth() + months);
-      }
-
-      let remainderDiff = targetDate - tempNow;
-      
-      const days = Math.floor(remainderDiff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((remainderDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((remainderDiff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((remainderDiff % (1000 * 60)) / 1000);
-
-      updateMatrixCard('months-card', months);
-      updateMatrixCard('days-card', days);
-      updateMatrixCard('hours-card', hours);
-      updateMatrixCard('minutes-card', minutes);
-      updateMatrixCard('seconds-card', seconds);
-    }
-
-    setInterval(runCountdown, 1000);
-    runCountdown();
 
     async function checkForMissingHandler(username) {
       if (!username || username === 'Guest') return;
       try {
-        const authHeaders = {
-          'apikey': ANON_KEY,
-          'Authorization': `Bearer ${ANON_KEY}`
-        };
-
-        const response = await fetch(`${SUPABASE_PROJECT_URL}/rest/v1/users?username=eq.${encodeURIComponent(username)}&select=handler`, {
+        const response = await fetch(`${TURSO_API_BASE}/users?username=${encodeURIComponent(username)}`, {
           method: 'GET',
-          headers: authHeaders
+          headers: TURSO_HEADERS
         });
 
         if (!response.ok) return;
 
         const data = await response.json();
         
-        if (data.length > 0 && (data[0].handler === null || data[0].handler.trim() === '')) {
+        if (data && (data.handler == null || String(data.handler).trim() === '')) {
           document.getElementById('handlerModal').classList.remove('hidden');
         }
       } catch (err) {
@@ -1113,19 +779,19 @@
       }
 
       try {
-        const authHeaders = {
-          'apikey': ANON_KEY,
-          'Authorization': `Bearer ${ANON_KEY}`,
-          'Content-Type': 'application/json'
-        };
-
-        const response = await fetch(`${SUPABASE_PROJECT_URL}/rest/v1/users?username=eq.${encodeURIComponent(currentUsername)}`, {
+        const getRes = await fetch(`${TURSO_API_BASE}/users?username=${encodeURIComponent(currentUsername)}`, {
+          headers: TURSO_HEADERS
+        });
+        if (!getRes.ok) {
+          msgBox.textContent = 'Could not load your account.';
+          msgBox.className = 'modal-msg-box error';
+          return;
+        }
+        const userRow = await getRes.json();
+        const response = await fetch(`${TURSO_API_BASE}/users`, {
           method: 'PATCH',
-          headers: {
-            ...authHeaders,
-            'Prefer': 'return=minimal'
-          },
-          body: JSON.stringify({ handler: handlerVal })
+          headers: TURSO_HEADERS,
+          body: JSON.stringify({ id: userRow.id, handler: handlerVal })
         });
 
         if (!response.ok) {
@@ -1155,25 +821,26 @@
     async function checkForWarnings(username) {
       if (!username || username === 'Guest') return;
       try {
-        const authHeaders = {
-          'apikey': ANON_KEY,
-          'Authorization': `Bearer ${ANON_KEY}`
-        };
-
-        const response = await fetch(`${SUPABASE_PROJECT_URL}/rest/v1/user_roles?username=eq.${encodeURIComponent(username)}&select=warned,last_action_reason`, {
+        const response = await fetch(`${TURSO_API_BASE}/user-roles?username=${encodeURIComponent(username)}`, {
           method: 'GET',
-          headers: authHeaders
+          headers: TURSO_HEADERS
         });
 
         if (!response.ok) return;
 
-        const data = await response.json();
+        const role = await response.json();
+        const isWarned = role && (
+          role.warned === true ||
+          role.warned === 1 ||
+          String(role.warned).toUpperCase() === 'TRUE' ||
+          (Number(role.warning_count) > 0 && role.last_action_type === 'warn')
+        );
         
-        if (data.length > 0 && data[0].warned === true) {
+        if (isWarned) {
           const overlay = document.getElementById('warning-modal-overlay');
           const reasonBox = document.getElementById('warning-reason-text');
           
-          reasonBox.textContent = data[0].last_action_reason || "Violation of community guidelines.";
+          reasonBox.textContent = role.last_action_reason || "Violation of community guidelines.";
           overlay.classList.remove('hidden');
 
           document.getElementById('warning-ack-btn').onclick = async () => {
@@ -1181,13 +848,10 @@
             btn.textContent = "Dismissing...";
             btn.disabled = true;
             
-            await fetch(`${SUPABASE_PROJECT_URL}/rest/v1/user_roles?username=eq.${encodeURIComponent(username)}`, {
+            await fetch(`${TURSO_API_BASE}/user-roles`, {
               method: 'PATCH',
-              headers: {
-                ...authHeaders,
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ warned: false }) 
+              headers: TURSO_HEADERS,
+              body: JSON.stringify({ id: role.id, warning_count: 0, last_action_type: null })
             });
             
             overlay.classList.add('hidden');
@@ -1208,259 +872,21 @@
   </script>
   
   <script src="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.js.iife.js"></script>
+  <script src="tour.js"></script>
 
-  <script>
-  const driver = window.driver.js.driver;
-
-  function showSection(navId) {
-    document.getElementById(navId)?.click();
-  }
-
-  function getGameCard() {
-    return document.querySelector(
-      "#gameGrid .game-card, #gameGrid .game-item, #gameGrid > *"
-    );
-  }
-
-  function closeContextMenu() {
-    const menu = document.getElementById("custom-context-menu");
-
-    if (menu) {
-      menu.style.display = "none";
-    }
-  }
-
-  function openContextMenu(card) {
-    if (!card) return;
-
-    const rect = card.getBoundingClientRect();
-
-    card.dispatchEvent(new MouseEvent("contextmenu", {
-      bubbles: true,
-      cancelable: true,
-      view: window,
-      clientX: rect.left + Math.min(30, rect.width / 2),
-      clientY: rect.top + Math.min(30, rect.height / 2)
-    }));
-  }
-
-  const tour = driver({
-    showProgress: true,
-    animate: true,
-    smoothScroll: true,
-    overlayOpacity: 0.72,
-
-    /* Clicking the dark background does nothing */
-    allowClose: false,
-    overlayClickBehavior: () => {},
-
-    /* Highlighted items remain usable */
-    disableActiveInteraction: false,
-
-    nextBtnText: "Next",
-    prevBtnText: "Back",
-    doneBtnText: "Finish",
-    progressText: "{{current}} / {{total}}",
-
-    steps: [
-      {
-        element: ".left-nav",
-        popover: {
-          title: "Navigation",
-          description: "Use this menu to move around the site.",
-          side: "right",
-          align: "start"
-        }
-      },
-
-      {
-        element: "#nav-games",
-        popover: {
-          title: "Games",
-          description: "Press Next and the tour will open Games.",
-          side: "right",
-          align: "center",
-          showButtons: ["previous", "next"]
-        },
-
-        onNextClick: (element, step, { driver }) => {
-          showSection("nav-games");
-
-          setTimeout(() => {
-            driver.moveNext();
-          }, 350);
-        }
-      },
-
-      {
-        element: () => getGameCard(),
-        waitForElement: 2000,
-        popover: {
-          title: "Game Cards",
-          description: "Click a card to play. Right-click one for options.",
-          side: "bottom",
-          align: "center"
-        }
-      },
-
-      {
-        element: () => getGameCard(),
-        waitForElement: 2000,
-        popover: {
-          title: "Game Menu",
-          description: "Press Next to preview the right-click menu.",
-          side: "bottom",
-          align: "center",
-          showButtons: ["previous", "next"]
-        },
-
-        onNextClick: (element, step, { driver }) => {
-          openContextMenu(getGameCard());
-
-          setTimeout(() => {
-            driver.moveNext();
-          }, 150);
-        }
-      },
-
-      {
-        element: "#ctx-favorite",
-        waitForElement: 1000,
-        popover: {
-          title: "Favorite Game",
-          description: "Click this anytime to save the selected game.",
-          side: "right",
-          align: "center"
-        }
-      },
-
-      {
-        element: "#nav-favorites",
-        popover: {
-          title: "Favorites",
-          description: "Press Next and the tour will open Favorites.",
-          side: "right",
-          align: "center",
-          showButtons: ["previous", "next"]
-        },
-
-        onNextClick: (element, step, { driver }) => {
-          closeContextMenu();
-          showSection("nav-favorites");
-
-          setTimeout(() => {
-            driver.moveNext();
-          }, 350);
-        }
-      },
-
-      {
-        element: "#favoritesGrid",
-        popover: {
-          title: "Saved Games",
-          description: "Your favorited games appear here.",
-          side: "top",
-          align: "center"
-        }
-      },
-
-      {
-        element: "#searchBar",
-        popover: {
-          title: "Search",
-          description: "Search games by name.",
-          side: "bottom",
-          align: "center"
-        }
-      },
-
-      {
-        element: "#randomBtn",
-        popover: {
-          title: "Random Game",
-          description: "Pick a random title.",
-          side: "bottom",
-          align: "center"
-        }
-      },
-
-      {
-        element: "#nav-profile",
-        popover: {
-          title: "Profile",
-          description: "Manage your profile here.",
-          side: "right",
-          align: "center"
-        }
-      },
-
-      {
-        element: "#nav-unblockers",
-        popover: {
-          title: "Unblockers",
-          description: "Open available site tools here.",
-          side: "right",
-          align: "center"
-        }
-      },
-
-      {
-        element: "#signInBtn",
-        popover: {
-          title: "Sign In",
-          description: "Sign in for account features.",
-          side: "left",
-          align: "center"
-        }
-      },
-
-      {
-        element: "#settingsBtn",
-        popover: {
-          title: "Settings",
-          description: "Themes and preferences are here.",
-          side: "left",
-          align: "center"
-        }
-      },
-
-      {
-        element: "#start-tour-btn",
-        popover: {
-          title: "Finished",
-          description: "Use Site Tour to open this guide again.",
-          side: "left",
-          align: "center"
-        }
-      }
-    ]
-  });
-
-  function startTour() {
-    closeContextMenu();
-    tour.drive();
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("start-tour-btn")
-      ?.addEventListener("click", startTour);
-
-    if (!localStorage.getItem("hasSeenNullXTour")) {
-      setTimeout(() => {
-        startTour();
-        localStorage.setItem("hasSeenNullXTour", "true");
-      }, 1500);
-    }
-  });
-</script>
+  <script src="JS/music.js"></script>
   <script src="debug.js"></script>
-  
-  <script type="module" src="JS/main.js"></script>
+
+  <script src="JS/force-home-fix.js"></script>
+  <script src="JS/main.js"></script>
   <script src="customcrosshair/loader.js"></script>
 
   <script src="themes/themes.js"></script>
   
   <script src="./BAN/guard.js"></script>
+  
+  <script src="JS/game-filters.js"></script>
+  
   <script>
     fetch('version.json', { cache: 'no-store' })
       .then(response => response.json())
@@ -1478,7 +904,9 @@
         document.body.appendChild(script);
       });
   </script>
+  
 
+  
   <script>
     (function initInPageConsole() {
       document.addEventListener('DOMContentLoaded', () => {
@@ -1551,5 +979,62 @@
       });
     })();
   </script>
+  <script src="Settings/homescreen-pref.js"></script>
+
+  <div id="system-news-modal" role="dialog" aria-modal="true" aria-labelledby="snm-title">
+    <div class="snm-box">
+      <div class="snm-header">
+        <h3 id="snm-title">System News</h3>
+        <button type="button" class="snm-close" id="system-news-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="snm-feed" id="newsFeed">
+
+        <div class="news-card">
+            <span class="news-tag">Update</span>
+            <p>Added all the games, no images yet... also found a working file for balantro, so yay, and if you see on the right that your data cannot be saved it is due to an upcoming commit</p>
+            <span class="news-date">Sep. 22</span>
+          </div>
+        
+        <div class="news-card">
+            <span class="news-tag">Update</span>
+            <p>Ok, well, gitlab is giving us errors, so we're working on doing something, we're gonna upload files to different repos. github repos, that is the only solution.</p>
+            <span class="news-date">Sep. 17</span>
+          </div>
+        
+        <div class="news-card">
+            <span class="news-tag">Update</span>
+            <p>New game filter system added with thumbs-up ratings and improved mobile layout!</p>
+            <span class="news-date">Sep. 17</span>
+          </div>
+
+        <div class="news-card">
+            <span class="news-tag">Update</span>
+            <p>No updates are coming through till we finish our new way of loading games: GITLAB. *this will stop most lag issues*</p>
+            <span class="news-date">Sep. 16</span>
+          </div>
+
+        <div class="news-card">
+            <span class="news-tag">Update</span>
+            <p>I accidentally upload a ton of games so it's now laggy, my fault for being a dumbass.</p>
+            <span class="news-date">Sep. 14</span>
+          </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var btn = document.getElementById('system-news-btn');
+      var modal = document.getElementById('system-news-modal');
+      var closeBtn = document.getElementById('system-news-close');
+      if (!btn || !modal) return;
+      function openNews() { modal.classList.add('show'); }
+      function closeNews() { modal.classList.remove('show'); }
+      btn.addEventListener('click', openNews);
+      if (closeBtn) closeBtn.addEventListener('click', closeNews);
+      modal.addEventListener('click', function (e) { if (e.target === modal) closeNews(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeNews(); });
+    })();
+  </script>
+
 </body>
 </html>
