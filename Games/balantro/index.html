@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, minimum-scale=1, maximum-scale=1">
+  <title>Balatro</title>
+  <base href="https://cdn.jsdelivr.net/gh/thirstygithub/mathamatic-notes@master/">
+  <link rel="stylesheet" type="text/css" href="theme/love.css">
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+
+    #loadingCanvas,
+    #canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    #canvas {
+      visibility: hidden;
+    }
+  </style>
+
+  <script src="consolewrapper.js"></script>
+  <script>
+    if (typeof console !== "undefined" && typeof console.debug !== "function") {
+      console.debug = console.log.bind(console);
+    }
+
+    var __logger = (typeof console !== "undefined") ? console : null;
+
+    if (typeof window !== "undefined") {
+      if (typeof window.__getWebDB !== "function") {
+        window.__getWebDB = function(name) {
+          try {
+            return window.localStorage ? window.localStorage.getItem(name) : null;
+          } catch (err) {
+            if (__logger && __logger.warn) {
+              __logger.warn("Unable to access localStorage for __getWebDB:", err);
+            }
+            return null;
+          }
+        };
+      }
+
+      if (typeof window.__setWebDB !== "function") {
+        window.__setWebDB = function(name, value) {
+          try {
+            if (window.localStorage) {
+              window.localStorage.setItem(name, value);
+              return true;
+            }
+          } catch (err) {
+            if (__logger && __logger.warn) {
+              __logger.warn("Unable to access localStorage for __setWebDB:", err);
+            }
+          }
+          return false;
+        };
+      }
+    }
+  </script>
+</head>
+<body>
+  <canvas id="loadingCanvas" oncontextmenu="event.preventDefault()" width="800" height="600"></canvas>
+  <canvas id="canvas" oncontextmenu="event.preventDefault()" width="800" height="600"></canvas>
+
+  <script>
+    window.callad = function() {
+      window.parent.postMessage({ type: "adcall" }, "*");
+    };
+
+    var loadingCanvas = document.getElementById("loadingCanvas");
+    var gameCanvas = document.getElementById("canvas");
+
+    function resizeCanvases() {
+      var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+      var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+      loadingCanvas.width = width;
+      loadingCanvas.height = height;
+      gameCanvas.width = width;
+      gameCanvas.height = height;
+    }
+
+    resizeCanvases();
+    window.addEventListener("resize", resizeCanvases);
+
+    function goFullScreen() {
+      if (gameCanvas.requestFullscreen) gameCanvas.requestFullscreen();
+      else if (gameCanvas.webkitRequestFullscreen) gameCanvas.webkitRequestFullscreen();
+      else if (gameCanvas.mozRequestFullScreen) gameCanvas.mozRequestFullScreen();
+    }
+
+    function FullScreenHook() {
+      resizeCanvases();
+    }
+
+    var loadingContext = loadingCanvas.getContext("2d");
+
+    function drawLoadingText(text) {
+      var c = loadingContext.canvas;
+      loadingContext.fillStyle = "rgb(142, 195, 227)";
+      loadingContext.fillRect(0, 0, c.width, c.height);
+      loadingContext.font = "2em arial";
+      loadingContext.textAlign = "center";
+      loadingContext.fillStyle = "rgb(11, 86, 117)";
+      loadingContext.fillText(text, c.width / 2, c.height / 2);
+    }
+
+    window.onload = function() {
+      window.focus();
+    };
+
+    window.onclick = function() {
+      window.focus();
+    };
+
+    window.addEventListener("keydown", function(e) {
+      if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+      }
+    }, false);
+
+    var Module = {
+      arguments: ["./data"],
+      INITIAL_MEMORY: 256000000,
+      printErr: console.error.bind(console),
+      canvas: (function() {
+        gameCanvas.addEventListener("webglcontextlost", function(e) {
+          alert("WebGL context lost. You will need to reload the page.");
+          e.preventDefault();
+        }, false);
+        return gameCanvas;
+      })(),
+      setStatus: function(text) {
+        if (text) {
+          drawLoadingText(text);
+        } else if (Module.remainingDependencies === 0) {
+          loadingCanvas.style.display = "none";
+          gameCanvas.style.visibility = "visible";
+        }
+      },
+      totalDependencies: 0,
+      remainingDependencies: 0,
+      monitorRunDependencies: function(left) {
+        this.remainingDependencies = left;
+        this.totalDependencies = Math.max(this.totalDependencies, left);
+        Module.setStatus(left
+          ? "Preparing... (" + (this.totalDependencies - left) + "/" + this.totalDependencies + ")"
+          : "All downloads complete.");
+      }
+    };
+
+    Module.setStatus("Downloading...");
+
+    window.onerror = function() {
+      Module.setStatus("Exception thrown, see JavaScript console");
+      Module.setStatus = function(text) {
+        if (text) Module.printErr("[post-exception status] " + text);
+      };
+    };
+
+    var applicationLoad = function() {
+      Love(Module);
+    };
+  </script>
+
+  <script type="text/javascript" src="game.js"></script>
+  <script async type="text/javascript" src="love.js" onload="applicationLoad(this)"></script>
+</body>
+</html>
