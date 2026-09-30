@@ -3,7 +3,7 @@
 // Routes through Cloudflare Worker for security
 const CLOUDFLARE_WORKER = 'https://apithingy.jlsniperelite4.workers.dev';
 
-const DEFAULT_PFP = 'https://glaxyias.github.io/imgs/download.jpeg';
+const DEFAULT_PFP = 'https://glaxyias.github.io/imgs/Screenshot 2026-09-26 15.55.05.png';
 
 const PROFILE_API_HEADERS = {
   'Content-Type': 'application/json'
