@@ -3,80 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Settings</title>
+    <title>Profile — Null-X</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="profile.css">
 </head>
 <body>
     <div class="profile-container">
-        <div class="sidebar">
+        <aside class="sidebar">
             <div class="sidebar-header">
-                <h2>SETTINGS</h2>
+                <h2>Profile</h2>
             </div>
-            <div class="sidebar-menu">
-                <a href="https://glaxyias.github.io" class="menu-item">
+            <nav class="sidebar-menu">
+                <a href="https://null-x-team.github.io/" class="menu-item">
                     <i class="fas fa-home icon"></i> Home
                 </a>
+                <a href="../Newhomepage/index.html" class="menu-item">
+                    <i class="fas fa-display icon"></i> NXOS Home
+                </a>
                 <a href="../chat/chat.html" class="menu-item">
-                    <i class="fas fa-comments icon"></i> Chat Server
+                    <i class="fas fa-comments icon"></i> Chat
                 </a>
-                <a href="#" class="menu-item active">
-                    <i class="fas fa-user-id icon"></i> Profile Card
+                <a href="profile.html" class="menu-item active">
+                    <i class="fas fa-user icon"></i> Profile Card
                 </a>
-            </div>
-        </div>
+            </nav>
+        </aside>
 
-        <div class="main-content">
-            <div class="settings-grid">
-                
-                <div class="profile-card upload-section">
-                    <h3>UPLOAD PROFILE PICTURE</h3>
-                    <div class="avatar-upload-container">
-                        <img id="pfp-preview" src="https://Glaxyias.github.io/imgs/download.jpeg" alt="Profile Picture">
-                        <div class="upload-inputs">
-                            <label for="pfp-file-input" class="custom-file-upload">Choose File</label>
-                            <span class="file-name-fallback">No file chosen</span>
-                            <input type="file" id="pfp-file-input" accept="image/*">
+        <main class="main-content">
+            <div class="profile-shell">
+                <section class="profile-hero" id="profile-hero">
+                    <div class="hero-glow"></div>
+                    <div class="avatar-wrap">
+                        <img id="pfp-preview" src="" alt="Avatar" width="120" height="120">
+                        <div id="avatar-fallback" class="avatar-fallback" aria-hidden="true">?</div>
+                        <span id="role-badge" class="role-badge" style="display:none;">ADMIN</span>
+                    </div>
+                    <h1 id="hero-username" class="hero-name">Loading…</h1>
+                    <p id="hero-handle" class="hero-handle">@user</p>
+                    <p id="hero-bio" class="hero-bio">Loading profile…</p>
+                    <div class="hero-meta">
+                        <div class="meta-chip">
+                            <i class="fas fa-calendar-days"></i>
+                            <span>Joined <strong id="join-date">—</strong></span>
+                        </div>
+                        <div class="meta-chip" id="viewing-chip" style="display:none;">
+                            <i class="fas fa-eye"></i>
+                            <span>Viewing profile</span>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <div class="profile-card input-group">
-                    <label for="display-username">USERNAME</label>
-                    <input type="text" id="display-username" value="Loading..." readonly class="styled-input">
-                </div>
-
-                <div class="profile-card input-group">
-                    <label for="bio-input">ABOUT ME / BIO</label>
-                    <textarea id="bio-input" placeholder="Tell the community a little bit about yourself..." maxlength="250" class="styled-textarea"></textarea>
-                </div>
-
-                <div class="profile-card meta-info">
-                    <div class="info-group">
-                        <span class="meta-label">ACCOUNT HOLDER:</span>
-                        <div id="info-username" class="meta-value">TEST USER</div>
+                <section class="profile-edit" id="profile-edit" style="display:none;">
+                    <div class="profile-card">
+                        <h3><i class="fas fa-image"></i> Profile picture</h3>
+                        <div class="avatar-upload-row">
+                            <label for="pfp-file-input" class="custom-file-upload">
+                                <i class="fas fa-upload"></i> Choose image
+                            </label>
+                            <span class="file-name-fallback" id="file-name-label">PNG/JPG · max 1.5MB</span>
+                            <input type="file" id="pfp-file-input" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+                        </div>
+                        <p class="hint">Images are resized in your browser before saving.</p>
                     </div>
-                    <div class="info-group">
-                        <span class="meta-label">JOINED COMMUNITY:</span>
-                        <div id="join-date" class="meta-value">-</div>
-                    </div>
-                </div>
 
-                <div id="admin-actions-container" class="profile-card admin-section" style="display: none;">
-                    <button id="toggle-admin-btn" class="admin-btn">
-                        <i class="fas fa-user-shield"></i> Give Admin Status
+                    <div class="profile-card">
+                        <h3><i class="fas fa-user"></i> Username</h3>
+                        <input type="text" id="display-username" value="Loading..." readonly class="styled-input">
+                    </div>
+
+                    <div class="profile-card">
+                        <h3><i class="fas fa-pen"></i> About me</h3>
+                        <textarea id="bio-input" placeholder="Tell the community a little about yourself…" maxlength="250" class="styled-textarea"></textarea>
+                        <div class="char-count"><span id="bio-count">0</span>/250</div>
+                    </div>
+
+                    <div class="actions-container">
+                        <button type="button" id="save-profile-btn" class="save-btn">Save changes</button>
+                        <span id="save-status"></span>
+                    </div>
+                </section>
+
+                <section class="profile-view-details" id="profile-view-details" style="display:none;">
+                    <div class="profile-card">
+                        <h3>About</h3>
+                        <p id="view-bio-text" class="view-bio-text">No bio yet.</p>
+                    </div>
+                    <div class="profile-card meta-info">
+                        <div class="info-group">
+                            <span class="meta-label">Account</span>
+                            <div id="info-username" class="meta-value">—</div>
+                        </div>
+                        <div class="info-group">
+                            <span class="meta-label">Member since</span>
+                            <div id="info-joined" class="meta-value">—</div>
+                        </div>
+                    </div>
+                </section>
+
+                <div id="admin-actions-container" class="profile-card admin-section" style="display:none;">
+                    <button type="button" id="toggle-admin-btn" class="admin-btn">
+                        <i class="fas fa-user-shield"></i> <span id="toggle-admin-label">Give admin status</span>
                     </button>
                 </div>
-
-                <div class="actions-container">
-                    <button id="save-profile-btn" class="save-btn">Save Changes</button>
-                    <span id="save-status"></span>
-                </div>
-
             </div>
-        </div>
+        </main>
     </div>
-    
+
     <script type="module" src="profile.js"></script>
 </body>
 </html>
