@@ -1,5 +1,6 @@
-
-/* GitHub Pages games (games-a..j) — load AFTER JS/main.js */
+/* Pack games on GitHub Pages — load AFTER JS/main.js
+ * Host: https://whatchamacallitexe.github.io/pack-a .. pack-j
+ */
 (function () {
   if (typeof _0xData === "undefined") return;
 
@@ -18,75 +19,103 @@
     "j": "apple-shooter,champion-archer,cubefield,edge-surf,fireboy-and-watergirl,getting-over-it,helicopter,kitten-cannon,missiles,n-gon,ns-shaft,om-nom-bounce,pac-man,space-company,subway-surfers,twitch-tetris"
   };
 
-  var ids = Object.create(null);
-  var existingUrls = [];
-
-  for (var i = 0; i < _0xData.length; i++) {
-    var game = _0xData[i];
-
-    if (game.id != null) {
-      ids[String(game.id)] = true;
-    }
-
-    if (game.url) {
-      existingUrls.push(String(game.url).toLowerCase());
-    }
-  }
-
-  // Match complete URL path segments, not arbitrary substrings.
-  function hasExistingSlug(slug) {
-    var pattern = new RegExp(
-      "(?:^|/)" +
-      slug.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") +
-      "(?:/|$)",
-      "i"
-    );
-
-    return existingUrls.some(function (url) {
-      return pattern.test(url.split(/[?#]/)[0]);
-    });
-  }
-
-  var added = 0;
-
+  // slug -> pack letter
+  var slugToPack = Object.create(null);
   Object.keys(packs).forEach(function (letter) {
-    var repo = "games-" + letter;
-
     packs[letter].split(",").forEach(function (slug) {
       slug = slug.trim().toLowerCase();
-      if (!slug) return;
-
-      var id = "gl_" + slug.replace(/-/g, "_");
-
-      if (ids[id] || hasExistingSlug(slug)) return;
-
-      var title = slug
-        .replace(/-/g, " ")
-        .replace(/\b\w/g, function (c) {
-          return c.toUpperCase();
-        });
-
-      _0xData.push({
-        id: id,
-        title: title,
-        url: GH + "/" + repo + "/" + slug + "/",
-        external: true,
-        desc: "GitHub Pages (" + repo + ")",
-        popular: true
-      });
-
-      ids[id] = true;
-      added++;
+      if (slug && !slugToPack[slug]) slugToPack[slug] = letter;
     });
   });
 
-  console.log("[GitHub Pages] added", added, "games");
+  function packUrl(letter, slug) {
+    return GH + "/pack-" + letter + "/" + slug + "/";
+  }
+
+  var ids = Object.create(null);
+  var fixed = 0;
+  var added = 0;
+
+  // 1) Rewrite existing entries that match a pack slug (old gfiles / gitlab / games-* URLs)
+  for (var i = 0; i < _0xData.length; i++) {
+    var game = _0xData[i];
+    if (game.id != null) ids[String(game.id)] = true;
+
+    var slug = null;
+    if (game.id) {
+      var rawId = String(game.id).toLowerCase();
+      // gl_apple_shooter -> apple-shooter
+      if (rawId.indexOf("gl_") === 0) {
+        slug = rawId.slice(3).replace(/_/g, "-");
+      } else {
+        slug = rawId.replace(/_/g, "-");
+      }
+    }
+    if (!slugToPack[slug] && game.url) {
+      var m = String(game.url).match(
+        /(?:gfiles\d*|games-[a-j]|pack-[a-j]|gitlab\.io\/[^/]+)\/([^/?#]+)/i
+      );
+      if (m) slug = m[1].toLowerCase();
+    }
+
+    if (slug && slugToPack[slug]) {
+      var letter = slugToPack[slug];
+      var next = packUrl(letter, slug);
+      if (game.url !== next) {
+        game.url = next;
+        game.external = true;
+        fixed++;
+      }
+    }
+  }
+
+  // 2) Add any pack games missing from the library
+  Object.keys(slugToPack).forEach(function (slug) {
+    var letter = slugToPack[slug];
+    var id = "gl_" + slug.replace(/-/g, "_");
+    if (ids[id] || ids[slug]) return;
+
+    // also skip if any entry already has this slug as id
+    var already = false;
+    for (var j = 0; j < _0xData.length; j++) {
+      var g = _0xData[j];
+      if (!g) continue;
+      if (String(g.id || "").toLowerCase() === slug) {
+        already = true;
+        break;
+      }
+      if (g.url && String(g.url).toLowerCase().indexOf("/" + slug + "/") !== -1) {
+        already = true;
+        break;
+      }
+    }
+    if (already) return;
+
+    var title = slug
+      .replace(/-/g, " ")
+      .replace(/\b\w/g, function (c) {
+        return c.toUpperCase();
+      });
+
+    _0xData.push({
+      id: id,
+      title: title,
+      url: packUrl(letter, slug),
+      external: true,
+      desc: "Play " + title + " online.",
+      popular: true
+    });
+    ids[id] = true;
+    added++;
+  });
+
+  console.log("[pack] fixed", fixed, "urls, added", added, "games");
 
   if (typeof renderLibraryGrid === "function") {
     try {
       renderLibraryGrid(_0xData);
     } catch (e) {
-      console.error("[GitHub Pages] Grid rendering failed:", e);
+      console.error("[pack] render failed:", e);
     }
   }
 })();
