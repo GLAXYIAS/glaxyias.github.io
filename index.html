@@ -3,7 +3,7 @@
 <head>
   <script>
     (function () {
-      var ALLOWED = ["null-x-team.github.io", "glaxyias.github.io"];
+      var ALLOWED = ["null-x-team.github.io", "glaxyias.github.io", "localhost", "127.0.0.1", ""];
       var host = (location.hostname || "").toLowerCase();
       if (ALLOWED.some(function (d) { return host === d; })) return;
       try { window.stop(); } catch (e) {}
