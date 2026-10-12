@@ -419,15 +419,12 @@ function launchGame(gameId) {
     localStorage.setItem("nx_recent_games", JSON.stringify(next));
   } catch (e) {}
 
-  const gameTab = window.open("about:blank", "_self");
-  if (!gameTab) {
-    alert("Pop-up blocked! Please allow popups to play games.");
-    return;
-  }
-
-  // Full-page shell: about:blank + iframe (NO sandbox — breaks Unity/WebGL and many local games)
-  gameTab.document.open();
-  gameTab.document.write("<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\">" +
+  // IMPORTANT: do NOT use window.open("about:blank", "_self").
+  // That navigates away and often aborts this script before document.write,
+  // leaving a permanent black about:blank page.
+  // Instead replace the current document in-place (same tab, Null X is gone).
+  const html =
+    "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\">" +
     "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">" +
     "<title>" + safeTitle + "</title>" +
     "<style>" +
@@ -446,11 +443,16 @@ function launchGame(gameId) {
     "referrerpolicy=\"no-referrer-when-downgrade\"></iframe>" +
     "<script>(function(){var f=document.getElementById(\"game-frame\");var m=document.getElementById(\"load-msg\");" +
     "function hide(){if(m)m.style.display=\"none\";}" +
-    "if(f){f.addEventListener(\"load\",hide);setTimeout(hide,10000);}" +
+    "if(f){f.addEventListener(\"load\",hide);setTimeout(hide,12000);}" +
+    "console.log(\"[nx] iframe src=\", f && f.src);" +
     "})();<\/script>" +
-    "</body></html>");
-  gameTab.document.close();
+    "</body></html>";
+
+  document.open("text/html", "replace");
+  document.write(html);
+  document.close();
 }
+
 
 
 function renderLibraryGrid(gamesArray) {
