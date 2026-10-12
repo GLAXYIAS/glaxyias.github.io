@@ -38,11 +38,11 @@
 // DYNAMIC CORE SYSTEMS & GAMES REGISTER DATA
 // ==========================================
 let _0xData = [
-  { id: "b_ap", title: "Brotato All Pain No Gain", url: "Games/brotatoAPNG/Brotato.html", image: "Games/brotatoAPNG/images (23).jpeg", desc: "The newest version of Brotato with the All Pain No Gain update.", popular: true },
-{ id: "cloverpit", title: "cloverpit", url: "Games/cloverpit/index.html", desc: "Clover Pit is a roguelite gambling game where you spin, bet, and chase huge payouts while trying not to go broke.", popular: true , image: "Games/cloverpit/images.jpeg" },
-    { id: "feedingablackhole", title: "Feeding A Black Hole", url: "Games/feedingablackhole/index.html", desc: "Feed a growing black hole, consume objects, and explore the world to become bigger and more powerful.", popular: true, image: "Games/feedingablackhole/images (1).jpeg" },
-    { id: "deadsignal", title: "DeadSignal", url: "Games/DeadSignal/index.html", desc: "A Null-X-Team Special Creation!", popular: true },
-  { id: "y_io", title: "Yohoho.io", url: "Games/yohoho/index.html", image: "Games/yohoho/images (24).jpeg", desc: "A pirate battle royale game where you collect gold and fight opponents.", popular: true },
+  { id: "b_ap", title: "Brotato All Pain No Gain", url: "../Games/brotatoAPNG/Brotato.html", image: "Games/brotatoAPNG/images (23).jpeg", desc: "The newest version of Brotato with the All Pain No Gain update.", popular: true },
+{ id: "cloverpit", title: "cloverpit", url: "../Games/cloverpit/index.html", desc: "Clover Pit is a roguelite gambling game where you spin, bet, and chase huge payouts while trying not to go broke.", popular: true , image: "Games/cloverpit/images.jpeg" },
+    { id: "feedingablackhole", title: "Feeding A Black Hole", url: "../Games/feedingablackhole/index.html", desc: "Feed a growing black hole, consume objects, and explore the world to become bigger and more powerful.", popular: true, image: "Games/feedingablackhole/images (1).jpeg" },
+    { id: "deadsignal", title: "DeadSignal", url: "../Games/DeadSignal/index.html", desc: "A Null-X-Team Special Creation!", popular: true },
+  { id: "y_io", title: "Yohoho.io", url: "../Games/yohoho/index.html", image: "Games/yohoho/images (24).jpeg", desc: "A pirate battle royale game where you collect gold and fight opponents.", popular: true },
   { id: "b_er", title: "Bitcoin Clicker", url: "Games/Bitcoin/index.html", image: "Games/Bitcoin/images (4).jpeg", jsbin: "https://glaxyias.github.io/Bitcoin-clicker/", isEmbedCode: true, desc: "A Homemade Special.", popular: true },
   { id: "s_lp", title: "Slope", url: "Games/slope/index.html", image: "Games/slope/images (25).jpeg", desc: "A fast-paced 3D platformer. Stay on the track!", popular: true },
   { id: "d_md", title: "DriveMad", url: "Games/drivemad/index.html", image: "Games/drivemad/images (26).jpeg", desc: "Challenging physics-based driving. Don't flip your truck!", popular: true },
@@ -50,7 +50,7 @@ let _0xData = [
   { id: "b_bb", title: "Baseball Bros", url: "Games/baseballbros/Baseballbros.html", image: "Games/baseballbros/images (28).jpeg", desc: "An arcade baseball game with fast-paced matches.", popular: true },
   { id: "b_kt", title: "Basket Bros", url: "Games/basketbros/Basketbros.html", image: "Games/basketbros/images (29).jpeg", desc: "Chaotic basketball with crazy dunks and quick matches.", popular: true },
   { id: "b_sts", title: "Basketball Stars", url: "Games/basketballstars/Basketballstars.html", image: "Games/basketballstars/images (30).jpeg", desc: "Fast-paced 1v1 street-style basketball matches.", popular: true },
-  { id: "c_cc", title: "Cookie Clicker", url: "Games/cookieclicker/cookieclicker.html", jsbin: "https://codepen.io/Glaeesas/embed/EaZpPeO?default-tab=result&theme-id=dark", isEmbedCode: true, image: "Games/cookieclicker/images (35).jpeg", desc: "Click cookies to build an industrial empire.", popular: true },
+  { id: "c_cc", title: "Cookie Clicker", url: "../Games/cookieclicker/cookieclicker.html", jsbin: "https://codepen.io/Glaeesas/embed/EaZpPeO?default-tab=result&theme-id=dark", isEmbedCode: true, image: "Games/cookieclicker/images (35).jpeg", desc: "Click cookies to build an industrial empire.", popular: true },
   { id: "b_rd", title: "Basket Random", url: "Games/basketrandom/Basketrandom.html", image: "Games/basketrandom/images (5).jpeg", desc: "Fun basketball game featuring completely random physics parameters.", popular: true },
   { id: "r_bw", title: "Retro Bowl", url: "Games/retrobowl/Retrobowl.html", image: "/Games/retrobowl/images (6).jpeg", desc: "Manage your team and lead them to gridiron glory.", popular: true },
   { id: "a_us", title: "Among Us", url: "Games/amongus/Amongus.html", desc: "Complete tasks while avoiding hidden impostors.", popular: true , image: "Games/amongus/images (7).jpeg" },
