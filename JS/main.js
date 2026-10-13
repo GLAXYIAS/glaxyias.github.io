@@ -1068,7 +1068,7 @@ function renderLibraryGrid(gamesArray) {
   gameGrid.style.minHeight = "0";
 
   let cols = 1;
-  let rowH = CARD_H + GAP;
+  let rowH = MAX_CARD + GAP;
   let totalRows = 1;
   let raf = 0;
   let lastStart = -1;
@@ -1108,6 +1108,7 @@ function renderLibraryGrid(gamesArray) {
     } else {
       const ph = document.createElement("div");
       ph.className = "game-card-img-placeholder";
+      ph.style.cssText = "position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#2a1a40,#12091c);";
       const sp = document.createElement("span");
       sp.textContent = title.substring(0, 2).toUpperCase();
       ph.appendChild(sp);
@@ -1115,6 +1116,7 @@ function renderLibraryGrid(gamesArray) {
     }
     const h3 = document.createElement("h3");
     h3.textContent = title;
+    h3.style.cssText = "position:relative;z-index:2;margin:0;padding:6px 8px;font-size:0.78rem;text-align:center;color:#fff;text-shadow:0 1px 4px #000;";
     card.appendChild(h3);
     const desc = document.createElement("div");
     desc.className = "game-desc-overlay";
