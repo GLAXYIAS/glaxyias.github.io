@@ -1,106 +1,1234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terms of Service | Null X</title>
-    <link rel="stylesheet" href="CSS/style.css">
-    <link rel="stylesheet" href="newpage.css">
-    <link rel="stylesheet" href="../themes/themes.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="../Games/GameSaveData/auto-save.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms of Service | Null X</title>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    :root {
+      --bg: #0d0905;
+      --panel: #170f08;
+      --card: rgba(28, 17, 8, 0.88);
+      --border: rgba(249, 115, 22, 0.3);
+      --border-glow: rgba(251, 146, 60, 0.6);
+      --accent: #f97316;
+      --accent-2: #eab308;
+      --green: #fbbf24;
+      --text: #fef3c7;
+      --muted: #f59e0b;
+      --soft: #fde68a;
+      --card-tilt-x: 0deg;
+      --card-tilt-y: 0deg;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      color-scheme: dark;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.65;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(249, 115, 22, 0.3);
+      border-radius: 4px;
+      border: 1px solid rgba(249, 115, 22, 0.1);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(249, 115, 22, 0.6);
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    /* Background Canvas */
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Scroll Reading Progress Bar */
+    #progress-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(23, 15, 8, 0.6);
+      z-index: 100;
+      backdrop-filter: blur(4px);
+    }
+
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #f97316, #eab308, #fbbf24, #fdba74);
+      background-size: 300% 100%;
+      animation: gradientShift 4s ease infinite;
+      box-shadow: 0 0 12px rgba(234, 179, 8, 0.8);
+      transition: width 0.1s ease-out;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Layout Shell */
+    .shell {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Hero Card & Mouse Tracking */
+    .hero-card {
+      background: linear-gradient(145deg, rgba(38, 20, 8, 0.9), rgba(18, 10, 4, 0.85));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px 30px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      animation: heroEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(249, 115, 22, 0.18),
+        transparent 40%
+      );
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .hero-title-text {
+      background: linear-gradient(135deg, #fff7ed 0%, #f97316 40%, #eab308 80%, #fef08a 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shineText 6s linear infinite, pulseGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes shineText {
+      to { background-position: 200% center; }
+    }
+
+    @keyframes pulseGlow {
+      0% { filter: drop-shadow(0 0 2px rgba(249, 115, 22, 0.2)); }
+      100% { filter: drop-shadow(0 0 8px rgba(234, 179, 8, 0.6)); }
+    }
+
+    /* Scale Icon Aura */
+    .hero-icon-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: rgba(249, 115, 22, 0.15);
+      border: 1px solid rgba(234, 179, 8, 0.4);
+      margin-right: 14px;
+      vertical-align: middle;
+      box-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
+      animation: auraPulse 2.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes auraPulse {
+      0% { box-shadow: 0 0 10px rgba(249, 115, 22, 0.2); }
+      100% { box-shadow: 0 0 25px rgba(234, 179, 8, 0.6); }
+    }
+
+    .hero-icon-wrapper i {
+      animation: iconFloat 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes iconFloat {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-4px) rotate(8deg); }
+    }
+
+    /* Search Bar Input */
+    .search-box {
+      position: relative;
+      margin-bottom: 20px;
+      animation: fadeUp 0.6s ease forwards 0.2s;
+      opacity: 0;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 14px 20px 14px 48px;
+      background: rgba(23, 15, 8, 0.85);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: #fff;
+      font-size: 0.92rem;
+      outline: none;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-2);
+      box-shadow: 0 0 25px rgba(234, 179, 8, 0.3), inset 0 0 10px rgba(249, 115, 22, 0.15);
+      background: rgba(38, 20, 8, 0.95);
+    }
+
+    /* Table of Contents Nav */
+    .toc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .toc-pill {
+      text-decoration: none;
+      color: var(--soft);
+      border: 1px solid var(--border);
+      background: rgba(23, 15, 8, 0.7);
+      padding: 8px 15px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(6px);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards;
+      animation-delay: calc(var(--stagger) * 0.04s + 0.3s);
+    }
+
+    .toc-pill:hover {
+      color: #fff;
+      border-color: var(--accent);
+      background: rgba(249, 115, 22, 0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(249, 115, 22, 0.3);
+    }
+
+    .toc-pill.active {
+      color: #0d0905;
+      background: var(--accent-2);
+      border-color: var(--accent-2);
+      font-weight: 700;
+      box-shadow: 0 0 18px rgba(234, 179, 8, 0.7);
+      transform: scale(1.04);
+    }
+
+    /* Section Cards with 3D perspective wrapper */
+    .section-wrapper {
+      perspective: 1000px;
+      margin-bottom: 18px;
+    }
+
+    .section-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 26px 26px 22px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      transform-style: preserve-3d;
+      transition: transform 0.2s ease-out, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
+      opacity: 0;
+      transform: translateY(30px) rotateX(0deg) rotateY(0deg);
+    }
+
+    .section-card.visible {
+      opacity: 1;
+      transform: translateY(0) rotateX(var(--card-tilt-x)) rotateY(var(--card-tilt-y));
+    }
+
+    /* Neon Fill Bar on Left */
+    .section-card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+      opacity: 0.4;
+      transition: opacity 0.3s ease, width 0.3s ease;
+      border-radius: 4px 0 0 4px;
+    }
+
+    .section-card:hover::before {
+      opacity: 1;
+      width: 6px;
+      box-shadow: 0 0 15px var(--accent-2);
+    }
+
+    .section-card:hover {
+      border-color: rgba(234, 179, 8, 0.55);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 30px rgba(249, 115, 22, 0.2);
+    }
+
+    .section-card h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--green);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-card h2 .title-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-card h2 i.section-icon {
+      color: var(--accent);
+      width: 1.3em;
+      text-align: center;
+      font-size: 1.1rem;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .section-card:hover h2 i.section-icon {
+      transform: scale(1.3) rotate(-8deg);
+      color: var(--accent-2);
+    }
+
+    /* Copy Link Button */
+    .copy-link-btn {
+      background: rgba(249, 115, 22, 0.1);
+      border: 1px solid rgba(249, 115, 22, 0.25);
+      color: var(--soft);
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      opacity: 0.6;
+    }
+
+    .section-card:hover .copy-link-btn {
+      opacity: 1;
+    }
+
+    .copy-link-btn:hover {
+      background: rgba(234, 179, 8, 0.2);
+      border-color: var(--accent-2);
+      color: #fff;
+      transform: scale(1.1);
+    }
+
+    .section-card p, .section-card li {
+      color: #fed7aa;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .section-card p + p {
+      margin-top: 12px;
+    }
+
+    .section-card ul {
+      margin: 10px 0 0 1.25rem;
+      display: grid;
+      gap: 8px;
+    }
+
+    .section-card ul li::marker {
+      color: var(--accent-2);
+    }
+
+    .section-card strong {
+      color: #fff7ed;
+      font-weight: 700;
+    }
+
+    /* Rotating Neon Conic Border Quote Card */
+    .quote-card-wrapper {
+      position: relative;
+      margin-top: 36px;
+      border-radius: 22px;
+      padding: 2px;
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.4), rgba(249, 115, 22, 0.4));
+      overflow: hidden;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+      animation: floatQuote 5s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatQuote {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-8px); }
+    }
+
+    .quote-card-wrapper::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(
+        from 0deg,
+        transparent 0%,
+        var(--accent-2) 25%,
+        transparent 50%,
+        var(--accent) 75%,
+        transparent 100%
+      );
+      animation: rotateConic 8s linear infinite;
+    }
+
+    @keyframes rotateConic {
+      100% { transform: rotate(360deg); }
+    }
+
+    .quote-card-content {
+      position: relative;
+      z-index: 1;
+      background: rgba(23, 15, 8, 0.92);
+      border-radius: 20px;
+      padding: 30px 28px;
+      backdrop-filter: blur(12px);
+    }
+
+    .quote-card-content::before {
+      content: "\201C";
+      position: absolute;
+      left: 18px;
+      top: -10px;
+      font-size: 100px;
+      line-height: 1;
+      color: rgba(234, 179, 8, 0.15);
+      font-family: Georgia, serif;
+      pointer-events: none;
+    }
+
+    .quote-text {
+      font-size: clamp(1.05rem, 2.5vw, 1.28rem);
+      font-weight: 600;
+      color: #fff7ed;
+      line-height: 1.6;
+      max-width: 52ch;
+      position: relative;
+      z-index: 2;
+    }
+
+    .quote-attr {
+      margin-top: 16px;
+      color: var(--accent-2);
+      font-weight: 800;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .quote-attr::before {
+      content: "";
+      display: inline-block;
+      width: 20px;
+      height: 2px;
+      background: var(--accent-2);
+    }
+
+    /* Sticky Acknowledge Banner */
+    #ack-banner {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      width: calc(100% - 32px);
+      max-width: 620px;
+      background: rgba(28, 17, 8, 0.95);
+      border: 1px solid var(--accent-2);
+      border-radius: 16px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(234, 179, 8, 0.3);
+      backdrop-filter: blur(16px);
+      z-index: 90;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #ack-banner.show {
+      transform: translateX(-50%) translateY(0);
+      animation: bannerBounce 0.6s ease;
+    }
+
+    @keyframes bannerBounce {
+      0% { transform: translateX(-50%) translateY(120%); }
+      70% { transform: translateX(-50%) translateY(-10px); }
+      100% { transform: translateX(-50%) translateY(0); }
+    }
+
+    .ack-btn {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #0d0905;
+      font-weight: 800;
+      font-size: 0.88rem;
+      padding: 10px 20px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+      box-shadow: 0 4px 15px rgba(234, 179, 8, 0.4);
+    }
+
+    .ack-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 22px rgba(234, 179, 8, 0.6);
+    }
+
+    /* Floating Back To Top Button */
+    #back-to-top {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(28, 17, 8, 0.9);
+      border: 1px solid var(--border);
+      color: var(--accent-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.8) translateY(20px);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 80;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    #back-to-top.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1) translateY(0);
+    }
+
+    #back-to-top:hover {
+      background: var(--accent);
+      color: #0d0905;
+      border-color: var(--accent);
+      box-shadow: 0 0 20px var(--accent);
+      transform: translateY(-4px);
+    }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: rgba(23, 15, 8, 0.95);
+      border: 1px solid var(--green);
+      color: var(--text);
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(251, 191, 36, 0.25);
+      z-index: 110;
+      transform: translateX(150%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(10px);
+    }
+
+    #toast.show {
+      transform: translateX(0);
+    }
+
+    /* Keyframes */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes heroEntrance {
+      from { opacity: 0; transform: translateY(24px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @media (max-width: 640px) {
+      .shell { padding: 18px 14px 60px; }
+      .hero-card { padding: 22px 18px; }
+      .section-card { padding: 20px 18px; }
+      #ack-banner { flex-direction: column; text-align: center; }
+      #back-to-top { bottom: 20px; right: 20px; }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="dashboard-wrapper">
+  <!-- Background Canvas -->
+  <canvas id="bg-canvas"></canvas>
 
-        <aside class="side-panel">
-            <div class="logo">
-                <img src="imgs/Screenshot 2026-01-27 8.17.07 PM.png" alt="Null_X Logo" class="site-logo" style="max-width: 100%; height: auto; margin-bottom: 15px;">
-            </div>
-            <nav style="display: flex; flex-direction: column; gap: 8px;">
-                <a href="index.html" class="nav-tab-item nav-item"><i class="fas fa-house" style="margin-right: 8px;"></i>Home</a>
-                <a href="index.html" class="nav-tab-item nav-item"><i class="fas fa-gamepad" style="margin-right: 8px;"></i>Games</a>
-                <a href="#" class="nav-tab-item nav-item active"><i class="fa-solid fa-scale-balanced" style="margin-right: 8px;"></i>Terms</a>
-            </nav>
+  <!-- Scroll Progress Bar -->
+  <div id="progress-container">
+    <div id="progress-bar"></div>
+  </div>
 
-            <div class="widget-header" style="margin-top: 30px;">
-                <i class="fa-solid fa-microchip"></i> Diagnostics
-            </div>
-            <div class="weather-stats">
-                <span id="battery-status" style="color: #4ade80;">Battery: --%</span>
-                <span id="digital-clock" style="color: #b975ff;">00:00:00 AM</span>
-            </div>
-        </aside>
+  <!-- Main Shell -->
+  <div class="shell">
+    
+    <!-- Topbar Navigation -->
+    <header class="flex items-center justify-between gap-4 mb-8">
+      <a class="flex items-center gap-3 text-decoration-none group" href="../index.html">
+        <div class="w-11 h-11 rounded-xl bg-orange-950/60 border border-orange-500/30 flex items-center justify-center text-amber-400 group-hover:border-amber-400 group-hover:shadow-[0_0_15px_rgba(249,115,22,0.5)] transition-all">
+          <i class="fa-solid fa-cube text-xl"></i>
+        </div>
+        <span class="font-extrabold tracking-wider text-xl text-amber-400 group-hover:text-amber-300 transition-colors">NULL X</span>
+      </a>
+      <a class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-orange-500/30 bg-orange-900/10 text-amber-200 text-sm font-semibold hover:bg-orange-600/20 hover:text-white hover:border-amber-400 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] transition-all" href="../index.html">
+        <i class="fas fa-arrow-left text-xs"></i> Back to Home
+      </a>
+    </header>
 
-        <main class="main-hub">
-            <header class="top-bar" style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 20px;">
-                <div class="greeting">
-                    <h1 class="site-title" style="margin: 0;">Legal Center</h1>
-                    <p style="margin: 5px 0 0 0; color: #888;">Review platform rules and policies.</p>
-                </div>
-            </header>
+    <!-- Hero Card -->
+    <section class="hero-card" id="hero">
+      <h1 class="text-3xl sm:text-4xl font-extrabold mb-3 flex items-center flex-wrap">
+        <span class="hero-icon-wrapper">
+          <i class="fa-solid fa-scale-balanced text-amber-400 text-2xl"></i>
+        </span>
+        <span class="hero-title-text">Terms of Service</span>
+      </h1>
+      <p class="text-amber-100/90 max-w-2xl text-sm sm:text-base leading-relaxed">
+        These Terms explain what Null X is meant to do, what it is not, and the limits of our responsibility. By using the site you agree to this page in full.
+      </p>
+      <div class="mt-4 pt-3 border-t border-orange-500/20 flex items-center gap-2 text-xs text-amber-400 font-medium">
+        <i class="fa-regular fa-clock"></i>
+        <span>Last updated: September 7, 2026 · Personal / community project — not a commercial legal product</span>
+      </div>
+    </section>
 
-            <div class="main-content">
-                <div style="padding: 30px; background: rgba(139, 0, 255, 0.02); border: 1px solid rgba(139, 0, 255, 0.1); border-radius: 8px; color: white; font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto;">
-                    
-                    <h2 style="color: #b975ff; border-bottom: 1px solid rgba(139, 0, 255, 0.2); padding-bottom: 12px; margin-bottom: 20px; font-size: 1.6rem; display: flex; align-items: center;">
-                        <i class="fa-solid fa-scale-balanced" style="margin-right: 12px;"></i> Terms of Service
-                    </h2>
-                    
-                    <p style="color: rgba(255,255,255,0.4); font-size: 0.85rem; margin-bottom: 30px;">Last Updated: July 2, 2026</p>
-                    
-                    <div style="margin-bottom: 25px;">
-                        <h3 style="color: #4ade80; margin-bottom: 10px; font-size: 1.15rem;"><i class="fa-solid fa-user-shield" style="margin-right: 8px;"></i> 1. Privacy & Data Protection</h3>
-                        <p style="color: #ccc; margin: 0 0 10px 0;"><strong>No Data Selling:</strong> We value your privacy. We explicitly guarantee that we do not sell, rent, lease, or trade your usage habits, personal settings, or local profile configurations to any third parties.</p>
-                        <p style="color: #ccc; margin: 0;"><strong>IP Address Logging:</strong> Your network IP address is compiled automatically within secure connection tables. This parameter is recorded and maintained <strong>strictly for ban enforcement and safety measures</strong> to neutralize bad actors, exploits, or structural site abuse.</p>
-                    </div>
-
-                    <div style="margin-bottom: 25px;">
-                        <h3 style="color: #4ade80; margin-bottom: 10px; font-size: 1.15rem;"><i class="fa-solid fa-trash-can" style="margin-right: 8px;"></i> 2. DMCA & Content Takedown Rights</h3>
-                        <p style="color: #ccc; margin: 0;">We highly respect developer rights and independent creations. If you find any game or content integrated inside our application grids that you own or represent, and you want it taken down, let us know. We will process your notice and completely wipe it from our site directory immediately.</p>
-                    </div>
-
-                    <div style="margin-bottom: 15px;">
-                        <h3 style="color: #4ade80; margin-bottom: 10px; font-size: 1.15rem;"><i class="fa-solid fa-terminal" style="margin-right: 8px;"></i> 3. Platform Regulations</h3>
-                        <p style="color: #ccc; margin: 0;">Any hostile attempts to manipulate our network parameters, modify runtime configuration objects (`main.js`), or deploy malicious code loops into the localized sandbox terminals will result in an absolute and permanent IP infrastructure ban.</p>
-                    </div>
-                    
-                </div>
-            </div>
-        </main>
-
+    <!-- Live Search & Filter Bar -->
+    <div class="search-box">
+      <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-amber-400"></i>
+      <input type="text" id="section-search" class="search-input" placeholder="Search Terms of Service (e.g. privacy, proxies, DMCA)..." autocomplete="off">
     </div>
 
-    <script>
-        if (navigator.getBattery) {
-            navigator.getBattery().then(battery => {
-                function updateBattery() {
-                    const statusText = document.getElementById('battery-status');
-                    if (statusText) {
-                        const lvl = Math.round(battery.level * 100);
-                        const state = battery.charging ? " (Charging)" : "";
-                        statusText.textContent = `Battery: ${lvl}%${state}`;
-                    }
-                }
-                updateBattery();
-                battery.addEventListener('levelchange', updateBattery);
-                battery.addEventListener('chargingchange', updateBattery);
-            }).catch(() => {});
+    <!-- Table of Contents Navigation Pills -->
+    <nav class="toc" id="toc-nav" aria-label="Table of Contents">
+      <a href="#s1" class="toc-pill" style="--stagger: 1;"><i class="fa-solid fa-circle-info text-xs"></i> Purpose</a>
+      <a href="#s2" class="toc-pill" style="--stagger: 2;"><i class="fa-solid fa-user-shield text-xs"></i> Privacy</a>
+      <a href="#s3" class="toc-pill" style="--stagger: 3;"><i class="fa-solid fa-gamepad text-xs"></i> Games</a>
+      <a href="#s4" class="toc-pill" style="--stagger: 4;"><i class="fa-solid fa-shield-halved text-xs"></i> Proxies</a>
+      <a href="#s5" class="toc-pill" style="--stagger: 5;"><i class="fa-solid fa-eye-slash text-xs"></i> Cloak</a>
+      <a href="#s6" class="toc-pill" style="--stagger: 6;"><i class="fa-solid fa-trash-can text-xs"></i> DMCA</a>
+      <a href="#s7" class="toc-pill" style="--stagger: 7;"><i class="fa-solid fa-terminal text-xs"></i> Conduct</a>
+      <a href="#s8" class="toc-pill" style="--stagger: 8;"><i class="fa-solid fa-triangle-exclamation text-xs"></i> No Warranty</a>
+      <a href="#s9" class="toc-pill" style="--stagger: 9;"><i class="fa-solid fa-gavel text-xs"></i> Liability</a>
+      <a href="#s10" class="toc-pill" style="--stagger: 10;"><i class="fa-solid fa-user-check text-xs"></i> You</a>
+      <a href="#s11" class="toc-pill" style="--stagger: 11;"><i class="fa-solid fa-rotate text-xs"></i> Changes</a>
+      <a href="#s12" class="toc-pill" style="--stagger: 12;"><i class="fa-solid fa-bookmark text-xs"></i> Agreement</a>
+    </nav>
+
+    <!-- Container for Terms Sections -->
+    <main id="sections-container">
+
+      <!-- Section 1 -->
+      <div class="section-wrapper">
+        <section class="section-card" id="s1" data-search="intended purpose games library tools unblockers proxy chat profile calculator themes cloak">
+          <h2>
+            <span class="title-group">
+              <i class="fa-solid fa-circle-info section-icon"></i>
+              <span>1. Intended Purpose</span>
+            </span>
+            <button class="copy-link-btn" title="Copy section link" onclick="copySectionLink('s1')">
+              <i class="fa-solid fa-link"></i>
+            </button>
+          </h2>
+          <p>Null X is a personal / community web project. It is intended to provide only the following:</p>
+          <ul>
+            <li><strong>Games library</strong> — browser games and ports for casual entertainment.</li>
+            <li><strong>Featured / random tools</strong> — shortcuts into the local catalog.</li>
+            <li><strong>Unblockers / proxy shortcuts</strong> — optional links that open local or external tools in another tab.</li>
+            <li><strong>Profile & settings</strong> — optional username, bio, avatar, and preferences (mostly in your browser).</li>
+            <li><strong>Chat / communications</strong> — optional messaging when enabled.</li>
+            <li><strong>Calculator</strong> — a simple utility iframe.</li>
+            <li><strong>Themes, news, tour, cloak UI</strong> — interface helpers only.</li>
+          </ul>
+          <p>If something occurs outside these intended functions — bugs, odd redirects, third-party ads, broken assets, filter blocks, or unexpected pages — it is <strong>not intentional</strong> on the part of the site owner and is not a promised feature of the service.</p>
+        </section>
+      </div>
+
+      <!-- Section 2 -->
+      <div class="section-wrapper">
+        <section class="section-card" id="s2" data-search="privacy data no data selling local storage security logs ip abuse backend">
+          <h2>
+            <span class="title-group">
+              <i class="fa-solid fa-user-shield section-icon"></i>
+              <span>2. Privacy & Data</span>
+            </span>
+            <button class="copy-link-btn" title="Copy section link" onclick="copySectionLink('s2')">
+              <i class="fa-solid fa-link"></i>
+            </button>
+          </h2>
+          <p><strong>No data selling.</strong> We do not sell, rent, or trade your profile text, preferences, or usage habits to advertisers or brokers.</p>
+          <p><strong>Local storage.</strong> Themes, favorites, cloak options, panic key, and similar items often live in your browser. Clearing site data deletes them. We are not responsible for lost local data.</p>
+          <p><strong>Security logs.</strong> IP or similar identifiers may be stored only for abuse prevention and ban enforcement — not for marketing.</p>
+          <p><strong>Optional backends.</strong> If profile or cloud features call an external API, that service may process the data you choose to submit. Use those features only if you accept that risk.</p>
+        </section>
+      </div>
+
+      <!-- Section 3 -->
+      <div class="section-wrapper">
+        <section class="section-card" id="s3" data-search="games embedded content entertainment cdn saves leaderboards about:blank report">
+          <h2>
+            <span class="title-group">
+              <i class="fa-solid fa-gamepad section-icon"></i>
+              <span>3. Games & Embedded Content</span>
+            </span>
+            <button class="copy-link-btn" title="Copy section link" onclick="copySectionLink('s3')">
+              <i class="fa-solid fa-link"></i>
+            </button>
+          </h2>
+          <p>Games are for personal, non-commercial entertainment. Many are third-party or community ports loaded from this repo or public CDNs.</p>
+          <ul>
+            <li>Titles may fail to load, lag, crash, or differ by device/browser. That is not intentional harm.</li>
+            <li>No guarantee of uptime, cloud saves, leaderboards, multiplayer fairness, or filter bypass.</li>
+            <li>New-tab / about:blank wrappers are display helpers only.</li>
+            <li>Report broken or inappropriate content; we will fix or remove when practical.</li>
+          </ul>
+        </section>
+      </div>
+
+      <!-- Section 4 -->
+      <div class="section-wrapper">
+        <section class="section-card" id="s4" data-search="unblockers proxies third-party links vpn external endpoints activity ads consequences bans">
+          <h2>
+            <span class="title-group">
+              <i class="fa-solid fa-shield-halved section-icon"></i>
+              <span>4. Unblockers, Proxies & Third-Party Links</span>
+            </span>
+            <button class="copy-link-btn" title="Copy section link" onclick="copySectionLink('s4')">
+              <i class="fa-solid fa-link"></i>
+            </button>
+          </h2>
+          <p>Proxy buttons are optional convenience shortcuts. Null X is <strong>not</strong> a commercial VPN. Some links open tools on this site; others open external endpoints in a sandboxed tab.</p>
+          <ul>
+            <li><strong>Your activity is yours.</strong> We are not liable for what you do on third-party networks.</li>
+            <li><strong>We do not control third-party pages.</strong> Ads, downloads, or odd links you see there were <strong>not intentionally placed by us</strong>.</li>
+            <li><strong>No responsibility for consequences</strong> such as account bans, school discipline, malware, data loss, or legal claims.</li>
+            <li>External mirrors can change or die without notice.</li>
+            <li>Using Unblockers means you accept full responsibility for your own conduct online.</li>
+          </ul>
+        </section>
+      </div>
+
+      <!-- Section 5 -->
+      <div class="section-wrapper">
+        <section class="section-card" id="s5" data-search="educational cloak stealth ui study overlay tab title splash visual mask misuse">
+          <h2>
+            <span class="title-group">
+              <i class="fa-solid fa-eye-slash section-icon"></i>
+              <span>5. Educational Cloak / Stealth UI</span>
+            </span>
+            <button class="copy-link-btn" title="Copy section link" onclick="copySectionLink('s5')">
+              <i class="fa-solid fa-link"></i>
+            </button>
+          </h2>
+          <p>The study-style overlay and stealth options are <strong>presentation features only</strong> (tab title, splash, visual mask). They are not provided to defeat security systems, hide illegal activity, or impersonate institutions. Misuse is solely your responsibility. Glitches in these features are not intentional wrongdoing by the owner.</p>
+        </section>
+      </div>
+
+      <!-- Section 6 -->
+      <div class="section-wrapper">
+        <section class="section-card" id="s6" data-search="dmca takedown copyright rights holder claims content removal review">
+          <h2>
+            <span class="title-group">
+              <i class="fa-solid fa-trash-can section-icon"></i>
+              <span>6. DMCA & Takedown</span>
+            </span>
+            <button class="copy-link-btn" title="Copy section link" onclick="copySectionLink('s6')">
+              <i class="fa-solid fa-link"></i>
+            </button>
+          </h2>
+          <p>We respect valid rights-holder claims. If you own content hosted here and want it removed, contact us with enough detail to find it. We do not host material for the purpose of infringement; if something appears that should not, it is unintentional pending review and removal.</p>
+        </section>
+      </div>
+
+      <!-- Section 7 -->
+      <div class="section-wrapper">
+        <section class="section-card" id="s7" data-search="acceptable use conduct attack abuse malware phishing ip ban restrictions">
+          <h2>
+            <span class="title-group">
+              <i class="fa-solid fa-terminal section-icon"></i>
+              <span>7. Acceptable Use</span>
+            </span>
+            <button class="copy-link-btn" title="Copy section link" onclick="copySectionLink('s7')">
+              <i class="fa-solid fa-link"></i>
+            </button>
+          </h2>
+          <p>You agree not to attack the site, abuse other users, inject malware/phishing, or use Null X primarily to break the law or harm people. We may restrict or ban access (including by IP) when abuse is detected. Monitoring is not guaranteed.</p>
+        </section>
+      </div>
+
+      <!-- Section 8 -->
+      <div class="section-wrapper">
+        <section class="section-card" id="s8" data-search="no warranties as is as available merchantability fitness accuracy downtime">
+          <h2>
+            <span class="title-group">
+              <i class="fa-solid fa-triangle-exclamation section-icon"></i>
+              <span>8. No Warranties</span>
+            </span>
+            <button class="copy-link-btn" title="Copy section link" onclick="copySectionLink('s8')">
+              <i class="fa-solid fa-link"></i>
+            </button>
+          </h2>
+          <p>THE SITE AND ALL FEATURES ARE PROVIDED <strong>“AS IS”</strong> AND <strong>“AS AVAILABLE.”</strong> No warranties of merchantability, fitness for a particular purpose, non-infringement, accuracy, security, or uninterrupted access. Errors and downtime will happen.</p>
+        </section>
+      </div>
+
+      <!-- Section 9 -->
+      <div class="section-wrapper">
+        <section class="section-card" id="s9" data-search="limitation of liability indirect incidental consequential damages loss data profits school standing">
+          <h2>
+            <span class="title-group">
+              <i class="fa-solid fa-gavel section-icon"></i>
+              <span>9. Limitation of Liability</span>
+            </span>
+            <button class="copy-link-btn" title="Copy section link" onclick="copySectionLink('s9')">
+              <i class="fa-solid fa-link"></i>
+            </button>
+          </h2>
+          <p>To the maximum extent permitted by law, the site owner, contributors, and operators are not liable for indirect, incidental, special, consequential, exemplary, or punitive damages, or for loss of data, profits, goodwill, device integrity, accounts, school/work standing, or other intangible losses arising from use of the site, games, proxies, links, or third-party services.</p>
+          <p>Events outside Section 1’s intended purposes — including bugs, third-party content, network blocks, user misconduct, or data loss — are <strong>not intentional</strong> on our part. We disclaim liability for them to the fullest extent allowed by law.</p>
+          <p>Some jurisdictions limit these disclaimers; in those places, our liability is limited to the minimum the law requires.</p>
+        </section>
+      </div>
+
+      <!-- Section 10 -->
+      <div class="section-wrapper">
+        <section class="section-card" id="s10" data-search="your responsibility control clicks downloads school work rules parents minors">
+          <h2>
+            <span class="title-group">
+              <i class="fa-solid fa-user-check section-icon"></i>
+              <span>10. Your Responsibility</span>
+            </span>
+            <button class="copy-link-btn" title="Copy section link" onclick="copySectionLink('s10')">
+              <i class="fa-solid fa-link"></i>
+            </button>
+          </h2>
+          <p>You alone control what you click, download, type, and share. You are responsible for following school, work, and local rules. Parents and guardians should supervise minors where required. Attention or proximity does not create ownership of the operator’s time, private life, or decisions.</p>
+        </section>
+      </div>
+
+      <!-- Section 11 -->
+      <div class="section-wrapper">
+        <section class="section-card" id="s11" data-search="changes terms updates new version revision date">
+          <h2>
+            <span class="title-group">
+              <i class="fa-solid fa-rotate section-icon"></i>
+              <span>11. Changes</span>
+            </span>
+            <button class="copy-link-btn" title="Copy section link" onclick="copySectionLink('s11')">
+              <i class="fa-solid fa-link"></i>
+            </button>
+          </h2>
+          <p>We may update these Terms by posting a new version here. Continued use after a change means you accept the new Terms. The date at the top is the latest revision.</p>
+        </section>
+      </div>
+
+      <!-- Section 12 -->
+      <div class="section-wrapper">
+        <section class="section-card" id="s12" data-search="agreement accept terms binding unenforceable disclaimed">
+          <h2>
+            <span class="title-group">
+              <i class="fa-solid fa-bookmark section-icon"></i>
+              <span>12. Agreement</span>
+            </span>
+            <button class="copy-link-btn" title="Copy section link" onclick="copySectionLink('s12')">
+              <i class="fa-solid fa-link"></i>
+            </button>
+          </h2>
+          <p>Using Null X means you accept these Terms. If one part is unenforceable, the rest still applies. These Terms describe intended operation; unintended behavior is disclaimed as stated above.</p>
+        </section>
+      </div>
+
+      <!-- No Search Results Found Notice -->
+      <div id="no-results" class="hidden text-center py-12 bg-orange-950/20 border border-orange-500/20 rounded-2xl my-6 backdrop-blur-md">
+        <i class="fa-solid fa-magnifying-glass-minus text-4xl text-amber-400 mb-3"></i>
+        <h3 class="text-xl font-bold text-amber-200">No matching sections found</h3>
+        <p class="text-amber-400 text-sm mt-1">Try searching for keywords like "privacy", "proxies", or "liability".</p>
+      </div>
+
+    </main>
+
+    <!-- Quote Card -->
+    <figure class="quote-card-wrapper">
+      <div class="quote-card-content">
+        <blockquote class="quote-text">
+          The more people see you, the more they assume they own you. Fame, attention, or even closeness can make people feel entitled to your life, your time, your choices. Protect yourself.
+        </blockquote>
+        <figcaption class="quote-attr"> Jake</figcaption>
+      </div>
+    </figure>
+
+    <!-- Footer -->
+    <footer class="mt-10 text-center text-amber-400/80 text-xs flex flex-col items-center gap-2">
+      <div class="flex items-center gap-2 text-amber-300 font-semibold">
+        <span>NULL X</span>
+        <span>•</span>
+        <span>Terms of Service</span>
+      </div>
+      <p>Not legal advice for every jurisdiction · Designed for personal & community compliance</p>
+    </footer>
+
+  </div>
+
+  <!-- Acknowledge Sticky Banner -->
+  <div id="ack-banner">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0">
+        <i class="fa-solid fa-shield-cat text-lg"></i>
+      </div>
+      <div class="text-xs sm:text-sm">
+        <p class="font-bold text-amber-100">Reviewed Null X Terms?</p>
+        <p class="text-amber-300 text-xs">By continuing to use Null X, you acknowledge these conditions.</p>
+      </div>
+    </div>
+    <button class="ack-btn" onclick="acknowledgeTerms()">I Acknowledge & Agree</button>
+  </div>
+
+  <!-- Back To Top Button -->
+  <button id="back-to-top" title="Back to top" onclick="scrollToTop()">
+    <i class="fa-solid fa-arrow-up"></i>
+  </button>
+
+  <!-- Toast Notification -->
+  <div id="toast">
+    <i class="fa-solid fa-circle-check text-amber-400 text-lg"></i>
+    <span id="toast-msg">Action completed!</span>
+  </div>
+
+  <script>
+    /* Particle Canvas Background Script */
+    (function initCanvas() {
+      const canvas = document.getElementById('bg-canvas');
+      const ctx = canvas.getContext('2d');
+      let width = canvas.width = window.innerWidth;
+      let height = canvas.height = window.innerHeight;
+
+      let particles = [];
+      const particleCount = Math.min(Math.floor(width / 18), 70);
+      let mouse = { x: width / 2, y: height / 2, radius: 140 };
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      });
+
+      class Particle {
+        constructor() {
+          this.x = Math.random() * width;
+          this.y = Math.random() * height;
+          this.size = Math.random() * 2 + 1;
+          this.baseX = this.x;
+          this.baseY = this.y;
+          this.vx = (Math.random() - 0.5) * 0.6;
+          this.vy = (Math.random() - 0.5) * 0.6;
+          this.color = Math.random() > 0.5 ? 'rgba(249, 115, 22, ' : 'rgba(234, 179, 8, ';
+          this.alpha = Math.random() * 0.5 + 0.2;
         }
 
-        function updateLiveClock() {
-            const clock = document.getElementById('digital-clock');
-            if (clock) {
-                const config = { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' };
-                clock.textContent = new Date().toLocaleTimeString(undefined, config);
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+
+          if (this.x < 0 || this.x > width) this.vx *= -1;
+          if (this.y < 0 || this.y > height) this.vy *= -1;
+
+          // Mouse parallax push effect
+          const dx = mouse.x - this.x;
+          const dy = mouse.y - this.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance < mouse.radius) {
+            const force = (mouse.radius - distance) / mouse.radius;
+            const angle = Math.atan2(dy, dx);
+            this.x -= Math.cos(angle) * force * 2;
+            this.y -= Math.sin(angle) * force * 2;
+          }
+        }
+
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = this.color + this.alpha + ')';
+          ctx.fill();
+        }
+      }
+
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+
+        for (let i = 0; i < particles.length; i++) {
+          particles[i].update();
+          particles[i].draw();
+
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 110) {
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = `rgba(249, 115, 22, ${0.15 * (1 - dist / 110)})`;
+              ctx.lineWidth = 0.8;
+              ctx.stroke();
             }
+          }
         }
-        updateLiveClock();
-        setInterval(updateLiveClock, 1000);
-    </script>
+        requestAnimationFrame(animate);
+      }
 
-    <script type="module" src="../JS/main.js"></script>
-    <script src="../themes/themes.js"></script>
+      animate();
+    })();
+
+    // Scroll Reading Progress Bar
+    const progressBar = document.getElementById('progress-bar');
+    const backToTopBtn = document.getElementById('back-to-top');
+    const ackBanner = document.getElementById('ack-banner');
+
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (scrollTop / docHeight) * 100;
+      progressBar.style.width = Math.min(progress, 100) + '%';
+
+      // Back to Top visibility
+      if (scrollTop > 350) {
+        backToTopBtn.classList.add('visible');
+      } else {
+        backToTopBtn.classList.remove('visible');
+      }
+
+      // Show Acknowledge banner when user reaches 75% down page unless already dismissed
+      if (progress > 75 && !localStorage.getItem('nullx_tos_ack')) {
+        ackBanner.classList.add('show');
+      }
+    });
+
+    // Hero Card Mouse Gradient Tracker
+    const heroCard = document.getElementById('hero');
+    heroCard.addEventListener('mousemove', (e) => {
+      const rect = heroCard.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      heroCard.style.setProperty('--mouse-x', `${x}px`);
+      heroCard.style.setProperty('--mouse-y', `${y}px`);
+    });
+
+    // Card 3D tilt effect on hover
+    const cards = document.querySelectorAll('.section-card');
+
+    cards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const tiltX = ((y - centerY) / centerY) * -5; // Max tilt deg
+        const tiltY = ((x - centerX) / centerX) * 5;
+
+        card.style.setProperty('--card-tilt-x', `${tiltX}deg`);
+        card.style.setProperty('--card-tilt-y', `${tiltY}deg`);
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.setProperty('--card-tilt-x', '0deg');
+        card.style.setProperty('--card-tilt-y', '0deg');
+      });
+    });
+
+    // Scroll Reveal Observer
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12 });
+
+    cards.forEach(card => sectionObserver.observe(card));
+
+    // ScrollSpy TOC Highlighting
+    const tocPills = document.querySelectorAll('.toc-pill');
+    const spyObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          tocPills.forEach(pill => {
+            if (pill.getAttribute('href') === `#${id}`) {
+              pill.classList.add('active');
+            } else {
+              pill.classList.remove('active');
+            }
+          });
+        }
+      });
+    }, { threshold: 0.4 });
+
+    cards.forEach(card => spyObserver.observe(card));
+
+    // Live Search & Filter
+    const searchInput = document.getElementById('section-search');
+    const sectionWrappers = document.querySelectorAll('.section-wrapper');
+    const noResults = document.getElementById('no-results');
+
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase().trim();
+      let matchCount = 0;
+
+      sectionWrappers.forEach(wrapper => {
+        const card = wrapper.querySelector('.section-card');
+        const textContent = card.innerText.toLowerCase();
+        const searchTags = card.getAttribute('data-search') || '';
+
+        if (textContent.includes(query) || searchTags.includes(query)) {
+          wrapper.style.display = 'block';
+          card.classList.add('visible');
+          matchCount++;
+        } else {
+          wrapper.style.display = 'none';
+        }
+      });
+
+      if (matchCount === 0) {
+        noResults.classList.remove('hidden');
+      } else {
+        noResults.classList.add('hidden');
+      }
+    });
+
+    // Copy Section Link Toast
+    function copySectionLink(sectionId) {
+      const url = `${window.location.origin}${window.location.pathname}#${sectionId}`;
+      
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = url;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+
+      showToast('Section link copied to clipboard!');
+    }
+
+    // Toast Notification Trigger
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-msg');
+      toastMsg.innerText = message;
+      toast.classList.add('show');
+
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Scroll To Top
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Acknowledge Terms
+    function acknowledgeTerms() {
+      localStorage.setItem('nullx_tos_ack', 'true');
+      ackBanner.classList.remove('show');
+      showToast('Terms acknowledged. Enjoy Null X!');
+    }
+
+    // Auto reveal top sections on initial load
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        cards[0].classList.add('visible');
+        cards[1].classList.add('visible');
+      }, 100);
+    });
+  </script>
 </body>
 </html>
