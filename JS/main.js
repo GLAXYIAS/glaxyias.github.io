@@ -939,399 +939,379 @@ function launchGame(gameId) {
   const game = _0xData.find(g => g.id === gameId);
   if (!game) return;
 
-  const rootUrl = "https://glaxyias.github.io/";
+  const rootUrl = (typeof location !== "undefined" && location.origin)
+    ? (location.origin.replace(/\/$/, "") + "/")
+    : "https://glaxyias.github.io/";
 
-  // Unity WebGL builds often break inside about:blank iframes (isolation / workers).
-  // Open those top-level in a new tab instead.
-  const NX_UNITY_IDS = new Set(["10-minutes-till-dawn", "1v1-lol", "ULTRAKILL", "a-dance-of-fire-and-ice", "ages-of-conflict", "among-us", "aquapark-io", "aquapark-slides", "backrooms", "baldis-basics", "bicycle-stunt-3d", "bitlife", "bob-the-robber-4", "bottle-flip-3d", "bullet-force", "burnin-rubber-5-xs", "burrito-bison-revenge", "carcrash3", "cars-simulator", "cartoon-mini-racing", "cell-machine", "cluster-rush", "crazy-tunnel-3d", "death-run-3d", "drift-hunters", "drift-hunters-2", "drift-hunters-pro", "duck-life", "duck-life-2", "duck-life-3-evolution", "duck-life-4", "eagle-ride", "earn-to-die", "electron-dash", "endless-tunnel", "evolution", "fish-master", "flying-car-simulator", "flying-cars-era", "football-run", "frying-nemo", "george-and-the-printer", "getaway-shootout", "gimme-the-airpod", "gladihoppers", "glitch-dash", "granny-2-asylum-horror-house", "grey-box-testing", "gunspin", "gura-tambourine", "happy-wheels", "hole-io", "house-of-hazards", "idle-light-city", "idle-tree-city", "indian-truck-simulator", "jungle-td", "kingdom-defense-mercenary", "kingdom-guards-tower-defense", "kingdom-rush", "knife-io-fanmade", "knight-hero-adventure", "leader-strike", "mad-truck-challenge", "madalin-stunt-cars-3", "marble-dash", "masked-forces", "merge-harvest", "monster-truck-vs-zombie", "moto-trial-racing-2", "my-rusty-submarine", "pako-highway", "papery-planes", "pixel-gun-survival", "president-simulator", "real-flying-truck", "real-garbage-truck", "rocket-soccer-derby", "rooftop-snipers", "running-fred", "scrap-metal-3-infernal-trap", "skibidi-strike", "skiing-fred", "sky-car-stunt-3d", "slope", "slope-2-players", "slope-3", "slope-city", "slope-run", "slope-tunnel", "smash-karts", "snow-battle-io", "snow-rider-3d", "sort-the-court", "sprinter", "station-141", "stickman-vs-zombies", "storm-city-mafia", "subway-surfers", "super-falling-fred", "super-mario-bros", "superhot", "survivor-in-rainbow-monster", "tall-io", "tanuki-sunset", "tiny-islands", "traffic-mania", "truckdriver", "tube-jumpers", "tunnel-rush", "turbo-dismounting", "two-ball-3d", "two-tunnel-3d", "ultimate-offroad", "veloce", "wizard-mike", "zombie-derby-pixel-survival"]);
+  function resolveGameSrc() {
+    if (game.isEmbedCode && game.jsbin) return String(game.jsbin);
+    const raw = String(game.url || "");
+    if (/^https?:\/\//i.test(raw)) return raw;
+    return rootUrl + raw.replace(/^\.\.\//, "").replace(/^\//, "");
+  }
+
+  const gameSrc = resolveGameSrc();
+  const homeUrl = rootUrl;
+  const safeTitle = String(game.title || "Game")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/"/g, "&quot;");
+  const safeSrc = gameSrc.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+  const safeSrcJs = gameSrc.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+
   try {
     const recent = JSON.parse(localStorage.getItem("nx_recent_games") || "[]");
-    const next = [game.id].concat(recent.filter(function (x) { return x !== game.id; })).slice(0, 12);
+    const next = [gameId].concat(recent.filter(function (id) { return id !== gameId; })).slice(0, 20);
     localStorage.setItem("nx_recent_games", JSON.stringify(next));
   } catch (e) {}
 
   const gameTab = window.open("about:blank", "_blank");
   if (!gameTab) {
-    alert("Pop-up blocked! Please allow popup permissions to play games.");
+    alert("Pop-up blocked! Please allow popups to play games.");
     return;
   }
 
   gameTab.document.title = "Google Docs";
   gameTab.document.open();
-
-  const isEmbed = game.isEmbedCode;
-  const gameSrc = isEmbed ? game.jsbin : (game.url.startsWith("http") ? game.url : (rootUrl + game.url.replace(/^\.\.\//, "")));
-
-  gameTab.document.write(`
-<!DOCTYPE html>
+  gameTab.document.write(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>${game.title}</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${safeTitle}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
-body, html { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#000; color:#fff; }
-iframe { width:100%; height:100vh; display:block; border:none; }
+* { -webkit-user-select: none; user-select: none; box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; }
+iframe { width: 100%; height: 100vh; border: 0; display: block; background: #000; }
 
+#intro-overlay {
+  position: fixed; inset: 0; width: 100vw; height: 100vh;
+  background: #000; z-index: 99999;
+  display: flex; justify-content: center; align-items: center;
+  overflow: hidden;
+  transition: opacity 0.7s ease, visibility 0.7s ease;
+}
+#intro-overlay.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.intro-bg {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: gridPan 20s linear infinite; z-index: 1;
+}
+.vignette {
+  position: absolute; inset: 0;
+  background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, #000 75%);
+  z-index: 2; pointer-events: none;
+}
+.logo-container {
+  text-align: center; z-index: 3;
+  display: flex; flex-direction: column; align-items: center;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  max-width: 520px; padding: 20px;
+}
+.logo-graphic {
+  width: 110px; height: 110px; margin-bottom: 28px; position: relative;
+  background: #030303; border: 2px solid #d47a55; border-radius: 12px;
+  display: flex; justify-content: center; align-items: center;
+  font-size: 2.6rem; font-weight: 800; color: #fff;
+  text-shadow: 0 0 15px rgba(255,255,255,0.8);
+  box-shadow: 0 0 30px rgba(212,122,85,0.25), inset 0 0 20px rgba(212,122,85,0.15);
+  animation: elegantFadeIn 1.2s cubic-bezier(0.22,1,0.36,1) forwards, logoGlowPulse 4s infinite alternate ease-in-out 1.2s;
+}
+.logo-graphic::before, .logo-graphic::after {
+  content: ''; position: absolute; width: 14px; height: 14px; border: 3px solid #e59371;
+}
+.logo-graphic::before { top: -6px; left: -6px; border-right: none; border-bottom: none; }
+.logo-graphic::after { bottom: -6px; right: -6px; border-left: none; border-top: none; }
+.logo-text {
+  font-size: 2.4rem; font-weight: 900; color: #fff; margin: 0;
+  letter-spacing: 14px; text-indent: 14px; text-transform: uppercase;
+  text-shadow: 0 0 20px rgba(255,255,255,0.75);
+}
+.logo-subtitle {
+  font-size: 0.7rem; font-weight: 600; letter-spacing: 4px;
+  color: #a0a0a5; margin-top: 14px; text-transform: uppercase;
+}
+.game-loading-title {
+  margin-top: 22px; color: #e59371; font-size: 0.85rem; font-weight: 700;
+  letter-spacing: 1px;
+}
+.progress-wrap {
+  width: min(320px, 80vw); margin-top: 22px;
+}
+.progress-track {
+  width: 100%; height: 8px; background: #1a1a22; border-radius: 99px;
+  overflow: hidden; border: 1px solid #333;
+}
+.progress-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, #d47a55, #fff, #e59371);
+  box-shadow: 0 0 10px rgba(229,147,113,0.6);
+  transition: width 0.25s ease;
+  border-radius: 99px;
+}
+.progress-meta {
+  display: flex; justify-content: space-between; margin-top: 10px;
+  font-family: 'Press Start 2P', monospace; font-size: 9px; color: #00ff9d;
+  gap: 8px; flex-wrap: wrap;
+}
+.progress-meta span { opacity: 0.95; }
+.fun-fact {
+  margin-top: 28px; max-width: 420px; min-height: 48px;
+  font-size: 0.8rem; line-height: 1.45; color: #b8b8c0;
+  font-weight: 500; transition: opacity 0.4s ease;
+}
+.fun-fact strong { color: #e59371; }
 .back-btn {
-  position: fixed; top: 15px; left: 15px; z-index: 99999999;
+  position: fixed; top: 15px; left: 15px; z-index: 100000;
   background: #0a0a0a; color: #8b00ff; border: 2px solid #8b00ff;
   padding: 8px 14px; font-weight: bold; border-radius: 8px;
-  cursor: pointer; box-shadow: 0 0 12px rgba(139,0,255,0.45);
-  font-family: system-ui, sans-serif; text-decoration: none; display: inline-flex;
-  align-items: center; gap: 6px; user-select: none; touch-action: none;
-  transition: box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  cursor: pointer; text-decoration: none; font-family: system-ui, sans-serif;
+  box-shadow: 0 0 12px rgba(139,0,255,0.45);
 }
-.back-btn:hover {
-  background: #140a1c; border-color: #b056ff; box-shadow: 0 0 16px rgba(139,0,255,0.65);
-}
-.back-btn.dragging {
-  cursor: grabbing; opacity: 0.92; box-shadow: 0 0 20px rgba(139,0,255,0.8);
-  transition: none;
-}
-
-#back-btn-hint {
-  position: fixed; top: 58px; left: 15px; z-index: 99999999;
-  background: rgba(10,10,10,0.95); color: #c4b5fd;
-  padding: 8px 12px; border: 1px solid #8b00ff; border-radius: 8px;
-  font-family: system-ui, sans-serif; font-size: 12px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.5); pointer-events: none;
-  animation: nxHintIn 0.25s ease;
-}
-@keyframes nxHintIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
-
-#back-btn-menu {
-  position: fixed; z-index: 999999999;
-  background: #0d0d13; color: #e9d5ff;
-  border: 1px solid rgba(139,0,255,0.55); border-radius: 10px;
-  padding: 6px; min-width: 160px;
-  font-family: system-ui, sans-serif; font-size: 13px;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.55);
-  animation: nxHintIn 0.15s ease;
-}
-#back-btn-menu div {
-  padding: 8px 12px; border-radius: 6px; cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
-}
-#back-btn-menu div:hover {
-  background: rgba(139,0,255,0.22); color: #fff;
+@keyframes gridPan { from { background-position: 0 0; } to { background-position: 60px 60px; } }
+@keyframes elegantFadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+@keyframes logoGlowPulse {
+  from { box-shadow: 0 0 25px rgba(212,122,85,0.2), inset 0 0 15px rgba(212,122,85,0.15); }
+  to { box-shadow: 0 0 45px rgba(212,122,85,0.45), inset 0 0 25px rgba(212,122,85,0.3); }
 }
 </style>
 </head>
-
 <body>
-<a href="https://glaxyias.github.io/" class="back-btn">← Back To Home</a>
+<a href="${homeUrl}" class="back-btn" target="_blank">&larr; Back To Home</a>
 
-<iframe
-  id="nx-game-frame"
-  src="${gameSrc}"
-  sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-modals allow-downloads"
+<div id="intro-overlay">
+  <div class="intro-bg"></div>
+  <div class="vignette"></div>
+  <div class="logo-container">
+    <div class="logo-graphic">Nx</div>
+    <h1 class="logo-text">Glaxyias</h1>
+    <div class="logo-subtitle">Bringing You Unblocked Games Since 2025</div>
+    <div class="game-loading-title">Loading ${safeTitle}</div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+      <div class="progress-meta">
+        <span id="prog-mb">0 MB / ? MB</span>
+        <span id="prog-pct">0%</span>
+        <span id="prog-eta">ETA --</span>
+      </div>
+    </div>
+    <div class="fun-fact" id="fun-fact"><strong>Fun fact:</strong> Loading…</div>
+  </div>
+</div>
+
+<iframe id="nx-game-frame" src="about:blank" allowfullscreen
+  sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-modals allow-downloads allow-popups"
   allow="pointer-lock *; fullscreen *; gamepad *; autoplay *; keyboard-map *"
-  referrerpolicy="no-referrer"
-  style="width:100%; height:100vh; display:block; border:none;"
-></iframe>
+  referrerpolicy="no-referrer"></iframe>
 
 <script>
 (function () {
-  // ===== NO REDIRECTS (cloak shell) =====
-  try {
-    window.open = function () { console.warn("[NX] blocked window.open"); return null; };
-  } catch (e) {}
-  document.addEventListener("click", function (e) {
-    var a = e.target && e.target.closest ? e.target.closest("a") : null;
-    if (!a) return;
-    var href = (a.getAttribute("href") || "").trim();
-    if (/^https?:/i.test(href)) {
-      e.preventDefault();
-      e.stopPropagation();
-      console.warn("[NX] blocked shell link", href);
-    }
-  }, true);
-  var frame = document.getElementById("nx-game-frame");
-  var allowed = "${gameSrc}";
-  var allowedHost = "";
-  try { allowedHost = new URL(allowed).hostname; } catch (e) {}
-  if (frame) {
-    frame.addEventListener("load", function () {
-      try {
-        var href = frame.contentWindow.location.href;
-        if (href && href !== "about:blank" && allowedHost && href.indexOf(allowedHost) === -1) {
-          console.warn("[NX] iframe left game host, restoring");
-          frame.src = allowed;
-        }
-      } catch (err) {}
-    });
-  }
-})();
-</script>
-<script>
-(function () {
-  var POS_KEY = "nx_back_btn_pos";
-  var backBtn = null;
-  var dragState = null;
+  var GAME_SRC = '${safeSrcJs}';
+  var fill = document.getElementById('prog-fill');
+  var mbEl = document.getElementById('prog-mb');
+  var pctEl = document.getElementById('prog-pct');
+  var etaEl = document.getElementById('prog-eta');
+  var factEl = document.getElementById('fun-fact');
+  var overlay = document.getElementById('intro-overlay');
+  var frame = document.getElementById('nx-game-frame');
 
-  function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+  var FACTS = [
+    "The first browser game is often credited to 1990s Java applets — no App Store required.",
+    "2048 was made in a weekend and still gets millions of plays.",
+    "Many 'HTML5 games' are just one index.html and a pile of JS — like this one.",
+    "Chromebooks hate huge Unity WebGL builds. Patience is a skill unlock.",
+    "about:blank is empty on purpose — it is a blank canvas for cloaked launches.",
+    "Your download speed is the real final boss right now.",
+    "Slope is basically endless falling with extra steps.",
+    "If a game is over 50 MB, grab a snack. We will wait.",
+    "Fun factception: this fun fact is loading while the game loads.",
+    "GitHub Pages has no loading bar API — we built our own.",
+    "The Nx logo is not a Windows error. Probably.",
+    "Unblocked does not mean instant. Physics still applies to bandwidth."
+  ];
 
-  function savePos(data) {
-    try { localStorage.setItem(POS_KEY, JSON.stringify(data)); } catch (e) {}
-  }
-
-  function loadPos() {
-    try {
-      var raw = localStorage.getItem(POS_KEY);
-      return raw ? JSON.parse(raw) : null;
-    } catch (e) { return null; }
-  }
-
-  function applySavedPos(btn) {
-    var p = loadPos();
-    if (!p) return;
-    btn.style.transform = "";
-    btn.style.top = p.top != null ? p.top : "";
-    btn.style.bottom = p.bottom != null ? p.bottom : "";
-    btn.style.left = p.left != null ? p.left : "";
-    btn.style.right = p.right != null ? p.right : "";
-    if (p.transform) btn.style.transform = p.transform;
-  }
-
-  function snapshotPos(btn) {
-    return {
-      top: btn.style.top || null,
-      bottom: btn.style.bottom || null,
-      left: btn.style.left || null,
-      right: btn.style.right || null,
-      transform: btn.style.transform || ""
-    };
-  }
-
-  function setBackBtnPos(btn, top, bottom, right, left) {
-    btn.style.transition = "top 0.25s ease, left 0.25s ease, right 0.25s ease, bottom 0.25s ease, transform 0.25s ease";
-    btn.style.top = top != null ? top : "auto";
-    btn.style.bottom = bottom != null ? bottom : "auto";
-    btn.style.right = right != null ? right : "auto";
-    btn.style.left = left != null ? left : "auto";
-    btn.style.transform = "";
-    savePos(snapshotPos(btn));
-    setTimeout(function () { btn.style.transition = ""; }, 280);
-  }
-
-  function setBackBtnCenter(btn, top, bottom) {
-    btn.style.transition = "top 0.25s ease, left 0.25s ease, right 0.25s ease, bottom 0.25s ease, transform 0.25s ease";
-    btn.style.top = top != null ? top : "auto";
-    btn.style.bottom = bottom != null ? bottom : "auto";
-    btn.style.left = "50%";
-    btn.style.right = "auto";
-    btn.style.transform = "translateX(-50%)";
-    savePos(snapshotPos(btn));
-    setTimeout(function () { btn.style.transition = ""; }, 280);
-  }
-
-  function placeMenu(menu, x, y) {
-    document.body.appendChild(menu);
-    var rect = menu.getBoundingClientRect();
-    var left = clamp(x, 8, window.innerWidth - rect.width - 8);
-    var top = clamp(y, 8, window.innerHeight - rect.height - 8);
-    menu.style.left = left + "px";
-    menu.style.top = top + "px";
-  }
-
-  function showBackBtnMenu(x, y, btn) {
-    var oldMenu = document.getElementById("back-btn-menu");
-    if (oldMenu) oldMenu.remove();
-
-    var menu = document.createElement("div");
-    menu.id = "back-btn-menu";
-
-    var options = [
-      { label: "Top Left", run: function () { setBackBtnPos(btn, "15px", null, null, "15px"); } },
-      { label: "Top Center", run: function () { setBackBtnCenter(btn, "15px"); } },
-      { label: "Top Right", run: function () { setBackBtnPos(btn, "15px", null, "15px", null); } },
-      { label: "Bottom Left", run: function () { setBackBtnPos(btn, null, "15px", null, "15px"); } },
-      { label: "Bottom Center", run: function () { setBackBtnCenter(btn, null, "15px"); } },
-      { label: "Bottom Right", run: function () { setBackBtnPos(btn, null, "15px", "15px", null); } },
-      { label: "Drag to move", run: function () { startDragMode(btn); } }
-    ];
-
-    options.forEach(function (opt) {
-      var item = document.createElement("div");
-      item.textContent = opt.label;
-      item.addEventListener("click", function (ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        opt.run();
-        menu.remove();
-      });
-      menu.appendChild(item);
-    });
-
-    placeMenu(menu, x, y);
-
+  var factIdx = 0;
+  function rotateFact() {
+    if (!factEl) return;
+    factEl.style.opacity = '0';
     setTimeout(function () {
-      document.addEventListener("click", function closeMenu() {
-        if (menu.parentNode) menu.remove();
-        document.removeEventListener("click", closeMenu);
-      });
-    }, 0);
+      factEl.innerHTML = '<strong>Fun fact:</strong> ' + FACTS[factIdx % FACTS.length];
+      factEl.style.opacity = '1';
+      factIdx++;
+    }, 280);
+  }
+  rotateFact();
+  setInterval(rotateFact, 4500);
+
+  function fmtMB(bytes) {
+    if (!isFinite(bytes) || bytes < 0) return '?';
+    return (bytes / 1048576).toFixed(2);
+  }
+  function fmtEta(sec) {
+    if (!isFinite(sec) || sec < 0) return '--';
+    if (sec < 1) return '<1s';
+    if (sec < 60) return Math.ceil(sec) + 's';
+    var m = Math.floor(sec / 60);
+    var s = Math.ceil(sec % 60);
+    return m + 'm ' + s + 's';
   }
 
-  function onPointerMove(e) {
-    if (!dragState) return;
-    e.preventDefault();
-    var clientX = e.clientX != null ? e.clientX : (e.touches && e.touches[0].clientX);
-    var clientY = e.clientY != null ? e.clientY : (e.touches && e.touches[0].clientY);
-    if (clientX == null) return;
+  var started = performance.now();
+  var lastBytes = 0;
+  var lastT = started;
+  var speedEma = 0;
 
-    var btn = dragState.btn;
-    var w = btn.offsetWidth;
-    var h = btn.offsetHeight;
-    var left = clamp(clientX - dragState.offsetX, 0, window.innerWidth - w);
-    var top = clamp(clientY - dragState.offsetY, 0, window.innerHeight - h);
+  function setProgress(loaded, total, forcedPct) {
+    var pct = 0;
+    if (typeof forcedPct === 'number') pct = forcedPct;
+    else if (total > 0) pct = Math.min(99, (loaded / total) * 100);
+    else pct = Math.min(90, (performance.now() - started) / 200); // soft crawl if unknown size
+    if (fill) fill.style.width = pct.toFixed(1) + '%';
+    if (pctEl) pctEl.textContent = Math.floor(pct) + '%';
 
-    btn.style.left = left + "px";
-    btn.style.top = top + "px";
-    btn.style.right = "auto";
-    btn.style.bottom = "auto";
-    btn.style.transform = "";
-    dragState.moved = true;
-  }
-
-  function onPointerUp(e) {
-    if (!dragState) return;
-    var btn = dragState.btn;
-    var moved = dragState.moved;
-    btn.classList.remove("dragging");
-    btn.style.cursor = "pointer";
-    document.removeEventListener("mousemove", onPointerMove);
-    document.removeEventListener("mouseup", onPointerUp);
-    document.removeEventListener("touchmove", onPointerMove);
-    document.removeEventListener("touchend", onPointerUp);
-    if (moved) {
-      savePos(snapshotPos(btn));
-      // block the click that would navigate home right after a drag
-      var block = function (ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        btn.removeEventListener("click", block, true);
-      };
-      btn.addEventListener("click", block, true);
-      setTimeout(function () { btn.removeEventListener("click", block, true); }, 50);
-    }
-    dragState = null;
-  }
-
-  function beginDrag(btn, clientX, clientY) {
-    var rect = btn.getBoundingClientRect();
-    dragState = {
-      btn: btn,
-      offsetX: clientX - rect.left,
-      offsetY: clientY - rect.top,
-      moved: false
-    };
-    btn.classList.add("dragging");
-    btn.style.cursor = "grabbing";
-    btn.style.transition = "none";
-    btn.style.transform = "";
-    // convert any right/bottom anchoring to left/top so drag is stable
-    btn.style.left = rect.left + "px";
-    btn.style.top = rect.top + "px";
-    btn.style.right = "auto";
-    btn.style.bottom = "auto";
-
-    document.addEventListener("mousemove", onPointerMove, { passive: false });
-    document.addEventListener("mouseup", onPointerUp);
-    document.addEventListener("touchmove", onPointerMove, { passive: false });
-    document.addEventListener("touchend", onPointerUp);
-  }
-
-  function startDragMode(btn) {
-    btn.style.cursor = "grab";
-    var once = function (e) {
-      e.preventDefault();
-      var clientX = e.clientX != null ? e.clientX : (e.touches && e.touches[0].clientX);
-      var clientY = e.clientY != null ? e.clientY : (e.touches && e.touches[0].clientY);
-      beginDrag(btn, clientX, clientY);
-      btn.removeEventListener("mousedown", once);
-      btn.removeEventListener("touchstart", once);
-    };
-    btn.addEventListener("mousedown", once);
-    btn.addEventListener("touchstart", once, { passive: false });
-  }
-
-  function init() {
-    backBtn = document.querySelector(".back-btn");
-    if (!backBtn) return;
-    backBtn.style.position = "fixed";
-    applySavedPos(backBtn);
-
-    if (!localStorage.getItem("backBtnHintShown")) {
-      var hint = document.createElement("div");
-      hint.id = "back-btn-hint";
-      hint.textContent = "Right-click the button to reposition it.";
-      document.body.appendChild(hint);
-      setTimeout(function () {
-        if (hint.parentNode) hint.remove();
-      }, 5000);
+    if (mbEl) {
+      if (total > 0) mbEl.textContent = fmtMB(loaded) + ' MB / ' + fmtMB(total) + ' MB';
+      else mbEl.textContent = fmtMB(loaded) + ' MB / ? MB';
     }
 
-    backBtn.addEventListener("contextmenu", function (e) {
-      e.preventDefault();
-      var hint = document.getElementById("back-btn-hint");
-      if (hint) {
-        hint.remove();
-        localStorage.setItem("backBtnHintShown", "true");
+    var now = performance.now();
+    var dt = (now - lastT) / 1000;
+    if (dt > 0.15 && loaded > lastBytes) {
+      var inst = (loaded - lastBytes) / dt;
+      speedEma = speedEma ? speedEma * 0.75 + inst * 0.25 : inst;
+      lastBytes = loaded;
+      lastT = now;
+    }
+    if (etaEl) {
+      if (total > 0 && speedEma > 500) {
+        etaEl.textContent = 'ETA ' + fmtEta((total - loaded) / speedEma);
+      } else if (pct > 5 && pct < 99) {
+        var elapsed = (now - started) / 1000;
+        var estTotal = elapsed / (pct / 100);
+        etaEl.textContent = 'ETA ' + fmtEta(estTotal - elapsed);
+      } else {
+        etaEl.textContent = 'ETA --';
       }
-      showBackBtnMenu(e.clientX, e.clientY, backBtn);
+    }
+  }
+
+  function finish() {
+    setProgress(1, 1, 100);
+    if (mbEl && mbEl.textContent.indexOf('?') !== -1) {
+      mbEl.textContent = 'Ready';
+    }
+    if (etaEl) etaEl.textContent = 'Done';
+    setTimeout(function () {
+      if (overlay) overlay.classList.add('hide');
+    }, 350);
+  }
+
+  // Try real byte progress via fetch (works when CORS allows — GitHub Pages usually does)
+  var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  var timedOut = false;
+  var loadTimer = setTimeout(function () {
+    timedOut = true;
+    // still wait for iframe; keep soft progress
+  }, 120000);
+
+  function startIframe() {
+    frame.src = GAME_SRC;
+    frame.addEventListener('load', function () {
+      clearTimeout(loadTimer);
+      finish();
     });
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
+  if (window.fetch && GAME_SRC.indexOf('http') === 0) {
+    fetch(GAME_SRC, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'omit',
+      signal: ctrl && ctrl.signal
+    }).then(function (res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      var total = Number(res.headers.get('Content-Length')) || 0;
+      // Note: Content-Length is only the HTML shell; assets load later inside the iframe.
+      // We still show real HTML download, then switch to iframe load phase.
+      if (!res.body || !res.body.getReader) {
+        return res.blob().then(function () {
+          setProgress(total || 1, total || 1, 40);
+          startIframe();
+        });
+      }
+      var reader = res.body.getReader();
+      var loaded = 0;
+      function pump() {
+        return reader.read().then(function (result) {
+          if (result.done) {
+            setProgress(loaded, total || loaded, 45);
+            startIframe();
+            // iframe phase: crawl 45% -> 95% until load
+            var phaseStart = performance.now();
+            var tick = setInterval(function () {
+              if (timedOut) return;
+              var p = 45 + Math.min(50, ((performance.now() - phaseStart) / 15000) * 50);
+              setProgress(loaded, total || loaded, p);
+            }, 300);
+            frame.addEventListener('load', function () {
+              clearInterval(tick);
+            });
+            return;
+          }
+          loaded += result.value.byteLength || 0;
+          setProgress(loaded, total);
+          return pump();
+        });
+      }
+      return pump();
+    }).catch(function () {
+      // CORS or network — fall back to iframe only + estimated progress
+      startIframe();
+      var phaseStart = performance.now();
+      var tick = setInterval(function () {
+        var p = Math.min(92, ((performance.now() - phaseStart) / 20000) * 92);
+        setProgress(0, 0, p);
+      }, 300);
+      frame.addEventListener('load', function () { clearInterval(tick); });
+    });
   } else {
-    init();
+    startIframe();
   }
-  window.addEventListener("load", function () {
-    if (!backBtn) init();
-  });
 })();
 <\/script>
-
 </body>
-</html>
-`);
+</html>`);
 
   gameTab.document.close();
 
-  // More reliable original-tab close
   function attemptCloseOriginalTab() {
     try {
       const selfWin = window.open(window.location.href, "_self");
       if (selfWin) selfWin.close();
     } catch (e) {}
+    try { window.close(); } catch (e) {}
     try {
-      window.close();
-    } catch (e) {}
-    try {
-      if (window.top && window.top !== window) {
-        window.top.close();
-      }
+      if (window.top && window.top !== window) window.top.close();
     } catch (e) {}
     try {
       window.open("", "_self");
       window.close();
     } catch (e) {}
   }
-
   attemptCloseOriginalTab();
   setTimeout(attemptCloseOriginalTab, 30);
-
-  setTimeout(function() {
-    try {
-      window.location.replace("https://www.google.com");
-    } catch (e) {
-      window.location.href = "https://www.google.com";
-    }
+  setTimeout(function () {
+    try { window.location.replace("https://www.google.com"); }
+    catch (e) { try { window.location.href = "https://www.google.com"; } catch (e2) {} }
   }, 120);
 }
+
 
 function renderLibraryGrid(gamesArray) {
   const gameGrid = document.getElementById("gameGrid");
