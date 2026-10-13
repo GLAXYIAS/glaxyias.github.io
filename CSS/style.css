@@ -350,6 +350,7 @@ nav {
   gap: 12px;
 }
 
+.main-content { overflow-x: hidden; }
 .game-grid, .games-grid {
   display: grid !important;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -397,17 +398,23 @@ nav {
   position: absolute !important;
   left: 0;
   right: 0;
+  top: 0;
   bottom: 0;
   z-index: 3 !important;
   margin: 0 !important;
-  padding: 12px 8px 8px !important;
-  font-size: 0.85rem !important;
+  padding: 10px 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.82rem !important;
   font-weight: 800 !important;
-  line-height: 1.15 !important;
+  line-height: 1.2 !important;
   letter-spacing: 0.02em;
   color: #fff !important;
-  text-shadow: 0 1px 2px #000, 0 0 8px #000 !important;
-  background: linear-gradient(transparent, rgba(0,0,0,0.88) 45%);
+  text-align: center !important;
+  text-shadow: 0 1px 3px #000, 0 0 10px #000, 0 2px 8px #000 !important;
+  background: rgba(0, 0, 0, 0.35) !important;
+  box-sizing: border-box;
 }
 
 .game-card:hover {
