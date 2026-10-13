@@ -357,8 +357,8 @@ nav {
   padding: 0 16px 40px;
   min-height: 200px;
   width: 100%;
-  max-width: 720px;
-  margin: 0 auto;
+  max-width: none;
+  margin: 0;
   box-sizing: border-box;
 }
 
@@ -370,8 +370,8 @@ nav {
   aspect-ratio: 1 / 1;
   height: auto;
   width: 100%;
-  max-width: 148px;
-  justify-self: center;
+  max-width: none;
+  justify-self: stretch;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -394,13 +394,20 @@ nav {
 }
 
 .game-card h3 {
-  position: relative;
-  z-index: 2;
-  margin: 0;
-  padding: 6px 8px;
-  font-size: 0.8rem !important;
-  line-height: 1.2;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.85);
+  position: absolute !important;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3 !important;
+  margin: 0 !important;
+  padding: 12px 8px 8px !important;
+  font-size: 0.85rem !important;
+  font-weight: 800 !important;
+  line-height: 1.15 !important;
+  letter-spacing: 0.02em;
+  color: #fff !important;
+  text-shadow: 0 1px 2px #000, 0 0 8px #000 !important;
+  background: linear-gradient(transparent, rgba(0,0,0,0.88) 45%);
 }
 
 .game-card:hover {
