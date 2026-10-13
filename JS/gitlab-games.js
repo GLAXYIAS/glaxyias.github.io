@@ -1,6 +1,6 @@
 /* Pack games on GitHub Pages — load AFTER JS/main.js
  * Host: https://whatchamacallitexe.github.io/pack-a .. pack-j
- */
+
 (function () {
   if (typeof _0xData === "undefined") return;
 
@@ -119,3 +119,4 @@
     }
   }
 })();
+*/
