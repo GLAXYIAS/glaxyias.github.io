@@ -319,43 +319,43 @@ let _0xData = [
     title: "Backyard Football",
     url: "https://whatchamacallitexe.github.io/pack-a/backyard-football/index.html",
     desc: "Play Backyard Football online in your browser.",
-    popular: false
+    popular: true
   },
   {
     id: "balatro",
     title: "Balatro",
     url: "https://whatchamacallitexe.github.io/pack-a/balatro/index.html",
     desc: "Play Balatro online in your browser.",
-    popular: false
+    popular: true
   },
   {
     id: "minecraft-1.12",
     title: "Minecraft 1.12",
     url: "https://whatchamacallitexe.github.io/pack-a/minecraft-1.12/index.html",
     desc: "Play Minecraft 1.12 online in your browser.",
-    popular: false
+    popular: true
   },
   {
     id: "minecraft-1.5",
     title: "Minecraft 1.5",
     url: "https://whatchamacallitexe.github.io/pack-a/minecraft-1.5/index.html",
     desc: "Play Minecraft 1.5 online in your browser.",
-    popular: false
+    popular: true
   },
   {
     id: "modernclient",
     title: "Modernclient",
     url: "https://whatchamacallitexe.github.io/pack-a/modernclient/index.html",
     desc: "Play Modernclient online in your browser.",
-    popular: false
+    popular: true
   },
   {
     id: "pokemon-black",
     title: "Pokemon Black",
     url: "https://whatchamacallitexe.github.io/pack-a/pokemon-black/index.html",
     desc: "Play Pokemon Black online in your browser.",
-    popular: false
-  }
+    popular: true
+  },
 ];
 
 (function mergeGitlabGames() {
