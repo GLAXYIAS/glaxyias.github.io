@@ -1066,6 +1066,9 @@ function renderLibraryGrid(gamesArray) {
   // Override grid layout while virtualizing — cards positioned absolutely in rows
   gameGrid.style.display = "block";
   gameGrid.style.minHeight = "0";
+  gameGrid.style.overflow = "hidden";
+  gameGrid.style.boxSizing = "border-box";
+  gameGrid.style.width = "100%";
 
   let cols = 1;
   let rowH = MAX_CARD + GAP;
@@ -1076,16 +1079,19 @@ function renderLibraryGrid(gamesArray) {
   const cardPool = new Map(); // id -> element
 
   function measure() {
-    const width = Math.max(gameGrid.clientWidth || gameGrid.offsetWidth || 600, 200);
-    // Prefer 4 columns; step down on narrow layouts
+    // clientWidth already excludes scrollbar; subtract a little so the right column is never clipped
+    const raw = Math.max(gameGrid.clientWidth || gameGrid.offsetWidth || 600, 200);
+    const width = Math.max(raw - 8, 180);
     if (width < 520) cols = 2;
     else if (width < 760) cols = 3;
     else cols = TARGET_COLS;
-    // Fill the full row width — square tiles that share the area evenly
+    // Slightly smaller than full width so they breathe and don't clip
     const colW = (width - GAP * (cols - 1)) / cols;
-    window.__nxCardSize = Math.max(100, colW);
+    window.__nxCardSize = Math.max(96, colW * 0.92);
     totalRows = Math.ceil(list.length / cols) || 1;
     rowH = window.__nxCardSize + GAP;
+    // Center the row of smaller cards in the available width
+    window.__nxXOff = Math.max(0, (raw - (cols * window.__nxCardSize + (cols - 1) * GAP)) / 2);
     spacer.style.height = (totalRows * rowH) + "px";
   }
 
@@ -1116,7 +1122,7 @@ function renderLibraryGrid(gamesArray) {
     }
     const h3 = document.createElement("h3");
     h3.textContent = title;
-    h3.style.cssText = "position:absolute;left:0;right:0;bottom:0;z-index:3;margin:0;padding:10px 8px 8px;font-size:0.85rem;font-weight:800;text-align:center;color:#fff;line-height:1.15;letter-spacing:0.02em;text-shadow:0 1px 2px #000,0 0 8px #000;background:linear-gradient(transparent,rgba(0,0,0,0.85) 40%);";
+    h3.style.cssText = "position:absolute;left:0;right:0;top:0;bottom:0;z-index:3;margin:0;padding:10px 12px;display:flex;align-items:center;justify-content:center;font-size:0.82rem;font-weight:800;text-align:center;color:#fff;line-height:1.2;letter-spacing:0.02em;text-shadow:0 1px 3px #000,0 0 10px #000,0 2px 8px #000;background:rgba(0,0,0,0.35);box-sizing:border-box;";
     card.appendChild(h3);
     const desc = document.createElement("div");
     desc.className = "game-desc-overlay";
@@ -1159,7 +1165,7 @@ function renderLibraryGrid(gamesArray) {
     measure();
     const width = Math.max(gameGrid.clientWidth || 600, 200);
     const size = window.__nxCardSize || 140;
-    const xOff = 0; // fill full grid width edge-to-edge
+    const xOff = window.__nxXOff || 0;
     const top = scrollTop();
     const offset = gridOffsetTop();
     const relTop = Math.max(0, top - offset);
