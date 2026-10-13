@@ -2,8 +2,12 @@ name: Scan GitHub Pages Repositories
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Auto-runs every 24 hours
-  workflow_dispatch:      # Manual trigger button in Actions tab
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+# Add write permission for contents (allows committing and pushing)
+permissions:
+  contents: write
 
 jobs:
   scan-and-update:
