@@ -626,7 +626,20 @@ function launchGame(gameId) {
     localStorage.setItem("nx_recent_games", JSON.stringify(next));
   } catch (e) {}
 
-  const gameTab = window.open("about:blank", "_blank");
+  // Settings: allow disabling iframes (some Unity/WebGL games break in iframes)
+  var useIframe = true;
+  try {
+    useIframe = localStorage.getItem("nx_use_iframe") !== "false";
+  } catch (e) {}
+  if (!useIframe) {
+    var direct = window.open(gameSrc, "_blank");
+    if (!direct) {
+      window.location.href = gameSrc;
+    }
+    return;
+  }
+
+    const gameTab = window.open("about:blank", "_blank");
   if (!gameTab) {
     alert("Pop-up blocked! Please allow popups to play games.");
     return;
@@ -1447,6 +1460,15 @@ document.addEventListener('DOMContentLoaded', () => {
               splashCheckbox.checked = localStorage.getItem('disableStudyCloak') === 'true';
               splashCheckbox.onchange = (e) => {
                 localStorage.setItem('disableStudyCloak', e.target.checked ? 'true' : 'false');
+              };
+            }
+
+            const iframeToggle = document.getElementById('toggle-use-iframe');
+            if (iframeToggle) {
+              // default ON unless explicitly disabled
+              iframeToggle.checked = localStorage.getItem('nx_use_iframe') !== 'false';
+              iframeToggle.onchange = (e) => {
+                localStorage.setItem('nx_use_iframe', e.target.checked ? 'true' : 'false');
               };
             }
 
