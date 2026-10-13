@@ -3,7 +3,7 @@ import re
 import requests
 
 GITHUB_USER = "whatchamacallitexe"
-MAIN_JS_PATH = "JS/main.js"  # Targeted your JS folder path
+MAIN_JS_PATH = "JS/main.js"
 
 def get_user_repositories(username):
     """Fetch all public repos owned by the user."""
@@ -21,8 +21,8 @@ def get_user_repositories(username):
 
 def discover_games_in_repo(repo_name):
     """
-    Finds games by looking for index.html files in the repository.
-    Handles both root-level games and subfolder games.
+    Scans the repository tree and builds exact URLs pointing directly 
+    to the index.html inside each game's folder.
     """
     token = os.getenv("GITHUB_TOKEN")
     headers = {"Authorization": f"token {token}"} if token else {}
@@ -40,19 +40,20 @@ def discover_games_in_repo(repo_name):
     for item in tree:
         path = item["path"]
         
-        # Look for index.html files that define a game entry point
+        # Look specifically for index.html files
         if item["type"] == "blob" and path.lower().endswith("index.html"):
             parts = path.split('/')
             
             if len(parts) == 1:
-                # Game is at repo root: https://whatchamacallitexe.github.io/repo-name/
+                # Root index.html -> https://whatchamacallitexe.github.io/repo-name/index.html
                 game_id = repo_name.lower()
-                game_url = f"https://{GITHUB_USER}.github.io/{repo_name}/"
+                game_url = f"https://{GITHUB_USER}.github.io/{repo_name}/index.html"
             else:
-                # Game is in a subfolder: https://whatchamacallitexe.github.io/repo-name/folder-name/
+                # Subfolder index.html -> https://whatchamacallitexe.github.io/repo-name/folder-name/index.html
                 folder_name = parts[-2]
                 game_id = folder_name.lower()
-                game_url = f"https://{GITHUB_USER}.github.io/{repo_name}/{folder_name}/"
+                # Points directly to the index.html inside the folder
+                game_url = f"https://{GITHUB_USER}.github.io/{repo_name}/{'/'.join(parts[:-1])}/index.html"
 
             clean_title = game_id.replace('-', ' ').replace('_', ' ').title()
 
@@ -74,7 +75,7 @@ def update_main_js(discovered_games):
     with open(MAIN_JS_PATH, "r", encoding="utf-8") as f:
         content = f.read()
 
-    # Find the _0xData array definition
+    # Find the let _0xData = [...] array block
     pattern = r"(let\s+_0xData\s*=\s*\[)([\s\S]*?)(\];)"
     match = re.search(pattern, content)
     
@@ -84,7 +85,7 @@ def update_main_js(discovered_games):
 
     prefix, existing_array_body, suffix = match.groups()
 
-    # Get already tracked IDs to prevent duplicates
+    # Get existing game IDs to prevent duplicates
     existing_ids = set(re.findall(r'id:\s*["\']([^"\']+)["\']', existing_array_body))
 
     new_entries = []
