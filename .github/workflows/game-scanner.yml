@@ -1,9 +1,9 @@
-name: Scan Games and Update main.js
+name: Scan GitHub Pages Repositories
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Every 24 hours
-  workflow_dispatch:
+    - cron: '0 0 * * *' # Auto-runs every 24 hours
+  workflow_dispatch:      # Manual trigger button in Actions tab
 
 jobs:
   scan-and-update:
@@ -21,14 +21,14 @@ jobs:
       - name: Install dependencies
         run: pip install requests
 
-      - name: Run Game Scanner Script
+      - name: Run Repo Scanner
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python scan_repos.py
 
-      - name: Commit updated main.js
+      - name: Commit updated JS/main.js
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add main.js
-          git diff-index --quiet HEAD || (git commit -m "chore: auto-add new games to _0xData in main.js" && git push)
+          git add JS/main.js
+          git diff-index --quiet HEAD || (git commit -m "chore: auto-update JS/main.js with new games" && git push)
