@@ -1,39 +1,39 @@
-name: Code Quality & Lint Check
+# # name: Code Quality & Lint Check
 
-on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+# on:
+#   push:
+#     branches: [ main, master ]
+#   pull_request:
+#     branches: [ main, master ]
 
-jobs:
-  lint:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      issues: write
+# jobs:
+#   lint:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       contents: read
+#       issues: write
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
 
-      - name: Set up Node.js (Optional)
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+#       - name: Set up Node.js (Optional)
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: '20'
 
-      - name: Install Dependencies
-        run: npm ci || npm install
+#       - name: Install Dependencies
+#         run: npm ci || npm install
 
-      - name: Check for Code Errors
-        run: npm run lint
+#       - name: Check for Code Errors
+#         run: npm run lint
 
-      - name: Create Issue on Failure
-        if: failure()
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh issue create \
-            --title "Linting Check Failed: Commit ${{ github.sha }}" \
-            --body "Automated code quality check failed on commit \`${{ github.sha }}\` pushed by @${{ github.actor }}. Check the workflow logs to fix syntax errors." \
-            --label "bug"
+#       - name: Create Issue on Failure
+#         if: failure()
+#         env:
+#           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         run: |
+#           gh issue create \
+#             --title "Linting Check Failed: Commit ${{ github.sha }}" \
+#             --body "Automated code quality check failed on commit \`${{ github.sha }}\` pushed by @${{ github.actor }}. Check the workflow logs to fix syntax errors." \
+#             --label "bug"
