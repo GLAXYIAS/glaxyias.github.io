@@ -1,1 +1,77 @@
-PLACEHOLDER_WILL_FAIL
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Null X - Settings</title>
+  <link rel="stylesheet" href="CSS/style.css">
+  <link rel="stylesheet" href="themes/themes.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="Games/GameSaveData/auto-save.js"></script>
+</head>
+<body style="background: #0b0512; color: white; padding: 40px 20px; font-family: sans-serif;">
+
+  <div class="settings-standalone-container" style="max-width: 800px; margin: 0 auto; background: rgba(18, 9, 28, 0.95); border: 1px solid #8b00ff; padding: 30px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+      <div>
+        <h1 class="glow" style="margin: 0; font-size: 2.2rem; letter-spacing: 1px; color: #fff;">Settings</h1>
+        <p class="subtitle" style="margin: 5px 0 0; color: #aaa; font-size: 0.95rem;">Personalize your Null_X dashboard</p>
+      </div>
+      <a href="./index.html" style="text-decoration: none; background: rgba(255,255,255,0.06); border: 1px solid rgba(139, 0, 255, 0.4); color: white; padding: 10px 18px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; transition: background 0.2s;" onmouseover="this.style.background='rgba(139, 0, 255, 0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+        <i class="fas fa-arrow-left"></i> Return Home
+      </a>
+    </div>
+
+    <hr class="settings-divider" style="border: 0; height: 1px; background: linear-gradient(to right, #8b00ff, transparent); margin: 20px 0 30px 0;">
+
+    <div class="setting-section" style="margin-bottom: 35px;">
+      <h3 style="color: #a033ff; margin-bottom: 12px; font-size: 1.2rem;"><i class="fas fa-music" style="margin-right: 8px;"></i>Music</h3>
+      <p class="setting-label" style="color: #ccc; font-size: 0.9rem; margin-bottom: 12px;">Background music uses licensed tracks hosted in <code>/audio</code> (HTML5 Audio — no iframes or YouTube).</p>
+      <div style="display: flex; flex-direction: column; gap: 12px; max-width: 420px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <input type="checkbox" id="nx-music-enable" style="cursor: pointer; width: 18px; height: 18px;">
+          <label for="nx-music-enable" style="margin: 0; cursor: pointer; font-size: 0.95rem; color: #ccc;">Enable background music</label>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <input type="checkbox" id="nx-music-mute" style="cursor: pointer; width: 18px; height: 18px;">
+          <label for="nx-music-mute" style="margin: 0; cursor: pointer; font-size: 0.95rem; color: #ccc;">Mute</label>
+        </div>
+        <div>
+          <label for="nx-music-volume" style="display: block; color: #ccc; font-size: 0.9rem; margin-bottom: 6px;">Volume: <span id="nx-music-volume-label">35%</span></label>
+          <input type="range" id="nx-music-volume" min="0" max="100" value="35" style="width: 100%; cursor: pointer;">
+        </div>
+      </div>
+    </div>
+
+    <p style="color:#ff6b6b;">FULL FILE TOO LARGE FOR THIS TOOL CALL — see PASTE_settings.html artifact. Temporary notice only.</p>
+
+    <div class="setting-section" style="margin-bottom: 35px;">
+      <h3 style="color: #a033ff; margin-bottom: 12px; font-size: 1.2rem;"><i class="fas fa-window-restore" style="margin-right: 8px;"></i>Game Display</h3>
+      <div style="display: flex; align-items: flex-start; gap: 10px; margin-top: 10px;">
+        <input type="checkbox" id="toggle-use-iframe" style="cursor: pointer; width: 18px; height: 18px; margin-top: 2px;" checked>
+        <label for="toggle-use-iframe" class="setting-label" style="margin: 0; cursor: pointer; font-size: 0.95rem; color: #ccc; line-height: 1.4;">
+          Launch games inside an iframe (recommended)
+        </label>
+      </div>
+      <div style="margin-top: 12px; padding: 12px 14px; background: rgba(255, 68, 68, 0.08); border: 1px solid rgba(255, 68, 68, 0.35); border-radius: 8px; color: #ffb4b4; font-size: 0.82rem; line-height: 1.45;">
+        <strong style="color:#ff6b6b;">Warning:</strong> Some games (especially Unity / WebGL) <strong>do not work inside iframes</strong>.
+        If a game stays black or never loads, turn this setting <strong>off</strong> so it opens as a normal page instead.
+        Cloaking / about:blank shell only works when iframes are enabled.
+      </div>
+    </div>
+
+    <div class="setting-section" style="margin-bottom: 35px;">
+      <h3 style="color: #a033ff; margin-bottom: 12px; font-size: 1.2rem;"><i class="fas fa-power-off" style="margin-right: 8px;"></i>Startup Environment</h3>
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <input type="checkbox" id="toggle-study-cloak" style="cursor: pointer; width: 18px; height: 18px;">
+        <label for="toggle-study-cloak" class="setting-label" style="margin: 0; cursor: pointer; font-size: 0.95rem; color: #ccc;">
+          Disable Academic Splash Screen on Launch
+        </label>
+      </div>
+    </div>
+
+  <script src="../JS/music.js"></script>
+  <script src="../customcrosshair/loader.js"></script>
+</body>
+</html>
