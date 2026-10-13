@@ -352,11 +352,13 @@ nav {
 
 .game-grid, .games-grid {
   display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(min(160px, 100%), 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
   padding: 0 16px 40px;
   min-height: 200px;
   width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
   box-sizing: border-box;
 }
 
@@ -364,8 +366,12 @@ nav {
   position: relative;
   background: var(--bg-sidebar) !important;
   border: 1px solid var(--border-color) !important;
-  border-radius: 16px;
-  height: 160px;
+  border-radius: 14px;
+  aspect-ratio: 1 / 1;
+  height: auto;
+  width: 100%;
+  max-width: 148px;
+  justify-self: center;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -375,6 +381,26 @@ nav {
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   background-clip: padding-box;
   min-width: 0;
+}
+
+.game-card-img,
+.game-card > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.game-card h3 {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  padding: 6px 8px;
+  font-size: 0.8rem !important;
+  line-height: 1.2;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.85);
 }
 
 .game-card:hover {
@@ -744,12 +770,14 @@ nav {
     font-size: clamp(1.4rem, 5vw, 2rem);
   }
   .game-grid, .games-grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
     padding: 0 12px 32px;
+    max-width: 520px;
   }
   .game-card {
-    height: 140px;
+    height: auto;
+    max-width: 140px;
   }
   .search-bar {
     max-width: none;
