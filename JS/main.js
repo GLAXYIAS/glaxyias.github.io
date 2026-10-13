@@ -314,7 +314,7 @@ let _0xData = [
   { id: "synesthesia", title: "Synesthesia", url: "https://whatchamacallitexe.github.io/pack-i/synesthesia/", desc: "Play Synesthesia online in your browser.", popular: true },
   { id: "temple-of-boom", title: "Temple Of Boom", url: "https://whatchamacallitexe.github.io/pack-c/temple-of-boom/", desc: "Play Temple Of Boom online in your browser.", popular: true },
   { id: "we-become-what-we-behold", title: "We Become What We Behold", url: "https://whatchamacallitexe.github.io/pack-i/we-become-what-we-behold/", desc: "Play We Become What We Behold online in your browser.", popular: true },
-  {
+ {
     id: "backyard-football",
     title: "Backyard Football",
     url: "https://whatchamacallitexe.github.io/pack-a/backyard-football/index.html",
@@ -357,6 +357,7 @@ let _0xData = [
     popular: true
   },
 ];
+
 
 (function mergeGitlabGames() {
   const GL = "https://declineoptionalcookies.gitlab.io";
@@ -1047,10 +1048,10 @@ function renderLibraryGrid(gamesArray) {
   if (!list.length) return;
 
   // Virtual window: only cards near the viewport exist in the DOM
-  const CARD_MIN_W = 160;
-  const CARD_H = 210;
-  const GAP = 14;
+  const GAP = 12;
   const OVERSCAN = 2; // extra rows above/below
+  const TARGET_COLS = 4; // preferred columns on desktop
+  const MAX_CARD = 148; // keep cards smaller / square
 
   const scroller = gameGrid.parentElement || document.documentElement;
   const spacer = document.createElement("div");
@@ -1076,9 +1077,15 @@ function renderLibraryGrid(gamesArray) {
 
   function measure() {
     const width = Math.max(gameGrid.clientWidth || gameGrid.offsetWidth || 600, 200);
-    cols = Math.max(1, Math.floor((width + GAP) / (CARD_MIN_W + GAP)));
+    // Prefer 4 columns; step down on narrow layouts
+    if (width < 520) cols = 2;
+    else if (width < 760) cols = 3;
+    else cols = TARGET_COLS;
+    const colW = (width - GAP * (cols - 1)) / cols;
+    // Square cards, capped so they stay smaller than the old tall tiles
+    window.__nxCardSize = Math.min(MAX_CARD, Math.max(110, colW));
     totalRows = Math.ceil(list.length / cols) || 1;
-    rowH = CARD_H + GAP;
+    rowH = window.__nxCardSize + GAP;
     spacer.style.height = (totalRows * rowH) + "px";
   }
 
@@ -1086,7 +1093,7 @@ function renderLibraryGrid(gamesArray) {
     const card = document.createElement("div");
     card.className = "game-card";
     card.setAttribute("data-game-id", game.id);
-    card.style.cssText = "position:absolute;box-sizing:border-box;margin:0;";
+    card.style.cssText = "position:absolute;box-sizing:border-box;margin:0;overflow:hidden;border-radius:14px;";
 
     const title = String(game.title || "Game");
     if (game.image) {
@@ -1095,6 +1102,7 @@ function renderLibraryGrid(gamesArray) {
       img.alt = "";
       img.loading = "lazy";
       img.decoding = "async";
+      img.style.cssText = "width:100%;height:100%;object-fit:cover;position:absolute;inset:0;";
       img.src = String(game.image);
       card.appendChild(img);
     } else {
@@ -1148,7 +1156,10 @@ function renderLibraryGrid(gamesArray) {
     raf = 0;
     measure();
     const width = Math.max(gameGrid.clientWidth || 600, 200);
-    const colW = (width - GAP * (cols - 1)) / cols;
+    const size = window.__nxCardSize || MAX_CARD;
+    const colW = size;
+    const gridW = cols * size + (cols - 1) * GAP;
+    const xOff = Math.max(0, (width - gridW) / 2);
     const top = scrollTop();
     const offset = gridOffsetTop();
     const relTop = Math.max(0, top - offset);
@@ -1172,9 +1183,9 @@ function renderLibraryGrid(gamesArray) {
           cardPool.set(String(game.id), card);
           windowEl.appendChild(card);
         }
-        card.style.width = colW + "px";
-        card.style.height = CARD_H + "px";
-        card.style.transform = "translate(" + (c * (colW + GAP)) + "px," + (row * rowH) + "px)";
+        card.style.width = size + "px";
+        card.style.height = size + "px";
+        card.style.transform = "translate(" + (xOff + c * (size + GAP)) + "px," + (row * rowH) + "px)";
         card.style.display = "";
       }
     }
