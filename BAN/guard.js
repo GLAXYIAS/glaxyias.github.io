@@ -1,98 +1,96 @@
-// BAN/guard.js
+// BAN/guard.js — ban checks via Cloudflare worker (same API as warnings)
 (async function initSecurityGuard() {
-    console.log("[Security System] Guard active. Connecting to user_roles repository...");
+  const API_BASE = "https://apithingy.jlsniperelite4.workers.dev";
+  const HEADERS = { "Content-Type": "application/json" };
 
-    // Hardcoded project credentials 
-    const SUPABASE_URL = "https://ldojzaikkolrxkiwyqvq.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxkb2p6YWlra29scnhraXd5cXZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMDM2NjksImV4cCI6MjA5NDg3OTY2OX0.CXZf1jaNJ3njQhIWoaYFxuJWx2J0HQ9CPF5imQoxtMw";
-
-    // Capture the logged-in username directly from your header elements
-    let currentUsername = null;
-    const welcomeEl = document.getElementById("welcome-text");
-    
-    if (welcomeEl && welcomeEl.innerText) {
-        currentUsername = welcomeEl.innerText.replace("Hello,", "").trim();
-    }
-    
-    // FIX: Look for 'chatUser' because that is what your site actually uses!
-    if (!currentUsername || currentUsername === "Guest") {
-        currentUsername = localStorage.getItem("chatUser") || localStorage.getItem("nxos_logged_user") || localStorage.getItem("username");
-    }
-
-    console.log("[Security System] Checking access status for:", currentUsername);
-    if (!currentUsername || currentUsername === "Guest") return;
-
+  function currentUsername() {
     try {
-        // FIX: Using fast REST API instead of waiting for a slow CDN script to load
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/user_roles?username=eq.${encodeURIComponent(currentUsername)}&select=is_banned,temp_ban_until,last_action_reason`, {
-            method: 'GET',
-            headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`
-            }
-        });
+      const welcomeEl = document.getElementById("welcome-text");
+      if (welcomeEl && welcomeEl.innerText) {
+        const n = welcomeEl.innerText.replace(/^Hello,\s*/i, "").trim();
+        if (n && n !== "Guest") return n;
+      }
+      return (
+        localStorage.getItem("chatUser") ||
+        localStorage.getItem("nxos_logged_user") ||
+        localStorage.getItem("username") ||
+        ""
+      );
+    } catch (e) {
+      return "";
+    }
+  }
 
-        if (!response.ok) throw new Error("Query fault");
-        
-        const data = await response.json();
+  function unwrapRole(data) {
+    if (!data) return null;
+    if (Array.isArray(data)) return data[0] || null;
+    if (data.roles && Array.isArray(data.roles)) return data.roles[0] || null;
+    if (data.role) return data.role;
+    if (data.error) return null;
+    return data;
+  }
 
-        if (data && data.length > 0) {
-            const userStatus = data[0];
-            const statusString = String(userStatus.is_banned).toUpperCase();
-            const isPermanentlyBanned = (userStatus.is_banned === true || statusString === "TRUE");
-            
-            // Check for temporary bans
-            let isTemporarilyBanned = false;
-            if (userStatus.temp_ban_until) {
-                const expiryTime = new Date(userStatus.temp_ban_until).getTime();
-                if (expiryTime > Date.now()) {
-                    isTemporarilyBanned = true;
-                }
-            }
+  function applySystemLockout(reasonText) {
+    if (document.getElementById("nxos-hard-lock")) return;
+    const overlay = document.createElement("div");
+    overlay.id = "nxos-hard-lock";
+    overlay.className = "nxos-ban-overlay";
+    overlay.innerHTML =
+      '<div class="nxos-ban-box">' +
+      '<div class="nxos-ban-title">ACCESS RESTRICTED</div>' +
+      '<p class="nxos-ban-msg">You\'ve Been BANNED.</p>' +
+      '<div class="nxos-ban-reason-container">' +
+      '<span class="nxos-ban-reason-label">Reason:</span>' +
+      '<p class="nxos-ban-reason-text">' +
+      reasonText +
+      "</p></div></div>";
+    document.body.appendChild(overlay);
+  }
 
-            // If they are banned in any way, lock them out
-            if (isPermanentlyBanned || isTemporarilyBanned) {
-                let banReason = userStatus.last_action_reason || "Access restricted by administration.";
-                
-                // Add expiry date to the screen if it's a temp ban
-                if (isTemporarilyBanned && !isPermanentlyBanned) {
-                    const expiryDate = new Date(userStatus.temp_ban_until).toLocaleString();
-                    banReason = `${banReason} <br><br><span style="color:#ffaa00;">Ban expires at: ${expiryDate}</span>`;
-                }
+  const username = currentUsername();
+  console.log("[Security System] Guard active (Cloudflare). User:", username || "(guest)");
+  if (!username || username === "Guest") return;
 
-                applySystemLockout(banReason);
-            }
-        }
+  try {
+    const response = await fetch(
+      API_BASE + "/user-roles?username=" + encodeURIComponent(username),
+      { method: "GET", headers: HEADERS }
+    );
+    if (!response.ok) {
+      if (response.status === 404) return;
+      console.warn("[Security System] role lookup failed:", response.status);
+      return;
+    }
+    const raw = await response.json();
+    const userStatus = unwrapRole(raw);
+    if (!userStatus) return;
 
-    } catch (err) {
-        console.error("[Security System] Execution exception:", err);
+    const statusString = String(userStatus.is_banned).toUpperCase();
+    const isPermanentlyBanned =
+      userStatus.is_banned === true ||
+      userStatus.is_banned === 1 ||
+      statusString === "TRUE" ||
+      statusString === "1";
+
+    let isTemporarilyBanned = false;
+    if (userStatus.temp_ban_until) {
+      const expiryTime = new Date(userStatus.temp_ban_until).getTime();
+      if (expiryTime > Date.now()) isTemporarilyBanned = true;
     }
 
-    function applySystemLockout(reasonText) {
-        if (document.getElementById("nxos-hard-lock")) return;
-
-        const overlay = document.createElement("div");
-        overlay.id = "nxos-hard-lock";
-        overlay.className = "nxos-ban-overlay";
-
-        overlay.innerHTML = `
-            <div class="nxos-ban-box">
-                <div class="nxos-ban-title">ACCESS RESTRICTED</div>
-                <p class="nxos-ban-msg">You've Been BANNED.</p>
-                <div class="nxos-ban-reason-container">
-                    <span class="nxos-ban-reason-label">Reason:</span>
-                    <p class="nxos-ban-reason-text">${reasonText}</p>
-                </div>
-            </div>
-        `;
-
-        // Blocks dev tools keys to enforce layout lockdown
-        window.addEventListener("keydown", (e) => {
-            if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I")) {
-                e.preventDefault();
-            }
-        });
-
-        document.body.appendChild(overlay);
+    if (isPermanentlyBanned || isTemporarilyBanned) {
+      let banReason =
+        userStatus.last_action_reason || "Access restricted by administration.";
+      if (isTemporarilyBanned && !isPermanentlyBanned) {
+        const expiryDate = new Date(userStatus.temp_ban_until).toLocaleString();
+        banReason +=
+          '<br><br><span style="color:#ffaa00;">Ban expires at: ' +
+          expiryDate +
+          "</span>";
+      }
+      applySystemLockout(banReason);
     }
+  } catch (err) {
+    console.error("[Security System] Execution exception:", err);
+  }
 })();
