@@ -446,6 +446,34 @@ let _0xData = [
     url: "https://whatchamacallitexe.github.io/pack-i/little-alchemy-2/encyclopedia/w/index.html",
     desc: "Play W online in your browser.",
     popular: false
+  },
+  {
+    id: "ballandbrick",
+    title: "Ballandbrick",
+    url: "https://whatchamacallitexe.github.io/pack-a/ballandbrick/index.html",
+    desc: "Play Ballandbrick online in your browser.",
+    popular: false
+  },
+  {
+    id: "banannasim",
+    title: "Banannasim",
+    url: "https://whatchamacallitexe.github.io/pack-a/banannasim/index.html",
+    desc: "Play Banannasim online in your browser.",
+    popular: false
+  },
+  {
+    id: "idle-dice",
+    title: "Idle Dice",
+    url: "https://whatchamacallitexe.github.io/pack-a/idle-dice/index.html",
+    desc: "Play Idle Dice online in your browser.",
+    popular: false
+  },
+  {
+    id: "idlefootball",
+    title: "Idlefootball",
+    url: "https://whatchamacallitexe.github.io/pack-a/idlefootball/index.html",
+    desc: "Play Idlefootball online in your browser.",
+    popular: false
   }
 ];
 
