@@ -356,6 +356,97 @@ let _0xData = [
     desc: "Play Pokemon Black online in your browser.",
     popular: true
   },
+  {
+    id: "ruffle",
+    title: "Ruffle",
+    url: "https://whatchamacallitexe.github.io/pack-a/cubes-2048-io/patch/ruffle/index.html",
+    desc: "Play Ruffle online in your browser.",
+    popular: false
+  },
+  {
+    id: "unity2019",
+    title: "Unity2019",
+    url: "https://whatchamacallitexe.github.io/pack-a/cubes-2048-io/patch/unity2019/index.html",
+    desc: "Play Unity2019 online in your browser.",
+    popular: false
+  },
+  {
+    id: "unity2020",
+    title: "Unity2020",
+    url: "https://whatchamacallitexe.github.io/pack-a/cubes-2048-io/patch/unity2020/index.html",
+    desc: "Play Unity2020 online in your browser.",
+    popular: false
+  },
+  {
+    id: "unity2021",
+    title: "Unity2021",
+    url: "https://whatchamacallitexe.github.io/pack-a/cubes-2048-io/patch/unity2021/index.html",
+    desc: "Play Unity2021 online in your browser.",
+    popular: false
+  },
+  {
+    id: "all",
+    title: "All",
+    url: "https://whatchamacallitexe.github.io/pack-a/minesweeper/all/index.html",
+    desc: "Play All online in your browser.",
+    popular: false
+  },
+  {
+    id: "beginner",
+    title: "Beginner",
+    url: "https://whatchamacallitexe.github.io/pack-a/minesweeper/beginner/index.html",
+    desc: "Play Beginner online in your browser.",
+    popular: false
+  },
+  {
+    id: "intermediate",
+    title: "Intermediate",
+    url: "https://whatchamacallitexe.github.io/pack-a/minesweeper/intermediate/index.html",
+    desc: "Play Intermediate online in your browser.",
+    popular: false
+  },
+  {
+    id: "unity",
+    title: "Unity",
+    url: "https://whatchamacallitexe.github.io/pack-a/wordle-unlimited/patch/unity/index.html",
+    desc: "Play Unity online in your browser.",
+    popular: false
+  },
+  {
+    id: "sharing",
+    title: "Sharing",
+    url: "https://whatchamacallitexe.github.io/pack-b/adventures-with-anxiety/sharing/index.html",
+    desc: "Play Sharing online in your browser.",
+    popular: false
+  },
+  {
+    id: "waflash",
+    title: "Waflash",
+    url: "https://whatchamacallitexe.github.io/pack-b/fancy-pants-2/patch/waflash/index.html",
+    desc: "Play Waflash online in your browser.",
+    popular: false
+  },
+  {
+    id: "build",
+    title: "Build",
+    url: "https://whatchamacallitexe.github.io/pack-d/duck-life-2/Build/index.html",
+    desc: "Play Build online in your browser.",
+    popular: false
+  },
+  {
+    id: "encyclopedia",
+    title: "Encyclopedia",
+    url: "https://whatchamacallitexe.github.io/pack-i/little-alchemy-2/encyclopedia/index.html",
+    desc: "Play Encyclopedia online in your browser.",
+    popular: false
+  },
+  {
+    id: "w",
+    title: "W",
+    url: "https://whatchamacallitexe.github.io/pack-i/little-alchemy-2/encyclopedia/w/index.html",
+    desc: "Play W online in your browser.",
+    popular: false
+  }
 ];
 
 
