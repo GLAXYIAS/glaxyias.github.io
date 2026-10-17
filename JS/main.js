@@ -2049,6 +2049,727 @@ let _0xData = [
     url: "https://whatchamacallitexe.github.io/pack-k/system-breach/index.html",
     desc: "Play System Breach online in your browser.",
     popular: false
+  },
+  {
+    id: "samurai-shodown-2",
+    title: "Samurai Shodown 2",
+    url: "https://whatchamacallitexe.github.io/pack-k/samurai-shodown-2/index.html",
+    desc: "Play Samurai Shodown 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "samurai-shodown-3",
+    title: "Samurai Shodown 3",
+    url: "https://whatchamacallitexe.github.io/pack-k/samurai-shodown-3/index.html",
+    desc: "Play Samurai Shodown 3 online in your browser.",
+    popular: false
+  },
+  {
+    id: "samurai-shodown",
+    title: "Samurai Shodown",
+    url: "https://whatchamacallitexe.github.io/pack-k/samurai-shodown/index.html",
+    desc: "Play Samurai Shodown online in your browser.",
+    popular: false
+  },
+  {
+    id: "shantae",
+    title: "Shantae",
+    url: "https://whatchamacallitexe.github.io/pack-k/shantae/index.html",
+    desc: "Play Shantae online in your browser.",
+    popular: false
+  },
+  {
+    id: "shift-2",
+    title: "Shift 2",
+    url: "https://whatchamacallitexe.github.io/pack-k/shift-2/index.html",
+    desc: "Play Shift 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "shredmill",
+    title: "Shredmill",
+    url: "https://whatchamacallitexe.github.io/pack-k/shredmill/index.html",
+    desc: "Play Shredmill online in your browser.",
+    popular: false
+  },
+  {
+    id: "sift-heads-cartels-act-2",
+    title: "Sift Heads Cartels Act 2",
+    url: "https://whatchamacallitexe.github.io/pack-k/sift-heads-cartels-act-2/index.html",
+    desc: "Play Sift Heads Cartels Act 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "sift-heads-cartels-act-3",
+    title: "Sift Heads Cartels Act 3",
+    url: "https://whatchamacallitexe.github.io/pack-k/sift-heads-cartels-act-3/index.html",
+    desc: "Play Sift Heads Cartels Act 3 online in your browser.",
+    popular: false
+  },
+  {
+    id: "sift-heads-cartels",
+    title: "Sift Heads Cartels",
+    url: "https://whatchamacallitexe.github.io/pack-k/sift-heads-cartels/index.html",
+    desc: "Play Sift Heads Cartels online in your browser.",
+    popular: false
+  },
+  {
+    id: "sift-heads-world",
+    title: "Sift Heads World",
+    url: "https://whatchamacallitexe.github.io/pack-k/sift-heads-world/index.html",
+    desc: "Play Sift Heads World online in your browser.",
+    popular: false
+  },
+  {
+    id: "silhouette-showdown",
+    title: "Silhouette Showdown",
+    url: "https://whatchamacallitexe.github.io/pack-k/silhouette-showdown/index.html",
+    desc: "Play Silhouette Showdown online in your browser.",
+    popular: false
+  },
+  {
+    id: "six-cats-under",
+    title: "Six Cats Under",
+    url: "https://whatchamacallitexe.github.io/pack-k/six-cats-under/index.html",
+    desc: "Play Six Cats Under online in your browser.",
+    popular: false
+  },
+  {
+    id: "skibidi-in-the-backrooms",
+    title: "Skibidi In The Backrooms",
+    url: "https://whatchamacallitexe.github.io/pack-k/skibidi-in-the-backrooms/index.html",
+    desc: "Play Skibidi In The Backrooms online in your browser.",
+    popular: false
+  },
+  {
+    id: "skibidi-toilet-io",
+    title: "Skibidi Toilet Io",
+    url: "https://whatchamacallitexe.github.io/pack-k/skibidi-toilet-io/index.html",
+    desc: "Play Skibidi Toilet Io online in your browser.",
+    popular: false
+  },
+  {
+    id: "slenderman-the-8-pages",
+    title: "Slenderman The 8 Pages",
+    url: "https://whatchamacallitexe.github.io/pack-k/slenderman-the-8-pages/index.html",
+    desc: "Play Slenderman The 8 Pages online in your browser.",
+    popular: false
+  },
+  {
+    id: "slide-in-the-woods",
+    title: "Slide In The Woods",
+    url: "https://whatchamacallitexe.github.io/pack-k/slide-in-the-woods/index.html",
+    desc: "Play Slide In The Woods online in your browser.",
+    popular: false
+  },
+  {
+    id: "slither-io",
+    title: "Slither Io",
+    url: "https://whatchamacallitexe.github.io/pack-k/slither-io/index.html",
+    desc: "Play Slither Io online in your browser.",
+    popular: false
+  },
+  {
+    id: "slope-2-player",
+    title: "Slope 2 Player",
+    url: "https://whatchamacallitexe.github.io/pack-k/slope-2-player/index.html",
+    desc: "Play Slope 2 Player online in your browser.",
+    popular: false
+  },
+  {
+    id: "slow-roads",
+    title: "Slow Roads",
+    url: "https://whatchamacallitexe.github.io/pack-k/slow-roads/index.html",
+    desc: "Play Slow Roads online in your browser.",
+    popular: false
+  },
+  {
+    id: "snakelike",
+    title: "Snakelike",
+    url: "https://whatchamacallitexe.github.io/pack-k/snakelike/index.html",
+    desc: "Play Snakelike online in your browser.",
+    popular: false
+  },
+  {
+    id: "snow-road",
+    title: "Snow Road",
+    url: "https://whatchamacallitexe.github.io/pack-k/snow-road/index.html",
+    desc: "Play Snow Road online in your browser.",
+    popular: false
+  },
+  {
+    id: "soccer-bros",
+    title: "Soccer Bros",
+    url: "https://whatchamacallitexe.github.io/pack-k/soccer-bros/index.html",
+    desc: "Play Soccer Bros online in your browser.",
+    popular: false
+  },
+  {
+    id: "solar-smash",
+    title: "Solar Smash",
+    url: "https://whatchamacallitexe.github.io/pack-k/solar-smash/index.html",
+    desc: "Play Solar Smash online in your browser.",
+    popular: false
+  },
+  {
+    id: "sonic-3-and-knuckles",
+    title: "Sonic 3 And Knuckles",
+    url: "https://whatchamacallitexe.github.io/pack-k/sonic-3-and-knuckles/index.html",
+    desc: "Play Sonic 3 And Knuckles online in your browser.",
+    popular: false
+  },
+  {
+    id: "sonic-advance-2",
+    title: "Sonic Advance 2",
+    url: "https://whatchamacallitexe.github.io/pack-k/sonic-advance-2/index.html",
+    desc: "Play Sonic Advance 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "sonic-advance-3",
+    title: "Sonic Advance 3",
+    url: "https://whatchamacallitexe.github.io/pack-k/sonic-advance-3/index.html",
+    desc: "Play Sonic Advance 3 online in your browser.",
+    popular: false
+  },
+  {
+    id: "sonic-advance",
+    title: "Sonic Advance",
+    url: "https://whatchamacallitexe.github.io/pack-k/sonic-advance/index.html",
+    desc: "Play Sonic Advance online in your browser.",
+    popular: false
+  },
+  {
+    id: "sonic-and-knuckles",
+    title: "Sonic And Knuckles",
+    url: "https://whatchamacallitexe.github.io/pack-k/sonic-and-knuckles/index.html",
+    desc: "Play Sonic And Knuckles online in your browser.",
+    popular: false
+  },
+  {
+    id: "sonic-and-the-falling-star",
+    title: "Sonic And The Falling Star",
+    url: "https://whatchamacallitexe.github.io/pack-k/sonic-and-the-falling-star/index.html",
+    desc: "Play Sonic And The Falling Star online in your browser.",
+    popular: false
+  },
+  {
+    id: "sonic-battle",
+    title: "Sonic Battle",
+    url: "https://whatchamacallitexe.github.io/pack-k/sonic-battle/index.html",
+    desc: "Play Sonic Battle online in your browser.",
+    popular: false
+  },
+  {
+    id: "sonic-exe-original",
+    title: "Sonic Exe Original",
+    url: "https://whatchamacallitexe.github.io/pack-k/sonic-exe-original/index.html",
+    desc: "Play Sonic Exe Original online in your browser.",
+    popular: false
+  },
+  {
+    id: "sonic-revert",
+    title: "Sonic Revert",
+    url: "https://whatchamacallitexe.github.io/pack-k/sonic-revert/index.html",
+    desc: "Play Sonic Revert online in your browser.",
+    popular: false
+  },
+  {
+    id: "sonic-robo-blast-2",
+    title: "Sonic Robo Blast 2",
+    url: "https://whatchamacallitexe.github.io/pack-k/sonic-robo-blast-2/index.html",
+    desc: "Play Sonic Robo Blast 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "sonic-spinball",
+    title: "Sonic Spinball",
+    url: "https://whatchamacallitexe.github.io/pack-k/sonic-spinball/index.html",
+    desc: "Play Sonic Spinball online in your browser.",
+    popular: false
+  },
+  {
+    id: "sonic-the-hedgehog-2",
+    title: "Sonic The Hedgehog 2",
+    url: "https://whatchamacallitexe.github.io/pack-k/sonic-the-hedgehog-2/index.html",
+    desc: "Play Sonic The Hedgehog 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "sonic-the-hedgehog",
+    title: "Sonic The Hedgehog",
+    url: "https://whatchamacallitexe.github.io/pack-k/sonic-the-hedgehog/index.html",
+    desc: "Play Sonic The Hedgehog online in your browser.",
+    popular: false
+  },
+  {
+    id: "sonny",
+    title: "Sonny",
+    url: "https://whatchamacallitexe.github.io/pack-k/sonny/index.html",
+    desc: "Play Sonny online in your browser.",
+    popular: false
+  },
+  {
+    id: "space-is-key-xmas",
+    title: "Space Is Key Xmas",
+    url: "https://whatchamacallitexe.github.io/pack-k/space-is-key-xmas/index.html",
+    desc: "Play Space Is Key Xmas online in your browser.",
+    popular: false
+  },
+  {
+    id: "space-wars-battleground",
+    title: "Space Wars Battleground",
+    url: "https://whatchamacallitexe.github.io/pack-k/space-wars-battleground/index.html",
+    desc: "Play Space Wars Battleground online in your browser.",
+    popular: false
+  },
+  {
+    id: "spacebar-clicker",
+    title: "Spacebar Clicker",
+    url: "https://whatchamacallitexe.github.io/pack-k/spacebar-clicker/index.html",
+    desc: "Play Spacebar Clicker online in your browser.",
+    popular: false
+  },
+  {
+    id: "speed-per-click",
+    title: "Speed Per Click",
+    url: "https://whatchamacallitexe.github.io/pack-k/speed-per-click/index.html",
+    desc: "Play Speed Per Click online in your browser.",
+    popular: false
+  },
+  {
+    id: "spelunky-classic-hd",
+    title: "Spelunky Classic Hd",
+    url: "https://whatchamacallitexe.github.io/pack-k/spelunky-classic-hd/index.html",
+    desc: "Play Spelunky Classic Hd online in your browser.",
+    popular: false
+  },
+  {
+    id: "sports-heads-ice-hockey",
+    title: "Sports Heads Ice Hockey",
+    url: "https://whatchamacallitexe.github.io/pack-k/sports-heads-ice-hockey/index.html",
+    desc: "Play Sports Heads Ice Hockey online in your browser.",
+    popular: false
+  },
+  {
+    id: "sprunked",
+    title: "Sprunked",
+    url: "https://whatchamacallitexe.github.io/pack-k/sprunked/index.html",
+    desc: "Play Sprunked online in your browser.",
+    popular: false
+  },
+  {
+    id: "sprunki-clicker",
+    title: "Sprunki Clicker",
+    url: "https://whatchamacallitexe.github.io/pack-k/sprunki-clicker/index.html",
+    desc: "Play Sprunki Clicker online in your browser.",
+    popular: false
+  },
+  {
+    id: "sprunki-pyra-mixed",
+    title: "Sprunki Pyra Mixed",
+    url: "https://whatchamacallitexe.github.io/pack-k/sprunki-pyra-mixed/index.html",
+    desc: "Play Sprunki Pyra Mixed online in your browser.",
+    popular: false
+  },
+  {
+    id: "sprunki",
+    title: "Sprunki",
+    url: "https://whatchamacallitexe.github.io/pack-k/sprunki/index.html",
+    desc: "Play Sprunki online in your browser.",
+    popular: false
+  },
+  {
+    id: "squid-playground",
+    title: "Squid Playground",
+    url: "https://whatchamacallitexe.github.io/pack-k/squid-playground/index.html",
+    desc: "Play Squid Playground online in your browser.",
+    popular: false
+  },
+  {
+    id: "stackball-io",
+    title: "Stackball Io",
+    url: "https://whatchamacallitexe.github.io/pack-k/stackball-io/index.html",
+    desc: "Play Stackball Io online in your browser.",
+    popular: false
+  },
+  {
+    id: "star-fox-64",
+    title: "Star Fox 64",
+    url: "https://whatchamacallitexe.github.io/pack-k/star-fox-64/index.html",
+    desc: "Play Star Fox 64 online in your browser.",
+    popular: false
+  },
+  {
+    id: "star-fox",
+    title: "Star Fox",
+    url: "https://whatchamacallitexe.github.io/pack-k/star-fox/index.html",
+    desc: "Play Star Fox online in your browser.",
+    popular: false
+  },
+  {
+    id: "station-141",
+    title: "Station 141",
+    url: "https://whatchamacallitexe.github.io/pack-k/station-141/index.html",
+    desc: "Play Station 141 online in your browser.",
+    popular: false
+  },
+  {
+    id: "station-meltdown",
+    title: "Station Meltdown",
+    url: "https://whatchamacallitexe.github.io/pack-k/station-meltdown/index.html",
+    desc: "Play Station Meltdown online in your browser.",
+    popular: false
+  },
+  {
+    id: "steal-a-brainrot-duel",
+    title: "Steal A Brainrot Duel",
+    url: "https://whatchamacallitexe.github.io/pack-k/steal-a-brainrot-duel/index.html",
+    desc: "Play Steal A Brainrot Duel online in your browser.",
+    popular: false
+  },
+  {
+    id: "steal-a-brainrot",
+    title: "Steal A Brainrot",
+    url: "https://whatchamacallitexe.github.io/pack-k/steal-a-brainrot/index.html",
+    desc: "Play Steal A Brainrot online in your browser.",
+    popular: false
+  },
+  {
+    id: "steep-descent",
+    title: "Steep Descent",
+    url: "https://whatchamacallitexe.github.io/pack-k/steep-descent/index.html",
+    desc: "Play Steep Descent online in your browser.",
+    popular: false
+  },
+  {
+    id: "stick-archers",
+    title: "Stick Archers",
+    url: "https://whatchamacallitexe.github.io/pack-k/stick-archers/index.html",
+    desc: "Play Stick Archers online in your browser.",
+    popular: false
+  },
+  {
+    id: "stick-duels",
+    title: "Stick Duels",
+    url: "https://whatchamacallitexe.github.io/pack-k/stick-duels/index.html",
+    desc: "Play Stick Duels online in your browser.",
+    popular: false
+  },
+  {
+    id: "stick-slasher",
+    title: "Stick Slasher",
+    url: "https://whatchamacallitexe.github.io/pack-k/stick-slasher/index.html",
+    desc: "Play Stick Slasher online in your browser.",
+    popular: false
+  },
+  {
+    id: "stick-with-it",
+    title: "Stick With It",
+    url: "https://whatchamacallitexe.github.io/pack-k/stick-with-it/index.html",
+    desc: "Play Stick With It online in your browser.",
+    popular: false
+  },
+  {
+    id: "stickman-and-guns",
+    title: "Stickman And Guns",
+    url: "https://whatchamacallitexe.github.io/pack-k/stickman-and-guns/index.html",
+    desc: "Play Stickman And Guns online in your browser.",
+    popular: false
+  },
+  {
+    id: "stickman-clash",
+    title: "Stickman Clash",
+    url: "https://whatchamacallitexe.github.io/pack-k/stickman-clash/index.html",
+    desc: "Play Stickman Clash online in your browser.",
+    popular: false
+  },
+  {
+    id: "stickman-gta-city",
+    title: "Stickman Gta City",
+    url: "https://whatchamacallitexe.github.io/pack-k/stickman-gta-city/index.html",
+    desc: "Play Stickman Gta City online in your browser.",
+    popular: false
+  },
+  {
+    id: "stickman-kingdom-clash",
+    title: "Stickman Kingdom Clash",
+    url: "https://whatchamacallitexe.github.io/pack-k/stickman-kingdom-clash/index.html",
+    desc: "Play Stickman Kingdom Clash online in your browser.",
+    popular: false
+  },
+  {
+    id: "stickman-kombat-2d",
+    title: "Stickman Kombat 2D",
+    url: "https://whatchamacallitexe.github.io/pack-k/stickman-kombat-2d/index.html",
+    desc: "Play Stickman Kombat 2D online in your browser.",
+    popular: false
+  },
+  {
+    id: "stone-grass-mowing-simulator",
+    title: "Stone Grass Mowing Simulator",
+    url: "https://whatchamacallitexe.github.io/pack-k/stone-grass-mowing-simulator/index.html",
+    desc: "Play Stone Grass Mowing Simulator online in your browser.",
+    popular: false
+  },
+  {
+    id: "street-fighter-2",
+    title: "Street Fighter 2",
+    url: "https://whatchamacallitexe.github.io/pack-k/street-fighter-2/index.html",
+    desc: "Play Street Fighter 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "street-fighter-alpha-2",
+    title: "Street Fighter Alpha 2",
+    url: "https://whatchamacallitexe.github.io/pack-k/street-fighter-alpha-2/index.html",
+    desc: "Play Street Fighter Alpha 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "street-fighter-alpha-3",
+    title: "Street Fighter Alpha 3",
+    url: "https://whatchamacallitexe.github.io/pack-k/street-fighter-alpha-3/index.html",
+    desc: "Play Street Fighter Alpha 3 online in your browser.",
+    popular: false
+  },
+  {
+    id: "street-fighter-alpha",
+    title: "Street Fighter Alpha",
+    url: "https://whatchamacallitexe.github.io/pack-k/street-fighter-alpha/index.html",
+    desc: "Play Street Fighter Alpha online in your browser.",
+    popular: false
+  },
+  {
+    id: "streets-of-rage-2",
+    title: "Streets Of Rage 2",
+    url: "https://whatchamacallitexe.github.io/pack-k/streets-of-rage-2/index.html",
+    desc: "Play Streets Of Rage 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "streets-of-rage-3",
+    title: "Streets Of Rage 3",
+    url: "https://whatchamacallitexe.github.io/pack-k/streets-of-rage-3/index.html",
+    desc: "Play Streets Of Rage 3 online in your browser.",
+    popular: false
+  },
+  {
+    id: "streets-of-rage",
+    title: "Streets Of Rage",
+    url: "https://whatchamacallitexe.github.io/pack-k/streets-of-rage/index.html",
+    desc: "Play Streets Of Rage online in your browser.",
+    popular: false
+  },
+  {
+    id: "strikeforce-kitty-2",
+    title: "Strikeforce Kitty 2",
+    url: "https://whatchamacallitexe.github.io/pack-k/strikeforce-kitty-2/index.html",
+    desc: "Play Strikeforce Kitty 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "strikeforce-kitty-last-stand",
+    title: "Strikeforce Kitty Last Stand",
+    url: "https://whatchamacallitexe.github.io/pack-k/strikeforce-kitty-last-stand/index.html",
+    desc: "Play Strikeforce Kitty Last Stand online in your browser.",
+    popular: false
+  },
+  {
+    id: "strikeforce-kitty-league",
+    title: "Strikeforce Kitty League",
+    url: "https://whatchamacallitexe.github.io/pack-k/strikeforce-kitty-league/index.html",
+    desc: "Play Strikeforce Kitty League online in your browser.",
+    popular: false
+  },
+  {
+    id: "strikeforce-kitty",
+    title: "Strikeforce Kitty",
+    url: "https://whatchamacallitexe.github.io/pack-k/strikeforce-kitty/index.html",
+    desc: "Play Strikeforce Kitty online in your browser.",
+    popular: false
+  },
+  {
+    id: "striker-dummies",
+    title: "Striker Dummies",
+    url: "https://whatchamacallitexe.github.io/pack-k/striker-dummies/index.html",
+    desc: "Play Striker Dummies online in your browser.",
+    popular: false
+  },
+  {
+    id: "subway-surfers-buenos-aires",
+    title: "Subway Surfers Buenos Aires",
+    url: "https://whatchamacallitexe.github.io/pack-k/subway-surfers-buenos-aires/index.html",
+    desc: "Play Subway Surfers Buenos Aires online in your browser.",
+    popular: false
+  },
+  {
+    id: "subway-surfers-st-petersburg",
+    title: "Subway Surfers St Petersburg",
+    url: "https://whatchamacallitexe.github.io/pack-k/subway-surfers-st-petersburg/index.html",
+    desc: "Play Subway Surfers St Petersburg online in your browser.",
+    popular: false
+  },
+  {
+    id: "subway-surfers-winter-holiday",
+    title: "Subway Surfers Winter Holiday",
+    url: "https://whatchamacallitexe.github.io/pack-k/subway-surfers-winter-holiday/index.html",
+    desc: "Play Subway Surfers Winter Holiday online in your browser.",
+    popular: false
+  },
+  {
+    id: "sugar-sugar-2",
+    title: "Sugar Sugar 2",
+    url: "https://whatchamacallitexe.github.io/pack-k/sugar-sugar-2/index.html",
+    desc: "Play Sugar Sugar 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "summer-rider-3d",
+    title: "Summer Rider 3D",
+    url: "https://whatchamacallitexe.github.io/pack-k/summer-rider-3d/index.html",
+    desc: "Play Summer Rider 3D online in your browser.",
+    popular: false
+  },
+  {
+    id: "super-dark-deception",
+    title: "Super Dark Deception",
+    url: "https://whatchamacallitexe.github.io/pack-k/super-dark-deception/index.html",
+    desc: "Play Super Dark Deception online in your browser.",
+    popular: false
+  },
+  {
+    id: "super-drome-bugs",
+    title: "Super Drome Bugs",
+    url: "https://whatchamacallitexe.github.io/pack-k/super-drome-bugs/index.html",
+    desc: "Play Super Drome Bugs online in your browser.",
+    popular: false
+  },
+  {
+    id: "super-hot",
+    title: "Super Hot",
+    url: "https://whatchamacallitexe.github.io/pack-k/super-hot/index.html",
+    desc: "Play Super Hot online in your browser.",
+    popular: false
+  },
+  {
+    id: "super-kid-adventure",
+    title: "Super Kid Adventure",
+    url: "https://whatchamacallitexe.github.io/pack-k/super-kid-adventure/index.html",
+    desc: "Play Super Kid Adventure online in your browser.",
+    popular: false
+  },
+  {
+    id: "super-liquid-soccer",
+    title: "Super Liquid Soccer",
+    url: "https://whatchamacallitexe.github.io/pack-k/super-liquid-soccer/index.html",
+    desc: "Play Super Liquid Soccer online in your browser.",
+    popular: false
+  },
+  {
+    id: "super-mario-63-redux",
+    title: "Super Mario 63 Redux",
+    url: "https://whatchamacallitexe.github.io/pack-k/super-mario-63-redux/index.html",
+    desc: "Play Super Mario 63 Redux online in your browser.",
+    popular: false
+  },
+  {
+    id: "super-mario-64",
+    title: "Super Mario 64",
+    url: "https://whatchamacallitexe.github.io/pack-k/super-mario-64/index.html",
+    desc: "Play Super Mario 64 online in your browser.",
+    popular: false
+  },
+  {
+    id: "super-mario-bros-2",
+    title: "Super Mario Bros 2",
+    url: "https://whatchamacallitexe.github.io/pack-k/super-mario-bros-2/index.html",
+    desc: "Play Super Mario Bros 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "super-mario-bros-3",
+    title: "Super Mario Bros 3",
+    url: "https://whatchamacallitexe.github.io/pack-k/super-mario-bros-3/index.html",
+    desc: "Play Super Mario Bros 3 online in your browser.",
+    popular: false
+  },
+  {
+    id: "super-mario-construct",
+    title: "Super Mario Construct",
+    url: "https://whatchamacallitexe.github.io/pack-k/super-mario-construct/index.html",
+    desc: "Play Super Mario Construct online in your browser.",
+    popular: false
+  },
+  {
+    id: "super-mario-kart",
+    title: "Super Mario Kart",
+    url: "https://whatchamacallitexe.github.io/pack-k/super-mario-kart/index.html",
+    desc: "Play Super Mario Kart online in your browser.",
+    popular: false
+  },
+  {
+    id: "super-metroid",
+    title: "Super Metroid",
+    url: "https://whatchamacallitexe.github.io/pack-k/super-metroid/index.html",
+    desc: "Play Super Metroid online in your browser.",
+    popular: false
+  },
+  {
+    id: "super-onion-boy-2",
+    title: "Super Onion Boy 2",
+    url: "https://whatchamacallitexe.github.io/pack-k/super-onion-boy-2/index.html",
+    desc: "Play Super Onion Boy 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "super-smash-bros",
+    title: "Super Smash Bros",
+    url: "https://whatchamacallitexe.github.io/pack-k/super-smash-bros/index.html",
+    desc: "Play Super Smash Bros online in your browser.",
+    popular: false
+  },
+  {
+    id: "super-smash-flash-2",
+    title: "Super Smash Flash 2",
+    url: "https://whatchamacallitexe.github.io/pack-k/super-smash-flash-2/index.html",
+    desc: "Play Super Smash Flash 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "super-smash-flash-v08",
+    title: "Super Smash Flash V08",
+    url: "https://whatchamacallitexe.github.io/pack-k/super-smash-flash-v08/index.html",
+    desc: "Play Super Smash Flash V08 online in your browser.",
+    popular: false
+  },
+  {
+    id: "supercold",
+    title: "Supercold",
+    url: "https://whatchamacallitexe.github.io/pack-k/supercold/index.html",
+    desc: "Play Supercold online in your browser.",
+    popular: false
+  },
+  {
+    id: "supreme-duelist-2019",
+    title: "Supreme Duelist 2019",
+    url: "https://whatchamacallitexe.github.io/pack-k/supreme-duelist-2019/index.html",
+    desc: "Play Supreme Duelist 2019 online in your browser.",
+    popular: false
+  },
+  {
+    id: "survival-race-v2",
+    title: "Survival Race V2",
+    url: "https://whatchamacallitexe.github.io/pack-k/survival-race-v2/index.html",
+    desc: "Play Survival Race V2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "swords-and-sandals-2",
+    title: "Swords And Sandals 2",
+    url: "https://whatchamacallitexe.github.io/pack-k/swords-and-sandals-2/index.html",
+    desc: "Play Swords And Sandals 2 online in your browser.",
+    popular: false
   }
 ];
 
