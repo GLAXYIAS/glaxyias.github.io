@@ -6844,6 +6844,69 @@ let _0xData = [
     url: "https://whatchamacallitexe.github.io/pack-v/iq-ball/index.html",
     desc: "Play Iq Ball online in your browser.",
     popular: false
+  },
+  {
+    id: "car-drawing",
+    title: "Car Drawing",
+    url: "https://whatchamacallitexe.github.io/pack-o/car-drawing/index.html",
+    desc: "Play Car Drawing online in your browser.",
+    popular: false
+  },
+  {
+    id: "cartoon-network-table-tennis-ultimate-tournament",
+    title: "Cartoon Network Table Tennis Ultimate Tournament",
+    url: "https://whatchamacallitexe.github.io/pack-o/cartoon-network-table-tennis-ultimate-tournament/index.html",
+    desc: "Play Cartoon Network Table Tennis Ultimate Tournament online in your browser.",
+    popular: false
+  },
+  {
+    id: "circlo-o-2",
+    title: "Circlo O 2",
+    url: "https://whatchamacallitexe.github.io/pack-o/circlo-o-2/index.html",
+    desc: "Play Circlo O 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "bald-decomp",
+    title: "Bald Decomp",
+    url: "https://whatchamacallitexe.github.io/pack-v/bald-decomp/index.html",
+    desc: "Play Bald Decomp online in your browser.",
+    popular: false
+  },
+  {
+    id: "cannon-fodder",
+    title: "Cannon Fodder",
+    url: "https://whatchamacallitexe.github.io/pack-w/cannon-fodder/index.html",
+    desc: "Play Cannon Fodder online in your browser.",
+    popular: false
+  },
+  {
+    id: "castle-wars-modern",
+    title: "Castle Wars Modern",
+    url: "https://whatchamacallitexe.github.io/pack-w/castle-wars-modern/index.html",
+    desc: "Play Castle Wars Modern online in your browser.",
+    popular: false
+  },
+  {
+    id: "chrono-trigger",
+    title: "Chrono Trigger",
+    url: "https://whatchamacallitexe.github.io/pack-w/chrono-trigger/index.html",
+    desc: "Play Chrono Trigger online in your browser.",
+    popular: false
+  },
+  {
+    id: "color-water-sort-3d",
+    title: "Color Water Sort 3D",
+    url: "https://whatchamacallitexe.github.io/pack-w/color-water-sort-3d/index.html",
+    desc: "Play Color Water Sort 3D online in your browser.",
+    popular: false
+  },
+  {
+    id: "crunch-ball-3000",
+    title: "Crunch Ball 3000",
+    url: "https://whatchamacallitexe.github.io/pack-w/crunch-ball-3000/index.html",
+    desc: "Play Crunch Ball 3000 online in your browser.",
+    popular: false
   }
 ];
 
