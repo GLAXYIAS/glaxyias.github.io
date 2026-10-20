@@ -1,18 +1,14 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-  <base href="https://cdn.jsdelivr.net/gh/web-ports/clover-pit@main/">
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>CloverPit</title>
-  <link rel="shortcut icon" href="TemplateData/favicon.ico">
-  <link rel="stylesheet" href="TemplateData/style.css">
+  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/web-ports/clover-pit@main/TemplateData/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/web-ports/clover-pit@main/TemplateData/style.css">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes">
   <style>
-    html, body {
-      margin: 0; padding: 0; width: 100%; height: 100%;
-      overflow: hidden; background: #231F20;
-    }
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #231F20; }
     #nx-error {
       display: none; position: fixed; inset: 0; z-index: 999999;
       background: #0a0a0a; color: #eee; font-family: system-ui, sans-serif;
@@ -21,8 +17,7 @@
     #nx-error h1 { color: #ff5555; margin-top: 0; }
     #nx-error code {
       display: block; background: #1a1a1a; padding: 12px; border-radius: 8px;
-      white-space: pre-wrap; word-break: break-word; margin: 12px 0;
-      border: 1px solid #333;
+      white-space: pre-wrap; word-break: break-word; margin: 12px 0; border: 1px solid #333;
     }
     #nx-error a { color: #8b5cf6; }
     #nx-error .tips { color: #aaa; line-height: 1.6; }
@@ -33,18 +28,13 @@
     <h1>CloverPit could not start</h1>
     <code id="nx-error-msg"></code>
     <div class="tips">
-      <p><strong>This game requires WebGL 2</strong> (Unity WebGL). If you see a WebGL error:</p>
-      <ul>
-        <li>Use Chrome / Edge / Firefox (not some school locked browsers)</li>
-        <li>Enable hardware acceleration: chrome://settings/system</li>
-        <li>Try chrome://flags → search WebGL → enable</li>
-        <li>On school devices WebGL 2 is often blocked — nothing we can fix in code</li>
-      </ul>
+      <p>If you see <strong>429</strong> or <strong>magic word</strong> errors, the CDN rate-limited the download. Wait a minute and refresh.</p>
+      <p>This game needs <strong>WebGL 2</strong> and about <strong>90 MB</strong> of downloads.</p>
       <p><a href="/">← Back to Null X</a></p>
     </div>
   </div>
 
-  <div id="loading-text" style="color:white;font-size:32px;font-family:cursive;text-align:center;margin-top:20px;">
+  <div id="loading-text" style="color:white;font-size:28px;font-family:system-ui,sans-serif;text-align:center;margin-top:20px;">
     LOADING...
   </div>
 
@@ -61,12 +51,29 @@
 
   <script>
   (function () {
-    const loadingText = document.querySelector("#loading-text");
-    const canvas = document.querySelector("#unity-canvas");
-    const loadingBar = document.querySelector("#unity-loading-bar");
-    const progressBarFull = document.querySelector("#unity-progress-bar-full");
-    const totalMB = "86.96";
-    let loadedBytes = 0;
+    var loadingText = document.querySelector("#loading-text");
+    var canvas = document.querySelector("#unity-canvas");
+    var loadingBar = document.querySelector("#unity-loading-bar");
+    var progressBarFull = document.querySelector("#unity-progress-bar-full");
+    var totalBytesExpected = 91200000;
+    var loadedBytes = 0;
+
+    // Multiple mirrors — jsDelivr rate-limits (429) under parallel load
+    var BASES = [
+      "https://fastly.jsdelivr.net/gh/web-ports/clover-pit@main/",
+      "https://cdn.jsdelivr.net/gh/web-ports/clover-pit@main/",
+      "https://gcore.jsdelivr.net/gh/web-ports/clover-pit@main/",
+      "https://raw.githubusercontent.com/web-ports/clover-pit/main/"
+    ];
+
+    var EXPECTED = {
+      "Build/CloverPit.data.part1": 20866662,
+      "Build/CloverPit.data.part2": 20866662,
+      "Build/CloverPit.data.part3": 4268778,
+      "Build/CloverPit.wasm.part1": 20866662,
+      "Build/CloverPit.wasm.part2": 20866662,
+      "Build/CloverPit.wasm.part3": 3444922
+    };
 
     function showFatal(message) {
       console.error("[CloverPit]", message);
@@ -74,112 +81,142 @@
         loadingText.textContent = "FAILED TO LOAD";
         loadingText.style.color = "#ff4444";
       }
-      const box = document.getElementById("nx-error");
-      const msg = document.getElementById("nx-error-msg");
+      var box = document.getElementById("nx-error");
+      var msg = document.getElementById("nx-error-msg");
       if (box && msg) {
         msg.textContent = String(message || "Unknown error");
         box.style.display = "block";
-      }
-      const w = document.querySelector("#unity-warning");
-      if (w) {
-        w.style.display = "block";
-        w.style.background = "#ff0000";
-        w.style.color = "#fff";
-        w.textContent = String(message || "Error");
       }
     }
 
     function detectWebGL() {
       try {
-        const c = document.createElement("canvas");
+        var c = document.createElement("canvas");
         if (c.getContext("webgl2")) return 2;
         if (c.getContext("webgl") || c.getContext("experimental-webgl")) return 1;
       } catch (e) {}
       return 0;
     }
 
-    const webglLevel = detectWebGL();
+    var webglLevel = detectWebGL();
     if (webglLevel < 2) {
-      showFatal(
-        webglLevel === 1
-          ? "Your browser only has WebGL 1. CloverPit requires WebGL 2.\n\nEnable hardware acceleration or try a different browser. School-managed devices often block WebGL 2."
-          : "WebGL is not available in this browser.\n\nEnable hardware acceleration (chrome://settings/system) or use Chrome/Edge/Firefox on a non-locked device."
-      );
+      showFatal(webglLevel === 1
+        ? "WebGL 1 only — CloverPit needs WebGL 2. Enable hardware acceleration or use another browser."
+        : "WebGL not available. Enable hardware acceleration (chrome://settings/system).");
       return;
     }
 
-    async function fetchWithProgress(url) {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error("HTTP " + response.status + " for " + url);
-      const reader = response.body.getReader();
-      const chunks = [];
-      let received = 0;
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        received += value.length;
-        loadedBytes += value.length;
-        chunks.push(value);
-        loadingText.textContent =
-          "LOADING... " + (loadedBytes / (1024 * 1024)).toFixed(2) + " MB / " + totalMB + " MB";
-      }
-      const full = new Uint8Array(received);
-      let offset = 0;
-      for (const chunk of chunks) {
-        full.set(chunk, offset);
-        offset += chunk.length;
-      }
-      return full.buffer;
+    function sleep(ms) {
+      return new Promise(function (r) { setTimeout(r, ms); });
     }
 
-    async function mergeFiles(fileParts, mimeType) {
-      const buffers = await Promise.all(fileParts.map((p) => fetchWithProgress(p)));
-      return URL.createObjectURL(new Blob(buffers, { type: mimeType }));
+    async function fetchOne(path, expectedSize) {
+      var lastErr = null;
+      for (var b = 0; b < BASES.length; b++) {
+        var url = BASES[b] + path;
+        for (var attempt = 0; attempt < 3; attempt++) {
+          try {
+            loadingText.textContent = "Downloading " + path + " (mirror " + (b + 1) + ")...";
+            var response = await fetch(url, { cache: "force-cache" });
+            if (response.status === 429) {
+              lastErr = new Error("429 rate limit on " + url);
+              await sleep(1500 * (attempt + 1));
+              continue;
+            }
+            if (!response.ok) {
+              lastErr = new Error("HTTP " + response.status + " for " + url);
+              continue;
+            }
+            var ctype = (response.headers.get("content-type") || "").toLowerCase();
+            if (ctype.indexOf("text/html") !== -1) {
+              lastErr = new Error("Got HTML instead of binary for " + url);
+              continue;
+            }
+            var buf = await response.arrayBuffer();
+            var u8 = new Uint8Array(buf);
+            // Detect rate-limit / error text bodies (e.g. starts with "429:")
+            if (u8.length >= 4 && u8[0] === 0x34 && u8[1] === 0x32 && u8[2] === 0x39) {
+              lastErr = new Error("CDN returned 429 body for " + url);
+              await sleep(1500 * (attempt + 1));
+              continue;
+            }
+            if (expectedSize && Math.abs(u8.length - expectedSize) > 1024) {
+              lastErr = new Error("Size mismatch for " + path + ": got " + u8.length + " expected ~" + expectedSize);
+              continue;
+            }
+            loadedBytes += u8.length;
+            loadingText.textContent =
+              "LOADING... " + (loadedBytes / (1024 * 1024)).toFixed(1) + " MB / ~87 MB";
+            return buf;
+          } catch (e) {
+            lastErr = e;
+            await sleep(800 * (attempt + 1));
+          }
+        }
+      }
+      throw lastErr || new Error("Failed to download " + path);
     }
 
-    function getParts(file, start, end) {
-      const parts = [];
-      for (let i = start; i <= end; i++) parts.push(file + ".part" + i);
-      return parts;
+    async function mergeParts(prefix, count, mimeType, isWasm) {
+      var buffers = [];
+      // Sequential to avoid jsDelivr 429s from parallel requests
+      for (var i = 1; i <= count; i++) {
+        var path = prefix + ".part" + i;
+        buffers.push(await fetchOne(path, EXPECTED[path]));
+      }
+      var blob = new Blob(buffers, { type: mimeType });
+      if (isWasm) {
+        var head = new Uint8Array(buffers[0].slice(0, 4));
+        // WASM magic: 00 61 73 6d
+        if (!(head[0] === 0x00 && head[1] === 0x61 && head[2] === 0x73 && head[3] === 0x6d)) {
+          throw new Error(
+            "Merged WASM is corrupt (bad magic " +
+            Array.from(head).map(function (x) { return x.toString(16); }).join(" ") +
+            "). CDN likely rate-limited. Wait 1–2 minutes and refresh."
+          );
+        }
+      }
+      return URL.createObjectURL(blob);
     }
 
     (async function () {
       try {
-        const [dataUrl, wasmUrl] = await Promise.all([
-          mergeFiles(getParts("Build/CloverPit.data", 1, 3), "application/octet-stream"),
-          mergeFiles(getParts("Build/CloverPit.wasm", 1, 3), "application/wasm"),
-        ]);
+        // Sequential: data then wasm (less parallel pressure on CDN)
+        var dataUrl = await mergeParts("Build/CloverPit.data", 3, "application/octet-stream", false);
+        var wasmUrl = await mergeParts("Build/CloverPit.wasm", 3, "application/wasm", true);
 
-        const config = {
+        var activeBase = BASES[0];
+        var config = {
           arguments: [],
           dataUrl: dataUrl,
-          frameworkUrl: "Build/CloverPit.framework.js",
+          frameworkUrl: activeBase + "Build/CloverPit.framework.js",
           codeUrl: wasmUrl,
-          streamingAssetsUrl: "StreamingAssets",
+          streamingAssetsUrl: activeBase + "StreamingAssets",
           companyName: "Panik Arcade",
           productName: "CloverPit",
           productVersion: "1.3",
-          showBanner: function () {},
+          showBanner: function () {}
         };
 
         loadingBar.style.display = "block";
+        loadingText.textContent = "Starting Unity...";
 
         await new Promise(function (resolve, reject) {
-          const script = document.createElement("script");
-          script.src = "Build/CloverPit.loader.js";
+          var script = document.createElement("script");
+          script.src = activeBase + "Build/CloverPit.loader.js";
           script.onload = resolve;
           script.onerror = function () {
-            reject(new Error("Could not load CloverPit.loader.js from CDN"));
+            reject(new Error("Could not load Unity loader from CDN"));
           };
           document.body.appendChild(script);
         });
 
         if (typeof createUnityInstance !== "function") {
-          throw new Error("createUnityInstance() missing after loader load");
+          throw new Error("createUnityInstance() missing");
         }
 
         await createUnityInstance(canvas, config, function (progress) {
-          const percent = Math.round(progress * 100);
+          var percent = Math.round(progress * 100);
           progressBarFull.style.width = percent + "%";
           loadingText.textContent = "STARTING GAME... " + percent + "%";
         });
