@@ -384,6 +384,52 @@ let suppressPmRefresh = false;       // guards against the poller clobbering a j
 // Image marker used to embed an attached image inside a text message row
 const IMG_MARKER = "[[IMG]]";
 
+// --- PER-AUTHOR BUBBLE STYLES (visible to everyone) ---
+// The messages table only stores id/username/content/created_at, so the author's
+// chosen bubble style travels inside the content as a trailing marker (same
+// convention as IMG_MARKER and [ANNOUNCEMENT]) and is stripped before display.
+const BUBBLE_STYLE_VALUES = ["default", "neon", "glass", "terminal", "gradient", "minimal"];
+// Leading/trailing blanks are part of the match so stripping a marker can't
+// leave a double space behind (also below: markers mid-text).
+const BUBBLE_MARKER_RE = /[ \t]*\[\[BUBBLE:([a-z-]+)\]\][ \t]*/g;
+
+/** Allowlist lookup: anything we don't ship CSS for decays to 'default'. */
+function normalizeBubbleStyle(value) {
+    const name = String(value == null ? '' : value).toLowerCase().trim();
+    return BUBBLE_STYLE_VALUES.indexOf(name) === -1 ? 'default' : name;
+}
+
+/** Appends the chosen style to outgoing content (no-op for 'default'). */
+function encodeBubbleStyle(content, styleName) {
+    const text = stripBubbleMarkers(content);
+    const name = normalizeBubbleStyle(styleName === undefined ? getSavedBubbleStyle() : styleName);
+    return name === 'default' ? text : `${text} [[BUBBLE:${name}]]`;
+}
+
+function stripBubbleMarkers(content) {
+    return String(content == null ? '' : content)
+        .replace(BUBBLE_MARKER_RE, (match, _name, offset, whole) => {
+            // The marker swallows its own surrounding blanks; put a single space
+            // back when it sat between two words so "hi there" can't become "hithere".
+            const before = whole.charAt(offset - 1);
+            const after = whole.charAt(offset + match.length);
+            return before && after ? ' ' : '';
+        })
+        .trimEnd();
+}
+
+/** Reads the style a message was sent with; last marker wins. */
+function bubbleStyleFromContent(content) {
+    const found = String(content == null ? '' : content).match(/\[\[BUBBLE:([a-z-]+)\]\]/g);
+    if (!found || !found.length) return 'default';
+    const marker = found[found.length - 1];
+    return normalizeBubbleStyle(marker.slice(marker.indexOf(':') + 1, -2));
+}
+
+function splitBubbleContent(content) {
+    return { text: stripBubbleMarkers(content), style: bubbleStyleFromContent(content) };
+}
+
 function usernameToHandle(username) {
     return '@' + String(username).toLowerCase().replace(/\s+/g, '_');
 }
@@ -1458,7 +1504,7 @@ window.initializeChatEngine = async function() {
                                 ${pm.is_read ? '' : '<span style="color:#ff4444; margin-left:8px;">UNREAD</span>'}
                             </div>
                             <div style="color: #e0e0e0; margin-top: 4px; font-size: 14px;">
-                                ${renderMessageBody(pm.content)}
+                                ${renderMessageBody(stripBubbleMarkers(pm.content))}
                             </div>
                         </div>
                         <button style="background: #ff4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 10px; cursor: pointer;" 
@@ -1533,7 +1579,7 @@ window.initializeChatEngine = async function() {
                 if (msg.id && !knownPmIds.has(msg.id)) {
                     if (!isFirstPmSync && !isMine && notificationsEnabled()) {
                         const who = msg.sender_username || otherHandle || 'Someone';
-                        const preview = String(msg.content || '').replace(/^\[\[IMG\]\].*/, '[Image]').slice(0, 120);
+                        const preview = stripBubbleMarkers(msg.content).replace(/^\[\[IMG\]\].*/, '[Image]').slice(0, 120);
                         showChatNotification('PM from ' + who, preview || 'New private message', 'pm-' + msg.id);
                     }
                     knownPmIds.add(msg.id);
@@ -1600,11 +1646,12 @@ window.initializeChatEngine = async function() {
 
         list.innerHTML = convos.map(c => {
             const lastMsg = c.messages[c.messages.length - 1];
+            const lastText = lastMsg ? stripBubbleMarkers(lastMsg.content) : '';
             const previewText = !lastMsg
                 ? 'Say hello!'
-                : (lastMsg.content.startsWith(IMG_MARKER)
+                : (lastText.startsWith(IMG_MARKER)
                     ? '📷 Image'
-                    : lastMsg.content);
+                    : lastText);
             const isActive = c.otherHandle === activePmHandle;
             return `
                 <div class="pm-convo-item ${isActive ? 'active-convo' : ''}" data-handle="${c.otherHandle.replace(/"/g, '&quot;')}">
@@ -1671,7 +1718,11 @@ window.initializeChatEngine = async function() {
                 return false;
             })(msg);
             const time = new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const bubbleExtra = isMine && getSavedBubbleStyle() !== 'default' ? ` style-${getSavedBubbleStyle()}` : '';
+            const parsed = splitBubbleContent(msg.content);
+            const authorStyle = parsed.style !== 'default'
+                ? parsed.style
+                : (isMine ? normalizeBubbleStyle(getSavedBubbleStyle()) : 'default');
+            const bubbleExtra = authorStyle !== 'default' ? ` style-${authorStyle}` : '';
             return `
                 <div class="message-wrapper ${isMine ? 'my-message-wrapper' : 'other-message-wrapper'}">
                     <img src="${pfpForHandle(isMine ? myHandleGlobal : otherHandle)}" class="chat-pfp" alt="">
@@ -1681,7 +1732,7 @@ window.initializeChatEngine = async function() {
                             <span class="message-timestamp">${time}</span>
                         </div>
                         <div class="message-text-bubble ${isMine ? 'my-bubble-color' : 'other-bubble-color'}${bubbleExtra}">
-                            ${renderMessageBody(msg.content)}
+                            ${renderMessageBody(parsed.text)}
                         </div>
                     </div>
                 </div>
@@ -1719,6 +1770,7 @@ window.initializeChatEngine = async function() {
                 ? crypto.randomUUID()
                 : ('pm_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10));
             const createdAt = new Date().toISOString();
+            const encodedContent = encodeBubbleStyle(content);
             const res = await fetch(`${TURSO_API_BASE}/private-messages`, {
                 method: 'POST',
                 headers: TURSO_HEADERS,
@@ -1726,7 +1778,7 @@ window.initializeChatEngine = async function() {
                     id: id,
                     sender_username: myUsernameGlobal,
                     recipient_username: recipientUsername,
-                    content: content,
+                    content: encodedContent,
                     is_read: 0,
                     created_at: createdAt
                 })
@@ -1748,7 +1800,7 @@ window.initializeChatEngine = async function() {
                 id: id,
                 sender_username: myUsernameGlobal,
                 recipient_username: recipientUsername,
-                content: content,
+                content: encodedContent,
                 is_read: 0,
                 created_at: createdAt
             });
@@ -2031,7 +2083,7 @@ window.initializeChatEngine = async function() {
                     if (knownMessageIds.has(msg.id)) return;
                     const fromMe = msg.username && msg.username.trim().toLowerCase() === myUsernameGlobal.trim().toLowerCase();
                     if (!fromMe && msg.content !== "Message Was Deleted By Owner") {
-                        const preview = String(msg.content || '').replace(/^\[\[IMG\]\].*/, '[Image]').slice(0, 120);
+                        const preview = stripBubbleMarkers(msg.content).replace(/^\[\[IMG\]\].*/, '[Image]').slice(0, 120);
                         showChatNotification(msg.username || 'Someone', preview || 'New message in general chat', 'general-' + msg.id);
                     }
                 });
@@ -2079,11 +2131,17 @@ window.initializeChatEngine = async function() {
                 }
 
                 const isMine = msg.username === user;
-                const bubbleExtraClass = (isMine && myBubbleStyle !== 'default') ? ` style-${myBubbleStyle}` : '';
-                const isAnnouncement = typeof msg.content === 'string' && msg.content.startsWith('[ANNOUNCEMENT]');
+                const parsed = splitBubbleContent(msg.content);
+                // Messages sent before styles were shared carry no marker; for my own
+                // rows fall back to the style saved in this browser.
+                const authorStyle = parsed.style !== 'default'
+                    ? parsed.style
+                    : (isMine && myBubbleStyle !== 'default' ? normalizeBubbleStyle(myBubbleStyle) : 'default');
+                const bubbleExtraClass = authorStyle !== 'default' ? ` style-${authorStyle}` : '';
+                const isAnnouncement = parsed.text.startsWith('[ANNOUNCEMENT]');
                 const bodyHtml = isAnnouncement
-                    ? `<strong style="color:#3aa0ff;">📢 ${msg.content.replace('[ANNOUNCEMENT]', '').trim()}</strong>`
-                    : renderMessageBody(msg.content);
+                    ? `<strong style="color:#3aa0ff;">📢 ${parsed.text.replace('[ANNOUNCEMENT]', '').trim()}</strong>`
+                    : renderMessageBody(parsed.text);
 
                 const div = document.createElement('div');
                 div.className = `message-wrapper ${isMine ? 'my-message-wrapper' : 'other-message-wrapper'}`;
@@ -2126,11 +2184,11 @@ window.initializeChatEngine = async function() {
         };
     }
 
-    async function sendPlainMessage(content) {
+    async function sendPlainMessage(content, styleName) {
         await fetch(`${TURSO_API_BASE}/messages`, {
             method: 'POST',
             headers: TURSO_HEADERS,
-            body: JSON.stringify({ username: user, content })
+            body: JSON.stringify({ username: user, content: encodeBubbleStyle(content, styleName) })
         });
     }
 
@@ -2180,7 +2238,7 @@ window.initializeChatEngine = async function() {
                     pendingImageDataUrl = null;
                     document.getElementById('attach-image-input').value = '';
                     document.getElementById('image-preview-bar')?.classList.add('hidden');
-                    await sendPlainMessage(imgPayload);
+                    await sendPlainMessage(imgPayload, 'default');
                 }
 
                 if (val) {
