@@ -1,6 +1,5 @@
 /**
  * Force Unity / WebGL games to open in a real tab (not the about:blank iframe).
- * Unity WebGL often fails with "Unity failed to start" inside sandboxed iframes.
  */
 (function () {
   'use strict';
@@ -8,15 +7,32 @@
   var UNITY_IDS = {
     cloverpit: 1,
     'clover-pit': 1,
+    b_ft: 1,
+    bulletforce: 1,
+    'bullet-force': 1,
+    superhot: 1,
+    ultrakill: 1,
+    slope: 1,
+    'slope-plus': 1,
+    backrooms: 1,
+    trucksim: 1,
+    carcrash3: 1,
+    arenaking: 1,
+    AOC: 1,
+    BSV: 1,
+    ASRP: 1,
     'crazy-cattle-3d': 1,
     'cannon-balls-3d': 1
   };
 
   function isUnityGame(gameId, game) {
-    if (UNITY_IDS[String(gameId || '').toLowerCase()]) return true;
+    var id = String(gameId || '').toLowerCase();
+    if (UNITY_IDS[gameId] || UNITY_IDS[id]) return true;
     if (!game) return false;
     var blob = [game.id, game.title, game.url, game.desc].join(' ').toLowerCase();
     if (blob.indexOf('unity') !== -1) return true;
+    if (blob.indexOf('bullet force') !== -1) return true;
+    if (blob.indexOf('/games/bulletforce') !== -1) return true;
     return false;
   }
 
@@ -44,7 +60,7 @@
 
       if (isUnityGame(gameId, game) || (game && game.noIframe)) {
         var src = resolveSrc(game) || (location.origin + '/Games/' + gameId + '/index.html');
-        console.log('[unity-fix] Opening Unity game directly (no iframe):', src);
+        console.log('[unity-fix] Opening Unity game directly:', src);
         var w = window.open(src, '_blank');
         if (!w) window.location.href = src;
         return;
@@ -52,7 +68,7 @@
       return orig.apply(this, arguments);
     };
     window.launchGame.__unityPatched = true;
-    console.log('[unity-fix] launchGame patched for Unity titles');
+    console.log('[unity-fix] launchGame patched');
     return true;
   }
 
