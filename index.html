@@ -1,1 +1,40 @@
-SEE_ARTIFACTS
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Null X</title>
+<script>
+(async function () {
+  try {
+    var urls = [
+      "https://cdn.jsdelivr.net/gh/GLAXYIAS/glaxyias.github.io@e2bb269427/index.html",
+      "https://raw.githubusercontent.com/GLAXYIAS/glaxyias.github.io/e2bb269427/index.html"
+    ];
+    var html = null;
+    for (var i = 0; i < urls.length; i++) {
+      try {
+        var r = await fetch(urls[i]);
+        if (r.ok) { html = await r.text(); break; }
+      } catch (e) {}
+    }
+    if (!html) throw new Error("Could not load site shell");
+    if (html.indexOf("unity-fix.js") === -1) {
+      html = html.replace(
+        /(<script[^>]*main\.js[^>]*><\/script>)/i,
+        "$1\n  <script src=\"JS/unity-fix.js\"><\/script>"
+      );
+    }
+    document.open();
+    document.write(html);
+    document.close();
+  } catch (e) {
+    document.body.innerHTML = "<h1>Site restore failed</h1><p>" + e + "</p>" +
+      "<p>Paste artifacts/site-index.html over index.html on GitHub.</p>";
+  }
+})();
+</script>
+</head>
+<body style="background:#000;color:#fff;font-family:sans-serif;padding:40px">
+Loading Null X…
+</body>
+</html>
