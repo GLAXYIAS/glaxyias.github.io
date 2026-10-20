@@ -6907,6 +6907,1287 @@ let _0xData = [
     url: "https://whatchamacallitexe.github.io/pack-w/crunch-ball-3000/index.html",
     desc: "Play Crunch Ball 3000 online in your browser.",
     popular: false
+  },
+  {
+    id: "archimedes",
+    title: "Archimedes",
+    url: "https://whatchamacallitexe.github.io/eagler/archimedes/index.html",
+    desc: "Play Archimedes online in your browser.",
+    popular: false
+  },
+  {
+    id: "astra",
+    title: "Astra",
+    url: "https://whatchamacallitexe.github.io/eagler/astra/index.html",
+    desc: "Play Astra online in your browser.",
+    popular: false
+  },
+  {
+    id: "codercraft",
+    title: "Codercraft",
+    url: "https://whatchamacallitexe.github.io/eagler/codercraft/index.html",
+    desc: "Play Codercraft online in your browser.",
+    popular: false
+  },
+  {
+    id: "dragonx-gui",
+    title: "Dragonx Gui",
+    url: "https://whatchamacallitexe.github.io/eagler/dragonx-gui/index.html",
+    desc: "Play Dragonx Gui online in your browser.",
+    popular: false
+  },
+  {
+    id: "dragonx-v2",
+    title: "Dragonx V2",
+    url: "https://whatchamacallitexe.github.io/eagler/dragonx-v2/index.html",
+    desc: "Play Dragonx V2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "dragonx-v3",
+    title: "Dragonx V3",
+    url: "https://whatchamacallitexe.github.io/eagler/dragonx-v3/index.html",
+    desc: "Play Dragonx V3 online in your browser.",
+    popular: false
+  },
+  {
+    id: "eagler-forge",
+    title: "Eagler Forge",
+    url: "https://whatchamacallitexe.github.io/eagler/eagler-forge/index.html",
+    desc: "Play Eagler Forge online in your browser.",
+    popular: false
+  },
+  {
+    id: "eagler-reborn",
+    title: "Eagler Reborn",
+    url: "https://whatchamacallitexe.github.io/eagler/eagler-reborn/index.html",
+    desc: "Play Eagler Reborn online in your browser.",
+    popular: false
+  },
+  {
+    id: "eaglercraft-1.11.2",
+    title: "Eaglercraft 1.11.2",
+    url: "https://whatchamacallitexe.github.io/eagler/eaglercraft-1.11.2/index.html",
+    desc: "Play Eaglercraft 1.11.2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "eaglercraft-26-2",
+    title: "Eaglercraft 26 2",
+    url: "https://whatchamacallitexe.github.io/eagler/eaglercraft-26-2/index.html",
+    desc: "Play Eaglercraft 26 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "eaglercraft-26.3",
+    title: "Eaglercraft 26.3",
+    url: "https://whatchamacallitexe.github.io/eagler/eaglercraft-26.3/index.html",
+    desc: "Play Eaglercraft 26.3 online in your browser.",
+    popular: false
+  },
+  {
+    id: "eaglercraft-lite",
+    title: "Eaglercraft Lite",
+    url: "https://whatchamacallitexe.github.io/eagler/eaglercraft-lite/index.html",
+    desc: "Play Eaglercraft Lite online in your browser.",
+    popular: false
+  },
+  {
+    id: "eaglercraft-nebula",
+    title: "Eaglercraft Nebula",
+    url: "https://whatchamacallitexe.github.io/eagler/eaglercraft-nebula/index.html",
+    desc: "Play Eaglercraft Nebula online in your browser.",
+    popular: false
+  },
+  {
+    id: "eaglercraft-odd-future",
+    title: "Eaglercraft Odd Future",
+    url: "https://whatchamacallitexe.github.io/eagler/eaglercraft-odd-future/index.html",
+    desc: "Play Eaglercraft Odd Future online in your browser.",
+    popular: false
+  },
+  {
+    id: "eaglercraft-shadow",
+    title: "Eaglercraft Shadow",
+    url: "https://whatchamacallitexe.github.io/eagler/eaglercraft-shadow/index.html",
+    desc: "Play Eaglercraft Shadow online in your browser.",
+    popular: false
+  },
+  {
+    id: "eaglercraft-ultimate",
+    title: "Eaglercraft Ultimate",
+    url: "https://whatchamacallitexe.github.io/eagler/eaglercraft-ultimate/index.html",
+    desc: "Play Eaglercraft Ultimate online in your browser.",
+    popular: false
+  },
+  {
+    id: "eaglercraft-winston-horror",
+    title: "Eaglercraft Winston Horror",
+    url: "https://whatchamacallitexe.github.io/eagler/eaglercraft-winston-horror/index.html",
+    desc: "Play Eaglercraft Winston Horror online in your browser.",
+    popular: false
+  },
+  {
+    id: "eaglercraftx-1-16",
+    title: "Eaglercraftx 1 16",
+    url: "https://whatchamacallitexe.github.io/eagler/eaglercraftx-1-16/index.html",
+    desc: "Play Eaglercraftx 1 16 online in your browser.",
+    popular: false
+  },
+  {
+    id: "eaglercraftx-1-20-6",
+    title: "Eaglercraftx 1 20 6",
+    url: "https://whatchamacallitexe.github.io/eagler/eaglercraftx-1-20-6/index.html",
+    desc: "Play Eaglercraftx 1 20 6 online in your browser.",
+    popular: false
+  },
+  {
+    id: "eaglercraftz-1.20",
+    title: "Eaglercraftz 1.20",
+    url: "https://whatchamacallitexe.github.io/eagler/eaglercraftz-1.20/index.html",
+    desc: "Play Eaglercraftz 1.20 online in your browser.",
+    popular: false
+  },
+  {
+    id: "eaglerforge-intl",
+    title: "Eaglerforge Intl",
+    url: "https://whatchamacallitexe.github.io/eagler/eaglerforge-intl/index.html",
+    desc: "Play Eaglerforge Intl online in your browser.",
+    popular: false
+  },
+  {
+    id: "eaglymc-1.20",
+    title: "Eaglymc 1.20",
+    url: "https://whatchamacallitexe.github.io/eagler/eaglymc-1.20/index.html",
+    desc: "Play Eaglymc 1.20 online in your browser.",
+    popular: false
+  },
+  {
+    id: "eb-nextgen",
+    title: "Eb Nextgen",
+    url: "https://whatchamacallitexe.github.io/eagler/eb-nextgen/index.html",
+    desc: "Play Eb Nextgen online in your browser.",
+    popular: false
+  },
+  {
+    id: "eclient-1.5.2",
+    title: "Eclient 1.5.2",
+    url: "https://whatchamacallitexe.github.io/eagler/eclient-1.5.2/index.html",
+    desc: "Play Eclient 1.5.2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "eclipse",
+    title: "Eclipse",
+    url: "https://whatchamacallitexe.github.io/eagler/eclipse/index.html",
+    desc: "Play Eclipse online in your browser.",
+    popular: false
+  },
+  {
+    id: "explore",
+    title: "Explore",
+    url: "https://whatchamacallitexe.github.io/eagler/explore/index.html",
+    desc: "Play Explore online in your browser.",
+    popular: false
+  },
+  {
+    id: "flame",
+    title: "Flame",
+    url: "https://whatchamacallitexe.github.io/eagler/flame/index.html",
+    desc: "Play Flame online in your browser.",
+    popular: false
+  },
+  {
+    id: "fuchsiax",
+    title: "Fuchsiax",
+    url: "https://whatchamacallitexe.github.io/eagler/fuchsiax/index.html",
+    desc: "Play Fuchsiax online in your browser.",
+    popular: false
+  },
+  {
+    id: "ghost-1.12",
+    title: "Ghost 1.12",
+    url: "https://whatchamacallitexe.github.io/eagler/ghost-1.12/index.html",
+    desc: "Play Ghost 1.12 online in your browser.",
+    popular: false
+  },
+  {
+    id: "gx",
+    title: "Gx",
+    url: "https://whatchamacallitexe.github.io/eagler/gx/index.html",
+    desc: "Play Gx online in your browser.",
+    popular: false
+  },
+  {
+    id: "eagler",
+    title: "Eagler",
+    url: "https://whatchamacallitexe.github.io/eagler/index.html",
+    desc: "Play Eagler online in your browser.",
+    popular: false
+  },
+  {
+    id: "jmocraft",
+    title: "Jmocraft",
+    url: "https://whatchamacallitexe.github.io/eagler/jmocraft/index.html",
+    desc: "Play Jmocraft online in your browser.",
+    popular: false
+  },
+  {
+    id: "justin",
+    title: "Justin",
+    url: "https://whatchamacallitexe.github.io/eagler/justin/index.html",
+    desc: "Play Justin online in your browser.",
+    popular: false
+  },
+  {
+    id: "kerosene",
+    title: "Kerosene",
+    url: "https://whatchamacallitexe.github.io/eagler/kerosene/index.html",
+    desc: "Play Kerosene online in your browser.",
+    popular: false
+  },
+  {
+    id: "kone",
+    title: "Kone",
+    url: "https://whatchamacallitexe.github.io/eagler/kone/index.html",
+    desc: "Play Kone online in your browser.",
+    popular: false
+  },
+  {
+    id: "kozmo",
+    title: "Kozmo",
+    url: "https://whatchamacallitexe.github.io/eagler/kozmo/index.html",
+    desc: "Play Kozmo online in your browser.",
+    popular: false
+  },
+  {
+    id: "lambda",
+    title: "Lambda",
+    url: "https://whatchamacallitexe.github.io/eagler/lambda/index.html",
+    desc: "Play Lambda online in your browser.",
+    popular: false
+  },
+  {
+    id: "larpc-1.12",
+    title: "Larpc 1.12",
+    url: "https://whatchamacallitexe.github.io/eagler/larpc-1.12/index.html",
+    desc: "Play Larpc 1.12 online in your browser.",
+    popular: false
+  },
+  {
+    id: "larpc-1.14",
+    title: "Larpc 1.14",
+    url: "https://whatchamacallitexe.github.io/eagler/larpc-1.14/index.html",
+    desc: "Play Larpc 1.14 online in your browser.",
+    popular: false
+  },
+  {
+    id: "lumine",
+    title: "Lumine",
+    url: "https://whatchamacallitexe.github.io/eagler/lumine/index.html",
+    desc: "Play Lumine online in your browser.",
+    popular: false
+  },
+  {
+    id: "mega",
+    title: "Mega",
+    url: "https://whatchamacallitexe.github.io/eagler/mega/index.html",
+    desc: "Play Mega online in your browser.",
+    popular: false
+  },
+  {
+    id: "moonlight",
+    title: "Moonlight",
+    url: "https://whatchamacallitexe.github.io/eagler/moonlight/index.html",
+    desc: "Play Moonlight online in your browser.",
+    popular: false
+  },
+  {
+    id: "myven",
+    title: "Myven",
+    url: "https://whatchamacallitexe.github.io/eagler/myven/index.html",
+    desc: "Play Myven online in your browser.",
+    popular: false
+  },
+  {
+    id: "n0va",
+    title: "N0Va",
+    url: "https://whatchamacallitexe.github.io/eagler/n0va/index.html",
+    desc: "Play N0Va online in your browser.",
+    popular: false
+  },
+  {
+    id: "nit",
+    title: "Nit",
+    url: "https://whatchamacallitexe.github.io/eagler/nit/index.html",
+    desc: "Play Nit online in your browser.",
+    popular: false
+  },
+  {
+    id: "nova",
+    title: "Nova",
+    url: "https://whatchamacallitexe.github.io/eagler/nova/index.html",
+    desc: "Play Nova online in your browser.",
+    popular: false
+  },
+  {
+    id: "official-1.12.2-wasm",
+    title: "Official 1.12.2 Wasm",
+    url: "https://whatchamacallitexe.github.io/eagler/official-1.12.2-wasm/index.html",
+    desc: "Play Official 1.12.2 Wasm online in your browser.",
+    popular: false
+  },
+  {
+    id: "official-1.3",
+    title: "Official 1.3",
+    url: "https://whatchamacallitexe.github.io/eagler/official-1.3/index.html",
+    desc: "Play Official 1.3 online in your browser.",
+    popular: false
+  },
+  {
+    id: "official-1.5.2",
+    title: "Official 1.5.2",
+    url: "https://whatchamacallitexe.github.io/eagler/official-1.5.2/index.html",
+    desc: "Play Official 1.5.2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "official-1.8-international",
+    title: "Official 1.8 International",
+    url: "https://whatchamacallitexe.github.io/eagler/official-1.8-international/index.html",
+    desc: "Play Official 1.8 International online in your browser.",
+    popular: false
+  },
+  {
+    id: "official-1.8-shaders",
+    title: "Official 1.8 Shaders",
+    url: "https://whatchamacallitexe.github.io/eagler/official-1.8-shaders/index.html",
+    desc: "Play Official 1.8 Shaders online in your browser.",
+    popular: false
+  },
+  {
+    id: "official-1.8.8-wasm",
+    title: "Official 1.8.8 Wasm",
+    url: "https://whatchamacallitexe.github.io/eagler/official-1.8.8-wasm/index.html",
+    desc: "Play Official 1.8.8 Wasm online in your browser.",
+    popular: false
+  },
+  {
+    id: "official-1.8.8",
+    title: "Official 1.8.8",
+    url: "https://whatchamacallitexe.github.io/eagler/official-1.8.8/index.html",
+    desc: "Play Official 1.8.8 online in your browser.",
+    popular: false
+  },
+  {
+    id: "official-indev",
+    title: "Official Indev",
+    url: "https://whatchamacallitexe.github.io/eagler/official-indev/index.html",
+    desc: "Play Official Indev online in your browser.",
+    popular: false
+  },
+  {
+    id: "pi",
+    title: "Pi",
+    url: "https://whatchamacallitexe.github.io/eagler/pi/index.html",
+    desc: "Play Pi online in your browser.",
+    popular: false
+  },
+  {
+    id: "pixel",
+    title: "Pixel",
+    url: "https://whatchamacallitexe.github.io/eagler/pixel/index.html",
+    desc: "Play Pixel online in your browser.",
+    popular: false
+  },
+  {
+    id: "precision",
+    title: "Precision",
+    url: "https://whatchamacallitexe.github.io/eagler/precision/index.html",
+    desc: "Play Precision online in your browser.",
+    popular: false
+  },
+  {
+    id: "premium-dragon",
+    title: "Premium Dragon",
+    url: "https://whatchamacallitexe.github.io/eagler/premium-dragon/index.html",
+    desc: "Play Premium Dragon online in your browser.",
+    popular: false
+  },
+  {
+    id: "prism",
+    title: "Prism",
+    url: "https://whatchamacallitexe.github.io/eagler/prism/index.html",
+    desc: "Play Prism online in your browser.",
+    popular: false
+  },
+  {
+    id: "reborn",
+    title: "Reborn",
+    url: "https://whatchamacallitexe.github.io/eagler/reborn/index.html",
+    desc: "Play Reborn online in your browser.",
+    popular: false
+  },
+  {
+    id: "reflex",
+    title: "Reflex",
+    url: "https://whatchamacallitexe.github.io/eagler/reflex/index.html",
+    desc: "Play Reflex online in your browser.",
+    popular: false
+  },
+  {
+    id: "resent-5",
+    title: "Resent 5",
+    url: "https://whatchamacallitexe.github.io/eagler/resent-5/index.html",
+    desc: "Play Resent 5 online in your browser.",
+    popular: false
+  },
+  {
+    id: "resent",
+    title: "Resent",
+    url: "https://whatchamacallitexe.github.io/eagler/resent/index.html",
+    desc: "Play Resent online in your browser.",
+    popular: false
+  },
+  {
+    id: "shadow-2.5",
+    title: "Shadow 2.5",
+    url: "https://whatchamacallitexe.github.io/eagler/shadow-2.5/index.html",
+    desc: "Play Shadow 2.5 online in your browser.",
+    popular: false
+  },
+  {
+    id: "skyfactory",
+    title: "Skyfactory",
+    url: "https://whatchamacallitexe.github.io/eagler/skyfactory/index.html",
+    desc: "Play Skyfactory online in your browser.",
+    popular: false
+  },
+  {
+    id: "solar-3.5",
+    title: "Solar 3.5",
+    url: "https://whatchamacallitexe.github.io/eagler/solar-3.5/index.html",
+    desc: "Play Solar 3.5 online in your browser.",
+    popular: false
+  },
+  {
+    id: "solar",
+    title: "Solar",
+    url: "https://whatchamacallitexe.github.io/eagler/solar/index.html",
+    desc: "Play Solar online in your browser.",
+    popular: false
+  },
+  {
+    id: "starlike",
+    title: "Starlike",
+    url: "https://whatchamacallitexe.github.io/eagler/starlike/index.html",
+    desc: "Play Starlike online in your browser.",
+    popular: false
+  },
+  {
+    id: "stratus",
+    title: "Stratus",
+    url: "https://whatchamacallitexe.github.io/eagler/stratus/index.html",
+    desc: "Play Stratus online in your browser.",
+    popular: false
+  },
+  {
+    id: "tech",
+    title: "Tech",
+    url: "https://whatchamacallitexe.github.io/eagler/tech/index.html",
+    desc: "Play Tech online in your browser.",
+    popular: false
+  },
+  {
+    id: "tuff",
+    title: "Tuff",
+    url: "https://whatchamacallitexe.github.io/eagler/tuff/index.html",
+    desc: "Play Tuff online in your browser.",
+    popular: false
+  },
+  {
+    id: "uwu",
+    title: "Uwu",
+    url: "https://whatchamacallitexe.github.io/eagler/uwu/index.html",
+    desc: "Play Uwu online in your browser.",
+    popular: false
+  },
+  {
+    id: "via",
+    title: "Via",
+    url: "https://whatchamacallitexe.github.io/eagler/via/index.html",
+    desc: "Play Via online in your browser.",
+    popular: false
+  },
+  {
+    id: "voltan",
+    title: "Voltan",
+    url: "https://whatchamacallitexe.github.io/eagler/voltan/index.html",
+    desc: "Play Voltan online in your browser.",
+    popular: false
+  },
+  {
+    id: "wurst",
+    title: "Wurst",
+    url: "https://whatchamacallitexe.github.io/eagler/wurst/index.html",
+    desc: "Play Wurst online in your browser.",
+    popular: false
+  },
+  {
+    id: "zeta",
+    title: "Zeta",
+    url: "https://whatchamacallitexe.github.io/eagler/zeta/index.html",
+    desc: "Play Zeta online in your browser.",
+    popular: false
+  },
+  {
+    id: "balatro-gba",
+    title: "Balatro Gba",
+    url: "https://whatchamacallitexe.github.io/pack-ab/balatro-gba/index.html",
+    desc: "Play Balatro Gba online in your browser.",
+    popular: false
+  },
+  {
+    id: "backrooms2d",
+    title: "Backrooms2D",
+    url: "https://whatchamacallitexe.github.io/pack-ad/backrooms2d/index.html",
+    desc: "Play Backrooms2D online in your browser.",
+    popular: false
+  },
+  {
+    id: "backyardbaseball09",
+    title: "Backyardbaseball09",
+    url: "https://whatchamacallitexe.github.io/pack-ad/backyardbaseball09/index.html",
+    desc: "Play Backyardbaseball09 online in your browser.",
+    popular: false
+  },
+  {
+    id: "backyardbaseball10",
+    title: "Backyardbaseball10",
+    url: "https://whatchamacallitexe.github.io/pack-ad/backyardbaseball10/index.html",
+    desc: "Play Backyardbaseball10 online in your browser.",
+    popular: false
+  },
+  {
+    id: "backyardsoccer",
+    title: "Backyardsoccer",
+    url: "https://whatchamacallitexe.github.io/pack-ad/backyardsoccer/index.html",
+    desc: "Play Backyardsoccer online in your browser.",
+    popular: false
+  },
+  {
+    id: "badmondaysimulator",
+    title: "Badmondaysimulator",
+    url: "https://whatchamacallitexe.github.io/pack-ad/badmondaysimulator/index.html",
+    desc: "Play Badmondaysimulator online in your browser.",
+    popular: false
+  },
+  {
+    id: "badparenting",
+    title: "Badparenting",
+    url: "https://whatchamacallitexe.github.io/pack-ad/badparenting/index.html",
+    desc: "Play Badparenting online in your browser.",
+    popular: false
+  },
+  {
+    id: "baldidecomp",
+    title: "Baldidecomp",
+    url: "https://whatchamacallitexe.github.io/pack-ad/baldidecomp/index.html",
+    desc: "Play Baldidecomp online in your browser.",
+    popular: false
+  },
+  {
+    id: "baldisbasics",
+    title: "Baldisbasics",
+    url: "https://whatchamacallitexe.github.io/pack-ad/baldisbasics/index.html",
+    desc: "Play Baldisbasics online in your browser.",
+    popular: false
+  },
+  {
+    id: "banjokazooie",
+    title: "Banjokazooie",
+    url: "https://whatchamacallitexe.github.io/pack-ad/banjokazooie/index.html",
+    desc: "Play Banjokazooie online in your browser.",
+    popular: false
+  },
+  {
+    id: "banjotooie",
+    title: "Banjotooie",
+    url: "https://whatchamacallitexe.github.io/pack-ad/banjotooie/index.html",
+    desc: "Play Banjotooie online in your browser.",
+    popular: false
+  },
+  {
+    id: "bankbreakout2",
+    title: "Bankbreakout2",
+    url: "https://whatchamacallitexe.github.io/pack-ad/bankbreakout2/index.html",
+    desc: "Play Bankbreakout2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "bankrobbery2",
+    title: "Bankrobbery2",
+    url: "https://whatchamacallitexe.github.io/pack-ad/bankrobbery2/index.html",
+    desc: "Play Bankrobbery2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "barryhasasecret",
+    title: "Barryhasasecret",
+    url: "https://whatchamacallitexe.github.io/pack-ad/barryhasasecret/index.html",
+    desc: "Play Barryhasasecret online in your browser.",
+    popular: false
+  },
+  {
+    id: "baseballbros",
+    title: "Baseballbros",
+    url: "https://whatchamacallitexe.github.io/pack-ad/baseballbros/index.html",
+    desc: "Play Baseballbros online in your browser.",
+    popular: false
+  },
+  {
+    id: "basketballfrvr",
+    title: "Basketballfrvr",
+    url: "https://whatchamacallitexe.github.io/pack-ad/basketballfrvr/index.html",
+    desc: "Play Basketballfrvr online in your browser.",
+    popular: false
+  },
+  {
+    id: "basketballlegends",
+    title: "Basketballlegends",
+    url: "https://whatchamacallitexe.github.io/pack-ad/basketballlegends/index.html",
+    desc: "Play Basketballlegends online in your browser.",
+    popular: false
+  },
+  {
+    id: "basketballstars",
+    title: "Basketballstars",
+    url: "https://whatchamacallitexe.github.io/pack-ad/basketballstars/index.html",
+    desc: "Play Basketballstars online in your browser.",
+    popular: false
+  },
+  {
+    id: "basketbattle",
+    title: "Basketbattle",
+    url: "https://whatchamacallitexe.github.io/pack-ad/basketbattle/index.html",
+    desc: "Play Basketbattle online in your browser.",
+    popular: false
+  },
+  {
+    id: "basketbros",
+    title: "Basketbros",
+    url: "https://whatchamacallitexe.github.io/pack-ad/basketbros/index.html",
+    desc: "Play Basketbros online in your browser.",
+    popular: false
+  },
+  {
+    id: "batterup",
+    title: "Batterup",
+    url: "https://whatchamacallitexe.github.io/pack-ad/batterup/index.html",
+    desc: "Play Batterup online in your browser.",
+    popular: false
+  },
+  {
+    id: "backyardbaseball",
+    title: "Backyardbaseball",
+    url: "https://whatchamacallitexe.github.io/pack-ae/backyardbaseball/index.html",
+    desc: "Play Backyardbaseball online in your browser.",
+    popular: false
+  },
+  {
+    id: "bounceback",
+    title: "Bounceback",
+    url: "https://whatchamacallitexe.github.io/pack-ae/bounceback/index.html",
+    desc: "Play Bounceback online in your browser.",
+    popular: false
+  },
+  {
+    id: "bouncybasketball",
+    title: "Bouncybasketball",
+    url: "https://whatchamacallitexe.github.io/pack-ae/bouncybasketball/index.html",
+    desc: "Play Bouncybasketball online in your browser.",
+    popular: false
+  },
+  {
+    id: "babychiccoadventure",
+    title: "Babychiccoadventure",
+    url: "https://whatchamacallitexe.github.io/pack-af/babychiccoadventure/index.html",
+    desc: "Play Babychiccoadventure online in your browser.",
+    popular: false
+  },
+  {
+    id: "baconmaydie",
+    title: "Baconmaydie",
+    url: "https://whatchamacallitexe.github.io/pack-af/baconmaydie/index.html",
+    desc: "Play Baconmaydie online in your browser.",
+    popular: false
+  },
+  {
+    id: "badtimesimulator",
+    title: "Badtimesimulator",
+    url: "https://whatchamacallitexe.github.io/pack-af/badtimesimulator/index.html",
+    desc: "Play Badtimesimulator online in your browser.",
+    popular: false
+  },
+  {
+    id: "baldisbasicsremaster",
+    title: "Baldisbasicsremaster",
+    url: "https://whatchamacallitexe.github.io/pack-af/baldisbasicsremaster/index.html",
+    desc: "Play Baldisbasicsremaster online in your browser.",
+    popular: false
+  },
+  {
+    id: "baldisfunnewschoolultimate",
+    title: "Baldisfunnewschoolultimate",
+    url: "https://whatchamacallitexe.github.io/pack-af/baldisfunnewschoolultimate/index.html",
+    desc: "Play Baldisfunnewschoolultimate online in your browser.",
+    popular: false
+  },
+  {
+    id: "ballsandbricksgood",
+    title: "Ballsandbricksgood",
+    url: "https://whatchamacallitexe.github.io/pack-af/ballsandbricksgood/index.html",
+    desc: "Play Ballsandbricksgood online in your browser.",
+    popular: false
+  },
+  {
+    id: "bananasimulator",
+    title: "Bananasimulator",
+    url: "https://whatchamacallitexe.github.io/pack-af/bananasimulator/index.html",
+    desc: "Play Bananasimulator online in your browser.",
+    popular: false
+  },
+  {
+    id: "basketballlegendsgoodywoody",
+    title: "Basketballlegendsgoodywoody",
+    url: "https://whatchamacallitexe.github.io/pack-af/basketballlegendsgoodywoody/index.html",
+    desc: "Play Basketballlegendsgoodywoody online in your browser.",
+    popular: false
+  },
+  {
+    id: "basketrandom",
+    title: "Basketrandom",
+    url: "https://whatchamacallitexe.github.io/pack-af/basketrandom/index.html",
+    desc: "Play Basketrandom online in your browser.",
+    popular: false
+  },
+  {
+    id: "basketrandomgood",
+    title: "Basketrandomgood",
+    url: "https://whatchamacallitexe.github.io/pack-af/basketrandomgood/index.html",
+    desc: "Play Basketrandomgood online in your browser.",
+    popular: false
+  },
+  {
+    id: "basketslamdunk2",
+    title: "Basketslamdunk2",
+    url: "https://whatchamacallitexe.github.io/pack-af/basketslamdunk2/index.html",
+    desc: "Play Basketslamdunk2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "ben10alienforce",
+    title: "Ben10Alienforce",
+    url: "https://whatchamacallitexe.github.io/pack-af/ben10alienforce/index.html",
+    desc: "Play Ben10Alienforce online in your browser.",
+    popular: false
+  },
+  {
+    id: "ben10omniverse",
+    title: "Ben10Omniverse",
+    url: "https://whatchamacallitexe.github.io/pack-af/ben10omniverse/index.html",
+    desc: "Play Ben10Omniverse online in your browser.",
+    popular: false
+  },
+  {
+    id: "amigo-pancho-2",
+    title: "Amigo Pancho 2",
+    url: "https://whatchamacallitexe.github.io/pack-m/amigo-pancho-2/index.html",
+    desc: "Play Amigo Pancho 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "amigo-pancho-3",
+    title: "Amigo Pancho 3",
+    url: "https://whatchamacallitexe.github.io/pack-m/amigo-pancho-3/index.html",
+    desc: "Play Amigo Pancho 3 online in your browser.",
+    popular: false
+  },
+  {
+    id: "amigo-pancho-4",
+    title: "Amigo Pancho 4",
+    url: "https://whatchamacallitexe.github.io/pack-m/amigo-pancho-4/index.html",
+    desc: "Play Amigo Pancho 4 online in your browser.",
+    popular: false
+  },
+  {
+    id: "amigo-pancho-5",
+    title: "Amigo Pancho 5",
+    url: "https://whatchamacallitexe.github.io/pack-m/amigo-pancho-5/index.html",
+    desc: "Play Amigo Pancho 5 online in your browser.",
+    popular: false
+  },
+  {
+    id: "ancient-sins",
+    title: "Ancient Sins",
+    url: "https://whatchamacallitexe.github.io/pack-m/ancient-sins/index.html",
+    desc: "Play Ancient Sins online in your browser.",
+    popular: false
+  },
+  {
+    id: "angry-birds-showdown",
+    title: "Angry Birds Showdown",
+    url: "https://whatchamacallitexe.github.io/pack-m/angry-birds-showdown/index.html",
+    desc: "Play Angry Birds Showdown online in your browser.",
+    popular: false
+  },
+  {
+    id: "animal-crossing-wild-world",
+    title: "Animal Crossing Wild World",
+    url: "https://whatchamacallitexe.github.io/pack-m/animal-crossing-wild-world/index.html",
+    desc: "Play Animal Crossing Wild World online in your browser.",
+    popular: false
+  },
+  {
+    id: "ice-age-baby",
+    title: "Ice Age Baby",
+    url: "https://whatchamacallitexe.github.io/pack-x/ice-age-baby/index.html",
+    desc: "Play Ice Age Baby online in your browser.",
+    popular: false
+  },
+  {
+    id: "icedodo",
+    title: "Icedodo",
+    url: "https://whatchamacallitexe.github.io/pack-x/icedodo/index.html",
+    desc: "Play Icedodo online in your browser.",
+    popular: false
+  },
+  {
+    id: "idle-idle-gamedev",
+    title: "Idle Idle Gamedev",
+    url: "https://whatchamacallitexe.github.io/pack-x/idle-idle-gamedev/index.html",
+    desc: "Play Idle Idle Gamedev online in your browser.",
+    popular: false
+  },
+  {
+    id: "idle-miner-tycoon",
+    title: "Idle Miner Tycoon",
+    url: "https://whatchamacallitexe.github.io/pack-x/idle-miner-tycoon/index.html",
+    desc: "Play Idle Miner Tycoon online in your browser.",
+    popular: false
+  },
+  {
+    id: "idle-minorzamnshes12",
+    title: "Idle Minorzamnshes12",
+    url: "https://whatchamacallitexe.github.io/pack-x/idle-minorzamnshes12/index.html",
+    desc: "Play Idle Minorzamnshes12 online in your browser.",
+    popular: false
+  },
+  {
+    id: "impossible-quiz-2",
+    title: "Impossible Quiz 2",
+    url: "https://whatchamacallitexe.github.io/pack-x/impossible-quiz-2/index.html",
+    desc: "Play Impossible Quiz 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "inclement-emerald",
+    title: "Inclement Emerald",
+    url: "https://whatchamacallitexe.github.io/pack-x/inclement-emerald/index.html",
+    desc: "Play Inclement Emerald online in your browser.",
+    popular: false
+  },
+  {
+    id: "innkeeper",
+    title: "Innkeeper",
+    url: "https://whatchamacallitexe.github.io/pack-x/innkeeper/index.html",
+    desc: "Play Innkeeper online in your browser.",
+    popular: false
+  },
+  {
+    id: "inside-story",
+    title: "Inside Story",
+    url: "https://whatchamacallitexe.github.io/pack-x/inside-story/index.html",
+    desc: "Play Inside Story online in your browser.",
+    popular: false
+  },
+  {
+    id: "iron-soldier",
+    title: "Iron Soldier",
+    url: "https://whatchamacallitexe.github.io/pack-x/iron-soldier/index.html",
+    desc: "Play Iron Soldier online in your browser.",
+    popular: false
+  },
+  {
+    id: "jacksmithencryptedorsmthn",
+    title: "Jacksmithencryptedorsmthn",
+    url: "https://whatchamacallitexe.github.io/pack-y/jacksmithencryptedorsmthn/index.html",
+    desc: "Play Jacksmithencryptedorsmthn online in your browser.",
+    popular: false
+  },
+  {
+    id: "jamesbondjr",
+    title: "Jamesbondjr",
+    url: "https://whatchamacallitexe.github.io/pack-y/jamesbondjr/index.html",
+    desc: "Play Jamesbondjr online in your browser.",
+    popular: false
+  },
+  {
+    id: "jetrush",
+    title: "Jetrush",
+    url: "https://whatchamacallitexe.github.io/pack-y/jetrush/index.html",
+    desc: "Play Jetrush online in your browser.",
+    popular: false
+  },
+  {
+    id: "kaizo-mario-world",
+    title: "Kaizo Mario World",
+    url: "https://whatchamacallitexe.github.io/pack-z/kaizo-mario-world/index.html",
+    desc: "Play Kaizo Mario World online in your browser.",
+    popular: false
+  },
+  {
+    id: "karateka",
+    title: "Karateka",
+    url: "https://whatchamacallitexe.github.io/pack-z/karateka/index.html",
+    desc: "Play Karateka online in your browser.",
+    popular: false
+  },
+  {
+    id: "karlson",
+    title: "Karlson",
+    url: "https://whatchamacallitexe.github.io/pack-z/karlson/index.html",
+    desc: "Play Karlson online in your browser.",
+    popular: false
+  },
+  {
+    id: "karnovs-revenge",
+    title: "Karnovs Revenge",
+    url: "https://whatchamacallitexe.github.io/pack-z/karnovs-revenge/index.html",
+    desc: "Play Karnovs Revenge online in your browser.",
+    popular: false
+  },
+  {
+    id: "kart-fighter",
+    title: "Kart Fighter",
+    url: "https://whatchamacallitexe.github.io/pack-z/kart-fighter/index.html",
+    desc: "Play Kart Fighter online in your browser.",
+    popular: false
+  },
+  {
+    id: "kill-the-ice-age-baby-adventure",
+    title: "Kill The Ice Age Baby Adventure",
+    url: "https://whatchamacallitexe.github.io/pack-z/kill-the-ice-age-baby-adventure/index.html",
+    desc: "Play Kill The Ice Age Baby Adventure online in your browser.",
+    popular: false
+  },
+  {
+    id: "killer-instinct",
+    title: "Killer Instinct",
+    url: "https://whatchamacallitexe.github.io/pack-z/killer-instinct/index.html",
+    desc: "Play Killer Instinct online in your browser.",
+    popular: false
+  },
+  {
+    id: "killover",
+    title: "Killover",
+    url: "https://whatchamacallitexe.github.io/pack-z/killover/index.html",
+    desc: "Play Killover online in your browser.",
+    popular: false
+  },
+  {
+    id: "kim-jong-un-tile-puzzle",
+    title: "Kim Jong Un Tile Puzzle",
+    url: "https://whatchamacallitexe.github.io/pack-z/kim-jong-un-tile-puzzle/index.html",
+    desc: "Play Kim Jong Un Tile Puzzle online in your browser.",
+    popular: false
+  },
+  {
+    id: "king-of-fighters-2002",
+    title: "King Of Fighters 2002",
+    url: "https://whatchamacallitexe.github.io/pack-z/king-of-fighters-2002/index.html",
+    desc: "Play King Of Fighters 2002 online in your browser.",
+    popular: false
+  },
+  {
+    id: "king-of-fighters-94",
+    title: "King Of Fighters 94",
+    url: "https://whatchamacallitexe.github.io/pack-z/king-of-fighters-94/index.html",
+    desc: "Play King Of Fighters 94 online in your browser.",
+    popular: false
+  },
+  {
+    id: "king-of-fighters-97",
+    title: "King Of Fighters 97",
+    url: "https://whatchamacallitexe.github.io/pack-z/king-of-fighters-97/index.html",
+    desc: "Play King Of Fighters 97 online in your browser.",
+    popular: false
+  },
+  {
+    id: "king-of-fighters-98",
+    title: "King Of Fighters 98",
+    url: "https://whatchamacallitexe.github.io/pack-z/king-of-fighters-98/index.html",
+    desc: "Play King Of Fighters 98 online in your browser.",
+    popular: false
+  },
+  {
+    id: "kirby-64",
+    title: "Kirby 64",
+    url: "https://whatchamacallitexe.github.io/pack-z/kirby-64/index.html",
+    desc: "Play Kirby 64 online in your browser.",
+    popular: false
+  },
+  {
+    id: "kirby-and-the-amazing-mirror",
+    title: "Kirby And The Amazing Mirror",
+    url: "https://whatchamacallitexe.github.io/pack-z/kirby-and-the-amazing-mirror/index.html",
+    desc: "Play Kirby And The Amazing Mirror online in your browser.",
+    popular: false
+  },
+  {
+    id: "kirby-soft-and-wet",
+    title: "Kirby Soft And Wet",
+    url: "https://whatchamacallitexe.github.io/pack-z/kirby-soft-and-wet/index.html",
+    desc: "Play Kirby Soft And Wet online in your browser.",
+    popular: false
+  },
+  {
+    id: "kirby-super-star",
+    title: "Kirby Super Star",
+    url: "https://whatchamacallitexe.github.io/pack-z/kirby-super-star/index.html",
+    desc: "Play Kirby Super Star online in your browser.",
+    popular: false
+  },
+  {
+    id: "kirbys-adventure",
+    title: "Kirbys Adventure",
+    url: "https://whatchamacallitexe.github.io/pack-z/kirbys-adventure/index.html",
+    desc: "Play Kirbys Adventure online in your browser.",
+    popular: false
+  },
+  {
+    id: "kirbys-dream-land-2",
+    title: "Kirbys Dream Land 2",
+    url: "https://whatchamacallitexe.github.io/pack-z/kirbys-dream-land-2/index.html",
+    desc: "Play Kirbys Dream Land 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "kirbys-dream-land-3",
+    title: "Kirbys Dream Land 3",
+    url: "https://whatchamacallitexe.github.io/pack-z/kirbys-dream-land-3/index.html",
+    desc: "Play Kirbys Dream Land 3 online in your browser.",
+    popular: false
+  },
+  {
+    id: "kirbys-dream-land",
+    title: "Kirbys Dream Land",
+    url: "https://whatchamacallitexe.github.io/pack-z/kirbys-dream-land/index.html",
+    desc: "Play Kirbys Dream Land online in your browser.",
+    popular: false
+  },
+  {
+    id: "klonoa-door-to-phantomile",
+    title: "Klonoa Door To Phantomile",
+    url: "https://whatchamacallitexe.github.io/pack-z/klonoa-door-to-phantomile/index.html",
+    desc: "Play Klonoa Door To Phantomile online in your browser.",
+    popular: false
+  },
+  {
+    id: "knightmare-tower",
+    title: "Knightmare Tower",
+    url: "https://whatchamacallitexe.github.io/pack-z/knightmare-tower/index.html",
+    desc: "Play Knightmare Tower online in your browser.",
+    popular: false
+  },
+  {
+    id: "knuckles-chaotix",
+    title: "Knuckles Chaotix",
+    url: "https://whatchamacallitexe.github.io/pack-z/knuckles-chaotix/index.html",
+    desc: "Play Knuckles Chaotix online in your browser.",
+    popular: false
+  },
+  {
+    id: "konkr-io",
+    title: "Konkr Io",
+    url: "https://whatchamacallitexe.github.io/pack-z/konkr-io/index.html",
+    desc: "Play Konkr Io online in your browser.",
+    popular: false
+  },
+  {
+    id: "last-fire-red",
+    title: "Last Fire Red",
+    url: "https://whatchamacallitexe.github.io/pack-z/last-fire-red/index.html",
+    desc: "Play Last Fire Red online in your browser.",
+    popular: false
+  },
+  {
+    id: "last-stand-2",
+    title: "Last Stand 2",
+    url: "https://whatchamacallitexe.github.io/pack-z/last-stand-2/index.html",
+    desc: "Play Last Stand 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "last-stand",
+    title: "Last Stand",
+    url: "https://whatchamacallitexe.github.io/pack-z/last-stand/index.html",
+    desc: "Play Last Stand online in your browser.",
+    popular: false
+  },
+  {
+    id: "lasthorizon",
+    title: "Lasthorizon",
+    url: "https://whatchamacallitexe.github.io/pack-z/lasthorizon/index.html",
+    desc: "Play Lasthorizon online in your browser.",
+    popular: false
+  },
+  {
+    id: "leader-strike",
+    title: "Leader Strike",
+    url: "https://whatchamacallitexe.github.io/pack-z/leader-strike/index.html",
+    desc: "Play Leader Strike online in your browser.",
+    popular: false
+  },
+  {
+    id: "learn-to-fly-3",
+    title: "Learn To Fly 3",
+    url: "https://whatchamacallitexe.github.io/pack-z/learn-to-fly-3/index.html",
+    desc: "Play Learn To Fly 3 online in your browser.",
+    popular: false
+  },
+  {
+    id: "learn-to-fly-idle",
+    title: "Learn To Fly Idle",
+    url: "https://whatchamacallitexe.github.io/pack-z/learn-to-fly-idle/index.html",
+    desc: "Play Learn To Fly Idle online in your browser.",
+    popular: false
+  },
+  {
+    id: "lego-batman-2-superheroes",
+    title: "Lego Batman 2 Superheroes",
+    url: "https://whatchamacallitexe.github.io/pack-z/lego-batman-2-superheroes/index.html",
+    desc: "Play Lego Batman 2 Superheroes online in your browser.",
+    popular: false
+  },
+  {
+    id: "lego-batman",
+    title: "Lego Batman",
+    url: "https://whatchamacallitexe.github.io/pack-z/lego-batman/index.html",
+    desc: "Play Lego Batman online in your browser.",
+    popular: false
+  },
+  {
+    id: "lego-indiana-jones",
+    title: "Lego Indiana Jones",
+    url: "https://whatchamacallitexe.github.io/pack-z/lego-indiana-jones/index.html",
+    desc: "Play Lego Indiana Jones online in your browser.",
+    popular: false
+  },
+  {
+    id: "legoindianajones2",
+    title: "Legoindianajones2",
+    url: "https://whatchamacallitexe.github.io/pack-z/legoindianajones2/index.html",
+    desc: "Play Legoindianajones2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "legoninjago",
+    title: "Legoninjago",
+    url: "https://whatchamacallitexe.github.io/pack-z/legoninjago/index.html",
+    desc: "Play Legoninjago online in your browser.",
+    popular: false
+  },
+  {
+    id: "legostarwars",
+    title: "Legostarwars",
+    url: "https://whatchamacallitexe.github.io/pack-z/legostarwars/index.html",
+    desc: "Play Legostarwars online in your browser.",
+    popular: false
+  },
+  {
+    id: "lemmings",
+    title: "Lemmings",
+    url: "https://whatchamacallitexe.github.io/pack-z/lemmings/index.html",
+    desc: "Play Lemmings online in your browser.",
+    popular: false
+  },
+  {
+    id: "leveldevil",
+    title: "Leveldevil",
+    url: "https://whatchamacallitexe.github.io/pack-z/leveldevil/index.html",
+    desc: "Play Leveldevil online in your browser.",
+    popular: false
+  },
+  {
+    id: "leverwarriors",
+    title: "Leverwarriors",
+    url: "https://whatchamacallitexe.github.io/pack-z/leverwarriors/index.html",
+    desc: "Play Leverwarriors online in your browser.",
+    popular: false
+  },
+  {
+    id: "line-rider",
+    title: "Line Rider",
+    url: "https://whatchamacallitexe.github.io/pack-z/line-rider/index.html",
+    desc: "Play Line Rider online in your browser.",
+    popular: false
+  },
+  {
+    id: "link-to-the-past",
+    title: "Link To The Past",
+    url: "https://whatchamacallitexe.github.io/pack-z/link-to-the-past/index.html",
+    desc: "Play Link To The Past online in your browser.",
+    popular: false
+  },
+  {
+    id: "loderunner",
+    title: "Loderunner",
+    url: "https://whatchamacallitexe.github.io/pack-z/loderunner/index.html",
+    desc: "Play Loderunner online in your browser.",
+    popular: false
+  },
+  {
+    id: "lonewolf",
+    title: "Lonewolf",
+    url: "https://whatchamacallitexe.github.io/pack-z/lonewolf/index.html",
+    desc: "Play Lonewolf online in your browser.",
+    popular: false
+  },
+  {
+    id: "losangelesshark",
+    title: "Losangelesshark",
+    url: "https://whatchamacallitexe.github.io/pack-z/losangelesshark/index.html",
+    desc: "Play Losangelesshark online in your browser.",
+    popular: false
+  },
+  {
+    id: "loz1",
+    title: "Loz1",
+    url: "https://whatchamacallitexe.github.io/pack-z/loz1/index.html",
+    desc: "Play Loz1 online in your browser.",
+    popular: false
+  },
+  {
+    id: "lozlinkawakening",
+    title: "Lozlinkawakening",
+    url: "https://whatchamacallitexe.github.io/pack-z/lozlinkawakening/index.html",
+    desc: "Play Lozlinkawakening online in your browser.",
+    popular: false
+  },
+  {
+    id: "lozminishcap",
+    title: "Lozminishcap",
+    url: "https://whatchamacallitexe.github.io/pack-z/lozminishcap/index.html",
+    desc: "Play Lozminishcap online in your browser.",
+    popular: false
+  },
+  {
+    id: "lozoracleofseasons",
+    title: "Lozoracleofseasons",
+    url: "https://whatchamacallitexe.github.io/pack-z/lozoracleofseasons/index.html",
+    desc: "Play Lozoracleofseasons online in your browser.",
+    popular: false
   }
 ];
 
