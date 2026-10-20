@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ace Combat 3 - Electrosphere</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; width: 100%; height: 100%;
+      background: #121212; color: #fff; font-family: system-ui, sans-serif;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #game-container { width: 100%; height: 100%; text-align: center; }
+    #game { width: 100%; height: 100%; }
+    #loading-progress {
+      position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+      padding: 10px 16px; background: rgba(255,255,255,0.1); border-radius: 8px;
+      z-index: 10;
+    }
+    #err {
+      display: none; position: fixed; inset: 0; background: #0a0a0a;
+      padding: 24px; box-sizing: border-box; z-index: 999; overflow: auto;
+    }
+    #err code {
+      display: block; background: #1a1a1a; padding: 12px; border-radius: 8px;
+      white-space: pre-wrap; word-break: break-word; margin: 12px 0;
+    }
+    #err a { color: #8b5cf6; }
+  </style>
+</head>
+<body>
+  <div id="err"><h1>Ace Combat 3 failed to load</h1><code id="err-msg"></code><p><a href="/">← Back</a></p></div>
+  <div id="game-container">
+    <div id="game"></div>
+    <div id="loading-progress">Loading: 0/22</div>
+  </div>
+
+  <script>
+  (function () {
+    var CHD_PATH = "ace%20combat%203/Ace%20Combat%203%20-%20Electrosphere%20(USA).chd";
+    var BASES = [
+      "https://fastly.jsdelivr.net/gh/bubbls/ugss@6ae566604fe7593c3cd8e4fbb5b595b284b0537d/",
+      "https://cdn.jsdelivr.net/gh/bubbls/ugss@6ae566604fe7593c3cd8e4fbb5b595b284b0537d/",
+      "https://gcore.jsdelivr.net/gh/bubbls/ugss@6ae566604fe7593c3cd8e4fbb5b595b284b0537d/"
+    ];
+    var MIN = 1, MAX = 22;
+    var progressEl = document.getElementById("loading-progress");
+
+    function showErr(msg) {
+      console.error(msg);
+      document.getElementById("err-msg").textContent = String(msg);
+      document.getElementById("err").style.display = "block";
+      if (progressEl) progressEl.textContent = "Error loading game";
+    }
+
+    function sleep(ms) {
+      return new Promise(function (r) { setTimeout(r, ms); });
+    }
+
+    function partUrl(base, i) {
+      var pad = String(i).padStart(2, "0");
+      return base + CHD_PATH + ".part" + pad;
+    }
+
+    async function fetchPart(i) {
+      var lastErr = null;
+      for (var b = 0; b < BASES.length; b++) {
+        var url = partUrl(BASES[b], i);
+        for (var attempt = 0; attempt < 3; attempt++) {
+          try {
+            var res = await fetch(url);
+            if (res.status === 429) {
+              lastErr = new Error("429 on part " + i);
+              await sleep(1500 * (attempt + 1));
+              continue;
+            }
+            if (!res.ok) {
+              lastErr = new Error("HTTP " + res.status + " part " + i);
+              continue;
+            }
+            var buf = await res.arrayBuffer();
+            var u8 = new Uint8Array(buf);
+            if (u8.length >= 3 && u8[0] === 0x34 && u8[1] === 0x32 && u8[2] === 0x39) {
+              lastErr = new Error("429 body on part " + i);
+              await sleep(1500 * (attempt + 1));
+              continue;
+            }
+            if (u8.length < 1000) {
+              lastErr = new Error("Part " + i + " too small (" + u8.length + ")");
+              continue;
+            }
+            return buf;
+          } catch (e) {
+            lastErr = e;
+            await sleep(800 * (attempt + 1));
+          }
+        }
+      }
+      throw lastErr || new Error("Failed part " + i);
+    }
+
+    async function mergeAll() {
+      var buffers = [];
+      for (var i = MIN; i <= MAX; i++) {
+        progressEl.textContent = "Loading: " + (i - MIN) + "/" + (MAX - MIN + 1) +
+          " (part " + i + ")";
+        buffers.push(await fetchPart(i));
+      }
+      progressEl.textContent = "Starting emulator…";
+      return URL.createObjectURL(new Blob(buffers));
+    }
+
+    mergeAll()
+      .then(function (gameUrl) {
+        if (progressEl) progressEl.remove();
+        window.EJS_player = "#game";
+        window.EJS_core = "psx";
+        window.EJS_gameName = "Ace Combat 3 - Electrosphere (USA)";
+        window.EJS_color = "#0064ff";
+        window.EJS_startOnLoaded = true;
+        window.EJS_pathtodata = "https://cdn.jsdelivr.net/gh/genizy/emu@master/";
+        window.EJS_gameUrl = gameUrl;
+        window.EJS_biosUrl =
+          "https://cdn.jsdelivr.net/gh/Abdess/retroarch_system@5f96368f6dbad5851cdb16a5041fefec4bdcd305/Sony%20-%20PlayStation/scph5501.bin";
+        var script = document.createElement("script");
+        script.src = "https://cdn.jsdelivr.net/gh/genizy/emu@master/loader.js";
+        script.onerror = function () { showErr("Failed to load emulator loader"); };
+        document.body.appendChild(script);
+      })
+      .catch(function (e) {
+        showErr(e && (e.message || e) || String(e));
+      });
+  })();
+  </script>
+</body>
+</html>
