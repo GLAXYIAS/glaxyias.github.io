@@ -229,13 +229,15 @@ body.has-custom-bg .admin-card {
 .my-bubble-color { background: var(--accent); color: var(--bg-dark); font-weight: 500; border-bottom-right-radius: 2px; }
 .other-bubble-color { background: var(--bg-panel); color: #e0e0e0; border: 1px solid var(--border-soft); border-bottom-left-radius: 2px; }
 
-/* Personal message bubble styles */
-.my-bubble-color.style-neon { background: #10151a; color: var(--accent); border: 1px solid var(--accent); box-shadow: 0 0 10px var(--accent-soft), 0 0 20px var(--accent-soft) inset; font-weight: 600; }
-.my-bubble-color.style-glass { background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.25); backdrop-filter: blur(10px); font-weight: 500; }
-.my-bubble-color.style-terminal { background: #050505; color: #4ade80; border: 1px solid #4ade80; font-family: 'Courier New', monospace; border-radius: 4px; }
-.my-bubble-color.style-terminal::before { content: "> "; }
-.my-bubble-color.style-gradient { background: linear-gradient(135deg, var(--accent), #ff8fb0); color: #140f0d; font-weight: 600; border: none; }
-.my-bubble-color.style-minimal { background: transparent; color: white; border: 1px solid var(--text-muted); font-weight: 400; box-shadow: none; }
+/* Message bubble styles — shared, so everyone sees the author's choice.
+   Scoped to .message-text-bubble (not .my-bubble-color) so the style also
+   applies to other people's messages. */
+.message-text-bubble.style-neon { background: #10151a; color: var(--accent); border: 1px solid var(--accent); box-shadow: 0 0 10px var(--accent-soft), 0 0 20px var(--accent-soft) inset; font-weight: 600; }
+.message-text-bubble.style-glass { background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.25); backdrop-filter: blur(10px); font-weight: 500; }
+.message-text-bubble.style-terminal { background: #050505; color: #4ade80; border: 1px solid #4ade80; font-family: 'Courier New', monospace; border-radius: 4px; }
+.message-text-bubble.style-terminal::before { content: "> "; }
+.message-text-bubble.style-gradient { background: linear-gradient(135deg, var(--accent), #ff8fb0); color: #140f0d; font-weight: 600; border: none; }
+.message-text-bubble.style-minimal { background: transparent; color: white; border: 1px solid var(--text-muted); font-weight: 400; box-shadow: none; }
 
 .bubble-preview { padding: 8px 14px; border-radius: 12px; font-size: 13px; display: inline-block; margin-bottom: 6px; }
 .bubble-preview.style-default { background: var(--accent); color: var(--bg-dark); font-weight: 500; }
