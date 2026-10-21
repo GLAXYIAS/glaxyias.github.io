@@ -22,7 +22,10 @@
     BSV: 1,
     ASRP: 1,
     'crazy-cattle-3d': 1,
-    'cannon-balls-3d': 1
+    'cannon-balls-3d': 1,
+    polytrack: 1,
+    'moto-x3m': 1,
+    motox3m: 1
   };
 
   function isUnityGame(gameId, game) {
