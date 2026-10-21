@@ -1,5 +1,6 @@
 /**
  * Resilient CDN fetch for Unity / UGS games.
+ * Updated for multi-mirror 429 recovery.
  */
 (function () {
   'use strict';
