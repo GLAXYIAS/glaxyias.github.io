@@ -979,6 +979,7 @@
 
     <script src="JS/main.js?v=20261012b"></script>
   <script src="JS/upgrade-pack.js?v=1" defer></script>
+  <script src="JS/profile-modal.js?v=1" defer></script>
   <script src="customcrosshair/loader.js"></script>
 
   <script src="themes/themes.js"></script>
@@ -1126,6 +1127,16 @@
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeNews(); });
     })();
   </script>
+
+  <div id="profile-modal" class="profile-modal" role="dialog" aria-modal="true" aria-label="Your profile" aria-hidden="true">
+    <div class="profile-modal-shell">
+      <div class="profile-modal-bar">
+        <span class="profile-modal-title">Profile</span>
+        <button type="button" class="profile-modal-close" id="profile-modal-close" aria-label="Close profile">&times;</button>
+      </div>
+      <iframe id="profile-modal-frame" class="profile-modal-frame" title="Your profile" loading="lazy"></iframe>
+    </div>
+  </div>
 
 </body>
 </html>
