@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 
-
-
+<script src="/JS/cdn-resilient.js"></script>
 <!-- Ultimate Game Stash file--> 
 <!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
 
@@ -37,11 +36,13 @@
       }
       if (parts.length === 0) return baseUrl;
 
-      const buffers = await Promise.all(parts.map(async (u) => {
+      // Sequential downloads to avoid 429
+      const buffers = [];
+      for (const u of parts) {
         const r = await fetch(u);
         if (!r.ok) throw new Error("Failed part " + u);
-        return new Uint8Array(await r.arrayBuffer());
-      }));
+        buffers.push(new Uint8Array(await r.arrayBuffer()));
+      }
 
       const total = buffers.reduce((a, b) => a + b.length, 0);
       const merged = new Uint8Array(total);
