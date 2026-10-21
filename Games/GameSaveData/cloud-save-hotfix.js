@@ -6,19 +6,19 @@
  * window.cloudSave / window.cloudLoad on the Cloud Sync panel.
  *
  * WHY THIS EXISTS
- * The Cloudflare Worker (apithingy.jlsniperelite4.workers.dev) is online, but its
- * Turso database is missing the "gamesaveddata" table. Both /save and /load answer:
+ * The Worker was saving to a table/column that does not exist
+ * ("Gamesaveddata"."saves" instead of "Gamesavedata"."save_string"), so /save
+ * and /load answered:
  *
  *   500 {"error":"SQLite error: no such table: gamesaveddata"}
  *
  * The old code turned that into "Error exporting saves: Error: API error: 500"
  * and gave you no file at all. This version:
  *
- *   1. Always exports your saves as a .json backup file, so export can never fail.
- *   2. Still tries the Cloudflare Worker, so it starts syncing again as soon as
- *      the table exists (see fix-cloud-save.sql in this folder).
- *   3. Explains the real reason in the panel instead of a bare "500".
- *   4. Can import that .json backup back, even while the cloud is down.
+ *   1. Exports to the Cloudflare worker first. A .json backup file is written
+ *      ONLY when that export fails, so a normal export just syncs.
+ *   2. Explains the real reason in the panel instead of a bare "500".
+ *   3. Can import that fallback .json file back, even while the cloud is down.
  */
 (function () {
   'use strict';
@@ -149,7 +149,7 @@
   /** Turns worker/SQLite noise into a sentence a player can act on. */
   function friendlyCloudError(text) {
     var msg = String(text || 'unknown error');
-    if (/no such table/i.test(msg)) return 'cloud database not set up yet (missing table)';
+    if (/no such table/i.test(msg)) return 'cloud save table is missing on the server';
     if (/no such column/i.test(msg)) return 'cloud database is out of date (missing column)';
     if (/timed out/i.test(msg)) return 'cloud server timed out';
     if (/Failed to fetch|network/i.test(msg)) return 'no connection to the cloud server';
@@ -302,7 +302,7 @@
   };
 
   /**
-   * Export: writes a .json backup first, then tries the cloud.
+   * Export: cloud first. Only writes a backup file if the cloud export fails.
    * Never throws, and never leaves you without your data.
    */
   window.cloudSave = function (msgElementId, showMessage) {
@@ -323,23 +323,25 @@
       deviceInfo: (navigator && navigator.userAgent) || ''
     };
 
-    if (showMessage) setStatus(el, 'Exporting ' + count + ' saves…', '#a033ff');
-
-    var fileName = downloadBackup(payload);
+    if (showMessage) setStatus(el, 'Exporting ' + count + ' saves to cloud…', '#a033ff');
 
     return pushToCloud(payload).then(function (cloud) {
       if (cloud.ok) {
-        setStatus(el, '✓ ' + count + ' saves exported + cloud synced', '#00ff66');
-      } else if (fileName) {
-        el.textContent =
-          '✓ ' + count +
-          ' saves downloaded · cloud sync failed: ' +
-          friendlyCloudError(cloud.error);
-        el.style.color = '#ffb020';
-      } else {
-        setStatus(el, '✗ Export failed: no download and ' + cloud.error, '#ff3333');
+        setStatus(el, '✓ ' + count + ' saves exported to cloud', '#00ff66');
+        return { ok: true, count: count, fileName: null, cloud: cloud };
       }
-      return { ok: !!(fileName || cloud.ok), count: count, fileName: fileName, cloud: cloud };
+
+      // The cloud export failed, so hand over a file instead of losing the data.
+      var fileName = downloadBackup(payload);
+      if (el) {
+        el.textContent =
+          '✗ Cloud export failed: ' + friendlyCloudError(cloud.error) + ' ';
+        el.style.color = '#ffb020';
+        addActionLink(el, fileName ? 'Download again' : 'Download backup file', function () {
+          downloadBackup(payload);
+        });
+      }
+      return { ok: !!fileName, count: count, fileName: fileName, cloud: cloud };
     });
   };
 
