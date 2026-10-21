@@ -8673,6 +8673,24 @@ iframe { width: 100%; height: 100vh; border: 0; display: block; background: #000
   box-shadow: 0 4px 14px rgba(0,0,0,0.7);
   pointer-events: none; opacity: 1; transition: opacity 0.4s ease;
 }
+.back-btn.minimized { width: 36px; height: 36px; padding: 0; overflow: hidden; text-indent: -9999px; white-space: nowrap; }
+.back-btn.minimized::after { content: "⌂"; text-indent: 0; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #d8b4fe; }
+.back-btn:focus-visible, #back-btn-menu button:focus-visible, .err-btn:focus-visible { outline: 3px solid #d8b4fe; outline-offset: 2px; }
+.err-panel { position: fixed; inset: 0; z-index: 100002; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; font-family: system-ui, sans-serif; color: #eee; padding: 16px; }
+.err-box { max-width: 420px; padding: 24px; border: 1px solid #8b00ff; border-radius: 12px; background: #0a0a0f; text-align: center; }
+.err-box h2 { margin: 0 0 10px; font-size: 1.1rem; color: #e59371; }
+.err-box p { margin: 0 0 18px; font-size: 0.9rem; line-height: 1.45; color: #b8b8c0; }
+.err-btn { background: #0a0a0a; color: #d8b4fe; border: 2px solid #8b00ff; border-radius: 8px; padding: 8px 16px; font-weight: 700; cursor: pointer; margin: 0 6px; font-size: 0.9rem; }
+.err-btn:hover { background: rgba(139,0,255,0.25); }
+@media (max-width: 600px) {
+  .back-btn { top: 8px; left: 8px; padding: 6px 10px; font-size: 13px; }
+  #back-btn-menu { min-width: 170px; }
+  #back-btn-hint { top: 48px; left: 8px; max-width: 80vw; font-size: 11px; }
+  .err-box { padding: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
 @keyframes gridPan { from { background-position: 0 0; } to { background-position: 60px 60px; } }
 @keyframes elegantFadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 @keyframes logoGlowPulse {
@@ -8694,6 +8712,17 @@ iframe { width: 100%; height: 100vh; border: 0; display: block; background: #000
   <button type="button" data-pos="bottom-right">Bottom Right</button>
   <hr>
   <button type="button" data-pos="custom">Custom (Drag)</button>
+  <hr>
+  <button type="button" data-pos="minimize">Minimize (Alt+H)</button>
+</div>
+
+<div id="err-panel" role="alertdialog" aria-modal="true" aria-labelledby="err-title" aria-describedby="err-msg">
+  <div class="err-box">
+    <h2 id="err-title">This game didn't load</h2>
+    <p id="err-msg"></p>
+    <button type="button" class="err-btn" id="err-retry">Try again</button>
+    <button type="button" class="err-btn" id="err-home">Back To Home</button>
+  </div>
 </div>
 
 <div id="intro-overlay">
@@ -8743,6 +8772,7 @@ iframe { width: 100%; height: 100vh; border: 0; display: block; background: #000
   var dragState = null;
   var suppressClick = false;
   var hintTimer = null;
+  var longPressTimer = null;
 
   function showHint(text, durationMs) {
     if (!hint) return;
@@ -8900,12 +8930,13 @@ iframe { width: 100%; height: 100vh; border: 0; display: block; background: #000
   }
 
   function onPointerMove(e) {
-    if (!dragState || !backBtn) return;
+    if (!dragState || !backBtn || dragState.cancelled) return;
     var pt = getPoint(e);
     var dx = pt.clientX - dragState.startX;
     var dy = pt.clientY - dragState.startY;
     if (!dragState.moved && Math.hypot(dx, dy) > 4) {
       dragState.moved = true;
+      clearTimeout(longPressTimer);
       customDragMode = true;
       backBtn.classList.add('custom-drag-active');
       backBtn.classList.add('dragging');
@@ -8923,6 +8954,9 @@ iframe { width: 100%; height: 100vh; border: 0; display: block; background: #000
 
   function onPointerUp() {
     if (!dragState) return;
+    clearTimeout(longPressTimer);
+    var wasCancelled = !!dragState.cancelled;
+    if (wasCancelled) { suppressClick = true; setTimeout(function () { suppressClick = false; }, 400); }
     var wasMoved = dragState.moved;
     var finalLeft = dragState.lastLeft;
     var finalTop = dragState.lastTop;
@@ -8954,6 +8988,15 @@ iframe { width: 100%; height: 100vh; border: 0; display: block; background: #000
       lastTop: rect.top,
       moved: false
     };
+    if (e.type === 'touchstart') {
+      clearTimeout(longPressTimer);
+      longPressTimer = setTimeout(function () {
+        if (dragState && !dragState.moved) {
+          dragState.cancelled = true;
+          openMenuAt(pt.clientX, pt.clientY);
+        }
+      }, 500);
+    }
     document.addEventListener('mousemove', onPointerMove);
     document.addEventListener('mouseup', onPointerUp);
     document.addEventListener('touchmove', onPointerMove, { passive: false });
@@ -8979,6 +9022,7 @@ iframe { width: 100%; height: 100vh; border: 0; display: block; background: #000
 
   if (backBtn) {
     loadSavedPosition();
+    if (localStorage.getItem('nx_back_btn_min') === '1') setMinimized(true);
     showHint('Right-click the button to choose its position or Custom drag.', 4000);
 
     backBtn.addEventListener('contextmenu', function (e) {
@@ -8997,6 +9041,7 @@ iframe { width: 100%; height: 100vh; border: 0; display: block; background: #000
         suppressClick = false;
         return;
       }
+      if (backBtn.classList.contains('minimized')) { setMinimized(false); return; }
       navigateBackHome();
     });
   }
@@ -9009,6 +9054,7 @@ iframe { width: 100%; height: 100vh; border: 0; display: block; background: #000
       e.stopPropagation();
       var pos = targetBtn.getAttribute('data-pos');
       closeMenu();
+      if (pos === 'minimize') { setMinimized(true); return; }
       if (pos === 'custom') {
         enableCustomDragMode();
       } else if (pos) {
@@ -9027,6 +9073,21 @@ iframe { width: 100%; height: 100vh; border: 0; display: block; background: #000
   });
 
   window.addEventListener('blur', closeMenu);
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeMenu();
+    if (e.altKey && !e.ctrlKey && (e.key === 'h' || e.key === 'H')) {
+      e.preventDefault();
+      setMinimized(!backBtn.classList.contains('minimized'));
+    }
+  });
+  function setMinimized(on) {
+    if (!backBtn) return;
+    backBtn.classList.toggle('minimized', !!on);
+    backBtn.setAttribute('aria-label', on ? 'Show Back To Home button' : 'Back To Home');
+    backBtn.title = on ? 'Back To Home is minimized. Click to show it. Alt+H toggles.' : 'Right-click for position options. Alt+H minimizes it.';
+    try { localStorage.setItem('nx_back_btn_min', on ? '1' : '0'); } catch (e) {}
+    if (on) closeMenu();
+  }
   window.addEventListener('resize', function () {
     if (currentMode === 'custom' && backBtn) {
       var rect = backBtn.getBoundingClientRect();
@@ -9128,15 +9189,41 @@ iframe { width: 100%; height: 100vh; border: 0; display: block; background: #000
   // Try real byte progress via fetch (works when CORS allows — GitHub Pages usually does)
   var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
   var timedOut = false;
-  var loadTimer = setTimeout(function () {
+  var errPanel = document.getElementById('err-panel');
+  var errMsg = document.getElementById('err-msg');
+  var errRetry = document.getElementById('err-retry');
+  var errHome = document.getElementById('err-home');
+  var LOAD_TIMEOUT_MS = 120000;
+
+  function showError(msg) {
+    if (errMsg) errMsg.textContent = msg;
+    if (errPanel) errPanel.style.display = 'flex';
+    if (errRetry) errRetry.focus();
+  }
+  function hideError() {
+    if (errPanel) errPanel.style.display = 'none';
+  }
+  function onLoadTimeout() {
     timedOut = true;
-    // still wait for iframe; keep soft progress
-  }, 120000);
+    showError('This game is taking too long to respond. It may be down, blocked by your network, or still downloading. Try again or go back.');
+  }
+  function retryLoad() {
+    hideError();
+    timedOut = false;
+    clearTimeout(loadTimer);
+    loadTimer = setTimeout(onLoadTimeout, LOAD_TIMEOUT_MS);
+    frame.src = GAME_SRC + (GAME_SRC.indexOf('?') === -1 ? '?' : '&') + 'nxretry=' + Date.now();
+  }
+  if (errRetry) errRetry.addEventListener('click', retryLoad);
+  if (errHome) errHome.addEventListener('click', function () { navigateBackHome(); });
+
+  var loadTimer = setTimeout(onLoadTimeout, LOAD_TIMEOUT_MS);
 
   function startIframe() {
     frame.src = GAME_SRC;
     frame.addEventListener('load', function () {
       clearTimeout(loadTimer);
+      hideError();
       finish();
     });
   }
@@ -9148,7 +9235,11 @@ iframe { width: 100%; height: 100vh; border: 0; display: block; background: #000
       credentials: 'omit',
       signal: ctrl && ctrl.signal
     }).then(function (res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
+      if (!res.ok) {
+        clearTimeout(loadTimer);
+        showError('The game returned HTTP ' + res.status + '. The link may be broken or the game was removed.');
+        return;
+      }
       var total = Number(res.headers.get('Content-Length')) || 0;
       // Note: Content-Length is only the HTML shell; assets load later inside the iframe.
       // We still show real HTML download, then switch to iframe load phase.
@@ -9277,6 +9368,9 @@ function renderLibraryGrid(gamesArray) {
     card.style.cssText = "position:absolute;box-sizing:border-box;margin:0;overflow:hidden;border-radius:14px;";
 
     const title = String(game.title || "Game");
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", "Play " + title);
     if (game.image) {
       const img = document.createElement("img");
       img.className = "game-card-img";
@@ -9862,16 +9956,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const searchBar = document.getElementById('searchBar');
   if (searchBar) {
-    searchBar.addEventListener('input', (e) => {
-      const term = e.target.value.toLowerCase().trim();
-      if (!term) { showHomeView(); return; }
-      document.getElementById('heroSection').style.display = 'none';
-      document.querySelector('.random-section').style.display = 'none';
-      if (document.getElementById('favoritesGrid')) document.getElementById('favoritesGrid').style.display = 'none';
-      if (document.getElementById('gameGrid')) document.getElementById('gameGrid').style.display = 'grid';
-      const hits = _0xData.filter(g => g.title.toLowerCase().includes(term) || g.desc.toLowerCase().includes(term));
-      renderLibraryGrid(hits);
-    });
+    searchBar.addEventListener('input', () => applyLibraryFilters());
   }
 
   const contextMenu = document.getElementById('custom-context-menu');
@@ -10727,3 +10812,182 @@ if (stealthBtn) {
     }
   }
 })();
+
+
+// =========================================================================
+// LIBRARY UX: filters, recently played, keyboard access, reduced motion
+// =========================================================================
+// Genre is auto-tagged from title/description keywords. Add a game id here to override.
+const GAME_GENRE_OVERRIDES = {};
+// Device support is not in the game data. Fill in ids with "Mobile-friendly" or "Desktop only".
+// Untagged games count as "Unknown".
+const GAME_DEVICE_OVERRIDES = {};
+
+const NX_GENRE_RULES = [
+  ["Racing & Driving", /moto|drive|truck|car crash|escape road|racing|race|drift|speed trial|eggy car/i],
+  ["Shooter", /gun|bullet|sniper|shoot|superhot|strike force|firearm/i],
+  ["Sports", /baseball|basket|bowl|soccer|football|dunk/i],
+  ["Idle & Clicker", /idle|clicker|tycoon|miner|mining|cookie|doge|bitcoin|empire|capitalist|airline|aviation|babel tower/i],
+  ["Horror & Mystery", /horror|backrooms|skinwalker|haunted|creepy|eerie|terrifying|literature club|dokidoki|tung baldi/i],
+  ["Puzzle & Word", /puzzle|wordle|riddle|merge/i],
+  ["Platformer & Obby", /obby|parkour|platformer|vex|leap|jump|daddish|chicco|climb/i],
+  ["Battle & Multiplayer", /battle|multiplayer|arena|royale|agar|combat|brawl|fight|pirate|\bio\b/i],
+  ["Simulation & Strategy", /simulat|strateg|sandbox|nations|survival|rhythm/i]
+];
+
+function getGameGenre(game) {
+  if (GAME_GENRE_OVERRIDES[game.id]) return GAME_GENRE_OVERRIDES[game.id];
+  const text = String(game.title || "") + " " + String(game.desc || "");
+  for (const [name, re] of NX_GENRE_RULES) {
+    if (re.test(text)) return name;
+  }
+  return "Arcade & Other";
+}
+
+function getGameDevice(game) {
+  return GAME_DEVICE_OVERRIDES[game.id] || "Unknown";
+}
+
+function nxRecentIds() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem("nx_recent_games") || "[]");
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function applyLibraryFilters() {
+  const searchEl = document.getElementById("searchBar");
+  const genreEl = document.getElementById("nx-filter-genre");
+  const deviceEl = document.getElementById("nx-filter-device");
+  const recentEl = document.getElementById("nx-filter-recent");
+  const countEl = document.getElementById("nx-filter-count");
+
+  const term = (searchEl ? searchEl.value : "").toLowerCase().trim();
+  const genre = genreEl ? genreEl.value : "";
+  const device = deviceEl ? deviceEl.value : "";
+  const recentOnly = !!recentEl && recentEl.getAttribute("aria-pressed") === "true";
+  const active = !!term || !!genre || !!device || recentOnly;
+
+  if (!active) {
+    if (countEl) countEl.textContent = "";
+    showHomeView();
+    return;
+  }
+
+  const heroEl = document.getElementById("heroSection");
+  if (heroEl) heroEl.style.display = "none";
+  const randomEl = document.querySelector(".random-section");
+  if (randomEl) randomEl.style.display = "none";
+  const favEl = document.getElementById("favoritesGrid");
+  if (favEl) favEl.style.display = "none";
+  const gridEl = document.getElementById("gameGrid");
+  if (gridEl) gridEl.style.display = "grid";
+
+  let list = _0xData.slice();
+  if (recentOnly) {
+    const byId = new Map(list.map(g => [g.id, g]));
+    list = nxRecentIds().map(id => byId.get(id)).filter(Boolean);
+  }
+  if (term) {
+    list = list.filter(g =>
+      String(g.title || "").toLowerCase().includes(term) ||
+      String(g.desc || "").toLowerCase().includes(term));
+  }
+  if (genre) list = list.filter(g => getGameGenre(g) === genre);
+  if (device) list = list.filter(g => getGameDevice(g) === device);
+
+  renderLibraryGrid(list);
+  if (countEl) countEl.textContent = list.length + (list.length === 1 ? " game" : " games");
+}
+
+function nxBootUx() {
+  const gridEl = document.getElementById("gameGrid");
+  const searchEl = document.getElementById("searchBar");
+  if (searchEl) searchEl.setAttribute("aria-label", "Search games");
+
+  // Keyboard: Enter or Space on a focused game card launches it
+  document.addEventListener("keydown", function (e) {
+    const t = e.target;
+    if ((e.key === "Enter" || e.key === " ") && t && t.classList &&
+        t.classList.contains("game-card") && t.hasAttribute("data-game-id")) {
+      e.preventDefault();
+      launchGame(t.getAttribute("data-game-id"));
+    }
+  });
+
+  const style = document.createElement("style");
+  style.id = "nx-ux-style";
+  style.textContent = `
+#nx-filter-bar { display: none; flex-wrap: wrap; gap: 8px; align-items: center; margin: 12px 0; font-family: system-ui, sans-serif; }
+#nx-filter-bar select, #nx-filter-bar button { background: #14141a; color: #e5e5e5; border: 1px solid #3a3a48; border-radius: 8px; padding: 7px 10px; font-size: 13px; cursor: pointer; min-height: 36px; }
+#nx-filter-bar button[aria-pressed="true"] { border-color: #8b00ff; background: rgba(139,0,255,0.3); color: #fff; }
+#nx-filter-count { color: #9a9aa8; font-size: 12px; margin-left: auto; }
+.game-card:focus-visible, #nx-filter-bar select:focus-visible, #nx-filter-bar button:focus-visible, #searchBar:focus-visible { outline: 3px solid #d8b4fe; outline-offset: 2px; }
+@media (max-width: 600px) {
+  #nx-filter-bar select, #nx-filter-bar button { flex: 1 1 42%; font-size: 14px; }
+  #nx-filter-count { width: 100%; margin-left: 0; text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+`;
+  document.head.appendChild(style);
+
+  if (!gridEl || document.getElementById("nx-filter-bar")) return;
+
+  const bar = document.createElement("div");
+  bar.id = "nx-filter-bar";
+  bar.setAttribute("role", "toolbar");
+  bar.setAttribute("aria-label", "Game filters");
+  bar.innerHTML =
+    '<select id="nx-filter-genre" aria-label="Filter by genre"><option value="">All genres</option></select>' +
+    '<select id="nx-filter-device" aria-label="Filter by device"><option value="">Any device</option>' +
+    '<option value="Mobile-friendly">Mobile-friendly</option><option value="Desktop only">Desktop only</option>' +
+    '<option value="Unknown">Unknown</option></select>' +
+    '<button type="button" id="nx-filter-recent" aria-pressed="false">Recently played</button>' +
+    '<button type="button" id="nx-filter-clear">Clear filters</button>' +
+    '<span id="nx-filter-count" aria-live="polite"></span>';
+
+  const genreSel = bar.querySelector("#nx-filter-genre");
+  const deviceSel = bar.querySelector("#nx-filter-device");
+  const recentBtn = bar.querySelector("#nx-filter-recent");
+  const genres = Array.from(new Set(_0xData.map(g => getGameGenre(g)))).sort();
+  genres.forEach(function (name) {
+    const opt = document.createElement("option");
+    opt.value = name;
+    opt.textContent = name;
+    genreSel.appendChild(opt);
+  });
+
+  genreSel.addEventListener("change", applyLibraryFilters);
+  deviceSel.addEventListener("change", applyLibraryFilters);
+  recentBtn.addEventListener("click", function () {
+    const on = recentBtn.getAttribute("aria-pressed") !== "true";
+    recentBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    applyLibraryFilters();
+  });
+  bar.querySelector("#nx-filter-clear").addEventListener("click", function () {
+    if (searchEl) searchEl.value = "";
+    genreSel.value = "";
+    deviceSel.value = "";
+    recentBtn.setAttribute("aria-pressed", "false");
+    applyLibraryFilters();
+  });
+
+  gridEl.parentElement.insertBefore(bar, gridEl);
+
+  // Show the filter bar only while the library grid is visible
+  const syncBar = function () {
+    bar.style.display = gridEl.style.display === "grid" ? "flex" : "none";
+  };
+  new MutationObserver(syncBar).observe(gridEl, { attributes: true, attributeFilter: ["style"] });
+  syncBar();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", nxBootUx);
+} else {
+  nxBootUx();
+}
