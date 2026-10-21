@@ -27,7 +27,9 @@
     'moto-x3m': 1,
     motox3m: 1,
     bitlife: 1,
-    'bit-life': 1
+    'bit-life': 1,
+    blockblast: 1,
+    'block-blast': 1
   };
 
   function isUnityGame(gameId, game) {
