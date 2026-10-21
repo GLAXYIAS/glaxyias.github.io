@@ -29,7 +29,14 @@
     bitlife: 1,
     'bit-life': 1,
     blockblast: 1,
-    'block-blast': 1
+    'block-blast': 1,
+    ahoysurvival: 1,
+    clickerobby: 1,
+    ragdrop: 1,
+    skinwalker: 1,
+    tungbaldibasics: 1,
+    'adventure-capitalist': 1,
+    'adventure capitalist': 1
   };
 
   function isUnityGame(gameId, game) {
