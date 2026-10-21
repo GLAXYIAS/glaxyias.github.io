@@ -81,4 +81,22 @@
     gate();
   }
   window.__nxTosGate = { hasAgreed: hasAgreed, markAgreed: markAgreed, showModal: showModal };
+
+  // Load catalog URL overrides + Unity iframe bypass (after main.js)
+  function loadExtraScripts() {
+    ["JS/game-url-overrides.js", "JS/unity-fix.js"].forEach(function (src) {
+      if (document.querySelector('script[src="' + src + '"]')) return;
+      var s = document.createElement("script");
+      s.src = src;
+      s.async = false;
+      document.head.appendChild(s);
+    });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () {
+      setTimeout(loadExtraScripts, 0);
+    });
+  } else {
+    setTimeout(loadExtraScripts, 0);
+  }
 })();
