@@ -29,7 +29,7 @@
   <div id="nx-error">
     <h1>Bullet Force could not start</h1>
     <code id="nx-error-msg"></code>
-    <p>This game is ~500 MB. If you see <b>429</b> or corrupt file errors, wait 1–2 minutes and refresh.</p>
+    <p>This game is ~500 MB. First load can take several minutes. If a part fails, wait 1–2 minutes and refresh.</p>
     <p><a href="/">← Back to Null X</a></p>
   </div>
   <div id="loading-text">LOADING Bullet Force…</div>
@@ -47,15 +47,17 @@
       "https://raw.githubusercontent.com/bubbls/UGS-Assets/main/bullet-force-multiplayer/"
     ];
 
-    // Known split layout from UGS-Assets (avoids HEAD probes that also 429)
+    // UGS names them .gz but the split parts are UNCOMPRESSED (wasm magic / UnityWeb header)
     var FILES = [
       {
         name: "584aaab0eb92d84ef26110ca5439bc54.wasm.gz",
+        kind: "wasm",
         parts: 8,
         sizes: [20866662, 20866662, 20866662, 20866662, 20866662, 20866662, 20866662, 2401991]
       },
       {
         name: "7edaab9530d578d742b70ec34add0032.data.gz",
+        kind: "data",
         parts: 19,
         sizes: [20866662, 20866662, 20866662, 20866662, 20866662, 20866662, 20866662, 20866662, 20866662, 20866662, 20866662, 20866662, 20866662, 20866662, 20866662, 20866662, 20866662, 20866662, 5183944]
       }
@@ -95,7 +97,7 @@
             var res = await fetch(url);
             if (res.status === 429) {
               lastErr = new Error("429 rate limit: " + url);
-              await sleep(2000 * (attempt + 1));
+              await sleep(2500 * (attempt + 1));
               continue;
             }
             if (!res.ok) {
@@ -104,10 +106,14 @@
             }
             var buf = await res.arrayBuffer();
             var u8 = new Uint8Array(buf);
-            // 429 text body starts with "429"
             if (u8.length >= 3 && u8[0] === 0x34 && u8[1] === 0x32 && u8[2] === 0x39) {
               lastErr = new Error("CDN 429 body for " + path);
-              await sleep(2000 * (attempt + 1));
+              await sleep(2500 * (attempt + 1));
+              continue;
+            }
+            // HTML error page
+            if (u8.length >= 2 && u8[0] === 0x3c && u8[1] === 0x21) {
+              lastErr = new Error("HTML error page for " + path);
               continue;
             }
             if (expectedSize && Math.abs(u8.length - expectedSize) > 2048) {
@@ -119,11 +125,31 @@
             return buf;
           } catch (e) {
             lastErr = e;
-            await sleep(1000 * (attempt + 1));
+            await sleep(1200 * (attempt + 1));
           }
         }
       }
       throw lastErr || new Error("Failed " + path);
+    }
+
+    function checkMagic(kind, buffer0) {
+      var head = new Uint8Array(buffer0.slice(0, 8));
+      if (kind === "wasm") {
+        // \0asm
+        if (!(head[0] === 0x00 && head[1] === 0x61 && head[2] === 0x73 && head[3] === 0x6d)) {
+          throw new Error(
+            "Corrupt WASM (magic " +
+            Array.from(head.slice(0, 4)).map(function (x) { return x.toString(16); }).join(" ") +
+            "). Wait and refresh."
+          );
+        }
+      } else if (kind === "data") {
+        // UnityWeb...
+        var tag = String.fromCharCode.apply(null, head);
+        if (tag.indexOf("UnityWeb") !== 0 && !(head[0] === 0x1f && head[1] === 0x8b)) {
+          throw new Error("Corrupt data file (header " + tag + "). Wait and refresh.");
+        }
+      }
     }
 
     async function mergeFile(fileInfo) {
@@ -132,14 +158,9 @@
         var path = "Build/" + fileInfo.name + ".part" + i;
         buffers.push(await fetchPart(path, fileInfo.sizes[i - 1]));
       }
-      // gzip magic 1f 8b
-      var head = new Uint8Array(buffers[0].slice(0, 2));
-      if (!(head[0] === 0x1f && head[1] === 0x8b)) {
-        throw new Error(
-          "Corrupt " + fileInfo.name + " (bad gzip magic). CDN rate-limit likely — wait and refresh."
-        );
-      }
-      return URL.createObjectURL(new Blob(buffers, { type: "application/gzip" }));
+      checkMagic(fileInfo.kind, buffers[0]);
+      var mime = fileInfo.kind === "wasm" ? "application/wasm" : "application/octet-stream";
+      return URL.createObjectURL(new Blob(buffers, { type: mime }));
     }
 
     function resizeCanvas() {
@@ -162,41 +183,24 @@
           throw new Error("WebGL not available. Enable hardware acceleration.");
         }
 
-        var mergedMap = {};
+        // Download + merge (sequential to avoid CDN 429)
+        var wasmUrl = null;
+        var dataUrl = null;
         for (var f = 0; f < FILES.length; f++) {
           setProgress("Merging " + FILES[f].name);
-          mergedMap[FILES[f].name] = await mergeFile(FILES[f]);
+          var blobUrl = await mergeFile(FILES[f]);
+          if (FILES[f].kind === "wasm") wasmUrl = blobUrl;
+          else dataUrl = blobUrl;
         }
 
         var activeBase = BASES[0];
-        var origFetch = window.fetch;
-        window.fetch = async function (resource, options) {
-          if (typeof resource === "string") {
-            var key = resource.split("/").pop();
-            if (mergedMap[key]) return origFetch(mergedMap[key], options);
-          }
-          return origFetch(resource, options);
-        };
 
-        var OrigXHR = window.XMLHttpRequest;
-        window.XMLHttpRequest = function () {
-          var xhr = new OrigXHR();
-          var origOpen = xhr.open;
-          xhr.open = function (method, url) {
-            var rest = Array.prototype.slice.call(arguments, 2);
-            var key = String(url).split("/").pop();
-            if (mergedMap[key]) {
-              return origOpen.apply(xhr, [method, mergedMap[key]].concat(rest));
-            }
-            return origOpen.apply(xhr, arguments);
-          };
-          return xhr;
-        };
-
+        // Pass blob URLs DIRECTLY — do NOT use .gz paths.
+        // UGS filenames say .gz but content is uncompressed; Unity would try to gunzip and fail.
         var config = {
-          dataUrl: "Build/7edaab9530d578d742b70ec34add0032.data.gz",
+          dataUrl: dataUrl,
           frameworkUrl: activeBase + "Build/fd74eec22ed0b1f79484c6a782ad39af.framework.js",
-          codeUrl: "Build/584aaab0eb92d84ef26110ca5439bc54.wasm.gz",
+          codeUrl: wasmUrl,
           streamingAssetsUrl: activeBase + "StreamingAssets",
           companyName: "Bullet Force",
           productName: "Bullet Force",
