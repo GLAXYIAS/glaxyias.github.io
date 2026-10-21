@@ -9,6 +9,7 @@
 <html lang="en-us">
 <base href="https://cdn.jsdelivr.net/gh/Stinkalistic/UGS@main/UNITY/sniper/">
 <head>
+  <script src="/JS/cdn-resilient.js"></script>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>game :D</title>
@@ -115,7 +116,11 @@
     }
 
     async function mergeParts(parts, mimeType) {
-      const buffers = await Promise.all(parts.map(fetchPart));
+      const buffers = [];
+      // Sequential to avoid jsDelivr 429s
+      for (const part of parts) {
+        buffers.push(await fetchPart(part));
+      }
       const totalLen = buffers.reduce((s, b) => s + b.length, 0);
       const concatenated = new Uint8Array(totalLen);
       let off = 0;
@@ -140,11 +145,9 @@
         const sizes = await Promise.all(allParts.map(getSize));
         totalBytes = sizes.reduce((a, b) => a + b, 0);
 
-        const [dataUrl, wasmUrl, frameworkUrl] = await Promise.all([
-          mergeParts(dataParts),
-          mergeParts(wasmParts),
-          mergeParts(["Build/framework.js"], 'application/javascript')
-        ]);
+        const dataUrl = await mergeParts(dataParts);
+        const wasmUrl = await mergeParts(wasmParts);
+        const frameworkUrl = await mergeParts(["Build/framework.js"], 'application/javascript');
 
         const canvas = document.querySelector("#unity-canvas");
         let scaleToFit = true;
