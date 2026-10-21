@@ -9,6 +9,7 @@
 
 <html>
 <head>
+    <script src="/JS/cdn-resilient.js"></script>
     <base href="https://cdn.jsdelivr.net/gh/AZURE2077/polytrack-beta-0.6.0@main/">
     <script>
         var NativeImage = window.Image;
@@ -69,9 +70,9 @@
             '};',
             'var __origXHROpen = XMLHttpRequest.prototype.open;',
             'XMLHttpRequest.prototype.open = function(method, url) {',
-            '    var args = Array.prototype.slice.call(arguments);',
-            '    args[1] = __resolveUrl(url);',
-            '    return __origXHROpen.apply(this, args);',
+            '    var args = Array.prototype.slice.call(arguments);
+            '    args[1] = __resolveUrl(url);
+            '    return __origXHROpen.apply(this, args);
             '};'
         ];
         var workerPatch = workerPatchLines.join("\n") + "\n";
