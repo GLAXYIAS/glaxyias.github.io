@@ -8508,22 +8508,21 @@ function launchGame(gameId) {
     useIframe = localStorage.getItem("nx_use_iframe") !== "false";
   } catch (e) {}
   if (!useIframe) {
-    var direct = window.open(gameSrc, "_blank");
-    if (!direct) {
-      window.location.href = gameSrc;
+    window.location.replace(gameSrc);
+    return;
+  }
+
+  // Clear existing page timers so home-screen clocks/checks don't fire after document replacement
+  try {
+    var maxTimerId = setTimeout(function () {}, 0);
+    for (var tId = 1; tId <= maxTimerId; tId++) {
+      clearInterval(tId);
+      clearTimeout(tId);
     }
-    return;
-  }
+  } catch (e) {}
 
-    const gameTab = window.open("about:blank", "_blank");
-  if (!gameTab) {
-    alert("Pop-up blocked! Please allow popups to play games.");
-    return;
-  }
-
-  gameTab.document.title = "Google Docs";
-  gameTab.document.open();
-  gameTab.document.write(`<!DOCTYPE html>
+  document.open("text/html", "replace");
+  document.write(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -8623,6 +8622,56 @@ iframe { width: 100%; height: 100vh; border: 0; display: block; background: #000
   padding: 8px 14px; font-weight: bold; border-radius: 8px;
   cursor: pointer; text-decoration: none; font-family: system-ui, sans-serif;
   box-shadow: 0 0 12px rgba(139,0,255,0.45);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  touch-action: none;
+}
+.back-btn:hover {
+  box-shadow: 0 0 18px rgba(139,0,255,0.75);
+}
+.back-btn.custom-drag-active {
+  cursor: grab;
+  border-style: dashed;
+  box-shadow: 0 0 18px rgba(181,107,255,0.85);
+}
+.back-btn.dragging {
+  cursor: grabbing !important;
+  opacity: 0.92;
+  transition: none !important;
+}
+#back-btn-menu {
+  position: fixed; z-index: 100001; background: #0f0f13;
+  border: 1px solid #8b00ff; border-radius: 8px; padding: 6px;
+  display: none; flex-direction: column; gap: 3px;
+  font-family: system-ui, sans-serif; font-size: 12px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.85), 0 0 12px rgba(139,0,255,0.35);
+  min-width: 150px;
+}
+#back-btn-menu .menu-title {
+  padding: 4px 10px 6px; font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.8px; color: #888;
+  border-bottom: 1px solid #23232c; margin-bottom: 2px;
+}
+#back-btn-menu button {
+  background: transparent; color: #e5e5e5; border: 0; text-align: left;
+  padding: 6px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+#back-btn-menu button:hover {
+  background: rgba(139,0,255,0.25); color: #fff;
+}
+#back-btn-menu button.active {
+  background: rgba(139,0,255,0.35); color: #d8b4fe; font-weight: 600;
+}
+#back-btn-menu hr {
+  border: 0; border-top: 1px solid #26262f; margin: 3px 0;
+}
+#back-btn-hint {
+  position: fixed; top: 58px; left: 15px; z-index: 100000;
+  background: rgba(10,10,14,0.94); color: #d8b4fe;
+  border: 1px solid #8b00ff; border-radius: 8px;
+  padding: 7px 12px; font: 600 12px/1.35 system-ui, sans-serif;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.7);
+  pointer-events: none; opacity: 1; transition: opacity 0.4s ease;
 }
 @keyframes gridPan { from { background-position: 0 0; } to { background-position: 60px 60px; } }
 @keyframes elegantFadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
@@ -8633,7 +8682,19 @@ iframe { width: 100%; height: 100vh; border: 0; display: block; background: #000
 </style>
 </head>
 <body>
-<a href="${homeUrl}" class="back-btn" target="_blank">&larr; Back To Home</a>
+<a href="https://glaxyias.github.io/" class="back-btn" id="nx-back-btn">&larr; Back To Home</a>
+<div id="back-btn-hint">Right-click the button to choose its position or Custom drag.</div>
+<div id="back-btn-menu" role="menu" aria-label="Back button position">
+  <div class="menu-title">Button Position</div>
+  <button type="button" data-pos="top-left">Top Left</button>
+  <button type="button" data-pos="top-center">Top Center</button>
+  <button type="button" data-pos="top-right">Top Right</button>
+  <button type="button" data-pos="bottom-left">Bottom Left</button>
+  <button type="button" data-pos="bottom-center">Bottom Center</button>
+  <button type="button" data-pos="bottom-right">Bottom Right</button>
+  <hr>
+  <button type="button" data-pos="custom">Custom (Drag)</button>
+</div>
 
 <div id="intro-overlay">
   <div class="intro-bg"></div>
@@ -8663,6 +8724,12 @@ iframe { width: 100%; height: 100vh; border: 0; display: block; background: #000
 <script>
 (function () {
   var GAME_SRC = '${safeSrcJs}';
+  var HOME_TARGET = 'https://glaxyias.github.io/';
+  var POS_KEY = 'nx_back_btn_pos';
+
+  var backBtn = document.getElementById('nx-back-btn');
+  var menu = document.getElementById('back-btn-menu');
+  var hint = document.getElementById('back-btn-hint');
   var fill = document.getElementById('prog-fill');
   var mbEl = document.getElementById('prog-mb');
   var pctEl = document.getElementById('prog-pct');
@@ -8670,6 +8737,302 @@ iframe { width: 100%; height: 100vh; border: 0; display: block; background: #000
   var factEl = document.getElementById('fun-fact');
   var overlay = document.getElementById('intro-overlay');
   var frame = document.getElementById('nx-game-frame');
+
+  var currentMode = 'top-left';
+  var customDragMode = false;
+  var dragState = null;
+  var suppressClick = false;
+  var hintTimer = null;
+
+  function showHint(text, durationMs) {
+    if (!hint) return;
+    if (text) hint.textContent = text;
+    hint.style.display = 'block';
+    hint.style.opacity = '1';
+    if (hintTimer) clearTimeout(hintTimer);
+    hintTimer = setTimeout(function () {
+      if (!hint) return;
+      hint.style.opacity = '0';
+      setTimeout(function () {
+        if (hint && hint.style.opacity === '0') hint.style.display = 'none';
+      }, 450);
+    }, durationMs || 4000);
+  }
+
+  function updateMenuActive(mode) {
+    if (!menu) return;
+    var buttons = menu.querySelectorAll('button[data-pos]');
+    for (var i = 0; i < buttons.length; i++) {
+      var b = buttons[i];
+      if (b.getAttribute('data-pos') === mode) {
+        b.classList.add('active');
+      } else {
+        b.classList.remove('active');
+      }
+    }
+  }
+
+  function clearPositionStyles(el) {
+    el.style.top = '';
+    el.style.bottom = '';
+    el.style.left = '';
+    el.style.right = '';
+    el.style.transform = '';
+  }
+
+  function applyPresetPosition(el, pos) {
+    if (!el) return;
+    clearPositionStyles(el);
+    switch (pos) {
+      case 'top-center':
+        el.style.top = '15px';
+        el.style.left = '50%';
+        el.style.transform = 'translateX(-50%)';
+        break;
+      case 'top-right':
+        el.style.top = '15px';
+        el.style.right = '15px';
+        break;
+      case 'bottom-left':
+        el.style.bottom = '15px';
+        el.style.left = '15px';
+        break;
+      case 'bottom-center':
+        el.style.bottom = '15px';
+        el.style.left = '50%';
+        el.style.transform = 'translateX(-50%)';
+        break;
+      case 'bottom-right':
+        el.style.bottom = '15px';
+        el.style.right = '15px';
+        break;
+      case 'top-left':
+      default:
+        el.style.top = '15px';
+        el.style.left = '15px';
+        pos = 'top-left';
+        break;
+    }
+    currentMode = pos;
+    updateMenuActive(pos);
+  }
+
+  function applyCustomCoords(el, left, top) {
+    if (!el) return;
+    clearPositionStyles(el);
+    var rect = el.getBoundingClientRect();
+    var w = rect.width || el.offsetWidth || 140;
+    var h = rect.height || el.offsetHeight || 38;
+    var maxX = Math.max(4, (window.innerWidth || 800) - w - 4);
+    var maxY = Math.max(4, (window.innerHeight || 600) - h - 4);
+    var clampedLeft = Math.max(4, Math.min(maxX, Number(left) || 15));
+    var clampedTop = Math.max(4, Math.min(maxY, Number(top) || 15));
+    el.style.left = clampedLeft + 'px';
+    el.style.top = clampedTop + 'px';
+    currentMode = 'custom';
+    updateMenuActive('custom');
+    return { left: clampedLeft, top: clampedTop };
+  }
+
+  function savePosition(data) {
+    try {
+      localStorage.setItem(POS_KEY, JSON.stringify(data));
+    } catch (e) {}
+  }
+
+  function loadSavedPosition() {
+    if (!backBtn) return;
+    try {
+      var raw = localStorage.getItem(POS_KEY);
+      if (!raw) {
+        applyPresetPosition(backBtn, 'top-left');
+        return;
+      }
+      var saved = JSON.parse(raw);
+      if (saved && saved.mode === 'preset' && saved.value) {
+        customDragMode = false;
+        backBtn.classList.remove('custom-drag-active');
+        applyPresetPosition(backBtn, saved.value);
+      } else if (saved && saved.mode === 'custom') {
+        customDragMode = true;
+        backBtn.classList.add('custom-drag-active');
+        applyCustomCoords(backBtn, saved.left, saved.top);
+      } else {
+        applyPresetPosition(backBtn, 'top-left');
+      }
+    } catch (e) {
+      applyPresetPosition(backBtn, 'top-left');
+    }
+  }
+
+  function closeMenu() {
+    if (menu) menu.style.display = 'none';
+  }
+
+  function openMenuAt(clientX, clientY) {
+    if (!menu) return;
+    menu.style.display = 'flex';
+    var menuRect = menu.getBoundingClientRect();
+    var mw = menuRect.width || 160;
+    var mh = menuRect.height || 230;
+    var vw = window.innerWidth || 800;
+    var vh = window.innerHeight || 600;
+    var x = Math.max(6, Math.min(clientX, vw - mw - 6));
+    var y = Math.max(6, Math.min(clientY, vh - mh - 6));
+    menu.style.left = x + 'px';
+    menu.style.top = y + 'px';
+  }
+
+  function enableCustomDragMode() {
+    if (!backBtn) return;
+    customDragMode = true;
+    backBtn.classList.add('custom-drag-active');
+    var rect = backBtn.getBoundingClientRect();
+    var coords = applyCustomCoords(backBtn, rect.left, rect.top);
+    savePosition({ mode: 'custom', left: coords.left, top: coords.top });
+    showHint('Custom mode: drag the button anywhere with your cursor.', 3500);
+  }
+
+  function getPoint(e) {
+    if (e.touches && e.touches.length) return e.touches[0];
+    if (e.changedTouches && e.changedTouches.length) return e.changedTouches[0];
+    return e;
+  }
+
+  function onPointerMove(e) {
+    if (!dragState || !backBtn) return;
+    var pt = getPoint(e);
+    var dx = pt.clientX - dragState.startX;
+    var dy = pt.clientY - dragState.startY;
+    if (!dragState.moved && Math.hypot(dx, dy) > 4) {
+      dragState.moved = true;
+      customDragMode = true;
+      backBtn.classList.add('custom-drag-active');
+      backBtn.classList.add('dragging');
+      if (frame) frame.style.pointerEvents = 'none';
+      closeMenu();
+    }
+    if (!dragState.moved) return;
+    if (e.cancelable) e.preventDefault();
+    var nextLeft = dragState.origLeft + dx;
+    var nextTop = dragState.origTop + dy;
+    var coords = applyCustomCoords(backBtn, nextLeft, nextTop);
+    dragState.lastLeft = coords.left;
+    dragState.lastTop = coords.top;
+  }
+
+  function onPointerUp() {
+    if (!dragState) return;
+    var wasMoved = dragState.moved;
+    var finalLeft = dragState.lastLeft;
+    var finalTop = dragState.lastTop;
+    dragState = null;
+    if (backBtn) backBtn.classList.remove('dragging');
+    if (frame) frame.style.pointerEvents = '';
+    document.removeEventListener('mousemove', onPointerMove);
+    document.removeEventListener('mouseup', onPointerUp);
+    document.removeEventListener('touchmove', onPointerMove);
+    document.removeEventListener('touchend', onPointerUp);
+    if (wasMoved) {
+      suppressClick = true;
+      savePosition({ mode: 'custom', left: finalLeft, top: finalTop });
+      setTimeout(function () { suppressClick = false; }, 50);
+    }
+  }
+
+  function onPointerDown(e) {
+    if (!backBtn) return;
+    if (e.type === 'mousedown' && e.button !== 0) return;
+    var pt = getPoint(e);
+    var rect = backBtn.getBoundingClientRect();
+    dragState = {
+      startX: pt.clientX,
+      startY: pt.clientY,
+      origLeft: rect.left,
+      origTop: rect.top,
+      lastLeft: rect.left,
+      lastTop: rect.top,
+      moved: false
+    };
+    document.addEventListener('mousemove', onPointerMove);
+    document.addEventListener('mouseup', onPointerUp);
+    document.addEventListener('touchmove', onPointerMove, { passive: false });
+    document.addEventListener('touchend', onPointerUp);
+  }
+
+  function navigateBackHome() {
+    var sameUrl = false;
+    try {
+      sameUrl = (window.location.hostname === 'glaxyias.github.io' &&
+        (window.location.pathname === '/' || window.location.pathname === '/index.html') &&
+        !window.location.search && !window.location.hash);
+    } catch (e) {}
+    try {
+      window.location.replace(HOME_TARGET);
+    } catch (e) {
+      window.location.href = HOME_TARGET;
+    }
+    if (sameUrl && typeof window.location.reload === 'function') {
+      try { window.location.reload(); } catch (e) {}
+    }
+  }
+
+  if (backBtn) {
+    loadSavedPosition();
+    showHint('Right-click the button to choose its position or Custom drag.', 4000);
+
+    backBtn.addEventListener('contextmenu', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      openMenuAt(e.clientX, e.clientY);
+    });
+
+    backBtn.addEventListener('mousedown', onPointerDown);
+    backBtn.addEventListener('touchstart', onPointerDown, { passive: true });
+
+    backBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (suppressClick) {
+        suppressClick = false;
+        return;
+      }
+      navigateBackHome();
+    });
+  }
+
+  if (menu) {
+    menu.addEventListener('click', function (e) {
+      var targetBtn = e.target && e.target.closest ? e.target.closest('button[data-pos]') : null;
+      if (!targetBtn || !backBtn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      var pos = targetBtn.getAttribute('data-pos');
+      closeMenu();
+      if (pos === 'custom') {
+        enableCustomDragMode();
+      } else if (pos) {
+        customDragMode = false;
+        backBtn.classList.remove('custom-drag-active');
+        applyPresetPosition(backBtn, pos);
+        savePosition({ mode: 'preset', value: pos });
+      }
+    });
+  }
+
+  document.addEventListener('mousedown', function (e) {
+    if (!menu || menu.style.display === 'none') return;
+    if (menu.contains(e.target) || (backBtn && backBtn.contains(e.target))) return;
+    closeMenu();
+  });
+
+  window.addEventListener('blur', closeMenu);
+  window.addEventListener('resize', function () {
+    if (currentMode === 'custom' && backBtn) {
+      var rect = backBtn.getBoundingClientRect();
+      applyCustomCoords(backBtn, rect.left, rect.top);
+    }
+  });
 
   var FACTS = [
     "The first browser game is often credited to 1990s Java applets — no App Store required.",
@@ -8838,28 +9201,7 @@ iframe { width: 100%; height: 100vh; border: 0; display: block; background: #000
 </body>
 </html>`);
 
-  gameTab.document.close();
-
-  function attemptCloseOriginalTab() {
-    try {
-      const selfWin = window.open(window.location.href, "_self");
-      if (selfWin) selfWin.close();
-    } catch (e) {}
-    try { window.close(); } catch (e) {}
-    try {
-      if (window.top && window.top !== window) window.top.close();
-    } catch (e) {}
-    try {
-      window.open("", "_self");
-      window.close();
-    } catch (e) {}
-  }
-  attemptCloseOriginalTab();
-  setTimeout(attemptCloseOriginalTab, 30);
-  setTimeout(function () {
-    try { window.location.replace("https://www.google.com"); }
-    catch (e) { try { window.location.href = "https://www.google.com"; } catch (e2) {} }
-  }, 120);
+  document.close();
 }
 
 
