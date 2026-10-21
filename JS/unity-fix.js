@@ -36,7 +36,9 @@
     skinwalker: 1,
     tungbaldibasics: 1,
     'adventure-capitalist': 1,
-    'adventure capitalist': 1
+    'adventure capitalist': 1,
+    'ragdoll-drop': 1,
+    'ragdoll drop': 1
   };
 
   function isUnityGame(gameId, game) {
