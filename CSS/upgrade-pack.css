@@ -1,0 +1,963 @@
+/* ==========================================================================
+   Null_X Upgrade Pack
+   Extra UI only: dock, level chip, continue-playing rail, dialogs, toasts,
+   command palette, confetti. Everything is namespaced with .nxup- / #nxup-.
+   ========================================================================== */
+
+:root {
+  --nxup-accent: var(--accent, #8b00ff);
+  --nxup-panel: rgba(18, 9, 28, 0.96);
+  --nxup-line: rgba(139, 0, 255, 0.35);
+  --nxup-text: #f2ecff;
+  --nxup-muted: #a99bc4;
+  --nxup-radius: 12px;
+}
+
+/* ---------- Level chip in the top bar ---------- */
+#nxup-level-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+#nxup-level-chip:hover,
+#nxup-level-chip:focus-visible {
+  border-color: var(--nxup-accent);
+  background: rgba(139, 0, 255, 0.16);
+  outline: none;
+}
+
+#nxup-level-chip .nxup-chip-level {
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #d8b4fe;
+}
+
+#nxup-level-chip .nxup-chip-bar {
+  display: block;
+  width: 52px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+
+#nxup-level-chip .nxup-chip-fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--nxup-accent), #e9d5ff);
+  transition: width 0.35s ease;
+}
+
+/* ---------- Floating dock ---------- */
+#nxup-dock {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 950;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.nxup-dock-btn {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 13px;
+  border: 1px solid var(--nxup-line);
+  background: var(--nxup-panel);
+  color: #fff;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nxup-dock-btn:hover,
+.nxup-dock-btn:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--nxup-accent);
+  background: rgba(139, 0, 255, 0.22);
+  outline: none;
+}
+
+.nxup-dock-btn.nxup-cmd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.nxup-dock-btn .nxup-dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ffd166;
+  box-shadow: 0 0 8px #ffd166;
+}
+
+#nxup-top {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+}
+
+#nxup-top.nxup-show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* ---------- Toasts ---------- */
+#nxup-toasts {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 9800;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(340px, calc(100vw - 28px));
+  pointer-events: none;
+}
+
+.nxup-toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 13px;
+  border-radius: var(--nxup-radius);
+  border: 1px solid var(--nxup-line);
+  background: var(--nxup-panel);
+  color: var(--nxup-text);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  line-height: 1.35;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55);
+  animation: nxup-toast-in 0.25s ease both;
+  cursor: pointer;
+}
+
+.nxup-toast.nxup-out {
+  animation: nxup-toast-out 0.22s ease both;
+}
+
+.nxup-toast-icon {
+  font-size: 18px;
+  line-height: 1.1;
+  flex-shrink: 0;
+}
+
+.nxup-toast-title {
+  font-weight: 700;
+  display: block;
+}
+
+.nxup-toast-msg {
+  color: var(--nxup-muted);
+  font-size: 12px;
+  display: block;
+  margin-top: 2px;
+}
+
+.nxup-toast-xp {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 800;
+  color: #facc15;
+  padding-top: 2px;
+}
+
+@keyframes nxup-toast-in {
+  from { opacity: 0; transform: translateX(16px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes nxup-toast-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateX(14px); }
+}
+
+/* ---------- Continue playing rail ---------- */
+#nxup-rail {
+  display: none;
+  margin: 16px 16px 4px;
+  padding: 12px 12px 6px;
+  border: 1px solid var(--nxup-line);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(139, 0, 255, 0.08), rgba(0, 0, 0, 0.12));
+}
+
+#nxup-rail.nxup-visible {
+  display: block;
+}
+
+.nxup-daily {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  border: 1px dashed var(--nxup-line);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.nxup-daily-thumb {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #2a1a40, #12091c);
+  color: #d8b4fe;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.nxup-daily-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.nxup-daily-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+.nxup-daily-text small {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #d8b4fe;
+}
+
+.nxup-daily-text strong {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nxup-daily-play {
+  flex-shrink: 0;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--nxup-accent);
+  background: rgba(139, 0, 255, 0.22);
+  color: #fff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.nxup-daily-play:hover,
+.nxup-daily-play:focus-visible {
+  background: var(--nxup-accent);
+  outline: none;
+}
+
+.nxup-rail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.nxup-rail-title {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--nxup-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nxup-rail-title i {
+  color: #d8b4fe;
+  font-size: 0.9rem;
+}
+
+.nxup-link {
+  background: transparent;
+  border: none;
+  color: var(--nxup-muted);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+
+.nxup-link:hover,
+.nxup-link:focus-visible {
+  color: #fff;
+  outline: 1px solid var(--nxup-line);
+}
+
+.nxup-rail-list {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 8px;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: var(--nxup-accent) transparent;
+}
+
+.nxup-rail-list::-webkit-scrollbar { height: 6px; }
+.nxup-rail-list::-webkit-scrollbar-thumb { background: var(--nxup-accent); border-radius: 999px; }
+
+.nxup-rail-item {
+  position: relative;
+  flex: 0 0 auto;
+  width: 118px;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #1a0b2e;
+  cursor: pointer;
+  scroll-snap-align: start;
+  transition: transform 0.18s ease, border-color 0.18s ease;
+}
+
+.nxup-rail-item:hover,
+.nxup-rail-item:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--nxup-accent);
+  outline: none;
+}
+
+.nxup-rail-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.nxup-rail-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-family: system-ui, sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #d8b4fe;
+  background: linear-gradient(135deg, #2a1a40, #12091c);
+}
+
+.nxup-rail-item span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 14px 8px 7px;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+  text-align: left;
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.88));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Dialogs ---------- */
+.nxup-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9700;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(5, 2, 12, 0.82);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-sizing: border-box;
+}
+
+.nxup-modal.nxup-open { display: flex; }
+
+.nxup-card {
+  display: flex;
+  flex-direction: column;
+  width: min(720px, 100%);
+  max-height: min(86vh, 780px);
+  overflow: hidden;
+  border: 1px solid var(--nxup-accent);
+  border-radius: 16px;
+  background: #12091c;
+  color: var(--nxup-text);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  box-shadow: 0 0 70px rgba(139, 0, 255, 0.28);
+}
+
+.nxup-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.nxup-head h2 {
+  margin: 0;
+  flex: 1;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.nxup-close {
+  background: transparent;
+  border: none;
+  color: #b9a8d6;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 6px;
+  border-radius: 6px;
+}
+
+.nxup-close:hover,
+.nxup-close:focus-visible { color: #fff; outline: 1px solid var(--nxup-line); }
+
+.nxup-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 12px 16px 0;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.nxup-tab {
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: transparent;
+  color: #cbb8e6;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.nxup-tab:hover { border-color: var(--nxup-accent); color: #fff; }
+
+.nxup-tab.nxup-active {
+  border-color: var(--nxup-accent);
+  background: rgba(139, 0, 255, 0.24);
+  color: #fff;
+}
+
+.nxup-body {
+  padding: 16px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.nxup-body[data-panel]:not(.nxup-active) { display: none; }
+
+/* Level header inside the stats dialog */
+.nxup-hero {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--nxup-line);
+  background: linear-gradient(135deg, rgba(139, 0, 255, 0.18), rgba(0, 0, 0, 0.1));
+  margin-bottom: 14px;
+}
+
+.nxup-hero-badge {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--nxup-accent);
+  background: rgba(0, 0, 0, 0.35);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.nxup-hero-badge small {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--nxup-muted);
+  text-transform: uppercase;
+}
+
+.nxup-hero-badge strong {
+  font-size: 22px;
+  line-height: 1;
+  color: #fff;
+}
+
+.nxup-hero-main { flex: 1; min-width: 0; }
+
+.nxup-hero-main h3 {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  color: #fff;
+}
+
+.nxup-progress {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.nxup-progress > span {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--nxup-accent), #f0abfc);
+  transition: width 0.4s ease;
+}
+
+.nxup-muted {
+  color: var(--nxup-muted);
+  font-size: 12px;
+}
+
+.nxup-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.nxup-stat {
+  padding: 10px 12px;
+  border-radius: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.nxup-stat b {
+  display: block;
+  font-size: 18px;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.nxup-stat span {
+  display: block;
+  margin-top: 3px;
+  font-size: 11px;
+  color: var(--nxup-muted);
+}
+
+.nxup-subhead {
+  margin: 4px 0 8px;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #d8b4fe;
+}
+
+.nxup-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.nxup-bar-row {
+  display: grid;
+  grid-template-columns: minmax(80px, 34%) 1fr auto;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--nxup-text);
+}
+
+.nxup-bar-track {
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.nxup-bar-track > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--nxup-accent), #c084fc);
+}
+
+.nxup-bar-meta {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
+  color: var(--nxup-muted);
+  white-space: nowrap;
+}
+
+.nxup-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Achievements */
+.nxup-ach-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
+  gap: 10px;
+}
+
+.nxup-ach {
+  display: flex;
+  gap: 10px;
+  padding: 11px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  opacity: 0.62;
+}
+
+.nxup-ach.nxup-unlocked {
+  opacity: 1;
+  border-color: var(--nxup-accent);
+  background: rgba(139, 0, 255, 0.13);
+  box-shadow: 0 0 18px rgba(139, 0, 255, 0.14);
+}
+
+.nxup-ach-icon {
+  font-size: 20px;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+
+.nxup-ach-text { min-width: 0; }
+
+.nxup-ach-text b {
+  display: block;
+  font-size: 12.5px;
+  color: #fff;
+}
+
+.nxup-ach-text small {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--nxup-muted);
+}
+
+.nxup-ach-text em {
+  display: block;
+  margin-top: 4px;
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #facc15;
+}
+
+/* Themes */
+.nxup-themes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.nxup-theme {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--nxup-text);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.nxup-theme:hover,
+.nxup-theme:focus-visible { border-color: var(--nxup-accent); outline: none; }
+
+.nxup-theme.nxup-active {
+  border-color: var(--nxup-accent);
+  background: rgba(139, 0, 255, 0.16);
+}
+
+.nxup-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  flex-shrink: 0;
+}
+
+.nxup-hint {
+  margin-top: 12px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--nxup-muted);
+}
+
+/* ---------- Command palette ---------- */
+#nxup-palette-modal {
+  align-items: flex-start;
+  padding-top: min(12vh, 110px);
+  z-index: 9750;
+}
+
+.nxup-palette {
+  width: min(620px, 100%);
+  border: 1px solid var(--nxup-accent);
+  border-radius: 14px;
+  background: #0f0718;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  color: var(--nxup-text);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+#nxup-palette-input {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  padding: 16px 18px;
+  outline: none;
+}
+
+#nxup-palette-input::placeholder { color: #8f7fae; }
+
+.nxup-palette-list {
+  max-height: 52vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.nxup-result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+}
+
+.nxup-result.nxup-sel {
+  background: rgba(139, 0, 255, 0.2);
+  border-left-color: var(--nxup-accent);
+}
+
+.nxup-result-thumb {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #2a1a40;
+}
+
+.nxup-result-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(139, 0, 255, 0.18);
+  flex-shrink: 0;
+  font-size: 15px;
+}
+
+.nxup-result-text { min-width: 0; flex: 1; }
+
+.nxup-result-title {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nxup-result-sub {
+  display: block;
+  font-size: 11px;
+  color: var(--nxup-muted);
+}
+
+.nxup-result-tag {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #d8b4fe;
+  border: 1px solid rgba(139, 0, 255, 0.4);
+  border-radius: 999px;
+  padding: 2px 6px;
+  flex-shrink: 0;
+}
+
+.nxup-empty {
+  padding: 22px 16px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--nxup-muted);
+}
+
+.nxup-palette-foot {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 8px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 10.5px;
+  color: var(--nxup-muted);
+}
+
+kbd.nxup-kbd {
+  display: inline-block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
+  padding: 1px 5px;
+  margin-right: 2px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+}
+
+/* Shortcuts sheet */
+.nxup-keys {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nxup-key-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.035);
+  font-size: 12.5px;
+  color: var(--nxup-text);
+}
+
+.nxup-key-row span:last-child { text-align: right; color: var(--nxup-muted); font-size: 11.5px; }
+
+/* Confetti canvas */
+#nxup-confetti {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9900;
+  pointer-events: none;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 760px) {
+  #nxup-dock { right: 12px; bottom: 12px; gap: 6px; }
+  .nxup-dock-btn { width: 38px; height: 38px; border-radius: 11px; font-size: 16px; }
+  .nxup-dock-btn.nxup-cmd { font-size: 11px; }
+  #nxup-rail { margin: 12px 10px 2px; padding: 10px 10px 4px; }
+  .nxup-rail-item { width: 96px; }
+  .nxup-daily { gap: 8px; padding: 7px 8px; }
+  .nxup-daily-thumb { width: 32px; height: 32px; }
+  .nxup-daily-play { padding: 6px 11px; font-size: 11px; }
+  .nxup-modal { padding: 8px; align-items: flex-end; }
+  .nxup-card { max-height: 92vh; border-radius: 14px; }
+  .nxup-body { padding: 12px; }
+  #nxup-palette-modal { padding-top: 8vh; }
+  .nxup-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nxup-hero { gap: 10px; padding: 12px; }
+  .nxup-hero-badge { width: 54px; height: 54px; }
+  .nxup-hero-badge strong { font-size: 18px; }
+  #nxup-toasts { top: 8px; right: 8px; left: 8px; width: auto; }
+}
+
+@media (max-width: 420px) {
+  .nxup-ach-grid { grid-template-columns: 1fr; }
+  .nxup-bar-row { grid-template-columns: minmax(70px, 40%) 1fr; }
+  .nxup-bar-meta { display: none; }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .nxup-toast,
+  .nxup-dock-btn,
+  .nxup-rail-item,
+  #nxup-top,
+  .nxup-progress > span,
+  #nxup-level-chip .nxup-chip-fill {
+    animation: none !important;
+    transition: none !important;
+  }
+}
