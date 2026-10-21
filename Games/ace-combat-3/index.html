@@ -43,6 +43,12 @@
       "https://cdn.jsdelivr.net/gh/bubbls/ugss@6ae566604fe7593c3cd8e4fbb5b595b284b0537d/",
       "https://gcore.jsdelivr.net/gh/bubbls/ugss@6ae566604fe7593c3cd8e4fbb5b595b284b0537d/"
     ];
+    // Official EmulatorJS — genizy/emu returns 403
+    var EJS_LOADERS = [
+      { loader: "https://cdn.emulatorjs.org/stable/data/loader.js", data: "https://cdn.emulatorjs.org/stable/data/" },
+      { loader: "https://cdn.emulatorjs.org/latest/data/loader.js", data: "https://cdn.emulatorjs.org/latest/data/" },
+      { loader: "https://cdn.jsdelivr.net/gh/EmulatorJS/EmulatorJS@latest/data/loader.js", data: "https://cdn.jsdelivr.net/gh/EmulatorJS/EmulatorJS@latest/data/" }
+    ];
     var MIN = 1, MAX = 22;
     var progressEl = document.getElementById("loading-progress");
 
@@ -102,30 +108,51 @@
     async function mergeAll() {
       var buffers = [];
       for (var i = MIN; i <= MAX; i++) {
-        progressEl.textContent = "Loading: " + (i - MIN) + "/" + (MAX - MIN + 1) +
-          " (part " + i + ")";
+        progressEl.textContent = "Loading ROM: " + (i - MIN + 1) + "/" + (MAX - MIN + 1);
         buffers.push(await fetchPart(i));
       }
       progressEl.textContent = "Starting emulator…";
-      return URL.createObjectURL(new Blob(buffers));
+      return URL.createObjectURL(new Blob(buffers, { type: "application/octet-stream" }));
+    }
+
+    function loadScript(src) {
+      return new Promise(function (resolve, reject) {
+        var script = document.createElement("script");
+        script.src = src;
+        script.onload = function () { resolve(src); };
+        script.onerror = function () { reject(new Error("Failed script " + src)); };
+        document.body.appendChild(script);
+      });
+    }
+
+    async function startEmulator(gameUrl) {
+      window.EJS_player = "#game";
+      window.EJS_core = "psx";
+      window.EJS_gameName = "Ace Combat 3 - Electrosphere (USA)";
+      window.EJS_color = "#0064ff";
+      window.EJS_startOnLoaded = true;
+      window.EJS_gameUrl = gameUrl;
+      window.EJS_biosUrl =
+        "https://cdn.jsdelivr.net/gh/Abdess/retroarch_system@5f96368f6dbad5851cdb16a5041fefec4bdcd305/Sony%20-%20PlayStation/scph5501.bin";
+
+      var lastErr = null;
+      for (var i = 0; i < EJS_LOADERS.length; i++) {
+        try {
+          window.EJS_pathtodata = EJS_LOADERS[i].data;
+          progressEl.textContent = "Loading emulator (" + (i + 1) + "/" + EJS_LOADERS.length + ")…";
+          await loadScript(EJS_LOADERS[i].loader);
+          if (progressEl && progressEl.parentNode) progressEl.remove();
+          return;
+        } catch (e) {
+          lastErr = e;
+        }
+      }
+      throw lastErr || new Error("Failed to load emulator loader from all CDNs");
     }
 
     mergeAll()
       .then(function (gameUrl) {
-        if (progressEl) progressEl.remove();
-        window.EJS_player = "#game";
-        window.EJS_core = "psx";
-        window.EJS_gameName = "Ace Combat 3 - Electrosphere (USA)";
-        window.EJS_color = "#0064ff";
-        window.EJS_startOnLoaded = true;
-        window.EJS_pathtodata = "https://cdn.jsdelivr.net/gh/genizy/emu@master/";
-        window.EJS_gameUrl = gameUrl;
-        window.EJS_biosUrl =
-          "https://cdn.jsdelivr.net/gh/Abdess/retroarch_system@5f96368f6dbad5851cdb16a5041fefec4bdcd305/Sony%20-%20PlayStation/scph5501.bin";
-        var script = document.createElement("script");
-        script.src = "https://cdn.jsdelivr.net/gh/genizy/emu@master/loader.js";
-        script.onerror = function () { showErr("Failed to load emulator loader"); };
-        document.body.appendChild(script);
+        return startEmulator(gameUrl);
       })
       .catch(function (e) {
         showErr(e && (e.message || e) || String(e));
