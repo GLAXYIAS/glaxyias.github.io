@@ -5,43 +5,122 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ace Combat 3 - Electrosphere</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@500;700&display=swap');
+    * { box-sizing: border-box; }
     html, body {
       margin: 0; padding: 0; width: 100%; height: 100%;
-      background: #0a0a0a; color: #fff; font-family: system-ui, sans-serif;
-      overflow: hidden;
+      background: #050810; color: #e8f0ff; overflow: hidden;
+      font-family: 'Share Tech Mono', monospace;
     }
     #wrap {
       width: 100%; height: 100%;
       display: flex; align-items: center; justify-content: center;
-      box-sizing: border-box;
     }
-    /* EmulatorJS needs a real sized parent — full viewport */
     #game {
       width: min(100vw, calc(100vh * 4 / 3));
       height: min(100vh, calc(100vw * 3 / 4));
-      max-width: 100%;
-      max-height: 100%;
+      max-width: 100%; max-height: 100%;
       background: #000;
     }
-    #loading-progress {
-      position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
-      padding: 10px 16px; background: rgba(255,255,255,0.12); border-radius: 8px;
-      z-index: 10; pointer-events: none;
+    #loader {
+      position: fixed; inset: 0; z-index: 50;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background:
+        radial-gradient(ellipse at 50% 20%, rgba(0,100,255,0.25), transparent 55%),
+        linear-gradient(180deg, #050810 0%, #0a1528 100%);
+      padding: 24px;
+    }
+    #loader.hide { opacity: 0; pointer-events: none; transition: opacity 0.6s ease; }
+    .radar {
+      width: 120px; height: 120px; border-radius: 50%;
+      border: 2px solid rgba(0,160,255,0.35);
+      position: relative; margin-bottom: 28px;
+      box-shadow: 0 0 40px rgba(0,120,255,0.25), inset 0 0 30px rgba(0,80,200,0.15);
+    }
+    .radar::before {
+      content: ''; position: absolute; inset: 10%; border-radius: 50%;
+      border: 1px solid rgba(0,180,255,0.2);
+    }
+    .radar::after {
+      content: ''; position: absolute; left: 50%; top: 50%; width: 50%; height: 2px;
+      background: linear-gradient(90deg, transparent, #00c8ff);
+      transform-origin: left center;
+      animation: sweep 2.2s linear infinite;
+    }
+    @keyframes sweep { to { transform: rotate(360deg); } }
+    .blip {
+      position: absolute; width: 8px; height: 8px; border-radius: 50%;
+      background: #00e5ff; box-shadow: 0 0 12px #00e5ff;
+      animation: blip 2.2s ease-in-out infinite;
+    }
+    .blip:nth-child(1) { top: 28%; left: 62%; animation-delay: 0s; }
+    .blip:nth-child(2) { top: 55%; left: 30%; animation-delay: 0.7s; }
+    .blip:nth-child(3) { top: 70%; left: 68%; animation-delay: 1.4s; }
+    @keyframes blip {
+      0%, 100% { opacity: 0.2; transform: scale(0.7); }
+      40% { opacity: 1; transform: scale(1.2); }
+    }
+    h1 {
+      font-family: Orbitron, sans-serif; font-size: clamp(1.1rem, 3vw, 1.6rem);
+      letter-spacing: 0.12em; margin: 0 0 6px; text-transform: uppercase;
+      color: #7ec8ff; text-shadow: 0 0 20px rgba(0,150,255,0.5);
+    }
+    .sub { color: #6a8ab0; font-size: 13px; margin-bottom: 22px; letter-spacing: 0.05em; }
+    .bar-wrap {
+      width: min(420px, 90vw); height: 10px; border-radius: 6px;
+      background: rgba(255,255,255,0.08); overflow: hidden;
+      border: 1px solid rgba(0,160,255,0.25);
+    }
+    .bar {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, #0064ff, #00e5ff);
+      box-shadow: 0 0 16px rgba(0,200,255,0.5);
+      transition: width 0.25s ease;
+    }
+    .status {
+      margin-top: 14px; font-size: 14px; color: #a8d4ff;
+      min-height: 1.4em; text-align: center;
+    }
+    .meta {
+      margin-top: 6px; font-size: 12px; color: #5a7a9a;
+      text-align: center;
+    }
+    .fact-box {
+      margin-top: 28px; max-width: 440px; min-height: 72px;
+      padding: 14px 18px; border-radius: 12px;
+      background: rgba(0,40,80,0.35);
+      border: 1px solid rgba(0,140,255,0.2);
+      text-align: center;
+    }
+    .fact-label {
+      font-size: 11px; letter-spacing: 0.15em; color: #3a9fff;
+      text-transform: uppercase; margin-bottom: 8px;
+    }
+    .fact-text {
+      font-size: 13px; line-height: 1.5; color: #c5daf0;
+      transition: opacity 0.4s ease;
     }
     #start-btn {
-      display: none; position: fixed; inset: 0; z-index: 20;
-      background: rgba(0,0,0,0.85);
-      align-items: center; justify-content: center; flex-direction: column;
-      gap: 16px;
+      display: none; margin-top: 22px;
     }
     #start-btn button {
-      background: #0064ff; color: #fff; border: none; border-radius: 10px;
-      padding: 14px 28px; font-size: 18px; font-weight: 700; cursor: pointer;
+      font-family: Orbitron, sans-serif;
+      background: linear-gradient(135deg, #0064ff, #00a0ff);
+      color: #fff; border: none; border-radius: 10px;
+      padding: 14px 32px; font-size: 15px; font-weight: 700;
+      cursor: pointer; letter-spacing: 0.08em;
+      box-shadow: 0 0 24px rgba(0,120,255,0.45);
+      transition: transform 0.15s, box-shadow 0.15s;
     }
-    #start-btn p { color: #aaa; margin: 0; font-size: 14px; }
+    #start-btn button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 36px rgba(0,160,255,0.6);
+    }
+    #start-btn p { color: #6a8ab0; font-size: 12px; margin: 10px 0 0; text-align: center; }
     #err {
       display: none; position: fixed; inset: 0; background: #0a0a0a;
       padding: 24px; box-sizing: border-box; z-index: 999; overflow: auto;
+      font-family: system-ui, sans-serif;
     }
     #err code {
       display: block; background: #1a1a1a; padding: 12px; border-radius: 8px;
@@ -52,17 +131,31 @@
 </head>
 <body>
   <div id="err"><h1>Ace Combat 3 failed to load</h1><code id="err-msg"></code><p><a href="/">← Back</a></p></div>
-  <div id="loading-progress">Loading: 0/22</div>
-  <div id="start-btn">
-    <button type="button" id="start-click">▶ Start Ace Combat 3</button>
-    <p>ROM ready — click to start (required for audio / WebGL)</p>
+
+  <div id="loader">
+    <div class="radar"><span class="blip"></span><span class="blip"></span><span class="blip"></span></div>
+    <h1>Ace Combat 3</h1>
+    <div class="sub">ELECTROSPHERE · PSX</div>
+    <div class="bar-wrap"><div class="bar" id="bar"></div></div>
+    <div class="status" id="status">Initializing mission systems…</div>
+    <div class="meta" id="meta">0 MB / ~420 MB</div>
+    <div class="fact-box">
+      <div class="fact-label">Mission Intel</div>
+      <div class="fact-text" id="fact">Spinning up radar…</div>
+    </div>
+    <div id="start-btn">
+      <button type="button" id="start-click">▶ ENGAGE</button>
+      <p>ROM verified — click to launch emulator</p>
+    </div>
   </div>
+
   <div id="wrap"><div id="game"></div></div>
 
   <script>
   (function () {
     var CHD_PATH = "ace%20combat%203/Ace%20Combat%203%20-%20Electrosphere%20(USA).chd";
-    var ROM_NAME = "Ace Combat 3 - Electrosphere (USA).chd";
+    // MUST end with .chd — EmulatorJS uses gameName as filename for File/blob loads
+    var ROM_FILENAME = "Ace Combat 3 - Electrosphere (USA).chd";
     var BASES = [
       "https://fastly.jsdelivr.net/gh/bubbls/ugss@6ae566604fe7593c3cd8e4fbb5b595b284b0537d/",
       "https://cdn.jsdelivr.net/gh/bubbls/ugss@6ae566604fe7593c3cd8e4fbb5b595b284b0537d/",
@@ -73,22 +166,60 @@
       { loader: "https://cdn.emulatorjs.org/latest/data/loader.js", data: "https://cdn.emulatorjs.org/latest/data/" },
       { loader: "https://cdn.jsdelivr.net/gh/EmulatorJS/EmulatorJS@latest/data/loader.js", data: "https://cdn.jsdelivr.net/gh/EmulatorJS/EmulatorJS@latest/data/" }
     ];
+    var FACTS = [
+      "Ace Combat 3 is set in 2040 — one of the series' most distant futures.",
+      "Electrosphere has branching story routes based on your mission choices.",
+      "Nemo, the player character, is an AI pilot — a first for the series.",
+      "The soundtrack mixes techno and orchestral themes unique to AC3.",
+      "There are two versions: the Japanese original and a heavily cut US release.",
+      "General Resource and Neucom are rival megacorporations in the story.",
+      "You can switch allegiances mid-campaign depending on performance.",
+      "CHD is a compressed disc format — smaller download, same game data.",
+      "PSX emulation needs a real BIOS (scph5501) to boot US titles.",
+      "Ace Combat 3's cockpit UI was redesigned to feel more 'future fighter'.",
+      "Some missions let you choose aircraft with very different loadouts.",
+      "The game was directed with a cinematic, anime-influenced narrative."
+    ];
+
     var MIN = 1, MAX = 22;
-    var progressEl = document.getElementById("loading-progress");
+    var statusEl = document.getElementById("status");
+    var metaEl = document.getElementById("meta");
+    var barEl = document.getElementById("bar");
+    var factEl = document.getElementById("fact");
     var startBtn = document.getElementById("start-btn");
+    var loaderEl = document.getElementById("loader");
     var romFile = null;
+    var loadedBytes = 0;
+    var estTotal = 420 * 1024 * 1024;
+    var factIdx = 0;
+    var factTimer = null;
 
     function showErr(msg) {
-      console.error(msg);
+      console.error("[AC3]", msg);
       document.getElementById("err-msg").textContent = String(msg);
       document.getElementById("err").style.display = "block";
-      if (progressEl) progressEl.textContent = "Error";
-      if (startBtn) startBtn.style.display = "none";
+      if (loaderEl) loaderEl.style.display = "none";
     }
 
+    function setStatus(s) { statusEl.textContent = s; }
+    function setProgress(pct, meta) {
+      barEl.style.width = Math.min(100, Math.max(0, pct)) + "%";
+      if (meta) metaEl.textContent = meta;
+    }
     function sleep(ms) {
       return new Promise(function (r) { setTimeout(r, ms); });
     }
+
+    function rotateFacts() {
+      factEl.style.opacity = "0";
+      setTimeout(function () {
+        factEl.textContent = FACTS[factIdx % FACTS.length];
+        factEl.style.opacity = "1";
+        factIdx++;
+      }, 350);
+    }
+    factTimer = setInterval(rotateFacts, 4500);
+    rotateFacts();
 
     function partUrl(base, i) {
       return base + CHD_PATH + ".part" + String(i).padStart(2, "0");
@@ -100,9 +231,11 @@
         var url = partUrl(BASES[b], i);
         for (var attempt = 0; attempt < 3; attempt++) {
           try {
+            setStatus("Downloading sector " + i + "/" + MAX + " (mirror " + (b + 1) + ")…");
             var res = await fetch(url);
             if (res.status === 429) {
-              lastErr = new Error("429 on part " + i);
+              lastErr = new Error("429 rate limit on part " + i);
+              setStatus("CDN busy — cooling down…");
               await sleep(1500 * (attempt + 1));
               continue;
             }
@@ -121,6 +254,9 @@
               lastErr = new Error("Part " + i + " too small");
               continue;
             }
+            loadedBytes += u8.length;
+            var pct = (loadedBytes / estTotal) * 90; // leave 10% for emulator
+            setProgress(pct, (loadedBytes / (1024 * 1024)).toFixed(1) + " MB downloaded");
             return buf;
           } catch (e) {
             lastErr = e;
@@ -132,21 +268,21 @@
     }
 
     async function mergeAll() {
+      setStatus("Contacting data relays…");
       var buffers = [];
       for (var i = MIN; i <= MAX; i++) {
-        progressEl.textContent = "Loading ROM: " + (i - MIN + 1) + "/" + (MAX - MIN + 1);
         buffers.push(await fetchPart(i));
       }
-      // Critical: File name MUST end in .chd so EmulatorJS detects format
-      // (bare blob: URLs have no extension → black screen)
-      romFile = new File(buffers, ROM_NAME, { type: "application/octet-stream" });
-      // Verify CHD magic "MComprHD"
+      setStatus("Assembling disc image…");
+      setProgress(92, "Merging " + MAX + " sectors…");
+      romFile = new File(buffers, ROM_FILENAME, { type: "application/octet-stream" });
       var head = new Uint8Array(await romFile.slice(0, 8).arrayBuffer());
       var magic = String.fromCharCode.apply(null, head);
       if (magic.indexOf("MComprHD") !== 0) {
-        throw new Error("Merged file is not a valid CHD (header: " + magic + ")");
+        throw new Error("Invalid CHD header: " + magic);
       }
-      progressEl.textContent = "ROM ready (" + (romFile.size / (1024 * 1024)).toFixed(0) + " MB)";
+      setStatus("CHD verified · " + (romFile.size / (1024 * 1024)).toFixed(0) + " MB");
+      setProgress(95, (romFile.size / (1024 * 1024)).toFixed(0) + " MB ready");
       return romFile;
     }
 
@@ -155,7 +291,7 @@
         var script = document.createElement("script");
         script.src = src;
         script.onload = function () { resolve(src); };
-        script.onerror = function () { reject(new Error("Failed script " + src)); };
+        script.onerror = function () { reject(new Error("Failed to load " + src)); };
         document.body.appendChild(script);
       });
     }
@@ -163,42 +299,49 @@
     async function startEmulator() {
       if (!romFile) throw new Error("ROM not ready");
 
+      setStatus("Arming EmulatorJS core…");
+      setProgress(97, "Loading PSX core + BIOS…");
+
+      // File object + gameName ending in .chd (required for format detect)
       window.EJS_player = "#game";
-      // pcsx_rearmed is the default behind "psx" — CHD is supported
       window.EJS_core = "psx";
-      window.EJS_gameName = "Ace Combat 3 - Electrosphere";
+      window.EJS_gameName = ROM_FILENAME; // MUST include .chd extension
       window.EJS_color = "#0064ff";
       window.EJS_startOnLoaded = true;
-      // Pass File object (has .name ending in .chd) — blob URL alone has no extension
       window.EJS_gameUrl = romFile;
       window.EJS_biosUrl =
         "https://cdn.jsdelivr.net/gh/Abdess/retroarch_system@5f96368f6dbad5851cdb16a5041fefec4bdcd305/Sony%20-%20PlayStation/scph5501.bin";
+
+      // Surface emulator errors instead of silent black screen
+      window.EJS_ready = function () {
+        setStatus("Core online — booting…");
+        setProgress(100, "Launch");
+        setTimeout(function () {
+          if (loaderEl) loaderEl.classList.add("hide");
+          clearInterval(factTimer);
+        }, 800);
+      };
 
       var lastErr = null;
       for (var i = 0; i < EJS_LOADERS.length; i++) {
         try {
           window.EJS_pathtodata = EJS_LOADERS[i].data;
-          progressEl.textContent = "Loading emulator…";
+          setStatus("Loading emulator CDN " + (i + 1) + "/" + EJS_LOADERS.length + "…");
           await loadScript(EJS_LOADERS[i].loader);
-          if (progressEl && progressEl.parentNode) progressEl.remove();
           return;
         } catch (e) {
           lastErr = e;
         }
       }
-      throw lastErr || new Error("Failed to load emulator from all CDNs");
+      throw lastErr || new Error("All emulator CDNs failed");
     }
 
     mergeAll()
       .then(function () {
-        if (progressEl) progressEl.style.display = "none";
-        startBtn.style.display = "flex";
+        startBtn.style.display = "block";
+        setStatus("Systems nominal — awaiting pilot input");
         document.getElementById("start-click").onclick = function () {
           startBtn.style.display = "none";
-          if (progressEl) {
-            progressEl.style.display = "block";
-            progressEl.textContent = "Starting…";
-          }
           startEmulator().catch(showErr);
         };
       })
