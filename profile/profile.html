@@ -6,6 +6,24 @@
     <title>Profile — Null-X</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="profile.css">
+    <style>
+        /* Opened inside the home page's fullscreen profile modal (?embed=1):
+           hide this page's own sidebar so it reads as a modal, not a page. */
+        html.nx-embed .sidebar { display: none; }
+        html.nx-embed .profile-container { min-height: 100vh; }
+        html.nx-embed .main-content { padding: 20px 16px 40px; align-items: flex-start; }
+        html.nx-embed .profile-shell { max-width: 560px; }
+        @media (max-width: 600px) {
+            html.nx-embed .main-content { padding: 14px 10px 28px; }
+        }
+    </style>
+    <script>
+        try {
+            if (new URLSearchParams(location.search).get('embed') === '1') {
+                document.documentElement.classList.add('nx-embed');
+            }
+        } catch (e) {}
+    </script>
 </head>
 <body>
     <div class="profile-container">
