@@ -88,7 +88,7 @@ async function tursoJson(path, options = {}) {
   return { res, data };
 }
 
-const DEFAULT_PFP = "https://null-x-team.github.io/imgs/download.jpeg";
+const DEFAULT_PFP = "https://glaxyias.github.io/imgs/newpfp.png";
 let allUsers = [];
 let lastMessageTime = 0;
 
@@ -231,7 +231,7 @@ function showChatNotification(title, body, tag) {
         }
         const n = new Notification(title, {
             body: body || '',
-            icon: 'https://null-x-team.github.io/imgs/download.jpeg',
+            icon: 'https://glaxyias.github.io/imgs/download.jpeg',
             tag: tag || 'nullchat',
             renotify: true
         });
