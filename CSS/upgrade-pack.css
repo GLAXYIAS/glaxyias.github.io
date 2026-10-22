@@ -167,9 +167,12 @@
 }
 
 .nxup-toast-icon {
-  font-size: 18px;
   line-height: 1.1;
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--nxup-accent);
 }
 
 .nxup-toast-title {
@@ -682,10 +685,15 @@
 }
 
 .nxup-ach-icon {
-  font-size: 20px;
   line-height: 1.2;
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--nxup-accent);
 }
+
+.nxup-ach:not(.nxup-unlocked) .nxup-ach-icon { color: #6d6d84; }
 
 .nxup-ach-text { min-width: 0; }
 
