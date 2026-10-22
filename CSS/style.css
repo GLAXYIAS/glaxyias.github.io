@@ -1449,3 +1449,21 @@ body.profile-modal-open { overflow: hidden; }
   .profile-modal-bar { height: 42px; padding-left: 14px; }
   .profile-modal-close { width: 30px; height: 30px; }
 }
+
+/* Material Symbols icons — rendered from JS/nx-icons.js, never emoji. */
+.nx-ico {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.nx-ico-slot,
+.nx-ico-host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+#console-close-btn .nx-ico { display: block; }
