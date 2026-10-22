@@ -17,6 +17,10 @@
                 '" onclick="window.openImageLightbox(this.getAttribute(\'data-full-src\') || this.src)" alt="attachment" title="Click to enlarge">'
             );
         }
+        // Mentions/reply quotes are rendered by chat-actions.js.
+        if (typeof window.nxRenderMessageBody === "function") {
+            return window.nxRenderMessageBody(content);
+        }
         return content;
     };
 
