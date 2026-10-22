@@ -8188,6 +8188,195 @@ let _0xData = [
     url: "https://whatchamacallitexe.github.io/pack-z/lozoracleofseasons/index.html",
     desc: "Play Lozoracleofseasons online in your browser.",
     popular: false
+  },
+  {
+    id: "ben10protector",
+    title: "Ben10Protector",
+    url: "https://whatchamacallitexe.github.io/pack-ag/ben10protector/index.html",
+    desc: "Play Ben10Protector online in your browser.",
+    popular: false
+  },
+  {
+    id: "ben10racing",
+    title: "Ben10Racing",
+    url: "https://whatchamacallitexe.github.io/pack-ag/ben10racing/index.html",
+    desc: "Play Ben10Racing online in your browser.",
+    popular: false
+  },
+  {
+    id: "ben10ultimatealien",
+    title: "Ben10Ultimatealien",
+    url: "https://whatchamacallitexe.github.io/pack-ag/ben10ultimatealien/index.html",
+    desc: "Play Ben10Ultimatealien online in your browser.",
+    popular: false
+  },
+  {
+    id: "bigicetowertinysquare",
+    title: "Bigicetowertinysquare",
+    url: "https://whatchamacallitexe.github.io/pack-ag/bigicetowertinysquare/index.html",
+    desc: "Play Bigicetowertinysquare online in your browser.",
+    popular: false
+  },
+  {
+    id: "bigneontowertinysquare",
+    title: "Bigneontowertinysquare",
+    url: "https://whatchamacallitexe.github.io/pack-ag/bigneontowertinysquare/index.html",
+    desc: "Play Bigneontowertinysquare online in your browser.",
+    popular: false
+  },
+  {
+    id: "bigshotboxing",
+    title: "Bigshotboxing",
+    url: "https://whatchamacallitexe.github.io/pack-ag/bigshotboxing/index.html",
+    desc: "Play Bigshotboxing online in your browser.",
+    popular: false
+  },
+  {
+    id: "bindingofisaccsheeptime",
+    title: "Bindingofisaccsheeptime",
+    url: "https://whatchamacallitexe.github.io/pack-ag/bindingofisaccsheeptime/index.html",
+    desc: "Play Bindingofisaccsheeptime online in your browser.",
+    popular: false
+  },
+  {
+    id: "bioevil4",
+    title: "Bioevil4",
+    url: "https://whatchamacallitexe.github.io/pack-ag/bioevil4/index.html",
+    desc: "Play Bioevil4 online in your browser.",
+    popular: false
+  },
+  {
+    id: "cactusmccoy",
+    title: "Cactusmccoy",
+    url: "https://whatchamacallitexe.github.io/pack-ag/cactusmccoy/index.html",
+    desc: "Play Cactusmccoy online in your browser.",
+    popular: false
+  },
+  {
+    id: "cactusmccoy2",
+    title: "Cactusmccoy2",
+    url: "https://whatchamacallitexe.github.io/pack-ag/cactusmccoy2/index.html",
+    desc: "Play Cactusmccoy2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "cannonballs3d",
+    title: "Cannonballs3D",
+    url: "https://whatchamacallitexe.github.io/pack-ag/cannonballs3d/index.html",
+    desc: "Play Cannonballs3D online in your browser.",
+    popular: false
+  },
+  {
+    id: "cannonfodder",
+    title: "Cannonfodder",
+    url: "https://whatchamacallitexe.github.io/pack-ag/cannonfodder/index.html",
+    desc: "Play Cannonfodder online in your browser.",
+    popular: false
+  },
+  {
+    id: "capybaraclicker",
+    title: "Capybaraclicker",
+    url: "https://whatchamacallitexe.github.io/pack-ag/capybaraclicker/index.html",
+    desc: "Play Capybaraclicker online in your browser.",
+    popular: false
+  },
+  {
+    id: "carcrash3",
+    title: "Carcrash3",
+    url: "https://whatchamacallitexe.github.io/pack-ag/carcrash3/index.html",
+    desc: "Play Carcrash3 online in your browser.",
+    popular: false
+  },
+  {
+    id: "cavestory",
+    title: "Cavestory",
+    url: "https://whatchamacallitexe.github.io/pack-ag/cavestory/index.html",
+    desc: "Play Cavestory online in your browser.",
+    popular: false
+  },
+  {
+    id: "celeste",
+    title: "Celeste",
+    url: "https://whatchamacallitexe.github.io/pack-ag/celeste/index.html",
+    desc: "Play Celeste online in your browser.",
+    popular: false
+  },
+  {
+    id: "cheesechompers3d",
+    title: "Cheesechompers3D",
+    url: "https://whatchamacallitexe.github.io/pack-ag/cheesechompers3d/index.html",
+    desc: "Play Cheesechompers3D online in your browser.",
+    popular: false
+  },
+  {
+    id: "chess",
+    title: "Chess",
+    url: "https://whatchamacallitexe.github.io/pack-ag/chess/index.html",
+    desc: "Play Chess online in your browser.",
+    popular: false
+  },
+  {
+    id: "chipschallenge",
+    title: "Chipschallenge",
+    url: "https://whatchamacallitexe.github.io/pack-ag/chipschallenge/index.html",
+    desc: "Play Chipschallenge online in your browser.",
+    popular: false
+  },
+  {
+    id: "chronotrigger",
+    title: "Chronotrigger",
+    url: "https://whatchamacallitexe.github.io/pack-ag/chronotrigger/index.html",
+    desc: "Play Chronotrigger online in your browser.",
+    popular: false
+  },
+  {
+    id: "clusterrush",
+    title: "Clusterrush",
+    url: "https://whatchamacallitexe.github.io/pack-ag/clusterrush/index.html",
+    desc: "Play Clusterrush online in your browser.",
+    popular: false
+  },
+  {
+    id: "tastyplanet",
+    title: "Tastyplanet",
+    url: "https://whatchamacallitexe.github.io/pack-ag/tastyplanet/index.html",
+    desc: "Play Tastyplanet online in your browser.",
+    popular: false
+  },
+  {
+    id: "templerun2",
+    title: "Templerun2",
+    url: "https://whatchamacallitexe.github.io/pack-ag/templerun2/index.html",
+    desc: "Play Templerun2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "tetrisattack",
+    title: "Tetrisattack",
+    url: "https://whatchamacallitexe.github.io/pack-ag/tetrisattack/index.html",
+    desc: "Play Tetrisattack online in your browser.",
+    popular: false
+  },
+  {
+    id: "theimpossiblegame",
+    title: "Theimpossiblegame",
+    url: "https://whatchamacallitexe.github.io/pack-ag/theimpossiblegame/index.html",
+    desc: "Play Theimpossiblegame online in your browser.",
+    popular: false
+  },
+  {
+    id: "trafficjam3d",
+    title: "Trafficjam3D",
+    url: "https://whatchamacallitexe.github.io/pack-ag/trafficjam3d/index.html",
+    desc: "Play Trafficjam3D online in your browser.",
+    popular: false
+  },
+  {
+    id: "trucksim",
+    title: "Trucksim",
+    url: "https://whatchamacallitexe.github.io/pack-ag/trucksim/index.html",
+    desc: "Play Trucksim online in your browser.",
+    popular: false
   }
 ];
 
