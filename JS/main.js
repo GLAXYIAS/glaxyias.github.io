@@ -8188,195 +8188,6 @@ let _0xData = [
     url: "https://whatchamacallitexe.github.io/pack-z/lozoracleofseasons/index.html",
     desc: "Play Lozoracleofseasons online in your browser.",
     popular: false
-  },
-  {
-    id: "ben10protector",
-    title: "Ben10Protector",
-    url: "https://whatchamacallitexe.github.io/pack-ag/ben10protector/index.html",
-    desc: "Play Ben10Protector online in your browser.",
-    popular: false
-  },
-  {
-    id: "ben10racing",
-    title: "Ben10Racing",
-    url: "https://whatchamacallitexe.github.io/pack-ag/ben10racing/index.html",
-    desc: "Play Ben10Racing online in your browser.",
-    popular: false
-  },
-  {
-    id: "ben10ultimatealien",
-    title: "Ben10Ultimatealien",
-    url: "https://whatchamacallitexe.github.io/pack-ag/ben10ultimatealien/index.html",
-    desc: "Play Ben10Ultimatealien online in your browser.",
-    popular: false
-  },
-  {
-    id: "bigicetowertinysquare",
-    title: "Bigicetowertinysquare",
-    url: "https://whatchamacallitexe.github.io/pack-ag/bigicetowertinysquare/index.html",
-    desc: "Play Bigicetowertinysquare online in your browser.",
-    popular: false
-  },
-  {
-    id: "bigneontowertinysquare",
-    title: "Bigneontowertinysquare",
-    url: "https://whatchamacallitexe.github.io/pack-ag/bigneontowertinysquare/index.html",
-    desc: "Play Bigneontowertinysquare online in your browser.",
-    popular: false
-  },
-  {
-    id: "bigshotboxing",
-    title: "Bigshotboxing",
-    url: "https://whatchamacallitexe.github.io/pack-ag/bigshotboxing/index.html",
-    desc: "Play Bigshotboxing online in your browser.",
-    popular: false
-  },
-  {
-    id: "bindingofisaccsheeptime",
-    title: "Bindingofisaccsheeptime",
-    url: "https://whatchamacallitexe.github.io/pack-ag/bindingofisaccsheeptime/index.html",
-    desc: "Play Bindingofisaccsheeptime online in your browser.",
-    popular: false
-  },
-  {
-    id: "bioevil4",
-    title: "Bioevil4",
-    url: "https://whatchamacallitexe.github.io/pack-ag/bioevil4/index.html",
-    desc: "Play Bioevil4 online in your browser.",
-    popular: false
-  },
-  {
-    id: "cactusmccoy",
-    title: "Cactusmccoy",
-    url: "https://whatchamacallitexe.github.io/pack-ag/cactusmccoy/index.html",
-    desc: "Play Cactusmccoy online in your browser.",
-    popular: false
-  },
-  {
-    id: "cactusmccoy2",
-    title: "Cactusmccoy2",
-    url: "https://whatchamacallitexe.github.io/pack-ag/cactusmccoy2/index.html",
-    desc: "Play Cactusmccoy2 online in your browser.",
-    popular: false
-  },
-  {
-    id: "cannonballs3d",
-    title: "Cannonballs3D",
-    url: "https://whatchamacallitexe.github.io/pack-ag/cannonballs3d/index.html",
-    desc: "Play Cannonballs3D online in your browser.",
-    popular: false
-  },
-  {
-    id: "cannonfodder",
-    title: "Cannonfodder",
-    url: "https://whatchamacallitexe.github.io/pack-ag/cannonfodder/index.html",
-    desc: "Play Cannonfodder online in your browser.",
-    popular: false
-  },
-  {
-    id: "capybaraclicker",
-    title: "Capybaraclicker",
-    url: "https://whatchamacallitexe.github.io/pack-ag/capybaraclicker/index.html",
-    desc: "Play Capybaraclicker online in your browser.",
-    popular: false
-  },
-  {
-    id: "carcrash3",
-    title: "Carcrash3",
-    url: "https://whatchamacallitexe.github.io/pack-ag/carcrash3/index.html",
-    desc: "Play Carcrash3 online in your browser.",
-    popular: false
-  },
-  {
-    id: "cavestory",
-    title: "Cavestory",
-    url: "https://whatchamacallitexe.github.io/pack-ag/cavestory/index.html",
-    desc: "Play Cavestory online in your browser.",
-    popular: false
-  },
-  {
-    id: "celeste",
-    title: "Celeste",
-    url: "https://whatchamacallitexe.github.io/pack-ag/celeste/index.html",
-    desc: "Play Celeste online in your browser.",
-    popular: false
-  },
-  {
-    id: "cheesechompers3d",
-    title: "Cheesechompers3D",
-    url: "https://whatchamacallitexe.github.io/pack-ag/cheesechompers3d/index.html",
-    desc: "Play Cheesechompers3D online in your browser.",
-    popular: false
-  },
-  {
-    id: "chess",
-    title: "Chess",
-    url: "https://whatchamacallitexe.github.io/pack-ag/chess/index.html",
-    desc: "Play Chess online in your browser.",
-    popular: false
-  },
-  {
-    id: "chipschallenge",
-    title: "Chipschallenge",
-    url: "https://whatchamacallitexe.github.io/pack-ag/chipschallenge/index.html",
-    desc: "Play Chipschallenge online in your browser.",
-    popular: false
-  },
-  {
-    id: "chronotrigger",
-    title: "Chronotrigger",
-    url: "https://whatchamacallitexe.github.io/pack-ag/chronotrigger/index.html",
-    desc: "Play Chronotrigger online in your browser.",
-    popular: false
-  },
-  {
-    id: "clusterrush",
-    title: "Clusterrush",
-    url: "https://whatchamacallitexe.github.io/pack-ag/clusterrush/index.html",
-    desc: "Play Clusterrush online in your browser.",
-    popular: false
-  },
-  {
-    id: "tastyplanet",
-    title: "Tastyplanet",
-    url: "https://whatchamacallitexe.github.io/pack-ag/tastyplanet/index.html",
-    desc: "Play Tastyplanet online in your browser.",
-    popular: false
-  },
-  {
-    id: "templerun2",
-    title: "Templerun2",
-    url: "https://whatchamacallitexe.github.io/pack-ag/templerun2/index.html",
-    desc: "Play Templerun2 online in your browser.",
-    popular: false
-  },
-  {
-    id: "tetrisattack",
-    title: "Tetrisattack",
-    url: "https://whatchamacallitexe.github.io/pack-ag/tetrisattack/index.html",
-    desc: "Play Tetrisattack online in your browser.",
-    popular: false
-  },
-  {
-    id: "theimpossiblegame",
-    title: "Theimpossiblegame",
-    url: "https://whatchamacallitexe.github.io/pack-ag/theimpossiblegame/index.html",
-    desc: "Play Theimpossiblegame online in your browser.",
-    popular: false
-  },
-  {
-    id: "trafficjam3d",
-    title: "Trafficjam3D",
-    url: "https://whatchamacallitexe.github.io/pack-ag/trafficjam3d/index.html",
-    desc: "Play Trafficjam3D online in your browser.",
-    popular: false
-  },
-  {
-    id: "trucksim",
-    title: "Trucksim",
-    url: "https://whatchamacallitexe.github.io/pack-ag/trucksim/index.html",
-    desc: "Play Trucksim online in your browser.",
-    popular: false
   }
 ];
 
@@ -10069,6 +9880,19 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
+  function setSignInButton(signedIn) {
+    const btn = document.getElementById('signInBtn');
+    const label = document.getElementById('signInBtnLabel');
+    const icon = document.getElementById('signInBtnIcon');
+    if (label) label.textContent = signedIn ? "Sign Out" : "Sign In";
+    else if (btn) btn.textContent = signedIn ? "Sign Out" : "Sign In";
+    if (icon) {
+      icon.setAttribute('data-nx-icon', signedIn ? 'logout' : 'login');
+      icon.removeAttribute('data-nx-icon-ready');
+      if (typeof window.nxHydrateIcons === 'function') window.nxHydrateIcons();
+    }
+  }
+
   showHomeView();
 
   const randomBtn = document.getElementById('randomBtn');
@@ -10084,16 +9908,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('welcome-text')) {
       document.getElementById('welcome-text').textContent = `Hello, ${user}`;
     }
-    if (document.getElementById('signInBtn')) {
-      document.getElementById('signInBtn').textContent = "Sign Out";
-    }
+    setSignInButton(true);
   } else {
     if (document.getElementById('welcome-text')) {
       document.getElementById('welcome-text').textContent = "Hello, Guest";
     }
-    if (document.getElementById('signInBtn')) {
-      document.getElementById('signInBtn').textContent = "Sign In";
-    }
+    setSignInButton(false);
   }
 
   if (document.getElementById('signInBtn')) {
@@ -10752,7 +10572,7 @@ if (stealthBtn) {
             <div style="font-size:12px; color:#94a3b8;">Restricted Content Engine v6.2</div>
           </div>
           <div style="max-width:600px; margin:80px auto; padding:30px; text-align:center;">
-            <div style="font-size:64px; margin-bottom:10px;">🚫</div>
+            <div style="margin-bottom:10px;"><svg width="56" height="56" viewBox="0 0 24 24" fill="#ef4444" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-4.42 3.58-8 8-8 1.85 0 3.55.63 4.9 1.69L5.69 16.9A7.902 7.902 0 0 1 4 12zm8 8c-1.85 0-3.55-.63-4.9-1.69L18.31 7.1A7.902 7.902 0 0 1 20 12c0 4.42-3.58 8-8 8z"></path></svg></div>
             <h1 style="font-size:26px; color:#0f172a; margin-bottom:12px; font-weight:800;">Restricted Page</h1>
             <p style="color:#475569; font-size:15px; line-height:1.5; margin-bottom:24px;">
               This website has been restricted by your administrator policy.
@@ -10979,7 +10799,7 @@ if (stealthBtn) {
         return `
           <div style="background:#fff; height:100vh; padding:80px 40px; box-sizing:border-box; font-family:Roboto, Arial, sans-serif; color:#202124;">
             <div style="max-width:500px; margin:0 auto;">
-              <div style="font-size:48px; margin-bottom:20px; color:#5f6368;">🚫</div>
+              <div style="margin-bottom:20px; color:#5f6368;"><svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-4.42 3.58-8 8-8 1.85 0 3.55.63 4.9 1.69L5.69 16.9A7.902 7.902 0 0 1 4 12zm8 8c-1.85 0-3.55-.63-4.9-1.69L18.31 7.1A7.902 7.902 0 0 1 20 12c0 4.42-3.58 8-8 8z"></path></svg></div>
               <h1 style="font-size:22px; font-weight:500; margin-bottom:15px;">Blocked by administrator</h1>
               <p style="font-size:14px; color:#5f6368; line-height:1.6; margin-bottom:25px;">
                 This page has been blocked by your administrator.
