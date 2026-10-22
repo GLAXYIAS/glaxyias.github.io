@@ -174,40 +174,46 @@
   /* ------------------------------------------------------------------ */
   /* Achievements                                                        */
   /* ------------------------------------------------------------------ */
+  /* Material Symbols SVG (see JS/nx-icons.js) — the UI never uses emoji. */
+  function svgIcon(name, size) {
+    if (typeof window.nxIcon === 'function') return window.nxIcon(name, { size: size || 18 });
+    return '';
+  }
+
   var ACHIEVEMENTS = [
-    { id: 'first_launch', icon: '🎮', title: 'Press Start', desc: 'Launch your first game', xp: 20,
+    { id: 'first_launch', icon: 'sports_esports', title: 'Press Start', desc: 'Launch your first game', xp: 20,
       test: function () { return state.stats.launches >= 1; } },
-    { id: 'launch_5', icon: '🔥', title: 'Warmed Up', desc: 'Launch 5 games', xp: 25,
+    { id: 'launch_5', icon: 'local_fire_department', title: 'Warmed Up', desc: 'Launch 5 games', xp: 25,
       test: function () { return state.stats.launches >= 5; } },
-    { id: 'launch_10', icon: '⚡', title: 'Regular', desc: 'Launch 10 games', xp: 30,
+    { id: 'launch_10', icon: 'bolt', title: 'Regular', desc: 'Launch 10 games', xp: 30,
       test: function () { return state.stats.launches >= 10; } },
-    { id: 'launch_25', icon: '🕹️', title: 'Arcade Rat', desc: 'Launch 25 games', xp: 50,
+    { id: 'launch_25', icon: 'videogame_asset', title: 'Arcade Rat', desc: 'Launch 25 games', xp: 50,
       test: function () { return state.stats.launches >= 25; } },
-    { id: 'launch_50', icon: '👾', title: 'No-Life Legend', desc: 'Launch 50 games', xp: 80,
+    { id: 'launch_50', icon: 'smart_toy', title: 'No-Life Legend', desc: 'Launch 50 games', xp: 80,
       test: function () { return state.stats.launches >= 50; } },
-    { id: 'unique_10', icon: '🧭', title: 'Explorer', desc: 'Play 10 different games', xp: 40,
+    { id: 'unique_10', icon: 'explore', title: 'Explorer', desc: 'Play 10 different games', xp: 40,
       test: function () { return Object.keys(state.stats.unique).length >= 10; } },
-    { id: 'unique_25', icon: '🗺️', title: 'Cartographer', desc: 'Play 25 different games', xp: 70,
+    { id: 'unique_25', icon: 'map', title: 'Cartographer', desc: 'Play 25 different games', xp: 70,
       test: function () { return Object.keys(state.stats.unique).length >= 25; } },
-    { id: 'favorite_1', icon: '⭐', title: 'Collector', desc: 'Favorite your first game', xp: 15,
+    { id: 'favorite_1', icon: 'star', title: 'Collector', desc: 'Favorite your first game', xp: 15,
       test: function () { return state.stats.favs >= 1; } },
-    { id: 'favorite_5', icon: '💜', title: 'Curator', desc: 'Favorite 5 games', xp: 30,
+    { id: 'favorite_5', icon: 'favorite', title: 'Curator', desc: 'Favorite 5 games', xp: 30,
       test: function () { return state.stats.favs >= 5; } },
-    { id: 'streak_3', icon: '📅', title: 'On a Roll', desc: 'Visit 3 days in a row', xp: 40,
+    { id: 'streak_3', icon: 'event', title: 'On a Roll', desc: 'Visit 3 days in a row', xp: 40,
       test: function () { return state.streak.count >= 3; } },
-    { id: 'streak_7', icon: '🏆', title: 'Week Warrior', desc: 'Visit 7 days in a row', xp: 90,
+    { id: 'streak_7', icon: 'emoji_events', title: 'Week Warrior', desc: 'Visit 7 days in a row', xp: 90,
       test: function () { return state.streak.count >= 7; } },
-    { id: 'night_owl', icon: '🌙', title: 'Night Owl', desc: 'Start a game between midnight and 4 AM', xp: 30,
+    { id: 'night_owl', icon: 'bedtime', title: 'Night Owl', desc: 'Start a game between midnight and 4 AM', xp: 30,
       test: function () { return !!state.stats.nightOwl; } },
-    { id: 'early_bird', icon: '🌅', title: 'Early Bird', desc: 'Start a game between 5 AM and 8 AM', xp: 30,
+    { id: 'early_bird', icon: 'wb_twilight', title: 'Early Bird', desc: 'Start a game between 5 AM and 8 AM', xp: 30,
       test: function () { return !!state.stats.earlyBird; } },
-    { id: 'play_1h', icon: '⏱️', title: 'One More Game', desc: 'Play for 1 hour in total', xp: 60,
+    { id: 'play_1h', icon: 'timer', title: 'One More Game', desc: 'Play for 1 hour in total', xp: 60,
       test: function () { return state.stats.playMs >= 60 * 60 * 1000; } },
-    { id: 'level_5', icon: '🚀', title: 'Rising Star', desc: 'Reach level 5', xp: 50,
+    { id: 'level_5', icon: 'rocket_launch', title: 'Rising Star', desc: 'Reach level 5', xp: 50,
       test: function () { return levelInfo(state.xp).level >= 5; } },
-    { id: 'power_user', icon: '⌨️', title: 'Power User', desc: 'Open the command palette', xp: 20,
+    { id: 'power_user', icon: 'keyboard', title: 'Power User', desc: 'Open the command palette', xp: 20,
       test: function () { return !!state.stats.usedPalette; } },
-    { id: 'makeover', icon: '🎨', title: 'Makeover', desc: 'Change the site colour theme', xp: 20,
+    { id: 'makeover', icon: 'palette', title: 'Makeover', desc: 'Change the site colour theme', xp: 20,
       test: function () { return !!state.stats.themeChanged; } }
   ];
 
@@ -269,14 +275,14 @@
     return toastHost;
   }
 
-  function toast(icon, title, message, meta) {
+  function toast(iconName, title, message, meta) {
     var host = ensureToastHost();
     var el = document.createElement('div');
     el.className = 'nxup-toast';
 
     var iconEl = document.createElement('span');
     iconEl.className = 'nxup-toast-icon';
-    iconEl.textContent = icon || '✨';
+    iconEl.innerHTML = svgIcon(iconName, 18) || svgIcon('auto_awesome', 18);
     el.appendChild(iconEl);
 
     var text = document.createElement('span');
@@ -446,7 +452,7 @@
     dashBtn.id = 'nxup-open-dash';
     dashBtn.title = 'Stats & achievements';
     dashBtn.setAttribute('aria-label', 'Open stats and achievements');
-    dashBtn.textContent = '🏆';
+    dashBtn.innerHTML = svgIcon('emoji_events', 18);
     dockDot = document.createElement('span');
     dockDot.className = 'nxup-dot';
     dockDot.style.display = 'none';
@@ -460,7 +466,7 @@
     themeBtn.id = 'nxup-open-themes';
     themeBtn.title = 'Change colour theme';
     themeBtn.setAttribute('aria-label', 'Change colour theme');
-    themeBtn.textContent = '🎨';
+    themeBtn.innerHTML = svgIcon('palette', 18);
     themeBtn.addEventListener('click', function () { openDashboard('themes'); });
 
     var topBtn = document.createElement('button');
@@ -469,7 +475,7 @@
     topBtn.id = 'nxup-top';
     topBtn.title = 'Back to top';
     topBtn.setAttribute('aria-label', 'Back to top');
-    topBtn.textContent = '↑';
+    topBtn.innerHTML = svgIcon('arrow_upward', 18);
     topBtn.addEventListener('click', scrollToTop);
 
     dock.appendChild(paletteBtn);
@@ -566,7 +572,7 @@
       state.stats.themeChanged = true;
       saveStats();
       addXp(10);
-      toast('🎨', 'Theme changed: ' + theme.name, 'Saved for next time', '+10 XP');
+      toast('palette', 'Theme changed: ' + theme.name, 'Saved for next time', '+10 XP');
       checkAchievements();
     }
   }
@@ -617,7 +623,7 @@
 
     if (isNew) {
       addXp(25);
-      toast('🎮', 'New game: ' + rec.title, 'First time playing this one', '+25 XP');
+      toast('sports_esports', 'New game: ' + rec.title, 'First time playing this one', '+25 XP');
     } else {
       addXp(10);
     }
@@ -628,7 +634,7 @@
       state.stats.dailyPickDay = today;
       saveStats();
       addXp(20);
-      toast('🎯', "Today's pick played", '+20 XP bonus', '+20 XP');
+      toast('gps_fixed', "Today's pick played", '+20 XP bonus', '+20 XP');
     }
 
     checkAchievements();
@@ -668,7 +674,7 @@
       card.click();
       return true;
     }
-    toast('⚠️', 'Could not open that game', 'Reload the page and try again');
+    toast('warning', 'Could not open that game', 'Reload the page and try again');
     return false;
   }
 
@@ -718,7 +724,7 @@
     saveStats();
 
     addXp(25);
-    toast('🔥', 'Day ' + count + ' streak', 'Come back tomorrow for +25 XP', '+25 XP');
+    toast('local_fire_department', 'Day ' + count + ' streak', 'Come back tomorrow for +25 XP', '+25 XP');
     checkAchievements();
   }
 
@@ -739,7 +745,7 @@
     if (count > previous) {
       var gained = count - previous;
       addXp(5 * gained);
-      toast('⭐', gained === 1 ? 'Favorite added' : gained + ' favorites added', 'Saved in your library', '+' + (5 * gained) + ' XP');
+      toast('star', gained === 1 ? 'Favorite added' : gained + ' favorites added', 'Saved in your library', '+' + (5 * gained) + ' XP');
     }
     checkAchievements();
   }
@@ -781,7 +787,7 @@
       state.stats.history = [];
       saveStats();
       renderRail();
-      toast('🧹', 'Continue playing cleared', 'It will fill up again as you play');
+      toast('cleaning_services', 'Continue playing cleared', 'It will fill up again as you play');
     });
     head.appendChild(clear);
 
@@ -1126,7 +1132,7 @@
           ? when.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
           : '';
         return '<div class="nxup-ach' + (unlockedAt ? ' nxup-unlocked' : '') + '">' +
-          '<span class="nxup-ach-icon" aria-hidden="true">' + a.icon + '</span>' +
+          '<span class="nxup-ach-icon" aria-hidden="true">' + svgIcon(a.icon, 20) + '</span>' +
           '<span class="nxup-ach-text">' +
             '<b>' + esc(a.title) + '</b>' +
             '<small>' + esc(a.desc) + '</small>' +
@@ -1176,6 +1182,7 @@
       ['Ctrl / ⌘ + K', 'Search every game and run commands'],
       ['/', 'Jump to the search box'],
       ['Alt + R', 'Open a random game'],
+      ['Alt + L', 'Lock the site'],
       ['?', 'Show this shortcuts list'],
       ['Esc', 'Close any panel'],
       ['Enter / Space', 'Open the focused game card'],
@@ -1263,15 +1270,29 @@
     });
   }
 
+  function lockSiteNow() {
+    if (typeof window.nxLockSite === 'function') {
+      window.nxLockSite();
+      return;
+    }
+    // No lock hook on this page yet: behave exactly like pressing Alt + L.
+    try {
+      document.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'l', altKey: true, bubbles: true, cancelable: true
+      }));
+    } catch (err) {}
+  }
+
   function paletteActions() {
     return [
-      { type: 'action', icon: '🎲', title: 'Random game', sub: 'Play something unexpected', run: function () { randomGame(); } },
-      { type: 'action', icon: '📊', title: 'Open my stats', sub: 'Games played, time played, favourites', run: function () { openDashboard('overview'); } },
-      { type: 'action', icon: '🏆', title: 'Open achievements', sub: 'See what you have unlocked', run: function () { openDashboard('achievements'); } },
-      { type: 'action', icon: '🎨', title: 'Change colour theme', sub: 'Purple, cyan, crimson, emerald, gold, mono', run: function () { openDashboard('themes'); } },
-      { type: 'action', icon: '⌨️', title: 'Keyboard shortcuts', sub: 'Every shortcut in one place', run: function () { openShortcuts(); } },
-      { type: 'action', icon: '⭐', title: 'Go to favorites', sub: 'Your starred games', run: function () { var b = document.getElementById('nav-favorites'); if (b) b.click(); } },
-      { type: 'action', icon: '🕹️', title: 'Browse all games', sub: 'Open the full library', run: function () { var b = document.getElementById('nav-games'); if (b) b.click(); } }
+      { type: 'action', icon: 'lock', title: 'Lock site', sub: 'Hide everything behind your lock screen', hint: 'Alt+L', run: lockSiteNow },
+      { type: 'action', icon: 'casino', title: 'Random game', sub: 'Play something unexpected', run: function () { randomGame(); } },
+      { type: 'action', icon: 'insights', title: 'Open my stats', sub: 'Games played, time played, favourites', run: function () { openDashboard('overview'); } },
+      { type: 'action', icon: 'emoji_events', title: 'Open achievements', sub: 'See what you have unlocked', run: function () { openDashboard('achievements'); } },
+      { type: 'action', icon: 'palette', title: 'Change colour theme', sub: 'Purple, cyan, crimson, emerald, gold, mono', run: function () { openDashboard('themes'); } },
+      { type: 'action', icon: 'keyboard', title: 'Keyboard shortcuts', sub: 'Every shortcut in one place', run: function () { openShortcuts(); } },
+      { type: 'action', icon: 'star', title: 'Go to favorites', sub: 'Your starred games', run: function () { var b = document.getElementById('nav-favorites'); if (b) b.click(); } },
+      { type: 'action', icon: 'videogame_asset', title: 'Browse all games', sub: 'Open the full library', run: function () { var b = document.getElementById('nav-games'); if (b) b.click(); } }
     ];
   }
 
@@ -1354,10 +1375,10 @@
         '</div>';
       }
       return '<div class="nxup-result' + (i === 0 ? ' nxup-sel' : '') + '" role="option" aria-selected="' + (i === 0) + '" data-index="' + i + '">' +
-        '<span class="nxup-result-icon">' + esc(item.action.icon) + '</span>' +
+        '<span class="nxup-result-icon" aria-hidden="true">' + svgIcon(item.action.icon, 18) + '</span>' +
         '<span class="nxup-result-text"><span class="nxup-result-title">' + esc(item.action.title) + '</span>' +
         '<span class="nxup-result-sub">' + esc(item.action.sub) + '</span></span>' +
-        '<span class="nxup-result-tag">Action</span>' +
+        '<span class="nxup-result-tag">' + esc(item.action.hint || 'Action') + '</span>' +
       '</div>';
     }).join('');
 
@@ -1530,7 +1551,7 @@
     // 6. First-time visitors get a small hello instead of a silent feature.
     if (!state.helpSeen) {
       setTimeout(function () {
-        toast('👋', 'New here? Press Ctrl + K', 'Search any game instantly. Press ? for shortcuts.', '');
+        toast('waving_hand', 'New here? Press Ctrl + K', 'Search any game instantly. Press ? for shortcuts.', '');
       }, 1600);
     }
 
