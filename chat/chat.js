@@ -441,6 +441,10 @@ function renderMessageBody(content) {
         const safeUrl = url.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         return `<img src="${safeUrl}" class="chat-attached-image" data-full-src="${safeUrl}" onclick="window.openImageLightbox(this.getAttribute('data-full-src') || this.src)" alt="attachment" title="Click to enlarge">`;
     }
+    // Escape/mention/reply rendering lives in chat-actions.js
+    if (typeof window.nxRenderMessageBody === 'function') {
+        return window.nxRenderMessageBody(content);
+    }
     return content;
 }
 
@@ -1360,6 +1364,11 @@ window.initializeChatEngine = async function() {
             
             if (profile) {
                 currentUserIsAdmin = isAdminProfile(profile);
+                // Let chat-actions.js know who is signed in and whether they are staff
+                window.nxChatIsAdmin = currentUserIsAdmin;
+                window.dispatchEvent(new CustomEvent('nx:whoami', {
+                    detail: { username: user, isAdmin: currentUserIsAdmin }
+                }));
 
                 if (isBannedFlag(profile.is_banned)) {
                     alert("This account has been permanently banned from the server.");
@@ -1579,7 +1588,10 @@ window.initializeChatEngine = async function() {
                 if (msg.id && !knownPmIds.has(msg.id)) {
                     if (!isFirstPmSync && !isMine && notificationsEnabled()) {
                         const who = msg.sender_username || otherHandle || 'Someone';
-                        const preview = stripBubbleMarkers(msg.content).replace(/^\[\[IMG\]\].*/, '[Image]').slice(0, 120);
+                        const preview = stripBubbleMarkers(msg.content)
+                            .replace(/^\[\[REPLY:[^\]]*\]\]\s*/, '') // reply quote marker
+                            .replace(/^\[\[IMG\]\].*/, '[Image]')
+                            .slice(0, 120);
                         showChatNotification('PM from ' + who, preview || 'New private message', 'pm-' + msg.id);
                     }
                     knownPmIds.add(msg.id);
@@ -2083,7 +2095,10 @@ window.initializeChatEngine = async function() {
                     if (knownMessageIds.has(msg.id)) return;
                     const fromMe = msg.username && msg.username.trim().toLowerCase() === myUsernameGlobal.trim().toLowerCase();
                     if (!fromMe && msg.content !== "Message Was Deleted By Owner") {
-                        const preview = stripBubbleMarkers(msg.content).replace(/^\[\[IMG\]\].*/, '[Image]').slice(0, 120);
+                        const preview = stripBubbleMarkers(msg.content)
+                            .replace(/^\[\[REPLY:[^\]]*\]\]\s*/, '') // reply quote marker
+                            .replace(/^\[\[IMG\]\].*/, '[Image]')
+                            .slice(0, 120);
                         showChatNotification(msg.username || 'Someone', preview || 'New message in general chat', 'general-' + msg.id);
                     }
                 });
@@ -2145,6 +2160,13 @@ window.initializeChatEngine = async function() {
 
                 const div = document.createElement('div');
                 div.className = `message-wrapper ${isMine ? 'my-message-wrapper' : 'other-message-wrapper'}`;
+                // Raw row for chat-actions.js (edit/recall/delete/reply need the
+                // untouched content and the real id, not the rendered HTML).
+                if (msg.id != null) div.dataset.msgId = msg.id;
+                div.dataset.msgUser = msg.username;
+                // Image rows carry the whole data URL; don't duplicate megabytes
+                // into an attribute (edit/copy treat them as an image anyway).
+                div.dataset.msgRaw = String(msg.content || '').startsWith(IMG_MARKER) ? IMG_MARKER : msg.content;
                 
                 div.innerHTML = `
                     <img src="${userPfp}" class="chat-pfp chat-clickable" alt="Avatar" style="border: 2px solid ${senderStatusColor};" onclick="openUserMenu(event, '${msg.username}')">
@@ -2156,8 +2178,9 @@ window.initializeChatEngine = async function() {
                             <span style="font-size:10px; color:var(--accent); cursor:pointer; margin-left:4px;" onclick="window.mentionUser('${encodeURIComponent(msg.username)}')">[reply]</span>
                             ${tag}
                             <span class="message-timestamp">${time}</span>
+                            <button type="button" class="nx-msg-more" title="Message actions" aria-label="Message actions" onclick="window.nxMessageMenu(event, this)">⋯</button>
                         </div>
-                        <div class="message-text-bubble ${isMine ? 'my-bubble-color' : 'other-bubble-color'}${bubbleExtraClass}" style="${isDel ? 'font-style:italic; opacity:0.5;' : ''}" oncontextmenu="openMessageMenu(event, '${msg.id}', '${msg.username}')">
+                        <div class="message-text-bubble ${isMine ? 'my-bubble-color' : 'other-bubble-color'}${bubbleExtraClass}" style="${isDel ? 'font-style:italic; opacity:0.5;' : ''}">
                             ${bodyHtml}
                         </div>
                          ${(currentUserIsAdmin && !isDel) ? `<button style="background:none; color:red; font-size:10px; padding:0; margin-top:5px; cursor:pointer; width:auto; display:block;" onclick="deleteMsg('${msg.id}')">Delete</button>` : ""}
@@ -2171,6 +2194,17 @@ window.initializeChatEngine = async function() {
     }
 
     window.refreshChatMessages = fetchMessages;
+
+    // Small bridge for chat-actions.js (message menu, mentions, admin tools).
+    // `lastFetchedMessagesHash` must be cleared after an edit/delete, otherwise
+    // the id-only hash still matches and the chat would not repaint.
+    window.nxChatCtx = {
+        get user() { return user; },
+        get isAdmin() { return currentUserIsAdmin; },
+        get input() { return document.getElementById('message-input'); },
+        get form() { return document.getElementById('chat-form'); },
+        forceRefresh: () => { lastFetchedMessagesHash = null; return fetchMessages(); }
+    };
 
     const msgInput = document.getElementById('message-input');
     const charCounter = document.getElementById('char-counter');
@@ -2313,11 +2347,14 @@ window.initializeChatEngine = async function() {
         }
     };
 
+    // Admin "Delete" button under a message. Delegates to chat-actions.js so the
+    // request carries the message id (the old version sent no id at all).
     window.deleteMsg = async (id) => {
-        await fetch(`${TURSO_API_BASE}/messages`, { 
-            method: 'PATCH', 
-            headers: TURSO_HEADERS, 
-            body: JSON.stringify({ content: "Message Was Deleted By Owner" })
+        if (window.nxDeleteMessage) return window.nxDeleteMessage(id, { isAdminAction: true });
+        await fetch(`${TURSO_API_BASE}/messages?id=${encodeURIComponent(id)}`, {
+            method: 'DELETE',
+            headers: TURSO_HEADERS,
+            body: JSON.stringify({ id: id })
         });
         lastFetchedMessagesHash = null; // Force refresh
         fetchMessages();
