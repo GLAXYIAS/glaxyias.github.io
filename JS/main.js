@@ -10759,7 +10759,7 @@ document.addEventListener('DOMContentLoaded', () => {
       cloakOverlay.classList.add("hidden");
     } else {
       const timerDisplay = document.querySelector(".timer-subtext-sticky span");
-      let timeLeft = 10;
+      let timeLeft = 2;
       if (timerDisplay) {
         timerDisplay.textContent = `${timeLeft} seconds.`;
       }
