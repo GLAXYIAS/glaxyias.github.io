@@ -81,6 +81,7 @@
                 # PMs <span id="pm-unread-badge" class="pm-badge hidden">0</span>
             </div>
             <div id="chan-rules" class="channel" onclick="switchTab('rules')"># rules</div>
+            <div id="chan-support" class="channel" onclick="switchTab('support')"># support</div>
             <div id="chan-settings" class="channel" onclick="switchTab('settings')"># settings</div>
             <div id="admin-tab" class="channel" style="display:none; color: #ff4444; font-weight: bold;" onclick="switchTab('admin')"># admin</div>
             <div id="pm-tab" class="channel" style="display:none; color: var(--accent); font-weight: bold;" onclick="switchTab('private-messages')"># pm-log (admin)</div>
@@ -189,6 +190,29 @@
             <div style="margin-top: 25px; padding: 15px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-soft); border-radius: 6px; color: #aaa; font-size: 13px; line-height: 1.5;">
                 <strong style="color: var(--accent);">Enforcement Policy:</strong> If you commit a repeat aggressive offense by creating multiple alternative accounts to bypass restrictions, your IP address will be recorded, and any current or future accounts created on that IP will be automatically banned.
             </div>
+        </div>
+
+        <div id="support-view" style="display:none; padding: 40px; overflow-y: auto; height: 100%;">
+            <h1 style="color: var(--accent); margin-bottom: 8px;">Support</h1>
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Report issues, request features, or send update suggestions.</p>
+            <div class="support-grid">
+                <div class="support-card">
+                    <h3>Report a user / bug</h3>
+                    <input id="support-report-target" placeholder="Username or page (optional)" style="width:100%;padding:10px;margin:8px 0;background:var(--bg-dark);border:1px solid var(--border-soft);color:#fff;border-radius:6px;">
+                    <textarea id="support-report-body" rows="4" placeholder="What happened?" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border-soft);color:#fff;border-radius:6px;font-family:inherit;"></textarea>
+                    <button type="button" class="admin-btn" onclick="(function(){var b=document.getElementById('support-report-body');if(!b||!b.value.trim())return alert('Describe the issue');var q=JSON.parse(localStorage.getItem('nullchat_support_queue')||'[]');q.push({type:'report',target:(document.getElementById('support-report-target')||{}).value||'',body:b.value,at:new Date().toISOString(),by:localStorage.getItem('chatUser')||''});localStorage.setItem('nullchat_support_queue',JSON.stringify(q.slice(-50)));b.value='';document.getElementById('support-status').textContent='Report saved. Thanks!';})()">Submit report</button>
+                </div>
+                <div class="support-card">
+                    <h3>Update suggestion</h3>
+                    <textarea id="support-idea-body" rows="4" placeholder="What should we add or change?" style="width:100%;padding:10px;background:var(--bg-dark);border:1px solid var(--border-soft);color:#fff;border-radius:6px;font-family:inherit;"></textarea>
+                    <button type="button" class="admin-btn" style="background:#9d4edd;color:#fff;" onclick="(function(){var b=document.getElementById('support-idea-body');if(!b||!b.value.trim())return alert('Write a suggestion');var q=JSON.parse(localStorage.getItem('nullchat_support_queue')||'[]');q.push({type:'suggestion',body:b.value,at:new Date().toISOString(),by:localStorage.getItem('chatUser')||''});localStorage.setItem('nullchat_support_queue',JSON.stringify(q.slice(-50)));b.value='';document.getElementById('support-status').textContent='Suggestion queued!';})()">Send suggestion</button>
+                </div>
+                <div class="support-card" style="opacity:0.85;border-style:dashed;">
+                    <h3>Coming soon</h3>
+                    <p style="color:var(--text-muted);font-size:13px;line-height:1.5;">Tagged support, voice calls, group gaming, and shared canvas will land in a later chat update. Use <strong>@username</strong> to mention people — notifications for mentions are rolling out.</p>
+                </div>
+            </div>
+            <p id="support-status" style="margin-top:16px;color:#22c55e;font-size:13px;"></p>
         </div>
 
         <div id="settings-view" style="display:none; padding: 40px; overflow-y: auto; height: 100%;">
