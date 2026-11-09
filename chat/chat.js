@@ -1132,8 +1132,9 @@ window.mentionUser = function(rawEncodedName) {
     
     const counter = document.getElementById('char-counter');
     if (counter) {
+        const limit = (typeof currentUserIsAdmin !== 'undefined' && currentUserIsAdmin) ? 10000 : 1200;
         const len = input.value.length;
-        counter.textContent = `${len} / 1200`;
+        counter.textContent = `${len} / ${limit}`;
     }
 };
 
@@ -1408,7 +1409,7 @@ window.initializeChatEngine = async function() {
 
     // --- TAB NAVIGATION UPDATE ---
     window.switchTab = (target) => {
-        ['chat-view', 'rules-view', 'admin-panel-view', 'users-view', 'private-messages-view', 'settings-view', 'pms-view'].forEach(v => {
+        ['chat-view', 'rules-view', 'admin-panel-view', 'users-view', 'private-messages-view', 'settings-view', 'pms-view', 'support-view'].forEach(v => {
             const el = document.getElementById(v);
             if (el) el.style.display = 'none';
         });
@@ -1435,6 +1436,12 @@ window.initializeChatEngine = async function() {
             const pmTab = document.getElementById('pm-tab');
             if (pmTab) pmTab.classList.add('active');
             fetchAdminPrivateMessages();
+        }
+        else if (target === 'support') {
+            const supportView = document.getElementById('support-view');
+            if (supportView) supportView.style.display = 'block';
+            const supportTab = document.getElementById('chan-support');
+            if (supportTab) supportTab.classList.add('active');
         }
         else if (target === 'settings') {
             const settingsView = document.getElementById('settings-view');
@@ -1500,6 +1507,24 @@ window.initializeChatEngine = async function() {
             if (!pmData || pmData.length === 0) {
                 container.innerHTML = '<p style="color:var(--text-muted); text-align:center;">No private messages found in database.</p>';
                 return;
+            }
+
+            // Newest first
+            pmData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+            if (!document.getElementById('admin-pm-search')) {
+                const search = document.createElement('input');
+                search.id = 'admin-pm-search';
+                search.type = 'search';
+                search.placeholder = 'Search PM log by user or text…';
+                search.style.cssText = 'width:100%;max-width:420px;margin:0 0 12px;padding:10px;background:var(--bg-dark);border:1px solid var(--border-soft);color:#fff;border-radius:6px;';
+                container.parentElement && container.parentElement.insertBefore(search, container);
+                search.addEventListener('input', () => {
+                    const q = search.value.toLowerCase().trim();
+                    container.querySelectorAll(':scope > div').forEach(row => {
+                        row.style.display = (!q || (row.textContent || '').toLowerCase().includes(q)) ? '' : 'none';
+                    });
+                });
             }
 
             container.innerHTML = pmData.map(pm => {
@@ -2130,7 +2155,22 @@ window.initializeChatEngine = async function() {
 
                 const isDel = msg.content === "Message Was Deleted By Owner";
                 const role = roles && roles.find ? roles.find(r => r.username === msg.username) : null;
-                const time = new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const time = (function (iso) {
+                    try {
+                        const t = new Date(iso).getTime();
+                        const sec = Math.floor((Date.now() - t) / 1000);
+                        if (sec < 10) return 'just now';
+                        if (sec < 60) return sec + 's ago';
+                        const min = Math.floor(sec / 60);
+                        if (min < 60) return min + 'm ago';
+                        const hr = Math.floor(min / 60);
+                        if (hr < 24) return hr + 'h ago';
+                        return new Date(iso).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                    } catch (e) {
+                        return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    }
+                })(msg.created_at);
+                const timeTitle = (() => { try { return new Date(msg.created_at).toLocaleString(); } catch (e) { return ''; } })();
                 
                 const userPfp = role && role.pfp_url ? role.pfp_url : DEFAULT_PFP;
                 const evaluatedRole = role && role.role_tag ? role.role_tag : 'User';
@@ -2180,7 +2220,7 @@ window.initializeChatEngine = async function() {
                             </span>
                             <span style="font-size:10px; color:var(--accent); cursor:pointer; margin-left:4px;" onclick="window.mentionUser('${encodeURIComponent(msg.username)}')">[reply]</span>
                             ${tag}
-                            <span class="message-timestamp">${time}</span>
+                            <span class="message-timestamp" title="${timeTitle}">${time}</span>
                             <button type="button" class="nx-msg-more" title="Message actions" aria-label="Message actions" onclick="window.nxMessageMenu(event, this)">⋯</button>
                         </div>
                         <div class="message-text-bubble ${isMine ? 'my-bubble-color' : 'other-bubble-color'}${bubbleExtraClass}" style="${isDel ? 'font-style:italic; opacity:0.5;' : ''}">
@@ -2193,6 +2233,33 @@ window.initializeChatEngine = async function() {
             });
 
             if (isAtBottom) msgContainer.scrollTop = msgContainer.scrollHeight;
+
+            // Hide older messages to reduce lag (keep last 80 visible)
+            (function trimOldMessages() {
+                const kids = Array.from(msgContainer.querySelectorAll('.message-wrapper'));
+                const MAX = 80;
+                if (kids.length <= MAX) {
+                    const b = document.getElementById('load-older-messages');
+                    if (b) b.style.display = 'none';
+                    return;
+                }
+                const hideCount = kids.length - MAX;
+                for (let i = 0; i < hideCount; i++) kids[i].style.display = 'none';
+                let btn = document.getElementById('load-older-messages');
+                if (!btn) {
+                    btn = document.createElement('button');
+                    btn.id = 'load-older-messages';
+                    btn.type = 'button';
+                    btn.className = 'nx-load-older';
+                    btn.onclick = function () {
+                        msgContainer.querySelectorAll('.message-wrapper').forEach(el => { el.style.display = ''; });
+                        btn.style.display = 'none';
+                    };
+                    msgContainer.insertBefore(btn, msgContainer.firstChild);
+                }
+                btn.style.display = 'block';
+                btn.textContent = 'Show ' + hideCount + ' older messages';
+            })();
         } catch (e) { console.error(e); }
     }
 
@@ -2213,10 +2280,12 @@ window.initializeChatEngine = async function() {
     const charCounter = document.getElementById('char-counter');
     if (msgInput && charCounter) {
         msgInput.oninput = (e) => {
+            const limit = currentUserIsAdmin ? 10000 : 1200;
+            if (currentUserIsAdmin) msgInput.setAttribute('maxlength', '10000');
             const len = e.target.value.length;
-            charCounter.textContent = `${len} / 1200`;
-            if (len >= 230) charCounter.style.color = "#ff4444";
-            else if (len >= 200) charCounter.style.color = "var(--accent)";
+            charCounter.textContent = `${len} / ${limit}`;
+            if (len >= limit * 0.95) charCounter.style.color = "#ff4444";
+            else if (len >= limit * 0.8) charCounter.style.color = "var(--accent)";
             else charCounter.style.color = "var(--text-muted)";
         };
     }
@@ -2253,7 +2322,8 @@ window.initializeChatEngine = async function() {
             const hasImage = !!pendingImageDataUrl;
 
             if (!val && !hasImage) return;
-            if (val.length > 1200) return alert(`Your message is too long (${val.length}/1200 characters). Please shorten it.`);
+            const charLimit = currentUserIsAdmin ? 10000 : 1200;
+            if (val.length > charLimit) return alert(`Your message is too long (${val.length}/${charLimit} characters). Please shorten it.`);
 
             input.disabled = true;
 
@@ -2280,7 +2350,7 @@ window.initializeChatEngine = async function() {
 
                 if (val) {
                     input.value = "";
-                    if (charCounter) charCounter.textContent = "0 / 1200";
+                    if (charCounter) charCounter.textContent = currentUserIsAdmin ? "0 / 10000" : "0 / 1200";
                     await sendPlainMessage(val);
                 }
 
@@ -2376,6 +2446,151 @@ window.initializeChatEngine = async function() {
     if (pmPollingInterval) clearInterval(pmPollingInterval);
     pmPollingInterval = setInterval(fetchMyPrivateConversations, 5000);
     fetchMyPrivateConversations();
+
+    // Upcoming patch features (mentions, filter, veil, ban menu, media, support hooks)
+    try { if (typeof window.nxInitUpcomingFeatures === 'function') window.nxInitUpcomingFeatures(); } catch (e) { console.warn(e); }
+};
+
+// --- Upcoming chat features (kept in chat.js — no extra files) ---
+window.nxInitUpcomingFeatures = function () {
+    if (window.__nxUpcomingInit) return;
+    window.__nxUpcomingInit = true;
+
+    // Ban from chat in user context menu
+    const menu = document.getElementById('chat-user-menu');
+    if (menu && !document.getElementById('menu-btn-ban')) {
+        const banBtn = document.createElement('button');
+        banBtn.id = 'menu-btn-ban';
+        banBtn.type = 'button';
+        banBtn.className = 'menu-action-btn';
+        banBtn.style.cssText = 'color:#ff6666;display:none;width:100%;text-align:left;padding:10px 14px;background:transparent;border:none;cursor:pointer;';
+        banBtn.textContent = 'Ban from chat';
+        menu.appendChild(banBtn);
+        const _open = window.openUserMenu;
+        window.openUserMenu = function (event, targetUsername) {
+            const r = _open ? _open.apply(this, arguments) : undefined;
+            banBtn.style.display = currentUserIsAdmin ? 'block' : 'none';
+            return r;
+        };
+        banBtn.addEventListener('click', async () => {
+            menu.classList.add('hidden');
+            const target = (selectedChatUser && selectedChatUser.username) || '';
+            if (!target || !currentUserIsAdmin) return;
+            if (!confirm('Ban ' + target + ' from chat?')) return;
+            const reason = prompt('Ban reason:', 'Banned from chat by admin') || 'Banned from chat';
+            try {
+                const banSearch = document.getElementById('ban-search');
+                const banReason = document.getElementById('ban-reason');
+                if (banSearch) banSearch.value = target;
+                if (banReason) banReason.value = reason;
+                if (typeof window.adminExecute === 'function') await window.adminExecute('ban');
+            } catch (err) { alert('Ban failed: ' + (err.message || err)); }
+        });
+    }
+
+    // Message filter bar
+    const header = document.getElementById('chat-view-header');
+    if (header && !document.getElementById('chat-filter-input')) {
+        const bar = document.createElement('div');
+        bar.className = 'chat-filter-bar';
+        bar.innerHTML = '<input type="search" id="chat-filter-input" placeholder="Filter messages…" autocomplete="off"><button type="button" id="chat-filter-clear" title="Clear">✕</button>';
+        header.appendChild(bar);
+        const applyFilter = () => {
+            const q = (document.getElementById('chat-filter-input').value || '').toLowerCase().trim();
+            document.querySelectorAll('#chat-messages .message-wrapper').forEach(el => {
+                if (!q) { el.style.opacity = ''; return; }
+                el.style.opacity = (el.textContent || '').toLowerCase().includes(q) ? '1' : '0.25';
+            });
+        };
+        document.getElementById('chat-filter-input').addEventListener('input', applyFilter);
+        document.getElementById('chat-filter-clear').addEventListener('click', () => {
+            document.getElementById('chat-filter-input').value = '';
+            applyFilter();
+        });
+    }
+
+    // @ mention autocomplete
+    const input = document.getElementById('message-input');
+    if (input && !input.dataset.mentionBound) {
+        input.dataset.mentionBound = '1';
+        let drop = document.getElementById('mention-dropdown');
+        if (!drop) {
+            drop = document.createElement('div');
+            drop.id = 'mention-dropdown';
+            drop.className = 'mention-dropdown hidden';
+            if (input.parentElement) {
+                input.parentElement.style.position = input.parentElement.style.position || 'relative';
+                input.parentElement.appendChild(drop);
+            }
+        }
+        const hideDrop = () => { drop.classList.add('hidden'); drop.innerHTML = ''; };
+        input.addEventListener('input', () => {
+            const val = input.value;
+            const caret = input.selectionStart || val.length;
+            const before = val.slice(0, caret);
+            const m = before.match(/@([a-zA-Z0-9_]{0,24})$/);
+            if (!m) { hideDrop(); return; }
+            const q = m[1].toLowerCase();
+            const users = (allUsers || []).filter(u => {
+                const n = String(u.username || '').toLowerCase();
+                return n && n.includes(q) && n !== String(myUsernameGlobal || '').toLowerCase();
+            }).slice(0, 8);
+            if (!users.length) { hideDrop(); return; }
+            drop.innerHTML = users.map(u => '<div class="mention-item" data-name="' + String(u.username).replace(/"/g, '&quot;') + '">@' + u.username + '</div>').join('');
+            drop.classList.remove('hidden');
+            drop.querySelectorAll('.mention-item').forEach(item => {
+                item.onclick = () => {
+                    const name = item.getAttribute('data-name');
+                    const newBefore = before.replace(/@([a-zA-Z0-9_]{0,24})$/, '@' + name + ' ');
+                    input.value = newBefore + val.slice(caret);
+                    input.focus();
+                    hideDrop();
+                };
+            });
+        });
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#mention-dropdown') && e.target !== input) hideDrop();
+        });
+    }
+
+    // Veil mode in settings
+    const settings = document.getElementById('settings-view');
+    if (settings && !document.getElementById('toggle-veil')) {
+        const card = document.createElement('div');
+        card.className = 'settings-card';
+        card.innerHTML = '<h3>Veil mode</h3><p class="settings-desc">Blurs usernames and message text until you hover.</p><label style="display:flex;align-items:center;gap:10px;cursor:pointer;"><input type="checkbox" id="toggle-veil"> Enable veil</label>';
+        settings.appendChild(card);
+        const t = document.getElementById('toggle-veil');
+        t.checked = localStorage.getItem('nullchat_veil') === '1';
+        const apply = () => {
+            document.body.classList.toggle('nx-veil', t.checked);
+            localStorage.setItem('nullchat_veil', t.checked ? '1' : '0');
+        };
+        t.addEventListener('change', apply);
+        apply();
+    }
+
+    // Media: accept audio/video on attach inputs
+    ['attach-image-input', 'pm-attach-image-input'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.setAttribute('accept', 'image/*,audio/*,video/*');
+    });
+
+    // Expand image marker rendering for audio/video data URLs staged with markers
+    const AUDIO_MARKER = '[[AUDIO]]';
+    const VIDEO_MARKER = '[[VIDEO]]';
+    if (typeof window.renderMessageBody === 'function' && !window.renderMessageBody.__nxMedia) {
+        const _rb = window.renderMessageBody;
+        window.renderMessageBody = function (content) {
+            const s = String(content == null ? '' : content);
+            if (s.startsWith(AUDIO_MARKER)) return '<audio controls src="' + s.slice(AUDIO_MARKER.length).replace(/"/g, '&quot;') + '" style="max-width:100%"></audio>';
+            if (s.startsWith(VIDEO_MARKER)) return '<video controls src="' + s.slice(VIDEO_MARKER.length).replace(/"/g, '&quot;') + '" style="max-width:100%;max-height:280px;border-radius:8px"></video>';
+            return _rb.apply(this, arguments);
+        };
+        window.renderMessageBody.__nxMedia = true;
+    }
+
+    console.log('[nx] upcoming features ready');
 };
 
 if (document.getElementById('chat-messages')) {
