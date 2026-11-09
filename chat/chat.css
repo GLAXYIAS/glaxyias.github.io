@@ -767,3 +767,19 @@ input:checked + .slider::before { transform: translateX(20px); background-color:
     transform: scale(1.02);
     box-shadow: 0 0 0 2px var(--accent);
 }
+
+/* Upcoming patch UI (filter, mentions, veil, support, load-older) */
+.chat-filter-bar { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.chat-filter-bar input { background: var(--bg-dark, #0f0a1f); border: 1px solid var(--border-soft, #333); color: #e0e0e0; border-radius: 6px; padding: 6px 10px; font-size: 12px; min-width: 140px; }
+.chat-filter-bar button { background: transparent; border: none; color: var(--text-muted, #888); cursor: pointer; }
+.mention-dropdown { position: absolute; bottom: 100%; left: 12px; right: 12px; max-height: 220px; overflow-y: auto; background: rgba(20,12,40,0.98); border: 1px solid var(--accent, #8b00ff); border-radius: 8px; z-index: 50; box-shadow: 0 8px 24px rgba(0,0,0,0.45); }
+.mention-dropdown.hidden { display: none; }
+.mention-item { padding: 10px 14px; cursor: pointer; color: #e0e0ff; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.mention-item:hover { background: var(--accent-soft, rgba(139,0,255,0.25)); }
+.nx-load-older { display: block; width: 100%; margin: 8px 0 12px; padding: 8px 12px; background: rgba(139,0,255,0.15); border: 1px solid var(--border-soft, #333); color: var(--accent, #c084fc); border-radius: 8px; cursor: pointer; font-size: 12px; }
+.nx-load-older:hover { background: rgba(139,0,255,0.28); }
+body.nx-veil .chat-username-link, body.nx-veil .message-text-bubble, body.nx-veil #username-display { filter: blur(5px); transition: filter 0.15s ease; }
+body.nx-veil .message-wrapper:hover .chat-username-link, body.nx-veil .message-wrapper:hover .message-text-bubble, body.nx-veil .user-profile:hover #username-display { filter: none; }
+.support-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.support-card { background: var(--bg-panel, rgba(15,15,25,0.95)); border: 1px solid var(--border-soft, #333); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.support-card h3 { margin: 0; color: #e0e0ff; font-size: 15px; }
