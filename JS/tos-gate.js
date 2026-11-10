@@ -6,9 +6,12 @@
  *
  * - The terms themselves are read from TOS/TOS.html (single source of truth),
  *   so editing that page updates the gate everywhere.
- * - Acceptance is remembered in localStorage, so the gate appears once.
- * - Bump TOS_VERSION below whenever the terms change; everyone is then asked
- *   to read and accept the new version again.
+ * - Acceptance is remembered in localStorage together with a signature of the
+ *   terms text. If the terms change, the signature no longer matches and every
+ *   visitor is asked to read and agree again. No manual version bump needed.
+ * - Only acceptance from this gate counts. The old checkbox keys are ignored.
+ * - Waits for the educational study cloak (#educational-cloak) to finish
+ *   before it appears, so the splash is seen first. Works for guests too.
  * - Load on any page with: <script src=".../JS/tos-gate.js"></script>
  */
 (function () {
@@ -17,14 +20,12 @@
   if (window.__nxTosGateLoaded) return;
   window.__nxTosGateLoaded = true;
 
-  /* Bump this when TOS/TOS.html changes. */
-  var TOS_VERSION = '1';
-
-  var ACCEPT_KEY = 'nullx_tos_' + TOS_VERSION;
-  /* Older gate used a checkbox and wrote these; honour them once. */
-  var LEGACY_KEYS = ['nullx_tos_ack', 'nullx_tos_v1_guest'];
-  var LEGACY_PREFIX = 'nullx_tos_v1_';
+  var ACCEPT_KEY = 'nullx_tos_accept';
+  var VERIFY_AT_KEY = 'nullx_tos_verified_at';
   var BOTTOM_SLACK = 24; /* px of tolerance for zoom / rounding */
+  var VERIFY_FALLBACK_WINDOW = 30 * 60 * 1000; /* ms between fallback checks */
+  var CLOAK_MAX_WAIT = 15000; /* never hold the gate forever for a splash */
+  var CLOAK_FADE_WAIT = 550; /* let the splash fade out first */
 
   var overlay = null;
   var panel = null;
@@ -35,6 +36,8 @@
   var reachedEnd = false;
   var termsReady = false;
   var previousOverflow = '';
+  var loadedSig = '';
+  var loadedEtag = '';
 
   /* ------------------------------------------------------------------ store */
 
@@ -65,34 +68,131 @@
     return memoryStore();
   })();
 
-  function rememberAccepted() {
-    try { store.setItem(ACCEPT_KEY, '1'); } catch (e) {}
+  function readAcceptance() {
+    try {
+      var raw = store.getItem(ACCEPT_KEY);
+      if (!raw) return null;
+      var rec = JSON.parse(raw);
+      if (!rec || typeof rec !== 'object' || typeof rec.sig !== 'string') return null;
+      return rec;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function writeAcceptance(sig, etag) {
+    try {
+      store.setItem(ACCEPT_KEY, JSON.stringify({
+        sig: sig || '',
+        etag: etag || '',
+        at: Date.now()
+      }));
+    } catch (e) {}
+  }
+
+  function clearAcceptance() {
+    try { store.removeItem(ACCEPT_KEY); } catch (e) {}
   }
 
   function hasAccepted() {
+    return !!readAcceptance();
+  }
+
+  /* ----------------------------------------------------------- terms version */
+
+  function normaliseText(value) {
+    return String(value || '').replace(/\s+/g, ' ').trim();
+  }
+
+  /* Signature of the terms text only: page chrome, styles and scripts can
+     change without forcing everyone to read the terms again. */
+  function termsSignature(html) {
     try {
-      if (store.getItem(ACCEPT_KEY) === '1') return true;
+      var doc = new DOMParser().parseFromString(html, 'text/html');
+      var source = doc.getElementById('sections-container');
+      if (!source) return '';
+      var cards = source.querySelectorAll('.section-card');
+      if (!cards.length) return '';
 
-      for (var i = 0; i < LEGACY_KEYS.length; i++) {
-        var legacy = store.getItem(LEGACY_KEYS[i]);
-        if (legacy === '1' || legacy === 'true') {
-          rememberAccepted();
-          return true;
-        }
+      var parts = [];
+      for (var i = 0; i < cards.length; i++) {
+        parts.push(normaliseText(cards[i].textContent));
       }
+      var text = parts.join('\n');
 
-      if (typeof store.length === 'number' && typeof store.key === 'function') {
-        for (var j = 0; j < store.length; j++) {
-          var key = store.key(j);
-          var value = key ? store.getItem(key) : null;
-          if (key && key.indexOf(LEGACY_PREFIX) === 0 && (value === '1' || value === 'true')) {
-            rememberAccepted();
-            return true;
+      /* FNV-1a 32 bit */
+      var hash = 0x811c9dc5;
+      for (var j = 0; j < text.length; j++) {
+        hash ^= text.charCodeAt(j);
+        hash = (hash + ((hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24))) >>> 0;
+      }
+      return 'v1-' + hash.toString(16) + '-' + text.length;
+    } catch (e) {
+      return '';
+    }
+  }
+
+  function fallbackThrottled() {
+    try {
+      var now = Date.now();
+      var last = Number(window.sessionStorage.getItem(VERIFY_AT_KEY) || 0);
+      if (last && now - last < VERIFY_FALLBACK_WINDOW) return true;
+      window.sessionStorage.setItem(VERIFY_AT_KEY, String(now));
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /* If the stored acceptance no longer matches TOS/TOS.html, ask again. */
+  function verifyAcceptance() {
+    var rec = readAcceptance();
+    if (!rec || !rec.sig) return; /* nothing verifiable: leave accepted */
+    var url = tosUrl();
+
+    function compare(html, etag) {
+      var sig = termsSignature(html);
+      if (!sig) return; /* could not parse: do not lock anyone out */
+      if (sig === rec.sig) {
+        if (etag && etag !== rec.etag) writeAcceptance(rec.sig, etag);
+        return;
+      }
+      clearAcceptance();
+      whenCloakDone(open);
+    }
+
+    function fullCheck(etag) {
+      window.fetch(url, { cache: 'no-store', credentials: 'same-origin' })
+        .then(function (res) {
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return res.text();
+        })
+        .then(function (html) { compare(html, etag); })
+        .catch(function () { /* offline: keep the acceptance */ });
+    }
+
+    if (typeof window.fetch !== 'function') return;
+
+    try {
+      window.fetch(url, { method: 'HEAD', cache: 'no-store' })
+        .then(function (res) {
+          var etag = '';
+          try {
+            etag = res.headers.get('etag') || res.headers.get('last-modified') || '';
+          } catch (e) {}
+
+          /* Unchanged file: no download needed. */
+          if (etag && rec.etag && etag === rec.etag) return;
+
+          /* No usable headers: fall back to comparing the text, but not on
+             every single page load. */
+          if (!etag) {
+            if (fallbackThrottled()) return;
           }
-        }
-      }
+          fullCheck(etag);
+        })
+        .catch(function () { /* offline: keep the acceptance */ });
     } catch (e) {}
-    return false;
   }
 
   /* -------------------------------------------------------------- url helpers */
@@ -117,6 +217,68 @@
       if (marker > -1) return src.slice(0, marker) + '/TOS/TOS.html';
       return 'TOS/TOS.html';
     }
+  }
+
+  /* --------------------------------------------------- educational overlay */
+
+  function cloakActive() {
+    var el = document.getElementById('educational-cloak');
+    if (!el) return false;
+    if (el.classList.contains('hidden')) return false;
+    try {
+      var cs = window.getComputedStyle(el);
+      if (!cs) return true;
+      if (cs.display === 'none' || cs.visibility === 'hidden' || cs.opacity === '0') return false;
+    } catch (e) {}
+    return true;
+  }
+
+  /* Run cb once the study splash has finished (or straight away if there is
+     none). The splash hides itself ~2 s after load, or instantly when the
+     visitor disabled it in settings. */
+  function whenCloakDone(cb) {
+    var el = document.getElementById('educational-cloak');
+    if (!el || !cloakActive()) {
+      cb();
+      return;
+    }
+
+    var finished = false;
+    var poll = null;
+    var maxWait = null;
+    var settle = null;
+
+    function finish() {
+      if (finished) return;
+      finished = true;
+      try { observer.disconnect(); } catch (e) {}
+      if (poll) clearInterval(poll);
+      if (maxWait) clearTimeout(maxWait);
+      if (settle) clearTimeout(settle);
+      cb();
+    }
+
+    function check() {
+      if (finished) return;
+      if (!cloakActive()) {
+        if (!settle) settle = setTimeout(finish, CLOAK_FADE_WAIT);
+      } else {
+        if (settle) {
+          clearTimeout(settle);
+          settle = null;
+        }
+      }
+    }
+
+    var observer = null;
+    try {
+      observer = new MutationObserver(check);
+      observer.observe(el, { attributes: true, attributeFilter: ['class', 'style'] });
+    } catch (e) {}
+
+    poll = setInterval(check, 200);
+    maxWait = setTimeout(finish, CLOAK_MAX_WAIT);
+    check();
   }
 
   /* ------------------------------------------------------------------- styles */
@@ -349,7 +511,15 @@
     function finish(ok, html) {
       if (finished) return;
       finished = true;
-      if (!ok || !renderTerms(html)) renderFallback();
+      var rendered = false;
+      if (ok && html) {
+        loadedSig = termsSignature(html);
+        rendered = renderTerms(html);
+      }
+      if (!rendered) {
+        loadedSig = '';
+        renderFallback();
+      }
       refresh();
       /* Re-measure after fonts / layout settle. */
       setTimeout(refresh, 60);
@@ -358,9 +528,12 @@
 
     try {
       if (typeof window.fetch === 'function') {
-        window.fetch(url, { credentials: 'same-origin' })
+        window.fetch(url, { credentials: 'same-origin', cache: 'no-store' })
           .then(function (res) {
             if (!res.ok) throw new Error('HTTP ' + res.status);
+            try {
+              loadedEtag = res.headers.get('etag') || res.headers.get('last-modified') || '';
+            } catch (e) {}
             return res.text();
           })
           .then(function (html) { finish(true, html); })
@@ -369,6 +542,9 @@
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
         xhr.onload = function () {
+          try {
+            loadedEtag = xhr.getResponseHeader('ETag') || xhr.getResponseHeader('Last-Modified') || '';
+          } catch (e) {}
           finish(xhr.status >= 200 && xhr.status < 300, xhr.responseText);
         };
         xhr.onerror = function () { finish(false); };
@@ -433,7 +609,7 @@
       return;
     }
 
-    rememberAccepted();
+    writeAcceptance(loadedSig, loadedEtag);
     close();
   }
 
@@ -467,7 +643,7 @@
     refresh();
   }
 
-  /* Accepting in another tab (e.g. the TOS page) dismisses this one too. */
+  /* Accepting in another tab dismisses this one too. */
   try {
     window.addEventListener('storage', function (event) {
       if (!overlay) return;
@@ -485,8 +661,11 @@
   /* --------------------------------------------------------------------- boot */
 
   function boot() {
-    if (hasAccepted()) return;
-    open();
+    if (hasAccepted()) {
+      verifyAcceptance();
+      return;
+    }
+    whenCloakDone(open);
   }
 
   if (document.readyState === 'loading') {
@@ -496,10 +675,12 @@
   }
 
   window.__nxTosGate = {
-    version: TOS_VERSION,
     hasAccepted: hasAccepted,
+    signature: function () { return loadedSig; },
+    verify: verifyAcceptance,
     accept: accept,
     open: open,
-    close: close
+    close: close,
+    clear: clearAcceptance
   };
 })();
