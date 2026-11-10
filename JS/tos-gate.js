@@ -104,6 +104,12 @@
     return String(value || '').replace(/\s+/g, ' ').trim();
   }
 
+  /* CDNs hand browsers weak ETags (W/"...") and servers a strong form of the
+     same value, so compare them without the weakness marker. */
+  function etagKey(value) {
+    return String(value || '').replace(/^W\//, '').trim();
+  }
+
   /* Signature of the terms text only: page chrome, styles and scripts can
      change without forcing everyone to read the terms again. */
   function termsSignature(html) {
@@ -154,7 +160,7 @@
       var sig = termsSignature(html);
       if (!sig) return; /* could not parse: do not lock anyone out */
       if (sig === rec.sig) {
-        if (etag && etag !== rec.etag) writeAcceptance(rec.sig, etag);
+        if (etag && etagKey(etag) !== etagKey(rec.etag)) writeAcceptance(rec.sig, etag);
         return;
       }
       clearAcceptance();
@@ -182,7 +188,7 @@
           } catch (e) {}
 
           /* Unchanged file: no download needed. */
-          if (etag && rec.etag && etag === rec.etag) return;
+          if (etag && rec.etag && etagKey(etag) === etagKey(rec.etag)) return;
 
           /* No usable headers: fall back to comparing the text, but not on
              every single page load. */
