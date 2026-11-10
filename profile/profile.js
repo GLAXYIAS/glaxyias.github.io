@@ -3,7 +3,25 @@
 // Routes through Cloudflare Worker for security
 const CLOUDFLARE_WORKER = 'https://apithingy.jlsniperelite4.workers.dev';
 
-const DEFAULT_PFP = 'https://glaxyias.github.io/imgs/Screenshot 2026-09-26 15.55.05.png';
+const DEFAULT_PFP = 'https://glaxyias.github.io/imgs/newpfp.png';
+
+// Older profile saves stored this placeholder in the database, but the file was
+// never committed to the repo, so GitHub Pages answers it with its 404 page and
+// browsers paint a broken-image icon (alt text "Avatar") instead of an avatar.
+// Treat it as "no custom avatar" so those rows show the real default and get
+// replaced with a working URL the next time the profile is saved.
+const LEGACY_DEFAULT_PFP = /\/imgs\/Screenshot(?:%20|\s|\+)2026-09-26(?:%20|\s|\+)15\.55\.05\.png$/i;
+
+function isLegacyDefaultPfp(url) {
+  return !!url && LEGACY_DEFAULT_PFP.test(String(url).trim());
+}
+
+function normalizePfp(url) {
+  const value = (url == null ? '' : String(url)).trim();
+  if (!value || value === 'null' || value === 'undefined' || value === 'N/A') return '';
+  if (isLegacyDefaultPfp(value)) return '';
+  return value;
+}
 
 const PROFILE_API_HEADERS = {
   'Content-Type': 'application/json'
@@ -29,7 +47,7 @@ function initialsAvatar(name) {
 
 function setAvatar(img, url, username) {
   const fallbackEl = document.getElementById('avatar-fallback');
-  const safe = (url && String(url).trim()) || '';
+  const safe = normalizePfp(url);
 
   function showFallback() {
     if (img) {
@@ -222,7 +240,7 @@ window.initProfileSystem = async () => {
       if (data && data.username) {
         const profile = data;
         paintBio(profile.bio || '');
-        currentPfpUrl = profile.pfp_url || '';
+        currentPfpUrl = normalizePfp(profile.pfp_url);
         setAvatar(pfpPreview, currentPfpUrl || DEFAULT_PFP, targetUser);
 
         if (profile.is_admin && roleBadge) {
