@@ -342,6 +342,22 @@
       '#nx-tos-gate .nx-tos-body .section-icon{color:#f97316;font-size:.95rem}',
       '#nx-tos-gate .nx-tos-body .copy-link-btn{display:none !important}',
 
+      '#nx-tos-gate .nx-tos-quote{margin:16px 0 4px;padding:18px 18px 14px;position:relative;overflow:hidden;',
+      'border:1px solid rgba(251,191,36,.35);border-radius:14px;',
+      'background:linear-gradient(135deg,rgba(249,115,22,.14),rgba(251,191,36,.05))}',
+
+      '#nx-tos-gate .nx-tos-quote::before{content:"\\201C";position:absolute;left:10px;top:-14px;',
+      'font-size:72px;line-height:1;color:rgba(251,191,36,.18);font-family:Georgia,serif;pointer-events:none}',
+
+      '#nx-tos-gate .nx-tos-quote .quote-text{position:relative;margin:0;color:#fff7ed;',
+      'font-size:.95rem;line-height:1.65;font-weight:600}',
+
+      '#nx-tos-gate .nx-tos-quote .quote-attr{margin:10px 0 0;color:#fbbf24;font-size:.8rem;',
+      'font-weight:800;letter-spacing:.05em;display:flex;align-items:center;gap:8px}',
+
+      '#nx-tos-gate .nx-tos-quote .quote-attr::before{content:"";display:inline-block;width:18px;',
+      'height:2px;background:#fbbf24}',
+
       '#nx-tos-gate .nx-tos-loading{margin:0;color:#b0a8c0;font-size:.9rem}',
 
       '#nx-tos-gate .nx-tos-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;',
@@ -488,6 +504,16 @@
       section.className = 'nx-tos-section';
       section.appendChild(copy);
       frag.appendChild(section);
+    }
+
+    /* Carry the closing quote from the terms page into the gate so visitors see it too. */
+    var quote = doc.querySelector('.quote-card-wrapper');
+    if (quote && quote.querySelector('.quote-text')) {
+      var quoteCopy = quote.cloneNode(true);
+      quoteCopy.className = 'nx-tos-quote';
+      var quoteIds = quoteCopy.querySelectorAll('[id]');
+      for (var q = 0; q < quoteIds.length; q++) quoteIds[q].removeAttribute('id');
+      frag.appendChild(quoteCopy);
     }
 
     body.innerHTML = '';
