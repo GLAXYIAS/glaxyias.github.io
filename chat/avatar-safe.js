@@ -87,4 +87,15 @@
   } else {
     upgradeInsecureAvatars();
   }
+
+  // This file is loaded by chat.html before chat.js, and the chat page does not
+  // carry the Terms of Service script tag, so boot the site-wide gate here.
+  // See /JS/tos-gate.js.
+  (function loadTosGate() {
+    if (window.__nxTosGateLoaded) return;
+    if (document.querySelector('script[src*="tos-gate.js"]')) return;
+    var script = document.createElement('script');
+    script.src = '../JS/tos-gate.js';
+    (document.head || document.documentElement).appendChild(script);
+  })();
 })();
