@@ -26,7 +26,38 @@ document.addEventListener("DOMContentLoaded", () => {
         ghost:     { label: "Ghost",      bg: "#11161a", accent: "#708090" },
         copper:    { label: "Copper",     bg: "#140d0a", accent: "#b87333" },
         moonlight: { label: "Moonlight",  bg: "#080a0f", accent: "#7b92b5" },
-        neon:      { label: "Neon",       bg: "#020005", accent: "#00ffef" }
+        neon:      { label: "Neon",       bg: "#020005", accent: "#00ffef" },
+        bubblegum: { label: "Bubblegum",  bg: "#261c21", accent: "#ffb7b2" },
+        desert:    { label: "Desert",     bg: "#14120c", accent: "#d4af37" },
+        espresso:  { label: "Espresso",   bg: "#0f0b08", accent: "#875c36" },
+        eclipse:   { label: "Eclipse",    bg: "#050508", accent: "#800020" },
+        cotton:    { label: "Cotton Candy", bg: "#121a24", accent: "#84dcc6" },
+        rgb:       { label: "RGB Cycle",  bg: "#030303", accent: "#ff0000" },
+        matrix:    { label: "Matrix",     bg: "#000000", accent: "#00ff00" },
+        cosmic:    { label: "Cosmic",     bg: "#05010a", accent: "#7f00ff" },
+        magma:     { label: "Magma",      bg: "#1a0a00", accent: "#ff3b00" },
+        glacial:   { label: "Glacial",    bg: "#0a1116", accent: "#7fe9ff" },
+        titanium:  { label: "Titanium",   bg: "#0c0c0e", accent: "#c0c0c0" },
+        aurora:    { label: "Aurora",     bg: "#050a12", accent: "#00ffa6" },
+        starforge: { label: "Starforge",  bg: "#0a0014", accent: "#ff00c8" },
+        lab:       { label: "Laboratory", bg: "#0d0f12", accent: "#c8e6ff" },
+        dragon:    { label: "Dragon",     bg: "#0b0f08", accent: "#cc0000" },
+        storm:     { label: "Storm",      bg: "#0a0d12", accent: "#7fb2ff" },
+        chrome:    { label: "Chrome",     bg: "#0c0c0c", accent: "#d9d9d9" },
+        surge:     { label: "Electric Surge", bg: "#02040a", accent: "#00aaff" },
+        void:      { label: "Void Ripple", bg: "#050007", accent: "#5500ff" },
+        aether:    { label: "Aether",     bg: "#0a0f12", accent: "#66ffe0" },
+        inferno:   { label: "Inferno",    bg: "#140600", accent: "#ff3300" },
+        cryo:      { label: "Cryo",       bg: "#0b1418", accent: "#00eaff" },
+        techno:    { label: "Techno",     bg: "#040d08", accent: "#00ff88" },
+        sakura:    { label: "Sakura",     bg: "#1a0f13", accent: "#ff8fb1" },
+        abyss:     { label: "Abyss",      bg: "#03060f", accent: "#2f7fff" },
+        ember:     { label: "Ember",      bg: "#160a04", accent: "#ff6b35" },
+        mint:      { label: "Mint",       bg: "#04120f", accent: "#4fffc4" },
+        nebula:    { label: "Nebula",     bg: "#08030f", accent: "#b26bff" },
+        vapor:     { label: "Vaporwave",  bg: "#0f0416", accent: "#ff77e1" },
+        honey:     { label: "Honey",      bg: "#141004", accent: "#ffc93c" },
+        obsidian:  { label: "Obsidian",   bg: "#060608", accent: "#9b8cff" }
     };
 
     function applyThemeLocal(theme, bg, accent) {
@@ -37,6 +68,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         document.body.setAttribute("data-theme", theme);
         document.documentElement.setAttribute("data-theme", theme);
+        // Keep every theme key in sync so the choice survives navigation
+        localStorage.setItem(THEME_KEY, theme);
+        localStorage.setItem("selectedTheme", theme);
+        localStorage.setItem("nullx-theme", theme);
         if (bg) {
             document.body.style.setProperty("--nx-page-bg", bg);
             document.documentElement.style.setProperty("--nx-page-bg", bg);
