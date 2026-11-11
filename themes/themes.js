@@ -353,6 +353,18 @@ document.addEventListener('DOMContentLoaded', () => {
   box-shadow: 0 0 8px #ff4444;
   vertical-align: middle;
 }
+
+/* Favorite marker as a Google star SVG instead of a text glyph. */
+.game-card.is-favorite::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  z-index: 5;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffd700'%3E%3Cpath d='M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/%3E%3C/svg%3E") center/contain no-repeat;
+}
 `;
   var style = document.createElement('style');
   style.id = 'nx-site-extras';
@@ -447,4 +459,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch);
   else watch();
+})();
+
+/* Load the material-icon layer (emoji -> Google SVGs, Ctrl+Shift+P canvas,
+   and the same shortcut inside same-origin game frames). */
+(function loadNxEmojiIcons() {
+  if (document.querySelector('script[data-nx-emoji-icons]')) return;
+  var s = document.createElement('script');
+  s.src = (function () {
+    try { return new URL('/JS/nx-emoji-icons.js', window.location.origin).href; }
+    catch (e) { return '/JS/nx-emoji-icons.js'; }
+  })();
+  s.setAttribute('data-nx-emoji-icons', '1');
+  (document.head || document.documentElement).appendChild(s);
 })();

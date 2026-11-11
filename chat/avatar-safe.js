@@ -254,4 +254,13 @@
     script.src = '../JS/tos-gate.js';
     (document.head || document.documentElement).appendChild(script);
   })();
+
+  // Material-icon layer: emoji -> Google SVGs plus Ctrl+Shift+P for Canvas.
+  (function loadNxEmojiIcons() {
+    if (document.querySelector('script[data-nx-emoji-icons]')) return;
+    var script = document.createElement('script');
+    script.src = '../JS/nx-emoji-icons.js';
+    script.setAttribute('data-nx-emoji-icons', '1');
+    (document.head || document.documentElement).appendChild(script);
+  })();
 })();
