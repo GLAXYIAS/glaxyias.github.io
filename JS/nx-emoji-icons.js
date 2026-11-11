@@ -231,6 +231,51 @@
     el.remove();
   }
 
+  function mountCanvasDocument(html, host) {
+    var parse = new DOMParser().parseFromString(html, 'text/html');
+    var shadow = host.attachShadow({ mode: 'open' });
+    var css = '';
+    var styles = parse.querySelectorAll('style');
+    for (var i = 0; i < styles.length; i++) css += styles[i].textContent + '\n';
+    css = css.replace(/:root/g, ':host').replace(/(^|[},])\s*body\s*\{/g, '$1:host{');
+    var styleEl = document.createElement('style');
+    styleEl.textContent = css;
+    shadow.appendChild(styleEl);
+    var body = document.createElement('div');
+    body.className = 'nx-canvas-body';
+    var kids = Array.prototype.slice.call(parse.body.childNodes);
+    for (var j = 0; j < kids.length; j++) {
+      var node = kids[j];
+      if (node.nodeType === 1 && node.tagName === 'SCRIPT') continue;
+      body.appendChild(document.importNode(node, true));
+    }
+    shadow.appendChild(body);
+    var scriptText = '';
+    var scripts = parse.querySelectorAll('script');
+    for (var k = 0; k < scripts.length; k++) {
+      if (!scripts[k].src) scriptText += scripts[k].textContent + '\n';
+    }
+    var scoped = {
+      getElementById: function (id) {
+        var el = shadow.getElementById ? shadow.getElementById(id) : null;
+        return el || shadow.querySelector('#' + id);
+      },
+      querySelector: function (sel) { return shadow.querySelector(sel); },
+      querySelectorAll: function (sel) { return shadow.querySelectorAll(sel); },
+      createElement: function (tag) { return document.createElement(tag); },
+      createElementNS: function (ns, tag) { return document.createElementNS(ns, tag); },
+      createTextNode: function (t) { return document.createTextNode(t); },
+      createDocumentFragment: function () { return document.createDocumentFragment(); },
+      addEventListener: function () { return document.addEventListener.apply(document, arguments); },
+      removeEventListener: function () { return document.removeEventListener.apply(document, arguments); },
+      body: body,
+      documentElement: host,
+      head: shadow,
+      readyState: 'complete'
+    };
+    new Function('document', 'window', scriptText)(scoped, window);
+  }
+
   function mountCanvas() {
     var style = document.getElementById('nx-canvas-style');
     if (!style) {
@@ -241,8 +286,8 @@
         'max-width:none!important;max-height:none!important;margin:0!important;padding:0!important;border:0!important;' +
         'background:#08080f!important;color:#fff;overflow:hidden;}' +
         '#' + overlayId + '::backdrop{background:#08080f!important;}' +
-        '#' + overlayId + ' iframe{position:absolute!important;left:0!important;top:0!important;width:100%!important;' +
-        'height:100%!important;border:0!important;background:#f7f8f9!important;z-index:1;}' +
+        '#' + overlayId + ' #nx-canvas-host{position:absolute!important;left:0!important;top:0!important;width:100%!important;' +
+        'height:100%!important;overflow:auto;background:#f7f8f9;z-index:1;}' +
         '#' + overlayId + ' .nx-canvas-status{position:absolute;left:0;top:0;width:100%;height:100%;display:flex;' +
         'align-items:center;justify-content:center;flex-direction:column;gap:12px;color:#cfc9da;' +
         'font:600 15px/1.4 system-ui,-apple-system,sans-serif;text-align:center;padding:24px;z-index:2;pointer-events:none;}' +
@@ -262,7 +307,7 @@
       '<span id="nx-canvas-msg">Loading Canvas…</span>' +
       '<a href="' + ROOT + 'Canvas/index.html" target="_blank" rel="noopener">Open in a new tab</a></div>' +
       '<button id="nx-canvas-close" type="button" aria-label="Close canvas">' + icon('close', 20) + '</button>' +
-      '<iframe title="Canvas" allow="clipboard-read; clipboard-write"></iframe>';
+      '<div id="nx-canvas-host"></div>';
     (document.documentElement || document.body).appendChild(wrap);
     try {
       if (typeof wrap.showModal === 'function') wrap.showModal();
@@ -271,70 +316,32 @@
     wrap.addEventListener('cancel', function (e) { e.preventDefault(); closeCanvas(); });
     var btn = document.getElementById('nx-canvas-close');
     if (btn) btn.addEventListener('click', closeCanvas);
-    var frame = wrap.querySelector('iframe');
+    var host = document.getElementById('nx-canvas-host');
     var status = document.getElementById('nx-canvas-status');
-    var loadedHtml = false;
-    // Render the single-file Canvas app from fetched HTML instead of a frame
-    // request: srcdoc inherits this origin, so storage and scripts work even
-    // when a browser or extension refuses to frame the Canvas URL.
-    function loadCanvasHtml() {
-      if (!window.fetch) {
-        loadedHtml = true;
-        frame.src = ROOT + 'Canvas/index.html';
-        return;
-      }
-      fetch(ROOT + 'Canvas/index.html', { credentials: 'same-origin' })
-        .then(function (r) {
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          return r.text();
-        })
-        .then(function (html) {
-          loadedHtml = true;
-          frame.srcdoc = html;
-        })
-        .catch(function () {
-          loadedHtml = true;
-          frame.src = ROOT + 'Canvas/index.html';
-        });
-    }
-    loadCanvasHtml();
-    function clearStatus() { if (status) status.style.display = 'none'; }
     function failStatus() {
       var msg = document.getElementById('nx-canvas-msg');
       if (msg) msg.textContent = 'Canvas did not load.';
     }
-    function hookCanvasKeys() {
-      try {
-        var w = frame.contentWindow;
-        if (w && !w.__nxCanvasEsc) {
-          w.__nxCanvasEsc = true;
-          w.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') closeCanvas();
-          }, true);
-        }
-      } catch (e) {}
+    if (!window.fetch) {
+      failStatus();
+      return;
     }
-    function checkLoaded() {
-      if (!loadedHtml) return;
-      hookCanvasKeys();
-      try {
-        var d = frame.contentDocument;
-        if (d && (d.title === 'Dashboard' || (d.body && (d.body.querySelector('.app') || d.body.innerHTML.length > 500)))) {
-          clearStatus();
-          return;
-        }
-        failStatus();
-      } catch (e) { clearStatus(); }
-    }
-    try { frame.addEventListener('load', checkLoaded); } catch (e) {}
+    fetch(ROOT + 'Canvas/index.html', { credentials: 'same-origin' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.text();
+      })
+      .then(function (html) {
+        try {
+          mountCanvasDocument(html, host);
+          if (status) status.style.display = 'none';
+        } catch (e) { failStatus(); }
+      })
+      .catch(function () { failStatus(); });
     setTimeout(function () {
       if (!status || status.style.display === 'none') return;
-      if (!loadedHtml) {
-        var msg = document.getElementById('nx-canvas-msg');
-        if (msg) msg.textContent = 'Canvas is taking longer than expected.';
-        return;
-      }
-      failStatus();
+      var msg = document.getElementById('nx-canvas-msg');
+      if (msg && msg.textContent === 'Loading Canvas…') msg.textContent = 'Canvas is taking longer than expected.';
     }, 8000);
   }
 
