@@ -353,6 +353,9 @@ document.addEventListener('DOMContentLoaded', () => {
   box-shadow: 0 0 8px #ff4444;
   vertical-align: middle;
 }
+
+/* Stealth Mode: no visible button. The feature stays on Alt+S. */
+#stealthOpener { display: none !important; }
 `;
   var style = document.createElement('style');
   style.id = 'nx-site-extras';
@@ -387,4 +390,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     if (stealth.parentNode) stealth.parentNode.insertBefore(btn, stealth.nextSibling);
   }
+
+  // The Stealth Mode button is hidden by the CSS above; Alt+S still opens it.
+  document.addEventListener('keydown', function (e) {
+    if (!e.altKey || e.ctrlKey || e.metaKey) return;
+    if (e.key !== 's' && e.key !== 'S') return;
+    var t = document.activeElement;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    var opener = document.getElementById('stealthOpener');
+    if (!opener) return;
+    e.preventDefault();
+    opener.click();
+  });
 });
