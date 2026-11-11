@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard</title>
+<style>
+*{box-sizing:border-box}
+:root{
+  --nav:#334a5b;--blue:#0b5a9c;--text:#273746;--muted:#667783;
+  --line:#d7dce0;--bg:#f7f8f9;--canvas-blue:#0374B5
+}
+body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text)}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh;display:flex;flex-direction:column}
+.app-body{display:flex;flex:1;min-height:0}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+  width:54px;background:#334a5b;color:white;position:fixed;left:0;top:0;bottom:0;
+  z-index:30;overflow:hidden;
+  background-image:url("data:image/png;base64,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");
+  background-repeat:no-repeat;background-position:0 54px;background-size:54px 556px;
+}
+.sidebar-profile{
+  position:absolute;left:0;top:0;width:54px;height:54px;border:0;padding:0;
+  background:transparent;display:flex;align-items:center;justify-content:center;z-index:3;
+}
+.sidebar-profile:hover{background:rgba(255,255,255,.08)}
+.sidebar-profile img,.sidebar-profile .avatar-ph{
+  width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.3);
+}
+.sidebar-profile .avatar-ph{
+  background:#5a6d7c;display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:#fff;font-weight:600;
+}
+.sidebar-hit{
+  position:absolute;left:0;width:54px;height:44px;border:0;padding:0;margin:0;
+  background:transparent;display:block;z-index:2;
+}
+.sidebar-hit:hover{background:rgba(255,255,255,.08)}
+.sidebar-hit.active{outline:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.06)}
+.sidebar-hit.dashboard{top:54px;height:47px}
+.sidebar-hit.courses{top:101px}
+.sidebar-hit.calendar{top:144px}
+.sidebar-hit.inbox{top:186px}
+.sidebar-hit.history{top:228px}
+.sidebar-hit.studio{top:270px}
+.sidebar-hit.help{top:311px}
+.sidebar-hit.logout{top:auto;bottom:0;height:50px}
+
+/* Profile flyout */
+.profile-flyout{
+  display:none;position:fixed;left:54px;top:0;width:280px;max-height:100vh;
+  background:#fff;box-shadow:4px 0 24px rgba(0,0,0,.18);z-index:40;overflow-y:auto;
+  border-right:1px solid #e0e0e0;
+}
+.profile-flyout.open{display:block}
+.profile-flyout .pf-head{
+  padding:20px 16px 16px;text-align:center;border-bottom:1px solid #eee;position:relative;
+}
+.profile-flyout .pf-close{
+  position:absolute;right:10px;top:10px;border:0;background:none;font-size:20px;color:#888;cursor:pointer;
+}
+.profile-flyout .pf-avatar{
+  width:72px;height:72px;border-radius:50%;object-fit:cover;margin:0 auto 10px;display:block;
+  border:2px solid #ddd;background:#e8ecf0;
+}
+.profile-flyout .pf-avatar-ph{
+  width:72px;height:72px;border-radius:50%;margin:0 auto 10px;background:#5a6d7c;
+  display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;font-weight:600;
+}
+.profile-flyout .pf-name{font-size:16px;font-weight:600;margin-bottom:10px}
+.profile-flyout .pf-logout{
+  display:inline-block;padding:6px 16px;border:1px solid #c7cdd1;border-radius:3px;
+  background:#fff;font-size:13px;color:#333;
+}
+.profile-flyout .pf-logout:hover{background:#f5f5f5}
+.profile-flyout .pf-upload{
+  display:block;margin:8px auto 0;font-size:12px;color:var(--canvas-blue);background:none;border:0;
+  text-decoration:underline;cursor:pointer;
+}
+.profile-flyout nav{padding:8px 0;border-bottom:1px solid #eee}
+.profile-flyout nav a{
+  display:block;padding:10px 20px;color:var(--canvas-blue);text-decoration:none;font-size:14px;
+}
+.profile-flyout nav a:hover{background:#f5f8fa}
+.profile-flyout .pf-access{padding:14px 20px}
+.profile-flyout .pf-access h4{margin:0 0 12px;font-size:13px;font-weight:600;color:#333}
+.profile-flyout .toggle-row{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;font-size:13px;color:#444;
+}
+.profile-flyout .toggle{
+  width:40px;height:22px;border-radius:11px;border:0;background:#ccc;position:relative;cursor:pointer;
+  flex-shrink:0;
+}
+.profile-flyout .toggle.on{background:#0a8f08}
+.profile-flyout .toggle::after{
+  content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;
+  background:#fff;transition:left .15s;box-shadow:0 1px 3px rgba(0,0,0,.2);
+}
+.profile-flyout .toggle.on::after{left:20px}
+
+.main{margin-left:54px;flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh}
+
+/* Views */
+.view{display:none;flex:1}
+.view.active{display:block}
+#viewInbox.view.active{display:flex;flex-direction:column;background:#fff;min-height:0}
+
+.header{
+  height:85px;max-width:928px;margin-left:48px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between
+}
+h1{font-size:39px;font-weight:400;margin:0}
+.content{display:flex;gap:36px;margin-left:48px;max-width:1280px;padding-top:24px;padding-bottom:24px}
+.dashboard{width:min(928px,calc(100vw - 420px))}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(210px,1fr));gap:34px}
+.card{
+  height:270px;background:#fff;border:1px solid #ddd;border-radius:4px;overflow:hidden;
+  box-shadow:0 2px 4px #00000020;position:relative;transition:.15s;cursor:pointer
+}
+.card:hover{box-shadow:0 4px 10px #00000025}
+.card-image{height:145px;background:#e9edef center/cover no-repeat;position:relative}
+.card-image.no-image{
+  background:linear-gradient(135deg,#e6ebee,#cbd4d9);
+  display:grid;place-items:center;color:#65757e;font-size:13px
+}
+.card-body{padding:13px 19px}
+.card-title{
+  display:block;color:var(--blue);font-size:15px;text-decoration:underline;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:7px
+}
+.card-sub{
+  color:var(--blue);font-size:13px;text-decoration:underline;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+.card-description{font-size:12px;color:#65747d;margin-top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.todo{width:240px;flex-shrink:0}
+.todo h2{font-size:15px;margin:8px 0 12px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.todo-item{border-bottom:1px solid #ddd;padding:9px 4px 10px 28px;position:relative;font-size:13px}
+.todo-item .megaphone{position:absolute;left:1px;top:10px}
+.todo-item a{color:var(--blue);text-decoration:underline}
+.todo-item small{display:block;color:#43525b;margin-top:4px;line-height:1.35}
+.todo-x{position:absolute;right:0;top:8px;font-weight:bold;font-size:18px;cursor:pointer;border:0;background:none;color:#666}
+.showall{text-align:center;padding:13px;color:var(--blue);font-size:14px}
+.feedback{margin-top:13px}
+.feedback h2{font-size:15px;border-bottom:1px solid var(--line);padding-bottom:10px}
+
+/* Inbox toolbar - match screenshot */
+.inbox-toolbar{
+  display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid #e0e0e0;
+  background:#f7f8f9;flex-wrap:wrap;flex-shrink:0
+}
+.inbox-toolbar select{
+  padding:8px 28px 8px 12px;border:1px solid #c7cdd1;border-radius:20px;background:#fff;
+  font-size:14px;appearance:auto;min-width:130px;color:#333
+}
+.inbox-toolbar .search-wrap{position:relative;flex:1;max-width:260px}
+.inbox-toolbar .search-wrap input{
+  width:100%;padding:8px 12px 8px 36px;border:1px solid #c7cdd1;border-radius:20px;
+  background:#fff;font-size:14px
+}
+.inbox-toolbar .search-wrap::before{
+  content:"";position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  width:14px;height:14px;border:2px solid #888;border-radius:50%;
+}
+.inbox-toolbar .search-wrap::after{
+  content:"";position:absolute;left:24px;top:58%;width:6px;height:2px;background:#888;
+  transform:rotate(45deg);border-radius:1px;
+}
+.inbox-toolbar .icon-btns{display:flex;gap:2px;margin-left:auto;align-items:center}
+.inbox-toolbar .icon-btn{
+  width:36px;height:36px;border:1px solid transparent;background:transparent;border-radius:4px;
+  color:#555;font-size:15px;display:flex;align-items:center;justify-content:center;
+}
+.inbox-toolbar .icon-btn:hover{background:#e8e8e8;border-color:#ddd}
+
+.inbox-body{display:flex;flex:1;min-height:0}
+.inbox-list{width:340px;border-right:1px solid #e0e0e0;overflow-y:auto;background:#fff;flex-shrink:0}
+.inbox-item{
+  display:flex;gap:10px;padding:12px 14px;border-bottom:1px solid #eee;cursor:pointer;position:relative
+}
+.inbox-item:hover{background:#f5f8fa}
+.inbox-item.selected{background:#e8f4fc;border-left:3px solid var(--canvas-blue)}
+.inbox-item .check{margin-top:2px;flex-shrink:0}
+.inbox-item .meta{flex:1;min-width:0}
+.inbox-item .date-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+.inbox-item .date{color:var(--canvas-blue);font-size:13px}
+.inbox-item .badge{
+  background:var(--canvas-blue);color:#fff;font-size:11px;font-weight:600;
+  min-width:18px;height:18px;border-radius:9px;display:grid;place-items:center;padding:0 5px
+}
+.inbox-item .names{font-size:14px;font-weight:500;color:#222;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.inbox-item .subject{font-size:13px;color:#333;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.inbox-item .preview{font-size:12px;color:#888;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.inbox-item .star{position:absolute;right:12px;bottom:12px;color:#ccc;font-size:16px}
+.inbox-detail{flex:1;display:flex;flex-direction:column;background:#fff;min-width:0}
+.inbox-empty{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#888;gap:12px
+}
+.inbox-empty .envelope{
+  width:80px;height:64px;border:3px solid #9aa5ad;border-radius:4px;position:relative
+}
+.inbox-empty .envelope::before{
+  content:"";position:absolute;top:-2px;left:50%;width:0;height:0;
+  border-left:38px solid transparent;border-right:38px solid transparent;
+  border-top:32px solid #9aa5ad;transform:translateX(-50%)
+}
+.inbox-empty .envelope::after{
+  content:"";position:absolute;top:1px;left:50%;width:0;height:0;
+  border-left:34px solid transparent;border-right:34px solid transparent;
+  border-top:28px solid #fff;transform:translateX(-50%)
+}
+.inbox-empty p{font-size:16px;margin:0;color:#666}
+.inbox-msg-header{padding:16px 24px;border-bottom:1px solid #e8e8e8;background:#fafafa}
+.inbox-msg-header h2{margin:0 0 6px;font-size:20px;font-weight:500}
+.inbox-msg-header .from{font-size:13px;color:#555}
+.inbox-msg-body{padding:24px;flex:1;overflow-y:auto;line-height:1.55;font-size:14px}
+.edit-courses-btn,.setup-btn{
+  display:inline-block;margin-top:12px;margin-right:8px;padding:10px 18px;background:var(--canvas-blue);
+  color:#fff;border:0;border-radius:4px;font-size:14px;font-weight:500
+}
+.edit-courses-btn:hover,.setup-btn:hover{background:#025a8f}
+.setup-btn.secondary{background:#fff;color:var(--canvas-blue);border:1px solid var(--canvas-blue)}
+
+/* Course page */
+.course-page{margin-left:48px;max-width:900px;padding:24px 0 40px}
+.course-page .back-btn{
+  background:none;border:0;color:var(--blue);font-size:14px;padding:0;margin-bottom:12px;text-decoration:underline
+}
+.course-page h1{font-size:28px;margin:0 0 8px}
+.course-page .meta{color:var(--muted);font-size:14px;margin-bottom:20px}
+.course-box{background:#fff;border:1px solid #ddd;border-radius:6px;min-height:400px;padding:24px}
+.course-box .ph{text-align:center;padding:50px 20px;color:#71808a}
+.course-box .ph h3{margin:0 0 8px;font-size:18px;font-weight:500;color:#555}
+.course-box .ph p{margin:0 0 20px;font-size:14px}
+.course-box .ctrls{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.course-box .ctrls button{
+  padding:9px 16px;border:1px solid #c7cdd1;border-radius:4px;background:#fff;font-size:13px
+}
+.course-box .ctrls button:hover{background:#f5f5f5}
+.course-box textarea{
+  width:100%;min-height:260px;padding:12px;border:1px solid #bfc7cc;border-radius:4px;
+  font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;display:none;resize:vertical
+}
+.course-box textarea.open{display:block}
+.course-box .rendered{line-height:1.6}
+.course-box .rendered img{max-width:100%;height:auto;border-radius:4px}
+.course-box .save-row{margin-top:16px;display:none;justify-content:flex-end;gap:10px}
+.course-box .save-row.open{display:flex}
+.course-box .locked{
+  background:#f0f7fc;border:1px solid #c5d9e8;border-radius:4px;padding:12px 16px;
+  font-size:13px;color:#334;margin-bottom:16px;display:none
+}
+.course-box .locked.show{display:block}
+
+/* FOOTER - must be on bottom */
+.site-footer{
+  margin-left:54px;
+  background:#fff;
+  flex-shrink:0;
+  padding:0;
+}
+.site-footer img{
+  display:block;width:100%;height:auto;max-width:100%;
+}
+.site-footer .footer-upper-img{
+  width:100%;border:0;
+}
+.site-footer .footer-bar-img{
+  width:100%;border:0;border-top:1px solid #e8e8e8;
+}
+
+/* Modals */
+.editor{
+  display:none;position:fixed;z-index:50;inset:0;background:#0008;
+  align-items:center;justify-content:center;padding:20px
+}
+.editor.open{display:flex}
+.modal{
+  width:min(650px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:7px;
+  box-shadow:0 12px 50px #0008;padding:24px
+}
+.modal h2{margin:0 0 18px;font-size:23px;font-weight:500}
+.field{margin:12px 0}
+.field label{display:block;font-size:13px;font-weight:bold;margin-bottom:5px}
+.field input,.field textarea{width:100%;padding:10px;border:1px solid #bfc7cc;border-radius:4px}
+.field textarea{min-height:75px;resize:vertical}
+.image-row{display:flex;gap:10px;align-items:center}
+.image-preview{width:120px;height:70px;background:#e7eaec center/cover no-repeat;border-radius:4px;border:1px solid #ccd3d7}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+.btn{padding:9px 15px;border-radius:4px;border:1px solid #c7cdd1;background:#fff}
+.btn.primary{background:#0b5a9c;color:#fff;border-color:#0b5a9c}
+.btn.danger{color:#a21d1d;border-color:#d6aaaa}
+.notice{
+  position:fixed;left:50%;bottom:20px;transform:translateX(-50%);
+  background:#26343d;color:white;padding:11px 17px;border-radius:4px;
+  display:none;z-index:100;box-shadow:0 4px 18px #0005;font-size:13px
+}
+.notice.show{display:block}
+
+@media(max-width:1050px){
+  .content{margin-left:25px}.header{margin-left:25px}
+  .dashboard{width:calc(100vw - 340px)}
+  .cards{grid-template-columns:repeat(2,minmax(210px,1fr))}
+  .course-page{margin-left:25px}
+}
+@media(max-width:760px){
+  .header{margin-left:18px;margin-right:18px}.content{margin:0 18px}
+  .dashboard{width:100%}.todo{display:none}
+  .cards{grid-template-columns:repeat(2,minmax(180px,1fr));gap:18px}
+  .inbox-list{width:100%}.inbox-body{flex-direction:column}
+  .course-page{margin-left:18px;margin-right:18px}
+  .site-footer{margin-left:54px}
+}
+@media(max-width:500px){h1{font-size:30px}.cards{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="app-body">
+  <aside class="sidebar" aria-label="Canvas global navigation">
+    <button class="sidebar-profile" id="profileBtn" type="button" title="Profile" aria-label="Profile">
+      <span class="avatar-ph" id="sidebarAvatarPh">?</span>
+      <img id="sidebarAvatarImg" style="display:none" alt="Profile">
+    </button>
+    <button class="sidebar-hit dashboard active" data-nav="Dashboard" aria-label="Dashboard"></button>
+    <button class="sidebar-hit courses" data-nav="Courses" aria-label="Courses"></button>
+    <button class="sidebar-hit calendar" data-nav="Calendar" aria-label="Calendar"></button>
+    <button class="sidebar-hit inbox" data-nav="Inbox" aria-label="Inbox"></button>
+    <button class="sidebar-hit history" data-nav="History" aria-label="History"></button>
+    <button class="sidebar-hit studio" data-nav="Studio" aria-label="Studio"></button>
+    <button class="sidebar-hit help" data-nav="Help" aria-label="Help"></button>
+    <button class="sidebar-hit logout" data-nav="Log Out" aria-label="Log Out"></button>
+  </aside>
+
+  <!-- Profile flyout panel -->
+  <div class="profile-flyout" id="profileFlyout">
+    <div class="pf-head">
+      <button class="pf-close" id="pfClose" type="button" aria-label="Close">×</button>
+      <div id="pfAvatarWrap">
+        <div class="pf-avatar-ph" id="pfAvatarPh">?</div>
+        <img class="pf-avatar" id="pfAvatarImg" style="display:none" alt="Profile">
+      </div>
+      <div class="pf-name" id="pfName">Student</div>
+      <button class="pf-logout" id="pfLogout" type="button">Logout</button>
+      <button class="pf-upload" id="pfUploadBtn" type="button">Change profile picture</button>
+      <input type="file" id="pfFileInput" accept="image/*" style="display:none">
+    </div>
+    <nav>
+      <a href="#">Notifications</a>
+      <a href="#">Profile</a>
+      <a href="#">Files</a>
+      <a href="#">Settings</a>
+      <a href="#">ePortfolios (Legacy)</a>
+      <a href="#">Portfolio</a>
+      <a href="#">QR for Mobile Login</a>
+      <a href="#">Global Announcements</a>
+    </nav>
+    <div class="pf-access">
+      <h4>Accessibility Settings</h4>
+      <div class="toggle-row">
+        <span>Use High Contrast UI</span>
+        <button class="toggle on" id="togContrast" type="button" aria-pressed="true"></button>
+      </div>
+      <div class="toggle-row">
+        <span>Use a Dyslexia Friendly Font</span>
+        <button class="toggle" id="togDyslexia" type="button" aria-pressed="false"></button>
+      </div>
+    </div>
+  </div>
+
+  <main class="main">
+    <!-- DASHBOARD -->
+    <div id="viewDash" class="view active">
+      <header class="header">
+        <h1>Dashboard</h1>
+      </header>
+      <div class="content">
+        <section class="dashboard">
+          <div class="cards" id="cards"></div>
+        </section>
+        <aside class="todo" id="todoPanel">
+          <h2>To Do</h2>
+          <div id="todoList"></div>
+          <div class="showall">Show All</div>
+          <div class="feedback">
+            <h2>Recent Feedback</h2>
+            <div id="feedbackList" style="color:#168344;font-size:14px"></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- INBOX -->
+    <div id="viewInbox" class="view">
+      <div class="inbox-toolbar">
+        <select aria-label="All Courses">
+          <option>All Courses</option>
+          <option>Spanish 1</option>
+          <option>Advanced Science</option>
+          <option>Language Arts</option>
+        </select>
+        <select aria-label="Inbox">
+          <option>Inbox</option>
+          <option>Unread</option>
+          <option>Starred</option>
+          <option>Sent</option>
+        </select>
+        <div class="search-wrap">
+          <input type="search" placeholder="Search..." aria-label="Search">
+        </div>
+        <div class="icon-btns">
+          <button class="icon-btn" type="button" title="Address Book">📇</button>
+          <button class="icon-btn" type="button" title="Compose">📝</button>
+          <button class="icon-btn" type="button" title="Reply">↩</button>
+          <button class="icon-btn" type="button" title="Reply All">⇄</button>
+          <button class="icon-btn" type="button" title="Archive">⬇</button>
+          <button class="icon-btn" type="button" title="Delete">🗑</button>
+          <button class="icon-btn" type="button" title="More">⋮</button>
+        </div>
+      </div>
+      <div class="inbox-body">
+        <div class="inbox-list" id="inboxList"></div>
+        <div class="inbox-detail">
+          <div class="inbox-empty" id="inboxEmpty">
+            <div class="envelope"></div>
+            <p>No Conversations Selected</p>
+          </div>
+          <div id="inboxMsg" style="display:none;flex-direction:column;height:100%">
+            <div class="inbox-msg-header">
+              <h2 id="msgSubject"></h2>
+              <div class="from" id="msgFrom"></div>
+            </div>
+            <div class="inbox-msg-body" id="msgBody"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COURSE -->
+    <div id="viewCourse" class="view">
+      <div class="course-page">
+        <button class="back-btn" id="backDash" type="button">← Back to Dashboard</button>
+        <h1 id="courseTitle">Course</h1>
+        <div class="meta" id="courseMeta"></div>
+        <div class="course-box">
+          <div class="locked" id="lockedNote">
+            Content saved. To change course cards, open <strong>Inbox</strong> → first message → Edit Courses.
+          </div>
+          <div class="ph" id="contentPh">
+            <h3>Insert text or image</h3>
+            <p>Add a screenshot, paste HTML, or type text for this course page.</p>
+            <div class="ctrls">
+              <button type="button" id="btnText">Add text</button>
+              <button type="button" id="btnImage">Upload image</button>
+              <button type="button" id="btnHtml">Enter HTML</button>
+              <input type="file" id="courseImg" accept="image/*" style="display:none">
+            </div>
+          </div>
+          <textarea id="htmlEd" placeholder="Type or paste content here…"></textarea>
+          <div class="rendered" id="rendered"></div>
+          <div class="save-row" id="saveRow">
+            <button class="btn" id="cancelContent" type="button">Cancel</button>
+            <button class="btn primary" id="saveContent" type="button">Save content</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <img class="footer-upper-img" src="data:image/png;base64,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" alt="">
+      <img class="footer-bar-img" src="data:image/png;base64,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" alt="Instructure">
+    </footer>
+
+  </main>
+  </div>
+</div>
+
+<!-- Single card editor -->
+<div class="editor" id="editor">
+  <div class="modal">
+    <h2 id="modalTitle">Edit Course Card</h2>
+    <div class="field"><label for="titleInput">Card name</label><input id="titleInput" placeholder="Example: Spanish 1"></div>
+    <div class="field"><label for="subtitleInput">Course text</label><input id="subtitleInput" placeholder="Example: Spanish I - 50705ms..."></div>
+    <div class="field"><label for="schoolInput">School / extra text</label><input id="schoolInput" placeholder="Example: 2026/2027 - Piney Grove..."></div>
+    <div class="field"><label for="descriptionInput">Small description</label><textarea id="descriptionInput" placeholder="Optional"></textarea></div>
+    <div class="field">
+      <label>Card picture</label>
+      <div class="image-row">
+        <div class="image-preview" id="imagePreview"></div>
+        <div>
+          <input type="file" id="imageInput" accept="image/*">
+          <button class="btn" id="removeImage" type="button">Remove picture</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn danger" id="deleteCard" type="button">Delete Card</button>
+      <button class="btn" id="cancelEdit" type="button">Cancel</button>
+      <button class="btn primary" id="saveEdit" type="button">Save Card</button>
+    </div>
+  </div>
+</div>
+
+<!-- Manage courses -->
+<div class="editor" id="manageEditor">
+  <div class="modal">
+    <h2>Edit Courses</h2>
+    <p style="margin:0 0 16px;font-size:14px;color:#555">Add, edit, or remove course cards on your dashboard.</p>
+    <div id="manageList"></div>
+    <div class="modal-actions">
+      <button class="btn" id="closeManage" type="button">Close</button>
+      <button class="btn primary" id="addNewCard" type="button">＋ Add Course Card</button>
+    </div>
+  </div>
+</div>
+
+<!-- Setup: name + todo editor (from first message) -->
+<div class="editor" id="setupEditor">
+  <div class="modal">
+    <h2>Welcome Setup</h2>
+    <div class="field">
+      <label for="setupName">Your name</label>
+      <input id="setupName" placeholder="e.g. Tate Cutler">
+      <p style="margin:6px 0 0;font-size:12px;color:#666">This name will appear on your messages and profile.</p>
+    </div>
+    <div class="field">
+      <label for="setupTodo">To Do items (one per line)</label>
+      <textarea id="setupTodo" style="min-height:120px" placeholder="Dodgeball This Friday...|PGM Student Info Course|Sep 22 at 8:58am"></textarea>
+      <p style="margin:6px 0 0;font-size:12px;color:#666">Format: Title|Course|Date  — one item per line</p>
+    </div>
+    <div class="field">
+      <label for="setupFeedback">Recent Feedback (one per line)</label>
+      <textarea id="setupFeedback" style="min-height:60px" placeholder="Unit 1B Test (2026)"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="cancelSetup" type="button">Cancel</button>
+      <button class="btn primary" id="saveSetup" type="button">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="notice" id="notice"></div>
+
+<script>
+(function(){
+  var STORAGE_KEY = "canvasDashCards_v3";
+  var PROFILE_KEY = "canvasDashProfile_v3";
+  var TODO_KEY = "canvasDashTodo_v3";
+
+  var defaultCards = [
+    {title:"Patunas- Spanish 1",subtitle:"Spanish I - 50705ms - Patunas...",school:"2026/2027 - Piney Grove Middle School...",image:"",description:"",content:"",contentSaved:false},
+    {title:"Hill Advanced Science",subtitle:"Advanced Physical Science - ...",school:"2026/2027 - Piney Grove Middle School...",image:"",description:"",content:"",contentSaved:false},
+    {title:"Frost Advanced Language Arts",subtitle:"Advanced Language Arts - 81...",school:"2026/2027 - Piney Grove Middle School...",image:"",description:"",content:"",contentSaved:false},
+    {title:"Technology",subtitle:"Technology",school:"2026/2027 - Piney Grove Middle School...",image:"",description:"",content:"",contentSaved:false},
+    {title:"Advanced PE Coach Jager 8th Grade",subtitle:"Advanced PE Coach Jager 8th Gra...",school:"2026/2027 - Piney Grove Middle School...",image:"",description:"",content:"",contentSaved:false},
+    {title:"Advanced Georgia Studies - Wynn",subtitle:"Advanced Georgia Studies",school:"2026/2027 - Piney Grove Middle School...",image:"",description:"",content:"",contentSaved:false}
+  ];
+
+  var defaultTodo = [
+    {icon:"⚑", title:"Dodgeball This Friday...", course:"PGM Student Info Course", when:"Sep 22 at 8:58am"},
+    {icon:"⚑", title:"Basketball Cheer", course:"PGM Student Info Course", when:"Sep 24 at 9:05am"},
+    {icon:"⚑", title:"Debate Club! All 6th, 7th...", course:"PGM Student Info Course", when:"Sep 24 at 10:11am"},
+    {icon:"▧", title:"Unit 2B Practice Slope...", course:"8th Grade Math - Might", when:"100 points | Sep 25 at 9am"},
+    {icon:"▧", title:"Unit 2B Practice Slope...", course:"8th Grade Math - Might", when:"100 points | Sep 25 at 9am"}
+  ];
+  var defaultFeedback = ["Unit 1B Test (2026)"];
+
+  function loadJSON(key, fallback){
+    try{
+      var raw = localStorage.getItem(key);
+      if(!raw) return fallback;
+      return JSON.parse(raw);
+    }catch(e){ return fallback; }
+  }
+
+  function loadCards(){
+    var parsed = loadJSON(STORAGE_KEY, null);
+    if(!Array.isArray(parsed) || !parsed.length) return defaultCards.slice();
+    return parsed.map(function(c){
+      return {
+        title:c.title||"", subtitle:c.subtitle||"", school:c.school||"",
+        image:c.image||"", description:c.description||"",
+        content:c.content||"", contentSaved:!!c.contentSaved
+      };
+    });
+  }
+
+  var cards = loadCards();
+  var profile = loadJSON(PROFILE_KEY, {name:"", avatar:""});
+  var todoData = loadJSON(TODO_KEY, {items:defaultTodo.slice(), feedback:defaultFeedback.slice()});
+  if(!todoData.items) todoData.items = defaultTodo.slice();
+  if(!todoData.feedback) todoData.feedback = defaultFeedback.slice();
+
+  var editingIndex = null;
+  var pendingImage = null;
+  var currentCourse = null;
+
+  var cardsEl = document.getElementById("cards");
+  var editor = document.getElementById("editor");
+  var manageEditor = document.getElementById("manageEditor");
+  var setupEditor = document.getElementById("setupEditor");
+
+  function saveCards(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(cards)); }catch(e){} }
+  function saveProfile(){ try{ localStorage.setItem(PROFILE_KEY, JSON.stringify(profile)); }catch(e){} }
+  function saveTodo(){ try{ localStorage.setItem(TODO_KEY, JSON.stringify(todoData)); }catch(e){} }
+
+  function showNotice(msg){
+    var n = document.getElementById("notice");
+    n.textContent = msg;
+    n.classList.add("show");
+    clearTimeout(window._nt);
+    window._nt = setTimeout(function(){ n.classList.remove("show"); }, 1800);
+  }
+
+  function escapeHtml(s){
+    return String(s)
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+  }
+
+  function displayName(){
+    return profile.name && profile.name.trim() ? profile.name.trim() : "Student";
+  }
+
+  function initials(){
+    var n = displayName();
+    var parts = n.split(/\s+/);
+    if(parts.length >= 2) return (parts[0][0]+parts[1][0]).toUpperCase();
+    return n.slice(0,1).toUpperCase() || "?";
+  }
+
+  function updateProfileUI(){
+    var name = displayName();
+    document.getElementById("pfName").textContent = name;
+    var ph = document.getElementById("sidebarAvatarPh");
+    var img = document.getElementById("sidebarAvatarImg");
+    var pfPh = document.getElementById("pfAvatarPh");
+    var pfImg = document.getElementById("pfAvatarImg");
+    ph.textContent = initials();
+    pfPh.textContent = initials();
+    if(profile.avatar){
+      img.src = profile.avatar; img.style.display = "block"; ph.style.display = "none";
+      pfImg.src = profile.avatar; pfImg.style.display = "block"; pfPh.style.display = "none";
+    } else {
+      img.style.display = "none"; ph.style.display = "flex";
+      pfImg.style.display = "none"; pfPh.style.display = "flex";
+    }
+  }
+
+  function renderTodo(){
+    var list = document.getElementById("todoList");
+    list.innerHTML = "";
+    for(var i=0;i<todoData.items.length;i++){
+      var t = todoData.items[i];
+      var div = document.createElement("div");
+      div.className = "todo-item";
+      div.innerHTML =
+        '<span class="megaphone">' + escapeHtml(t.icon||"⚑") + '</span>' +
+        '<a href="#">' + escapeHtml(t.title) + '</a>' +
+        '<button class="todo-x" type="button" data-i="'+i+'">×</button>' +
+        '<small>' + escapeHtml(t.course||"") + '<br>' + escapeHtml(t.when||"") + '</small>';
+      list.appendChild(div);
+    }
+    var xs = list.querySelectorAll(".todo-x");
+    for(var x=0;x<xs.length;x++){
+      xs[x].addEventListener("click", function(e){
+        e.stopPropagation();
+        var idx = Number(this.getAttribute("data-i"));
+        todoData.items.splice(idx,1);
+        saveTodo(); renderTodo();
+      });
+    }
+    var fb = document.getElementById("feedbackList");
+    fb.innerHTML = "";
+    for(var f=0;f<todoData.feedback.length;f++){
+      fb.innerHTML += '✓ &nbsp;<a style="color:#0b5a9c;text-decoration:underline" href="#">' +
+        escapeHtml(todoData.feedback[f]) + '</a><br>';
+    }
+  }
+
+  function showView(id){
+    var views = document.querySelectorAll(".view");
+    for(var i=0;i<views.length;i++) views[i].classList.remove("active");
+    var el = document.getElementById(id);
+    if(el) el.classList.add("active");
+
+    var hits = document.querySelectorAll(".sidebar-hit");
+    for(var j=0;j<hits.length;j++) hits[j].classList.remove("active");
+    if(id === "viewDash"){
+      var d = document.querySelector(".sidebar-hit.dashboard");
+      if(d) d.classList.add("active");
+    } else if(id === "viewInbox"){
+      var ib = document.querySelector(".sidebar-hit.inbox");
+      if(ib) ib.classList.add("active");
+    }
+  }
+
+  // Profile flyout
+  document.getElementById("profileBtn").addEventListener("click", function(e){
+    e.stopPropagation();
+    document.getElementById("profileFlyout").classList.toggle("open");
+  });
+  document.getElementById("pfClose").addEventListener("click", function(){
+    document.getElementById("profileFlyout").classList.remove("open");
+  });
+  document.getElementById("pfLogout").addEventListener("click", function(){
+    showNotice("Logged out");
+    document.getElementById("profileFlyout").classList.remove("open");
+  });
+  document.getElementById("pfUploadBtn").addEventListener("click", function(){
+    document.getElementById("pfFileInput").click();
+  });
+  document.getElementById("pfFileInput").addEventListener("change", function(){
+    var file = this.files[0];
+    if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e){
+      profile.avatar = e.target.result;
+      saveProfile();
+      updateProfileUI();
+      showNotice("Profile picture updated");
+    };
+    reader.readAsDataURL(file);
+  });
+  document.getElementById("togContrast").addEventListener("click", function(){
+    this.classList.toggle("on");
+    this.setAttribute("aria-pressed", this.classList.contains("on") ? "true" : "false");
+  });
+  document.getElementById("togDyslexia").addEventListener("click", function(){
+    this.classList.toggle("on");
+    this.setAttribute("aria-pressed", this.classList.contains("on") ? "true" : "false");
+    document.body.style.fontFamily = this.classList.contains("on")
+      ? "Comic Sans MS, OpenDyslexic, Arial, sans-serif"
+      : "Arial, Helvetica, sans-serif";
+  });
+  document.addEventListener("click", function(e){
+    var fly = document.getElementById("profileFlyout");
+    var btn = document.getElementById("profileBtn");
+    if(fly.classList.contains("open") && !fly.contains(e.target) && !btn.contains(e.target)){
+      fly.classList.remove("open");
+    }
+  });
+
+  // Sidebar nav
+  var hits = document.querySelectorAll(".sidebar-hit");
+  for(var i=0;i<hits.length;i++){
+    hits[i].addEventListener("click", function(){
+      var name = this.getAttribute("data-nav");
+      if(name === "Dashboard"){ showView("viewDash"); showNotice("Dashboard"); return; }
+      if(name === "Inbox"){ showView("viewInbox"); renderInbox(); clearInboxSel(); showNotice("Inbox"); return; }
+      if(name === "Log Out"){ showNotice("Log Out clicked"); return; }
+      var all = document.querySelectorAll(".sidebar-hit");
+      for(var k=0;k<all.length;k++) all[k].classList.remove("active");
+      this.classList.add("active");
+      showNotice(name + " selected");
+    });
+  }
+
+  document.getElementById("backDash").addEventListener("click", function(){ showView("viewDash"); });
+
+  // Cards
+  function render(){
+    cardsEl.innerHTML = "";
+    for(var i=0;i<cards.length;i++){
+      (function(idx){
+        var card = cards[idx];
+        var el = document.createElement("article");
+        el.className = "card";
+        var hasImg = !!card.image;
+        var style = hasImg ? ' style="background-image:url(\'' + String(card.image).replace(/'/g,"%27") + '\')"' : "";
+        el.innerHTML =
+          '<div class="card-image' + (hasImg?"":" no-image") + '"' + style + '>' +
+            (hasImg ? "" : "Open card to add content") +
+          '</div>' +
+          '<div class="card-body">' +
+            '<a class="card-title" href="#">' + escapeHtml(card.title || "Untitled Course") + '</a>' +
+            '<div class="card-sub">' + escapeHtml(card.subtitle || "") + '</div>' +
+            '<div class="card-sub">' + escapeHtml(card.school || "") + '</div>' +
+            (card.description ? '<div class="card-description">' + escapeHtml(card.description) + '</div>' : "") +
+          '</div>';
+        el.addEventListener("click", function(){ openCourse(idx); });
+        cardsEl.appendChild(el);
+      })(i);
+    }
+  }
+
+  function openCourse(idx){
+    currentCourse = idx;
+    var card = cards[idx];
+    document.getElementById("courseTitle").textContent = card.title || "Course";
+    document.getElementById("courseMeta").textContent = [card.subtitle, card.school].filter(Boolean).join(" · ");
+    var ph = document.getElementById("contentPh");
+    var ed = document.getElementById("htmlEd");
+    var rendered = document.getElementById("rendered");
+    var saveRow = document.getElementById("saveRow");
+    var locked = document.getElementById("lockedNote");
+    ed.classList.remove("open"); saveRow.classList.remove("open"); ed.value = "";
+    if(card.content && card.contentSaved){
+      ph.style.display = "none"; rendered.innerHTML = card.content; rendered.style.display = "block"; locked.classList.add("show");
+    } else {
+      ph.style.display = "block"; rendered.innerHTML = ""; rendered.style.display = "none"; locked.classList.remove("show");
+    }
+    showView("viewCourse");
+  }
+
+  document.getElementById("btnText").addEventListener("click", function(){
+    var ed = document.getElementById("htmlEd");
+    ed.classList.add("open");
+    ed.value = (cards[currentCourse] && cards[currentCourse].content) || "";
+    ed.placeholder = "Type your text here…";
+    document.getElementById("saveRow").classList.add("open");
+    document.getElementById("contentPh").style.display = "none";
+  });
+  document.getElementById("btnHtml").addEventListener("click", function(){
+    var ed = document.getElementById("htmlEd");
+    ed.classList.add("open");
+    ed.value = (cards[currentCourse] && cards[currentCourse].content) || "";
+    ed.placeholder = "Paste HTML here…";
+    document.getElementById("saveRow").classList.add("open");
+    document.getElementById("contentPh").style.display = "none";
+  });
+  document.getElementById("btnImage").addEventListener("click", function(){ document.getElementById("courseImg").click(); });
+  document.getElementById("courseImg").addEventListener("change", function(){
+    var file = this.files[0]; if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var ed = document.getElementById("htmlEd");
+      ed.classList.add("open");
+      ed.value = (ed.value ? ed.value + "\n" : "") + '<img src="' + e.target.result + '" alt="Course image">';
+      document.getElementById("saveRow").classList.add("open");
+      document.getElementById("contentPh").style.display = "none";
+    };
+    reader.readAsDataURL(file);
+  });
+  document.getElementById("cancelContent").addEventListener("click", function(){ openCourse(currentCourse); });
+  document.getElementById("saveContent").addEventListener("click", function(){
+    if(currentCourse === null) return;
+    var html = document.getElementById("htmlEd").value.trim();
+    if(!html){ showNotice("Add some content first."); return; }
+    cards[currentCourse].content = html;
+    cards[currentCourse].contentSaved = true;
+    saveCards(); openCourse(currentCourse); showNotice("Content saved.");
+  });
+
+  // Inbox messages
+  function buildMessages(){
+    var you = displayName();
+    return [
+      {
+        id:1, date:"Aug 12, 2026", names:"Piney Grove Middle School",
+        subject:"Happy First Day of School",
+        preview:"Welcome! Set your name and customize your dashboard...",
+        badge:1, special:"setup",
+        body:"" // filled dynamically
+      },
+      {
+        id:2, date:"Sep 17, 2026", names:"Stephanie Jackson, " + you,
+        subject:"Powder Puff Registration",
+        preview:"Attention any 7th and 8th grade girls in...",
+        badge:1,
+        body:"<p>Attention any 7th and 8th grade girls interested in Powder Puff football!</p><p>Registration is now open. Please reply if you want to join.</p><p>— Stephanie Jackson</p>"
+      },
+      {
+        id:3, date:"Sep 17, 2026", names:you + ", Mark Swanger",
+        subject:"Checking in",
+        preview:"I'm good! thanks for asking, I don't fee...",
+        badge:2,
+        body:"<p>I'm good! thanks for asking, I don't feel too overwhelmed yet.</p><p>Let me know if you need anything for the week.</p>"
+      },
+      {
+        id:4, date:"Sep 18, 2026", names:"Coach Jager, " + you,
+        subject:"PE Uniform Reminder",
+        preview:"Don't forget PE clothes for Friday...",
+        badge:1,
+        body:"<p>Hi everyone — don't forget PE clothes for Friday's outdoor day.</p><p>— Coach Jager</p>"
+      },
+      {
+        id:5, date:"Sep 19, 2026", names:"Ms. Patunas, " + you,
+        subject:"Spanish vocab quiz Thursday",
+        preview:"Study units 1–3 for Thursday's quiz...",
+        badge:1,
+        body:"<p>Study units 1–3 for Thursday's vocab quiz. ¡Buena suerte!</p><p>— Ms. Patunas</p>"
+      },
+      {
+        id:6, date:"Sep 20, 2026", names:"Mr. Hill, " + you,
+        subject:"Science lab safety forms",
+        preview:"Please return signed lab safety forms by...",
+        badge:1,
+        body:"<p>Please return signed lab safety forms by Wednesday.</p><p>— Mr. Hill</p>"
+      },
+      {
+        id:7, date:"Sep 21, 2026", names:"Counseling Office",
+        subject:"Schedule change requests",
+        preview:"Schedule change window closes Friday...",
+        badge:1,
+        body:"<p>The schedule change window closes this Friday at 3pm.</p><p>— Counseling Office</p>"
+      },
+      {
+        id:8, date:"Sep 22, 2026", names:"PGM Student Info, " + you,
+        subject:"Dodgeball This Friday!",
+        preview:"Sign up in the gym lobby during lunch...",
+        badge:1,
+        body:"<p>Sign up for Friday dodgeball in the gym lobby during lunch.</p>"
+      },
+      {
+        id:9, date:"Sep 23, 2026", names:"Ms. Frost, " + you,
+        subject:"Essay draft due Monday",
+        preview:"Remember your essay drafts are due...",
+        badge:1,
+        body:"<p>Remember your essay drafts are due Monday. Bring a printed copy.</p><p>— Ms. Frost</p>"
+      },
+      {
+        id:10, date:"Sep 24, 2026", names:"Library, " + you,
+        subject:"Overdue book notice",
+        preview:"You have 1 book due soon...",
+        badge:1,
+        body:"<p>You have 1 book due soon. Please return or renew online.</p><p>— Library</p>"
+      }
+    ];
+  }
+
+  function setupMessageBody(){
+    return '<p>Welcome to the 2026–2027 school year at Piney Grove Middle School!</p>' +
+      '<p>Use the buttons below to set <strong>your name</strong> (shown on messages & profile) and to customize the <strong>To Do</strong> panel on the right of your dashboard. You can also edit course cards.</p>' +
+      '<button type="button" class="setup-btn" id="btnOpenSetup">Set Name & Edit To Do</button>' +
+      '<button type="button" class="edit-courses-btn" id="btnEditCourses">Edit Courses</button>' +
+      '<p style="margin-top:24px;font-size:13px;color:#666">Have a great first day!</p>';
+  }
+
+  function renderInbox(){
+    var messages = buildMessages();
+    var list = document.getElementById("inboxList");
+    list.innerHTML = "";
+    for(var i=0;i<messages.length;i++){
+      (function(msg){
+        var item = document.createElement("div");
+        item.className = "inbox-item";
+        item.setAttribute("data-id", msg.id);
+        item.innerHTML =
+          '<input type="checkbox" class="check">' +
+          '<div class="meta">' +
+            '<div class="date-row"><span class="date">' + msg.date + '</span>' +
+            (msg.badge ? '<span class="badge">' + msg.badge + '</span>' : '') +
+            '</div>' +
+            '<div class="names">' + escapeHtml(msg.names) + '</div>' +
+            '<div class="subject">' + escapeHtml(msg.subject) + '</div>' +
+            '<div class="preview">' + escapeHtml(msg.preview) + '</div>' +
+          '</div><span class="star">☆</span>';
+        item.querySelector(".check").addEventListener("click", function(e){ e.stopPropagation(); });
+        item.addEventListener("click", function(){ selectMsg(msg); });
+        list.appendChild(item);
+      })(messages[i]);
+    }
+  }
+
+  function clearInboxSel(){
+    var items = document.querySelectorAll(".inbox-item");
+    for(var i=0;i<items.length;i++) items[i].classList.remove("selected");
+    document.getElementById("inboxEmpty").style.display = "flex";
+    document.getElementById("inboxMsg").style.display = "none";
+  }
+
+  function selectMsg(msg){
+    var items = document.querySelectorAll(".inbox-item");
+    for(var j=0;j<items.length;j++){
+      items[j].classList.toggle("selected", Number(items[j].getAttribute("data-id")) === msg.id);
+    }
+    document.getElementById("inboxEmpty").style.display = "none";
+    document.getElementById("inboxMsg").style.display = "flex";
+    document.getElementById("msgSubject").textContent = msg.subject;
+    document.getElementById("msgFrom").textContent = "From: " + msg.names + " · " + msg.date;
+    var body = msg.special === "setup" ? setupMessageBody() : msg.body;
+    document.getElementById("msgBody").innerHTML = body;
+
+    var btnSetup = document.getElementById("btnOpenSetup");
+    if(btnSetup) btnSetup.onclick = function(){ openSetup(); };
+    var btnCourses = document.getElementById("btnEditCourses");
+    if(btnCourses) btnCourses.onclick = function(){ openManage(); };
+  }
+
+  // Setup modal
+  function openSetup(){
+    document.getElementById("setupName").value = profile.name || "";
+    var todoLines = todoData.items.map(function(t){
+      return (t.title||"") + "|" + (t.course||"") + "|" + (t.when||"");
+    }).join("\n");
+    document.getElementById("setupTodo").value = todoLines;
+    document.getElementById("setupFeedback").value = (todoData.feedback||[]).join("\n");
+    setupEditor.classList.add("open");
+  }
+  document.getElementById("cancelSetup").addEventListener("click", function(){ setupEditor.classList.remove("open"); });
+  document.getElementById("saveSetup").addEventListener("click", function(){
+    profile.name = document.getElementById("setupName").value.trim();
+    saveProfile();
+    updateProfileUI();
+
+    var lines = document.getElementById("setupTodo").value.split("\n");
+    var items = [];
+    for(var i=0;i<lines.length;i++){
+      var line = lines[i].trim();
+      if(!line) continue;
+      var parts = line.split("|");
+      items.push({
+        icon: "⚑",
+        title: (parts[0]||"").trim(),
+        course: (parts[1]||"").trim(),
+        when: (parts[2]||"").trim()
+      });
+    }
+    if(items.length) todoData.items = items;
+
+    var fbLines = document.getElementById("setupFeedback").value.split("\n");
+    var fb = [];
+    for(var f=0;f<fbLines.length;f++){
+      var s = fbLines[f].trim();
+      if(s) fb.push(s);
+    }
+    if(fb.length) todoData.feedback = fb;
+
+    saveTodo();
+    renderTodo();
+    setupEditor.classList.remove("open");
+    // refresh inbox so names update
+    if(document.getElementById("viewInbox").classList.contains("active")){
+      renderInbox();
+      clearInboxSel();
+    }
+    showNotice("Profile & To Do updated");
+  });
+  setupEditor.addEventListener("click", function(e){ if(e.target === setupEditor) setupEditor.classList.remove("open"); });
+
+  // Manage courses
+  function openManage(){
+    var list = document.getElementById("manageList");
+    list.innerHTML = "";
+    for(var i=0;i<cards.length;i++){
+      (function(idx){
+        var card = cards[idx];
+        var row = document.createElement("div");
+        row.style.cssText = "display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee;gap:12px";
+        row.innerHTML =
+          '<div style="min-width:0;flex:1">' +
+            '<div style="font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + escapeHtml(card.title) + '</div>' +
+            '<div style="font-size:12px;color:#666;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + escapeHtml(card.subtitle||"") + '</div>' +
+          '</div>' +
+          '<div style="display:flex;gap:6px;flex-shrink:0">' +
+            '<button class="btn" type="button" data-e="' + idx + '">Edit</button>' +
+            '<button class="btn danger" type="button" data-d="' + idx + '">Delete</button>' +
+          '</div>';
+        list.appendChild(row);
+      })(i);
+    }
+    var ebtns = list.querySelectorAll("[data-e]");
+    for(var e=0;e<ebtns.length;e++){
+      ebtns[e].addEventListener("click", function(){ openEditor(Number(this.getAttribute("data-e"))); });
+    }
+    var dbtns = list.querySelectorAll("[data-d]");
+    for(var d=0;d<dbtns.length;d++){
+      dbtns[d].addEventListener("click", function(){
+        var idx = Number(this.getAttribute("data-d"));
+        if(confirm("Delete this course card?")){
+          cards.splice(idx,1); saveCards(); render(); openManage(); showNotice("Course card deleted");
+        }
+      });
+    }
+    manageEditor.classList.add("open");
+  }
+
+  document.getElementById("closeManage").addEventListener("click", function(){ manageEditor.classList.remove("open"); });
+  document.getElementById("addNewCard").addEventListener("click", function(){
+    manageEditor.classList.remove("open"); openEditor(null);
+  });
+
+  function openEditor(index){
+    editingIndex = index;
+    pendingImage = index !== null ? (cards[index].image || "") : null;
+    document.getElementById("modalTitle").textContent = index === null ? "Add Course Card" : "Edit Course Card";
+    document.getElementById("titleInput").value = index === null ? "" : (cards[index].title || "");
+    document.getElementById("subtitleInput").value = index === null ? "" : (cards[index].subtitle || "");
+    document.getElementById("schoolInput").value = index === null ? "" : (cards[index].school || "");
+    document.getElementById("descriptionInput").value = index === null ? "" : (cards[index].description || "");
+    document.getElementById("imageInput").value = "";
+    document.getElementById("imagePreview").style.backgroundImage = pendingImage ? 'url("' + pendingImage + '")' : "";
+    document.getElementById("deleteCard").style.display = index === null ? "none" : "inline-block";
+    editor.classList.add("open");
+  }
+
+  document.getElementById("imageInput").addEventListener("change", function(){
+    var file = this.files[0]; if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e){
+      pendingImage = e.target.result;
+      document.getElementById("imagePreview").style.backgroundImage = 'url("' + pendingImage + '")';
+    };
+    reader.readAsDataURL(file);
+  });
+  document.getElementById("removeImage").addEventListener("click", function(){
+    pendingImage = ""; document.getElementById("imageInput").value = "";
+    document.getElementById("imagePreview").style.backgroundImage = "";
+  });
+  document.getElementById("cancelEdit").addEventListener("click", function(){ editor.classList.remove("open"); });
+  document.getElementById("saveEdit").addEventListener("click", function(){
+    var card = {
+      title: document.getElementById("titleInput").value.trim(),
+      subtitle: document.getElementById("subtitleInput").value.trim(),
+      school: document.getElementById("schoolInput").value.trim(),
+      description: document.getElementById("descriptionInput").value.trim(),
+      image: pendingImage || "",
+      content: editingIndex !== null ? (cards[editingIndex].content || "") : "",
+      contentSaved: editingIndex !== null ? !!cards[editingIndex].contentSaved : false
+    };
+    if(!card.title){ showNotice("Give the card a name first."); return; }
+    if(editingIndex === null) cards.push(card);
+    else cards[editingIndex] = card;
+    saveCards(); render();
+    editor.classList.remove("open");
+    if(manageEditor.classList.contains("open")) openManage();
+    showNotice(editingIndex === null ? "Course card added" : "Course card saved");
+  });
+  document.getElementById("deleteCard").addEventListener("click", function(){
+    if(editingIndex === null) return;
+    if(confirm("Delete this course card?")){
+      cards.splice(editingIndex,1); saveCards(); render();
+      editor.classList.remove("open");
+      if(manageEditor.classList.contains("open")) openManage();
+      showNotice("Course card deleted");
+    }
+  });
+  editor.addEventListener("click", function(e){ if(e.target === editor) editor.classList.remove("open"); });
+  manageEditor.addEventListener("click", function(e){ if(e.target === manageEditor) manageEditor.classList.remove("open"); });
+
+  // Boot
+  updateProfileUI();
+  renderTodo();
+  render();
+})();
+</script>
+</body>
+</html>
