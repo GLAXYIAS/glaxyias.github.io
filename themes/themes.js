@@ -359,3 +359,87 @@ document.addEventListener('DOMContentLoaded', () => {
   style.textContent = css;
   (document.head || document.documentElement).appendChild(style);
 })();
+
+/* ---------------------------------------------------------------------------
+   Lock screen: show the signed-in user's profile picture on the lock overlay
+   instead of the generic person icon. Falls back to imgs/newpfp.png.
+   --------------------------------------------------------------------------- */
+(function () {
+  if (window.__nxLockPfpLoaded) return;
+  window.__nxLockPfpLoaded = true;
+
+  var API = 'https://apithingy.jlsniperelite4.workers.dev';
+  var DEFAULT_PFP = 'https://glaxyias.github.io/imgs/newpfp.png';
+  var LEGACY_PFP = /\/imgs\/Screenshot(?:%20|\s|\+)2026-09-26(?:%20|\s|\+)15\.55\.05\.png$/i;
+
+  function currentUser() {
+    try { return (localStorage.getItem('chatUser') || '').trim(); } catch (e) { return ''; }
+  }
+
+  function cleanPfp(url) {
+    if (!url) return '';
+    var s = String(url).trim();
+    if (!s || LEGACY_PFP.test(s)) return '';
+    return s;
+  }
+
+  function apply() {
+    var overlay = document.getElementById('pin-lock-overlay');
+    if (!overlay) return;
+    var icon = overlay.querySelector('.nx-user-icon');
+    if (!icon) return;
+
+    var img = overlay.querySelector('img.nx-lock-pfp');
+    if (!img) {
+      img = document.createElement('img');
+      img.className = 'nx-user-icon nx-lock-pfp';
+      img.alt = 'User icon';
+      img.style.cssText = 'object-fit:cover;border-radius:50%;display:none;background:#1a1024;';
+      img.addEventListener('load', function () {
+        icon.style.display = 'none';
+        img.style.display = 'block';
+      });
+      img.addEventListener('error', function () {
+        img.remove();
+        icon.style.display = '';
+      });
+      icon.parentNode.insertBefore(img, icon.nextSibling);
+    }
+
+    var name = currentUser();
+    if (img.dataset.nxPfpFor === name && img.getAttribute('src')) return;
+    img.dataset.nxPfpFor = name;
+
+    var cached = '';
+    try { cached = cleanPfp(localStorage.getItem('nx_lock_pfp')); } catch (e) {}
+    img.src = cached || DEFAULT_PFP;
+
+    if (!name) return;
+    fetch(API + '/user-roles?username=' + encodeURIComponent(name), {
+      headers: { 'Content-Type': 'application/json' }
+    })
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .then(function (row) {
+        var url = cleanPfp(row && row.pfp_url) || DEFAULT_PFP;
+        if (url === img.src) return;
+        img.src = url;
+        try {
+          if (url.length < 200000) localStorage.setItem('nx_lock_pfp', url);
+        } catch (e) {}
+      })
+      .catch(function () {});
+  }
+
+  function watch() {
+    apply();
+    try {
+      var obs = new MutationObserver(function () {
+        if (document.getElementById('pin-lock-overlay')) apply();
+      });
+      obs.observe(document.body, { childList: true });
+    } catch (e) {}
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch);
+  else watch();
+})();
