@@ -226,7 +226,9 @@
 
   function closeCanvas() {
     var el = document.getElementById(overlayId);
-    if (el) el.remove();
+    if (!el) return;
+    try { if (el.open && el.close) el.close(); } catch (e) {}
+    el.remove();
   }
 
   function mountCanvas() {
@@ -235,43 +237,73 @@
       style = document.createElement('style');
       style.id = 'nx-canvas-style';
       style.textContent =
-        '#' + overlayId + '{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:2147483647;background:#08080f;}' +
-        '#' + overlayId + ' iframe{position:absolute;left:0;top:0;width:100%;height:100%;border:0;background:#f7f8f9;}' +
+        '#' + overlayId + '{position:fixed!important;left:0!important;top:0!important;width:100vw!important;height:100vh!important;' +
+        'max-width:none!important;max-height:none!important;margin:0!important;padding:0!important;border:0!important;' +
+        'background:#08080f!important;color:#fff;overflow:hidden;}' +
+        '#' + overlayId + '::backdrop{background:#08080f!important;}' +
+        '#' + overlayId + ' iframe{position:absolute!important;left:0!important;top:0!important;width:100%!important;' +
+        'height:100%!important;border:0!important;background:#f7f8f9!important;z-index:1;}' +
         '#' + overlayId + ' .nx-canvas-status{position:absolute;left:0;top:0;width:100%;height:100%;display:flex;' +
         'align-items:center;justify-content:center;flex-direction:column;gap:12px;color:#cfc9da;' +
-        'font:600 15px/1.4 system-ui,-apple-system,sans-serif;text-align:center;padding:24px;}' +
-        '#' + overlayId + ' .nx-canvas-status a{color:#c08bff;}' +
+        'font:600 15px/1.4 system-ui,-apple-system,sans-serif;text-align:center;padding:24px;z-index:2;pointer-events:none;}' +
+        '#' + overlayId + ' .nx-canvas-status a{color:#c08bff;pointer-events:auto;}' +
         '#nx-canvas-close{position:absolute;top:12px;right:14px;z-index:3;width:40px;height:40px;' +
         'border-radius:10px;border:1px solid rgba(255,255,255,.22);background:rgba(8,8,15,.72);' +
         'color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;}' +
         '#nx-canvas-close:hover{background:#8b00ff;border-color:#8b00ff;}';
       (document.head || document.documentElement).appendChild(style);
     }
-    var wrap = document.createElement('div');
+    var wrap = document.createElement('dialog');
     wrap.id = overlayId;
+    wrap.setAttribute('aria-label', 'Canvas');
+    wrap.style.cssText = 'position:fixed;left:0;top:0;width:100vw;height:100vh;max-width:none;max-height:none;margin:0;padding:0;border:0;background:#08080f;color:#fff;overflow:hidden;';
     wrap.innerHTML =
       '<div class="nx-canvas-status" id="nx-canvas-status">' +
       '<span id="nx-canvas-msg">Loading Canvas…</span>' +
       '<a href="' + ROOT + 'Canvas/index.html" target="_blank" rel="noopener">Open in a new tab</a></div>' +
       '<button id="nx-canvas-close" type="button" aria-label="Close canvas">' + icon('close', 20) + '</button>' +
       '<iframe src="' + ROOT + 'Canvas/index.html" title="Canvas" allow="clipboard-read; clipboard-write"></iframe>';
-    document.body.appendChild(wrap);
+    (document.documentElement || document.body).appendChild(wrap);
+    try {
+      if (typeof wrap.showModal === 'function') wrap.showModal();
+      else wrap.setAttribute('open', '');
+    } catch (e) { wrap.setAttribute('open', ''); }
+    wrap.addEventListener('cancel', function (e) { e.preventDefault(); closeCanvas(); });
     var btn = document.getElementById('nx-canvas-close');
     if (btn) btn.addEventListener('click', closeCanvas);
     var frame = wrap.querySelector('iframe');
     var status = document.getElementById('nx-canvas-status');
     function clearStatus() { if (status) status.style.display = 'none'; }
+    function failStatus() {
+      var msg = document.getElementById('nx-canvas-msg');
+      if (msg) msg.textContent = 'Canvas did not load.';
+    }
+    function hookCanvasKeys() {
+      try {
+        var w = frame.contentWindow;
+        if (w && !w.__nxCanvasEsc) {
+          w.__nxCanvasEsc = true;
+          w.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeCanvas();
+          }, true);
+        }
+      } catch (e) {}
+    }
     function checkLoaded() {
+      hookCanvasKeys();
       try {
         var d = frame.contentDocument;
-        if (d && (d.title || (d.body && d.body.childNodes.length))) clearStatus();
+        if (d && (d.title === 'Dashboard' || (d.body && (d.body.querySelector('.app') || d.body.innerHTML.length > 500)))) {
+          clearStatus();
+          return;
+        }
+        failStatus();
       } catch (e) { clearStatus(); }
     }
     try { frame.addEventListener('load', checkLoaded); } catch (e) {}
     setTimeout(function () {
-      var msg = document.getElementById('nx-canvas-msg');
-      if (status && status.style.display !== 'none' && msg) msg.textContent = 'Canvas is taking longer than expected.';
-    }, 6000);
+      if (status && status.style.display !== 'none') failStatus();
+    }, 8000);
   }
 
   function showCanvas() {
