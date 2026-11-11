@@ -25,16 +25,133 @@
 /*
  * Chat profanity guard: the CDN filter wipes any field it flags when the
  * field is committed (Enter/blur). That erased the whole message before the
- * writer could fix the flagged word. Swallow just that change event for the
- * chat box - the filter's submit/Enter guards still block sending until
- * the text is clean.
+ * writer could fix the flagged word. Swallow that change event for the chat
+ * boxes, and keep a safety net: if a wipe still happens, put the text back
+ * once the filter has counted the violation. Its submit/Enter guards still
+ * block sending until the text is clean.
  */
 (function () {
   "use strict";
+  var IDS = { "message-input": 1, "pm-message-input": 1 };
+  function isChatField(el) { return !!(el && el.id && IDS[el.id]); }
+
+  var lastGood = new WeakMap();
+
+  document.addEventListener("input", function (event) {
+    var el = event.target;
+    if (!isChatField(el)) return;
+    if (el.value) lastGood.set(el, { value: el.value, violations: el.__bwViolationCount || 0 });
+  }, true);
+
+  function restore(el) {
+    var snap = lastGood.get(el);
+    if (!snap || !snap.value || el.value !== "") return;
+    var now = el.__bwViolationCount || 0;
+    if (now <= snap.violations) return; // manual clear or a normal send
+    el.value = snap.value;
+    try { el.focus(); el.setSelectionRange(snap.value.length, snap.value.length); } catch (e) {}
+  }
+
   window.addEventListener("change", function (event) {
     var el = event.target;
-    if (el && el.id === "message-input") event.stopPropagation();
+    if (!isChatField(el)) return;
+    setTimeout(function () { restore(el); }, 60);
+    event.stopPropagation();
   }, true);
+})();
+
+/*
+ * Chat Look: extra appearance controls added to the Chat Settings view.
+ * Message size, bubble roundness, spacing, compact padding and timestamps,
+ * saved in localStorage under nullchat_look.
+ */
+(function () {
+  "use strict";
+  var KEY = "nullchat_look";
+  var DEFAULTS = { font: 14, radius: 12, gap: 15, compact: false, times: true };
+
+  function read() {
+    try {
+      var raw = JSON.parse(localStorage.getItem(KEY) || "{}");
+      return Object.assign({}, DEFAULTS, raw || {});
+    } catch (e) {
+      return Object.assign({}, DEFAULTS);
+    }
+  }
+
+  function apply(v) {
+    var root = document.documentElement;
+    root.style.setProperty("--nx-chat-font", v.font + "px");
+    root.style.setProperty("--nx-chat-radius", v.radius + "px");
+    root.style.setProperty("--nx-chat-gap", v.gap + "px");
+    document.body.classList.toggle("nx-chat-compact", !!v.compact);
+    document.body.classList.toggle("nx-chat-hide-time", !v.times);
+    try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {}
+    var f = document.getElementById("nx-look-font"); if (f) f.value = v.font;
+    var r = document.getElementById("nx-look-radius"); if (r) r.value = v.radius;
+    var g = document.getElementById("nx-look-gap"); if (g) g.value = v.gap;
+    var fv = document.getElementById("nx-look-font-val"); if (fv) fv.textContent = v.font + "px";
+    var rv = document.getElementById("nx-look-radius-val"); if (rv) rv.textContent = v.radius + "px";
+    var gv = document.getElementById("nx-look-gap-val"); if (gv) gv.textContent = v.gap + "px";
+    var c = document.getElementById("nx-look-compact"); if (c) c.checked = !!v.compact;
+    var t = document.getElementById("nx-look-time"); if (t) t.checked = v.times !== false;
+  }
+
+  function injectCss() {
+    if (document.getElementById("nx-chat-look-css")) return;
+    var s = document.createElement("style");
+    s.id = "nx-chat-look-css";
+    s.textContent = [
+      ".message-text-bubble{font-size:var(--nx-chat-font,14px)!important;border-radius:var(--nx-chat-radius,12px)!important;}",
+      ".messages-container{gap:var(--nx-chat-gap,15px)!important;}",
+      ".nx-chat-compact .messages-container{padding:10px 12px!important;}",
+      ".nx-chat-compact .message-wrapper{gap:8px!important;}",
+      ".nx-chat-compact .message-text-bubble{padding:8px 12px!important;}",
+      ".nx-chat-hide-time .message-timestamp{display:none!important;}",
+      ".nx-look-row{display:flex;align-items:center;gap:10px;justify-content:space-between;margin:10px 0;font-size:13px;color:var(--text-muted);}",
+      ".nx-look-row input[type=range]{flex:1;max-width:220px;accent-color:var(--accent);}",
+      ".nx-look-row output{min-width:42px;text-align:right;color:var(--accent);font-size:12px;}"
+    ].join("");
+    (document.head || document.documentElement).appendChild(s);
+  }
+
+  function build() {
+    injectCss();
+    var grid = document.querySelector(".settings-grid");
+    if (!grid || document.getElementById("nx-chat-look-card")) return;
+    var card = document.createElement("div");
+    card.className = "settings-card";
+    card.id = "nx-chat-look-card";
+    card.style.gridColumn = "span 2";
+    card.innerHTML = [
+      "<h3>\uD83C\uDF9B\uFE0F Chat Look</h3>",
+      "<p class=\"settings-desc\">Fine-tune the message area. Saved to this browser.</p>",
+      "<div class=\"nx-look-row\"><span>Message size</span><input type=\"range\" id=\"nx-look-font\" min=\"12\" max=\"20\" step=\"1\"><output id=\"nx-look-font-val\"></output></div>",
+      "<div class=\"nx-look-row\"><span>Bubble roundness</span><input type=\"range\" id=\"nx-look-radius\" min=\"2\" max=\"22\" step=\"1\"><output id=\"nx-look-radius-val\"></output></div>",
+      "<div class=\"nx-look-row\"><span>Message spacing</span><input type=\"range\" id=\"nx-look-gap\" min=\"6\" max=\"24\" step=\"1\"><output id=\"nx-look-gap-val\"></output></div>",
+      "<div class=\"settings-toggle-row\" style=\"margin-top:10px;\"><label class=\"switch\"><input type=\"checkbox\" id=\"nx-look-compact\"><span class=\"slider\"></span></label><span>Compact padding</span></div>",
+      "<div class=\"settings-toggle-row\" style=\"margin-top:10px;\"><label class=\"switch\"><input type=\"checkbox\" id=\"nx-look-time\"><span class=\"slider\"></span></label><span>Show timestamps</span></div>"
+    ].join("");
+    grid.appendChild(card);
+
+    apply(read());
+
+    ["font", "radius", "gap"].forEach(function (k) {
+      var el = document.getElementById("nx-look-" + k);
+      if (el) el.addEventListener("input", function () {
+        var next = read();
+        next[k] = parseInt(el.value, 10);
+        apply(next);
+      });
+    });
+    var c = document.getElementById("nx-look-compact");
+    if (c) c.addEventListener("change", function () { var n = read(); n.compact = c.checked; apply(n); });
+    var t = document.getElementById("nx-look-time");
+    if (t) t.addEventListener("change", function () { var n = read(); n.times = t.checked; apply(n); });
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", build);
+  else build();
 })();
 
 /**
