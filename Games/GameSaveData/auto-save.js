@@ -1,7 +1,17 @@
 /**
  * Auto-Save System for Null_X
  * Handles importing and exporting game saves to/from Turso database
- * Uses Cloudflare Worker proxy to communicate with Vercel API
+ * Uses Cloudflare Worker proxy to communicate with the API.
+ *
+ * Game saves are stored under many different localStorage keys (for example
+ * "/Games/daddish/index.html:mySave"), not just keys starting with
+ * "game_save_". The previous version only collected "game_save_*" keys, so a
+ * manual export wrote an empty object over the cloud row, and the unload
+ * beacon did exactly the same on every navigation - the save looked like it
+ * worked, then the row was empty the next time you tried to import it.
+ *
+ * Every path here now collects all localStorage keys except the account name,
+ * and nothing overwrites the cloud row on page unload.
  */
 
 // Scope constants to avoid re-declaration errors if script loads twice
@@ -10,35 +20,62 @@ if (typeof TURSO_API_BASE === 'undefined') {
   var TURSO_HEADERS = { 'Content-Type': 'application/json' };
 }
 
+// Keys that describe who you are, not your progress.
+var NX_PROTECTED_SAVE_KEYS = { chatUser: true };
+
+function nxCollectSaves() {
+  var saves = {};
+  try {
+    for (var i = 0; i < localStorage.length; i++) {
+      var key = localStorage.key(i);
+      if (!key || NX_PROTECTED_SAVE_KEYS[key]) continue;
+      saves[key] = localStorage.getItem(key);
+    }
+  } catch (e) {
+    /* private mode / storage blocked */
+  }
+  return saves;
+}
+
+function nxCurrentUser() {
+  try {
+    return localStorage.getItem('chatUser') || 'Guest';
+  } catch (e) {
+    return 'Guest';
+  }
+}
+
 /**
  * Export (Save) all user game data to Turso database
- * Collects localStorage game saves and sends to cloud
  * @param {string} msgElementId - Element ID to display status messages
  * @param {boolean} showMessage - Whether to display UI messages
  */
-window.cloudSave = async function(msgElementId, showMessage = false) {
+window.cloudSave = async function (msgElementId, showMessage = false) {
   const msgEl = document.getElementById(msgElementId);
-  const username = localStorage.getItem('chatUser') || 'Guest';
-  
+  const username = nxCurrentUser();
+  const gameSaves = nxCollectSaves();
+  const count = Object.keys(gameSaves).length;
+
+  if (!count) {
+    if (msgEl && showMessage) {
+      msgEl.textContent = 'No local saves found in this browser';
+      msgEl.style.color = '#ffb020';
+    }
+    return { success: false, reason: 'empty', count: 0 };
+  }
+
   try {
     // Show loading message
     if (msgEl && showMessage) {
-      msgEl.textContent = 'Exporting...';
+      msgEl.textContent = 'Exporting ' + count + ' saves...';
       msgEl.style.color = '#a033ff';
-    }
-
-    // Collect all game saves from localStorage
-    const gameSaves = {};
-    for (let key in localStorage) {
-      if (localStorage.hasOwnProperty(key) && key.startsWith('game_save_')) {
-        gameSaves[key] = localStorage.getItem(key);
-      }
     }
 
     // Prepare data payload
     const saveData = {
       username: username,
       saves: gameSaves,
+      count: count,
       timestamp: new Date().toISOString(),
       deviceInfo: navigator.userAgent
     };
@@ -51,14 +88,19 @@ window.cloudSave = async function(msgElementId, showMessage = false) {
     });
 
     if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+      let detail = '';
+      try {
+        const body = await response.json();
+        detail = (body && (body.error || body.message)) || '';
+      } catch (e) {}
+      throw new Error('API error: ' + response.status + (detail ? ' (' + detail + ')' : ''));
     }
 
     const result = await response.json();
 
     // Success message
     if (msgEl && showMessage) {
-      msgEl.textContent = '✓ Save exported successfully';
+      msgEl.textContent = '✓ ' + count + ' saves exported successfully';
       msgEl.style.color = '#00ff66';
       setTimeout(() => {
         msgEl.textContent = '';
@@ -77,18 +119,18 @@ window.cloudSave = async function(msgElementId, showMessage = false) {
         msgEl.textContent = '';
       }, 4000);
     }
+    return { success: false, error: error.message };
   }
 };
 
 /**
  * Import (Load) game data from Turso database to localStorage
- * Retrieves user saves from cloud and loads into local storage
  * @param {string} msgElementId - Element ID to display status messages
  * @param {boolean} showMessage - Whether to display UI messages
  */
-window.cloudLoad = async function(msgElementId, showMessage = false) {
+window.cloudLoad = async function (msgElementId, showMessage = false) {
   const msgEl = document.getElementById(msgElementId);
-  const username = localStorage.getItem('chatUser') || 'Guest';
+  const username = nxCurrentUser();
 
   try {
     // Show loading message
@@ -114,19 +156,26 @@ window.cloudLoad = async function(msgElementId, showMessage = false) {
     }
 
     const saveData = await response.json();
+    const saves = saveData && saveData.saves;
+    const keys = saves && typeof saves === 'object' ? Object.keys(saves) : [];
+
+    if (!keys.length) {
+      throw new Error('Cloud save is empty for this account - export first');
+    }
 
     // Load saves into localStorage
-    if (saveData && saveData.saves) {
-      for (let key in saveData.saves) {
-        if (saveData.saves.hasOwnProperty(key)) {
-          localStorage.setItem(key, saveData.saves[key]);
-        }
-      }
-    }
+    let restored = 0;
+    keys.forEach((key) => {
+      if (NX_PROTECTED_SAVE_KEYS[key]) return;
+      try {
+        localStorage.setItem(key, saves[key]);
+        restored++;
+      } catch (e) {}
+    });
 
     // Success message
     if (msgEl && showMessage) {
-      msgEl.textContent = '✓ Save imported successfully';
+      msgEl.textContent = '✓ ' + restored + ' saves imported successfully';
       msgEl.style.color = '#00ff66';
       setTimeout(() => {
         msgEl.textContent = '';
@@ -150,6 +199,7 @@ window.cloudLoad = async function(msgElementId, showMessage = false) {
         msgEl.textContent = '';
       }, 4000);
     }
+    return { success: false, error: error.message };
   }
 };
 
@@ -159,7 +209,7 @@ window.cloudLoad = async function(msgElementId, showMessage = false) {
  */
 window.enableAutoSaveInterval = function() {
   setInterval(() => {
-    const username = localStorage.getItem('chatUser');
+    const username = nxCurrentUser();
     if (username && username !== 'Guest') {
       window.cloudSave(null, false);
       console.log('Auto-save triggered at', new Date().toLocaleTimeString());
@@ -167,30 +217,8 @@ window.enableAutoSaveInterval = function() {
   }, 5 * 60 * 1000); // Every 5 minutes
 };
 
-/**
- * Sync data before leaving page
- * Ensures latest saves are uploaded when user closes window
- */
-window.addEventListener('beforeunload', () => {
-  const username = localStorage.getItem('chatUser');
-  if (username && username !== 'Guest') {
-    const gameSaves = {};
-    for (let key in localStorage) {
-      if (localStorage.hasOwnProperty(key) && key.startsWith('game_save_')) {
-        gameSaves[key] = localStorage.getItem(key);
-      }
-    }
-
-    const saveData = JSON.stringify({
-      username: username,
-      saves: gameSaves,
-      timestamp: new Date().toISOString()
-    });
-
-    // Send payload explicitly formatted as application/json
-    const blob = new Blob([saveData], { type: 'application/json' });
-    navigator.sendBeacon(TURSO_API_BASE + '/save', blob);
-  }
-});
+// No beforeunload write. The old beacon collected only "game_save_*" keys and
+// POSTed an empty object on every navigation, overwriting the real save. Use
+// the Save button (or enableAutoSaveInterval) to write to the cloud.
 
 console.log('Auto-save system initialized. Using Cloudflare Worker proxy.');
