@@ -204,6 +204,33 @@ window.cloudLoad = async function (msgElementId, showMessage = false) {
 };
 
 /**
+ * Auto-import guard.
+ * A fresh browser (or cleared storage) has no saves at all. Pull the account's
+ * cloud copy back BEFORE anything can export an empty payload, so clearing
+ * local storage or opening on a new device can never wipe the cloud save.
+ * Runs once per browser session, and only for a signed-in, non-guest user.
+ */
+function nxAutoImportIfEmpty() {
+  var user = nxCurrentUser();
+  if (!user || user === 'Guest') return;
+  if (Object.keys(nxCollectSaves()).length) return;
+  try {
+    if (sessionStorage.getItem('nx_auto_import_attempted') === '1') return;
+    sessionStorage.setItem('nx_auto_import_attempted', '1');
+  } catch (e) {}
+  if (typeof window.cloudLoad === 'function') {
+    console.log('No local saves found - importing the cloud copy first');
+    window.cloudLoad(null, false);
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', nxAutoImportIfEmpty);
+} else {
+  nxAutoImportIfEmpty();
+}
+
+/**
  * Auto-save interval (optional)
  * Automatically saves game data every 5 minutes
  */
