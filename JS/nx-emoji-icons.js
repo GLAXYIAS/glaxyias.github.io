@@ -229,6 +229,8 @@
     if (!el) return;
     try { if (el.open && el.close) el.close(); } catch (e) {}
     el.remove();
+    window.__nxCanvasMenuOpen = false;
+    window.__nxCanvasStudioOpen = false;
   }
 
   function mountCanvasDocument(html, host) {
@@ -274,6 +276,22 @@
       readyState: 'complete'
     };
     new Function('document', 'window', scriptText)(scoped, window);
+    loadCanvasEnhancer(host.shadowRoot, scoped);
+  }
+
+  function loadCanvasEnhancer(shadow, scoped) {
+    if (!window.fetch) return;
+    fetch(ROOT + 'Canvas/custom.js?v=' + Date.now(), { credentials: 'same-origin' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.text();
+      })
+      .then(function (src) {
+        try {
+          new Function('document', 'window', 'shadow', src)(scoped, window, shadow);
+        } catch (e) {}
+      })
+      .catch(function () {});
   }
 
   function mountCanvas() {
@@ -417,7 +435,10 @@
       }
       return;
     }
-    if (isTop && key === 'Escape') closeCanvas();
+    if (isTop && key === 'Escape') {
+      if (window.__nxCanvasMenuOpen || window.__nxCanvasStudioOpen) return;
+      closeCanvas();
+    }
   }
 
   document.addEventListener('keydown', onKey, true);
