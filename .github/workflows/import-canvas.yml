@@ -1,0 +1,35 @@
+name: Import Canvas App
+
+on:
+  push:
+    paths:
+      - Canvas/import-trigger.txt
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import-canvas:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch canvas index.html
+        run: |
+          mkdir -p Canvas
+          curl -fsSL https://raw.githubusercontent.com/GLAXYIAS/canvas/main/index.html -o Canvas/index.html
+          wc -c Canvas/index.html
+
+      - name: Commit imported file
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Canvas/index.html
+          if git diff --cached --quiet; then
+            echo "Canvas already up to date"
+            exit 0
+          fi
+          git commit -m "Import canvas app into Canvas/"
+          git push
