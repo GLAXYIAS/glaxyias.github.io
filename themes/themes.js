@@ -411,7 +411,10 @@ document.addEventListener('DOMContentLoaded', () => {
     img.dataset.nxPfpFor = name;
 
     var cached = '';
-    try { cached = cleanPfp(localStorage.getItem('nx_lock_pfp')); } catch (e) {}
+    try {
+      var hit = JSON.parse(localStorage.getItem('nx_lock_pfp') || 'null');
+      if (hit && hit.u === name) cached = cleanPfp(hit.url);
+    } catch (e) {}
     img.src = cached || DEFAULT_PFP;
 
     if (!name) return;
@@ -424,7 +427,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (url === img.src) return;
         img.src = url;
         try {
-          if (url.length < 200000) localStorage.setItem('nx_lock_pfp', url);
+          if (url.length < 200000) {
+            localStorage.setItem('nx_lock_pfp', JSON.stringify({ u: name, url: url }));
+          }
         } catch (e) {}
       })
       .catch(function () {});
