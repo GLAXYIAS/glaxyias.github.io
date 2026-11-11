@@ -331,7 +331,7 @@
       if (typeof wrap.showModal === 'function') wrap.showModal();
       else wrap.setAttribute('open', '');
     } catch (e) { wrap.setAttribute('open', ''); }
-    wrap.addEventListener('cancel', function (e) { e.preventDefault(); closeCanvas(); });
+    wrap.addEventListener('cancel', function (e) { e.preventDefault(); });
     var btn = document.getElementById('nx-canvas-close');
     if (btn) btn.addEventListener('click', closeCanvas);
     var host = document.getElementById('nx-canvas-host');
