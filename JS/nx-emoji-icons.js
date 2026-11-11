@@ -262,7 +262,7 @@
       '<span id="nx-canvas-msg">Loading Canvas…</span>' +
       '<a href="' + ROOT + 'Canvas/index.html" target="_blank" rel="noopener">Open in a new tab</a></div>' +
       '<button id="nx-canvas-close" type="button" aria-label="Close canvas">' + icon('close', 20) + '</button>' +
-      '<iframe src="' + ROOT + 'Canvas/index.html" title="Canvas" allow="clipboard-read; clipboard-write"></iframe>';
+      '<iframe title="Canvas" allow="clipboard-read; clipboard-write"></iframe>';
     (document.documentElement || document.body).appendChild(wrap);
     try {
       if (typeof wrap.showModal === 'function') wrap.showModal();
@@ -273,6 +273,31 @@
     if (btn) btn.addEventListener('click', closeCanvas);
     var frame = wrap.querySelector('iframe');
     var status = document.getElementById('nx-canvas-status');
+    var loadedHtml = false;
+    // Render the single-file Canvas app from fetched HTML instead of a frame
+    // request: srcdoc inherits this origin, so storage and scripts work even
+    // when a browser or extension refuses to frame the Canvas URL.
+    function loadCanvasHtml() {
+      if (!window.fetch) {
+        loadedHtml = true;
+        frame.src = ROOT + 'Canvas/index.html';
+        return;
+      }
+      fetch(ROOT + 'Canvas/index.html', { credentials: 'same-origin' })
+        .then(function (r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.text();
+        })
+        .then(function (html) {
+          loadedHtml = true;
+          frame.srcdoc = html;
+        })
+        .catch(function () {
+          loadedHtml = true;
+          frame.src = ROOT + 'Canvas/index.html';
+        });
+    }
+    loadCanvasHtml();
     function clearStatus() { if (status) status.style.display = 'none'; }
     function failStatus() {
       var msg = document.getElementById('nx-canvas-msg');
@@ -290,6 +315,7 @@
       } catch (e) {}
     }
     function checkLoaded() {
+      if (!loadedHtml) return;
       hookCanvasKeys();
       try {
         var d = frame.contentDocument;
@@ -302,7 +328,13 @@
     }
     try { frame.addEventListener('load', checkLoaded); } catch (e) {}
     setTimeout(function () {
-      if (status && status.style.display !== 'none') failStatus();
+      if (!status || status.style.display === 'none') return;
+      if (!loadedHtml) {
+        var msg = document.getElementById('nx-canvas-msg');
+        if (msg) msg.textContent = 'Canvas is taking longer than expected.';
+        return;
+      }
+      failStatus();
     }, 8000);
   }
 
