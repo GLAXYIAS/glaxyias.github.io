@@ -1,3 +1,27 @@
+/*
+ * Chat history window fix (loaded before chat.js in chat.html).
+ *
+ * The messages API only honours `limit`: order/offset/after are ignored and
+ * rows come back oldest-first. chat.js asked for limit=200, so as soon as the
+ * table passed 200 rows every new message was written to Turso but fell
+ * outside the returned window - it looked like messages vanished even though
+ * they were stored. Widen the window to 1000 rows so new messages come back.
+ */
+(function () {
+  "use strict";
+  if (window.__nxMessageWindowFix) return;
+  window.__nxMessageWindowFix = true;
+  var nativeFetch = window.fetch;
+  if (typeof nativeFetch !== "function") return;
+  window.fetch = function (input, init) {
+    var url = typeof input === "string" ? input : (input && input.url) || "";
+    if (url.indexOf("/messages?limit=200") !== -1) {
+      return nativeFetch.call(this, url.replace("/messages?limit=200", "/messages?limit=1000"), init);
+    }
+    return nativeFetch.call(this, input, init);
+  };
+})();
+
 /**
  * Avatar safety net for the chat page (loaded before chat.js in chat.html).
  *
