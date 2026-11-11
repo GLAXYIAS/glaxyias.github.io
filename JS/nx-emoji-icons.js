@@ -205,6 +205,16 @@
   window.nxCloseCanvas = closeCanvas;
 
   function injectFrame(frame) {
+    // Hook the frame's own keyboard first: key events never reach the parent
+    // document while a game has focus, and this also covers pages whose CSP
+    // blocks the injected script below.
+    try {
+      var win = frame.contentWindow;
+      if (win && !win.__nxCanvasKeyHook) {
+        win.__nxCanvasKeyHook = true;
+        win.addEventListener('keydown', onKey, true);
+      }
+    } catch (e) {}
     try {
       var doc = frame.contentDocument;
       if (!doc || !doc.documentElement) return;
