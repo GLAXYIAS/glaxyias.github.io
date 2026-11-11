@@ -203,6 +203,7 @@
 
   window.nxOpenCanvas = openCanvas;
   window.nxCloseCanvas = closeCanvas;
+  window.__nxCanvasInjectFrame = injectFrame;
 
   function injectFrame(frame) {
     // Hook the frame's own keyboard first: key events never reach the parent
@@ -230,9 +231,10 @@
     var frames = document.querySelectorAll('iframe');
     for (var i = 0; i < frames.length; i++) {
       var f = frames[i];
-      if (f.__nxEmojiHooked) continue;
-      f.__nxEmojiHooked = true;
-      f.addEventListener('load', function () { injectFrame(this); });
+      if (!f.__nxFrameLoadHooked) {
+        f.__nxFrameLoadHooked = true;
+        f.addEventListener('load', function () { injectFrame(this); });
+      }
       injectFrame(f);
     }
   }
