@@ -22,6 +22,21 @@
   };
 })();
 
+/*
+ * Chat profanity guard: the CDN filter wipes any field it flags when the
+ * field is committed (Enter/blur). That erased the whole message before the
+ * writer could fix the flagged word. Swallow just that change event for the
+ * chat box - the filter's submit/Enter guards still block sending until
+ * the text is clean.
+ */
+(function () {
+  "use strict";
+  window.addEventListener("change", function (event) {
+    var el = event.target;
+    if (el && el.id === "message-input") event.stopPropagation();
+  }, true);
+})();
+
 /**
  * Avatar safety net for the chat page (loaded before chat.js in chat.html).
  *
