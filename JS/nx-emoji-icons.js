@@ -17,6 +17,16 @@
   var isTop = true;
   try { isTop = window.top === window.self; } catch (e) { isTop = false; }
 
+  function hideDevTools() {
+    try {
+      var s = document.createElement('style');
+      s.id = 'nx-hide-devtools';
+      s.textContent = '#nx-trigger,#nx-hud,#nx-inspector-overlay,#nx-toast-wrap,#nx-matrix-canvas{display:none!important;visibility:hidden!important;pointer-events:none!important}';
+      (document.head || document.documentElement).appendChild(s);
+    } catch (e) {}
+  }
+  hideDevTools();
+
   /* Google Material Symbols (filled) path data, 24px viewBox. */
   var PATHS = {
     close: 'M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z',
@@ -33,7 +43,10 @@
     sync: 'M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0 0 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 0 0 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z',
     check_circle: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z',
     cancel: 'M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z',
-    gps_fixed: 'M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3A8.994 8.994 0 0 0 13 3.06V1h-2v2.06A8.994 8.994 0 0 0 3.06 11H1v2h2.06A8.994 8.994 0 0 0 11 20.94V23h2v-2.06A8.994 8.994 0 0 0 20.94 13H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z'
+    gps_fixed: 'M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3A8.994 8.994 0 0 0 13 3.06V1h-2v2.06A8.994 8.994 0 0 0 3.06 11H1v2h2.06A8.994 8.994 0 0 0 11 20.94V23h2v-2.06A8.994 8.994 0 0 0 20.94 13H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z',
+    palette: 'M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z',
+    visibility_off: 'M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78 3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z',
+    attach_file: 'M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z'
   };
 
   var MAP = {};
@@ -55,6 +68,49 @@
   MAP['\u{1F3AF}'] = 'gps_fixed';
 
   var EMOJI_RE = /([\u{1F4AC}\u270F\u2715\u{1F514}\u{1F4F7}\u{1F4E2}\u2605\u26A0\u2713\u2714\u2717\u274C\u2B07\u{1F504}\u2705\u{1F3AF}])\uFE0F?/gu;
+
+  /* Noto emoji images used by chat settings and the attach buttons. */
+  var NOTO = {
+    '1f3a8': 'palette',
+    '1f514': 'notifications',
+    '1f575': 'visibility_off',
+    '1f5bc': 'image',
+    '1f4ac': 'chat_bubble',
+    '1f4ce': 'attach_file'
+  };
+
+  function svgIcon(name, cls, size) {
+    var d = PATHS[name];
+    if (!d) return null;
+    var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    s.setAttribute('viewBox', '0 0 24 24');
+    s.setAttribute('fill', 'currentColor');
+    s.setAttribute('aria-hidden', 'true');
+    s.setAttribute('focusable', 'false');
+    s.setAttribute('class', 'nx-emoji-ico' + (cls ? ' ' + cls : ''));
+    s.style.width = size + 'px';
+    s.style.height = size + 'px';
+    s.style.display = 'inline-block';
+    s.style.verticalAlign = 'middle';
+    var p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    p.setAttribute('d', d);
+    s.appendChild(p);
+    return s;
+  }
+
+  function replaceNotoImages(root) {
+    var scope = root && root.querySelectorAll ? root : document;
+    if (!scope.querySelectorAll) return;
+    var imgs = scope.querySelectorAll('img[src*="notoemoji"]');
+    for (var i = 0; i < imgs.length; i++) {
+      var img = imgs[i];
+      var m = /notoemoji\/latest\/([0-9a-f]+)\/emoji\.svg/i.exec(img.src || '');
+      var name = m && NOTO[m[1]];
+      if (!name) continue;
+      var svg = svgIcon(name, img.className, 18);
+      if (svg && img.parentNode) img.parentNode.replaceChild(svg, img);
+    }
+  }
 
   function icon(name, size) {
     var d = PATHS[name];
@@ -126,6 +182,7 @@
 
   function walk(root) {
     if (!root) return;
+    if (root.nodeType === 1 || root.nodeType === 9) replaceNotoImages(root);
     if (root.nodeType === 3) {
       if (!shouldSkip(root)) replaceNode(root);
       return;
@@ -172,20 +229,19 @@
     if (el) el.remove();
   }
 
-  function openCanvas() {
-    if (!isTop || !document.body) return;
-    if (document.getElementById(overlayId)) {
-      closeCanvas();
-      return;
-    }
+  function mountCanvas() {
     var style = document.getElementById('nx-canvas-style');
     if (!style) {
       style = document.createElement('style');
       style.id = 'nx-canvas-style';
       style.textContent =
-        '#' + overlayId + '{position:fixed;inset:0;z-index:2147483600;background:#08080f;display:flex;}' +
-        '#' + overlayId + ' iframe{flex:1;width:100%;height:100%;border:0;background:#000;}' +
-        '#nx-canvas-close{position:absolute;top:12px;right:14px;z-index:2;width:40px;height:40px;' +
+        '#' + overlayId + '{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:2147483647;background:#08080f;}' +
+        '#' + overlayId + ' iframe{position:absolute;left:0;top:0;width:100%;height:100%;border:0;background:#f7f8f9;}' +
+        '#' + overlayId + ' .nx-canvas-status{position:absolute;left:0;top:0;width:100%;height:100%;display:flex;' +
+        'align-items:center;justify-content:center;flex-direction:column;gap:12px;color:#cfc9da;' +
+        'font:600 15px/1.4 system-ui,-apple-system,sans-serif;text-align:center;padding:24px;}' +
+        '#' + overlayId + ' .nx-canvas-status a{color:#c08bff;}' +
+        '#nx-canvas-close{position:absolute;top:12px;right:14px;z-index:3;width:40px;height:40px;' +
         'border-radius:10px;border:1px solid rgba(255,255,255,.22);background:rgba(8,8,15,.72);' +
         'color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;}' +
         '#nx-canvas-close:hover{background:#8b00ff;border-color:#8b00ff;}';
@@ -194,11 +250,43 @@
     var wrap = document.createElement('div');
     wrap.id = overlayId;
     wrap.innerHTML =
+      '<div class="nx-canvas-status" id="nx-canvas-status">' +
+      '<span id="nx-canvas-msg">Loading Canvas…</span>' +
+      '<a href="' + ROOT + 'Canvas/index.html" target="_blank" rel="noopener">Open in a new tab</a></div>' +
       '<button id="nx-canvas-close" type="button" aria-label="Close canvas">' + icon('close', 20) + '</button>' +
       '<iframe src="' + ROOT + 'Canvas/index.html" title="Canvas" allow="clipboard-read; clipboard-write"></iframe>';
     document.body.appendChild(wrap);
     var btn = document.getElementById('nx-canvas-close');
     if (btn) btn.addEventListener('click', closeCanvas);
+    var frame = wrap.querySelector('iframe');
+    var status = document.getElementById('nx-canvas-status');
+    function clearStatus() { if (status) status.style.display = 'none'; }
+    function checkLoaded() {
+      try {
+        var d = frame.contentDocument;
+        if (d && (d.title || (d.body && d.body.childNodes.length))) clearStatus();
+      } catch (e) { clearStatus(); }
+    }
+    try { frame.addEventListener('load', checkLoaded); } catch (e) {}
+    setTimeout(function () {
+      var msg = document.getElementById('nx-canvas-msg');
+      if (status && status.style.display !== 'none' && msg) msg.textContent = 'Canvas is taking longer than expected.';
+    }, 6000);
+  }
+
+  function showCanvas() {
+    if (!isTop || !document.body) return;
+    if (document.getElementById(overlayId)) return;
+    mountCanvas();
+  }
+
+  function openCanvas() {
+    if (!isTop || !document.body) return;
+    if (document.getElementById(overlayId)) {
+      closeCanvas();
+      return;
+    }
+    mountCanvas();
   }
 
   window.nxOpenCanvas = openCanvas;
@@ -265,7 +353,7 @@
 
   if (isTop) {
     window.addEventListener('message', function (e) {
-      if (e && e.data && e.data.type === 'nx-open-canvas') openCanvas();
+      if (e && e.data && e.data.type === 'nx-open-canvas') showCanvas();
     });
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startFrameWatcher);
     else startFrameWatcher();
