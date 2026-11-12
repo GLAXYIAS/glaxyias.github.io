@@ -94,4 +94,18 @@
   } else {
     nxHydrateIcons();
   }
+
+  /* Game launches need the about:blank wrapper after main.js is ready. */
+  (function loadGameAboutBlank() {
+    if (window.top !== window.self || window.__nxGameAboutBlankLoader) return;
+    window.__nxGameAboutBlankLoader = true;
+    var current = document.currentScript;
+    var base = current && current.src
+      ? current.src.replace(/nx-icons\.js.*$/, "")
+      : "JS/";
+    var script = document.createElement("script");
+    script.src = base + "game-about-blank.js?v=1";
+    script.async = false;
+    (document.head || document.documentElement).appendChild(script);
+  })();
 })();
