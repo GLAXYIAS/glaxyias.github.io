@@ -33,9 +33,9 @@
     }
   ];
 
-  games.forEach(function (game) {
+  games.slice().reverse().forEach(function (game) {
     if (!_0xData.some(function (existing) { return existing.id === game.id; })) {
-      _0xData.push(game);
+      _0xData.unshift(game);
     }
   });
 
