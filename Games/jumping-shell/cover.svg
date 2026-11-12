@@ -8,6 +8,4 @@
   <g fill="#fff"><circle cx="214" cy="110" r="15"/><circle cx="266" cy="110" r="15"/></g>
   <g fill="#26324a"><circle cx="218" cy="114" r="7"/><circle cx="270" cy="114" r="7"/></g>
   <path d="M240 18l-22 24h44z" fill="#ffe66d" stroke="#7f4f24" stroke-width="4"/>
-  <text x="240" y="272" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="50" font-weight="900" fill="#fff" stroke="#1b2436" stroke-width="9" paint-order="stroke">JUMPING</text>
-  <text x="240" y="328" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="50" font-weight="900" fill="#ffe66d" stroke="#1b2436" stroke-width="9" paint-order="stroke">SHELL</text>
 </svg>

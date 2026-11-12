@@ -10,6 +10,4 @@
     <path d="M-44 32h74v14h-74z" fill="#1d3557"/>
     <path d="M-158 62l-34-16 22 34z" fill="#ffd166" stroke="#6a040f" stroke-width="4"/>
   </g>
-  <text x="240" y="196" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="62" font-weight="900" fill="#fff" stroke="#023e8a" stroke-width="10" paint-order="stroke">JETSKI</text>
-  <text x="240" y="262" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="62" font-weight="900" fill="#ffd166" stroke="#023e8a" stroke-width="10" paint-order="stroke">RACE</text>
 </svg>
