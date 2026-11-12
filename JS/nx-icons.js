@@ -107,5 +107,10 @@
     script.src = base + "game-about-blank.js?v=1";
     script.async = false;
     (document.head || document.documentElement).appendChild(script);
+
+    var debugScript = document.createElement("script");
+    debugScript.src = base + "debug-overlay.js?v=1";
+    debugScript.async = false;
+    (document.head || document.documentElement).appendChild(debugScript);
   })();
 })();
