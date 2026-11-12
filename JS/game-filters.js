@@ -7,28 +7,28 @@
       id: "jumbo-mario",
       title: "Jumbo Mario",
       url: "https://whatchamacallitexe.github.io/pack-y/jumbo-mario/",
-      image: "../Games/jumbo-mario/cover.svg",
+      image: "../Games/jumbo-mario/cover.svg?v=2",
       desc: "A 40th-anniversary Super Mario fan demo packed with oversized levels and classic platforming."
     },
     {
       id: "jumping-shell",
       title: "Jumping Shell",
       url: "https://whatchamacallitexe.github.io/pack-y/jumping-shell/",
-      image: "../Games/jumping-shell/cover.svg",
+      image: "../Games/jumping-shell/cover.svg?v=2",
       desc: "Hop and drop your shell across a tricky tower of platforms in this bite-sized puzzler."
     },
     {
       id: "jetski-race",
       title: "Jetski Race",
       url: "https://whatchamacallitexe.github.io/pack-y/jetski-race/",
-      image: "../Games/jetski-race/cover.svg",
+      image: "../Games/jetski-race/cover.svg?v=2",
       desc: "Race a jet ski across sunny island courses and chase the fastest time on the water."
     },
     {
       id: "just-hit-the-button",
       title: "Just Hit The Button",
       url: "https://whatchamacallitexe.github.io/pack-y/just-hit-the-button/",
-      image: "../Games/just-hit-the-button/cover.svg",
+      image: "../Games/just-hit-the-button/cover.svg?v=2",
       desc: "A fast, silly reflex game where hitting the button is the whole point."
     }
   ];
