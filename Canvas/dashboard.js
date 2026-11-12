@@ -251,8 +251,8 @@
       '<circle cx="70" cy="265" r="95" fill="#ffffff" opacity=".08"></circle>' +
       '<circle cx="610" cy="25" r="85" fill="#ffffff" opacity=".07"></circle>' +
       art +
-      '<text x="38" y="164" font-family="Arial Black, Arial, sans-serif" font-size="' + labelSize + '" font-weight="900" fill="' + th.text + '">' + esc(label) + '</text>' +
-      (sub ? '<text x="41" y="202" font-family="Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="3" fill="' + th.text + '" opacity=".78">' + esc(sub) + '</text>' : '') +
+      '<text x="70" y="164" font-family="Arial Black, Arial, sans-serif" font-size="' + labelSize + '" font-weight="900" fill="' + th.text + '">' + esc(label) + '</text>' +
+      (sub ? '<text x="73" y="202" font-family="Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="3" fill="' + th.text + '" opacity=".78">' + esc(sub) + '</text>' : '') +
       '</svg>';
     coverCache[kind] = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
     return coverCache[kind];
