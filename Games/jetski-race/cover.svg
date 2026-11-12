@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <defs><linearGradient id="w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#66d9ff"/><stop offset="1" stop-color="#0077b6"/></linearGradient></defs>
+  <rect width="640" height="360" fill="url(#w)"/>
+  <circle cx="530" cy="70" r="42" fill="#ffe66d"/>
+  <path d="M0 290q80-40 160 0t160 0 160 0 160 0v70H0z" fill="#00b4d8" opacity=".8"/>
+  <path d="M0 320q100-36 200 0t200 0 240 0v40H0z" fill="#caf0f8" opacity=".7"/>
+  <g transform="translate(285 190) rotate(-8)">
+    <path d="M-130 40q40 40 100 40h130q40 0 50-28l-20-20H-80z" fill="#e63946" stroke="#6a040f" stroke-width="5"/>
+    <path d="M-80 30l30-50h100l20 50z" fill="#fff" stroke="#6a040f" stroke-width="5"/>
+    <path d="M-40 30h70v12h-70z" fill="#1d3557"/>
+    <path d="M-150 60l-30-14 20 30z" fill="#ffd166" stroke="#6a040f" stroke-width="4"/>
+  </g>
+  <text x="320" y="120" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="58" font-weight="900" fill="#fff" stroke="#023e8a" stroke-width="9" paint-order="stroke">JETSKI</text>
+  <text x="320" y="180" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="58" font-weight="900" fill="#ffd166" stroke="#023e8a" stroke-width="9" paint-order="stroke">RACE</text>
+</svg>

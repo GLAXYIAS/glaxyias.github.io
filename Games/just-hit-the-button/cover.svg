@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#242424"/>
+  <circle cx="320" cy="150" r="104" fill="#7f1d1d"/>
+  <circle cx="320" cy="142" r="96" fill="#e63946"/>
+  <circle cx="286" cy="108" r="30" fill="#ff8fa3" opacity=".55"/>
+  <circle cx="320" cy="142" r="70" fill="#c1121f"/>
+  <text x="320" y="158" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="34" font-weight="900" fill="#fff">HIT!</text>
+  <text x="320" y="294" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="46" font-weight="900" fill="#fff">JUST HIT</text>
+  <text x="320" y="340" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="46" font-weight="900" fill="#ffd166">THE BUTTON</text>
+</svg>
