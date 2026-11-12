@@ -384,7 +384,8 @@
     for (var i = 0; i < items.length && i < 4; i++) {
       var link = items[i].querySelector('a');
       var small = items[i].querySelector('small');
-      rows += '<li>' + (link ? link.textContent : 'Activity') + (small ? ' <span style="color:#7a8993">— ' + small.innerText.replace(/\s+/g, ' ') + '</span>' : '') + '</li>';
+      var meta = small ? small.innerHTML.replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim() : '';
+      rows += '<li>' + (link ? link.textContent : 'Activity') + (meta ? ' <span style="color:#7a8993">— ' + meta + '</span>' : '') + '</li>';
     }
     strip.innerHTML = '<h3>Recent Activity</h3>' + (rows ? '<ul>' + rows + '</ul>' : '<div style="font-size:13px;color:#65747d">No recent activity.</div>');
     var header = doc.querySelector('#viewDash .header');
@@ -430,9 +431,13 @@
       container.innerHTML = '<div class="nx-cp-empty">No courses yet.</div>';
       return;
     }
-    for (var i = 0; i < cards.length; i++) {
-      (function (card) {
-        var d = courseData(card);
+    var list = [];
+    for (var i = 0; i < cards.length; i++) list.push({ card: cards[i], d: courseData(cards[i]) });
+    list.sort(function (a, b) { return a.d.title.toLowerCase().localeCompare(b.d.title.toLowerCase()); });
+    for (var n = 0; n < list.length; n++) {
+      (function (item) {
+        var card = item.card;
+        var d = item.d;
         var btn = doc.createElement('button');
         btn.type = 'button';
         btn.className = compact ? 'nx-nd-course-item' : 'nx-cp-item';
@@ -444,7 +449,7 @@
           '</div>';
         btn.addEventListener('click', function () { openCourse(card); });
         container.appendChild(btn);
-      })(cards[i]);
+      })(list[n]);
     }
   }
 
