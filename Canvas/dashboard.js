@@ -384,7 +384,7 @@
     for (var i = 0; i < items.length && i < 4; i++) {
       var link = items[i].querySelector('a');
       var small = items[i].querySelector('small');
-      rows += '<li>' + (link ? link.textContent : 'Activity') + (small ? ' <span style="color:#7a8993">— ' + small.textContent.replace(/\s+/g, ' ') + '</span>' : '') + '</li>';
+      rows += '<li>' + (link ? link.textContent : 'Activity') + (small ? ' <span style="color:#7a8993">— ' + small.innerText.replace(/\s+/g, ' ') + '</span>' : '') + '</li>';
     }
     strip.innerHTML = '<h3>Recent Activity</h3>' + (rows ? '<ul>' + rows + '</ul>' : '<div style="font-size:13px;color:#65747d">No recent activity.</div>');
     var header = doc.querySelector('#viewDash .header');
@@ -622,7 +622,7 @@
     if (coursesOpen && coursesPanel && !coursesPanel.contains(e.target)) closeCourses();
   }, true);
 
-  root.addEventListener('keydown', onKey, true);
+  doc.addEventListener('keydown', onKey, true);
   window.addEventListener('resize', function () { if (dashMenu) closeDashMenu(); });
 
   removeOverlayClose();
