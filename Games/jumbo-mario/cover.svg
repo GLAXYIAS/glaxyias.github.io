@@ -1,13 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
-  <defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8ee8ff"/><stop offset="1" stop-color="#c9f7ff"/></linearGradient></defs>
-  <rect width="640" height="360" fill="url(#s)"/>
-  <g fill="#f7b731" stroke="#6b3f00" stroke-width="4">
-    <rect x="36" y="286" width="72" height="38"/><rect x="108" y="286" width="72" height="38"/><rect x="36" y="248" width="72" height="38"/>
-    <rect x="532" y="286" width="72" height="38"/><rect x="460" y="286" width="72" height="38"/><rect x="532" y="248" width="72" height="38"/>
-  </g>
-  <g fill="#e63946" stroke="#7a1018" stroke-width="5"><circle cx="152" cy="92" r="30"/><rect x="126" y="112" width="52" height="18" rx="9"/></g>
-  <g fill="#2b2d42"><circle cx="144" cy="86" r="5"/><circle cx="162" cy="86" r="5"/></g>
-  <text x="320" y="170" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="64" font-weight="900" fill="#1d3557" stroke="#fff" stroke-width="8" paint-order="stroke">JUMBO</text>
-  <text x="320" y="238" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="64" font-weight="900" fill="#e63946" stroke="#fff" stroke-width="8" paint-order="stroke">MARIO</text>
-  <text x="320" y="330" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d3557">SMB 40TH ANNIVERSARY DEMO</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 640">
+  <defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8ee8ff"/><stop offset="1" stop-color="#d8fbff"/></linearGradient></defs>
+  <rect width="480" height="640" fill="url(#s)"/>
+  <g fill="#f7b731" stroke="#6b3f00" stroke-width="4"><rect x="24" y="560" width="86" height="46"/><rect x="110" y="560" width="86" height="46"/><rect x="24" y="514" width="86" height="46"/><rect x="370" y="560" width="86" height="46"/><rect x="284" y="560" width="86" height="46"/><rect x="370" y="514" width="86" height="46"/></g>
+  <g fill="#e63946" stroke="#7a1018" stroke-width="5"><circle cx="382" cy="96" r="36"/><rect x="350" y="120" width="64" height="22" rx="11"/></g>
+  <g fill="#2b2d42"><circle cx="372" cy="90" r="6"/><circle cx="394" cy="90" r="6"/></g>
+  <text x="240" y="170" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="66" font-weight="900" fill="#1d3557" stroke="#fff" stroke-width="10" paint-order="stroke">JUMBO</text>
+  <text x="240" y="246" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="66" font-weight="900" fill="#e63946" stroke="#fff" stroke-width="10" paint-order="stroke">MARIO</text>
+  <text x="240" y="476" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="700" fill="#1d3557">SMB 40TH ANNIVERSARY</text>
+  <text x="240" y="505" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="700" fill="#1d3557">DEMO</text>
 </svg>
