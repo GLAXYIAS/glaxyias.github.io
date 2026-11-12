@@ -290,6 +290,16 @@
         try {
           new Function('document', 'window', 'shadow', src)(scoped, window, shadow);
         } catch (e) {}
+        return fetch(ROOT + 'Canvas/dashboard.js?v=' + Date.now(), { credentials: 'same-origin' });
+      })
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.text();
+      })
+      .then(function (src) {
+        try {
+          new Function('document', 'window', 'shadow', src)(scoped, window, shadow);
+        } catch (e) {}
       })
       .catch(function () {});
   }
