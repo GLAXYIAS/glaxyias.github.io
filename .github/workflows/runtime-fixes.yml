@@ -1,0 +1,99 @@
+name: Apply runtime fixes (one-shot)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Apply patch
+        env:
+          PATCH_GZ_B64: |
+            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
+        run: |
+          set -euo pipefail
+          printf '%s' "$PATCH_GZ_B64" | base64 -d | gzip -d > /tmp/runtime-fixes.patch
+          git apply --check /tmp/runtime-fixes.patch
+          git apply /tmp/runtime-fixes.patch
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/runtime-fixes.yml
+          git add index.html JS/main.js JS/upgrade-pack.js Settings/settings.html Settings/standalone-settings.js chat/chat.html Games/TAPA/index.html
+          git commit -m "Fix broken site assets and runtime errors"
+          git push
