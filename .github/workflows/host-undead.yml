@@ -1,0 +1,126 @@
+name: Host Undead Corridor
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  host:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download fixed Unity build from glaeesas
+        run: |
+          set -euo pipefail
+          mkdir -p Games/undead-corridor/Build
+          BASE='https://raw.githubusercontent.com/glaeesas/undead-corridor/5d726efed43f15aef40c0a71b0454bc3a4136648/Build'
+          for f in \
+            undead-corridor-v26041701.loader.js \
+            undead-corridor-v26041701.framework.js.unityweb \
+            undead-corridor-v26041701.wasm.unityweb \
+            undead-corridor-v26041701.data.unityweb; do
+            curl -fL --retry 3 --retry-delay 2 "$BASE/$f" -o "Games/undead-corridor/Build/$f"
+          done
+          test "$(stat -c%s Games/undead-corridor/Build/undead-corridor-v26041701.wasm.unityweb)" -gt 8000000
+          test "$(stat -c%s Games/undead-corridor/Build/undead-corridor-v26041701.data.unityweb)" -gt 15000000
+      - name: Write direct canvas page
+        run: |
+          cat > Games/undead-corridor/index.html <<'HTML'
+          <!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+            <title>Undead Corridor | AZ Games</title>
+            <style>
+              :root{color-scheme:dark}
+              *{box-sizing:border-box}
+              html,body{height:100%}
+              body{margin:0;background:#070505;color:#f4e9dc;font-family:Nunito,system-ui,sans-serif;overflow:hidden}
+              .topbar{height:56px;display:flex;align-items:center;gap:18px;padding:0 20px;background:#120b0b;border-bottom:1px solid #3a1d1d}
+              .topbar a{color:#ffd84d;text-decoration:none;font-weight:800;letter-spacing:.04em}
+              .topbar span{color:#9d8585;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+              .stage{position:relative;height:calc(100vh - 56px);background:#000}
+              #unity-canvas{display:block;width:100%;height:100%;outline:none;background:#000}
+              #loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0b0808;z-index:2}
+              #loading h1{margin:0 0 4px;font-size:22px;letter-spacing:.06em}
+              #loading p{margin:0;color:#9d8585;font-size:13px}
+              #bar{width:min(300px,70vw);height:7px;margin-top:22px;background:#2b2020;border-radius:99px;overflow:hidden}
+              #fill{height:100%;width:0;background:#ffd84d;transition:width .2s}
+              #status{margin-top:10px;min-height:18px;color:#9d8585;font-size:12px}
+              #error{display:none;margin-top:18px;max-width:480px;padding:12px;border:1px solid #6b2b2b;background:#1a0c0c;color:#ffb3b3;font-size:13px;text-align:center}
+            </style>
+          </head>
+          <body>
+            <header class="topbar">
+              <a href="/">AZ Games</a>
+              <span>Undead Corridor</span>
+            </header>
+            <main class="stage">
+              <canvas id="unity-canvas" tabindex="0"></canvas>
+              <div id="loading">
+                <h1>Undead Corridor</h1>
+                <p>Survive the endless waves.</p>
+                <div id="bar"><div id="fill"></div></div>
+                <div id="status">Downloading 0%</div>
+                <div id="error"></div>
+              </div>
+            </main>
+            <script>
+              const buildUrl = 'Build';
+              const config = {
+                dataUrl: buildUrl + '/undead-corridor-v26041701.data.unityweb',
+                frameworkUrl: buildUrl + '/undead-corridor-v26041701.framework.js.unityweb',
+                codeUrl: buildUrl + '/undead-corridor-v26041701.wasm.unityweb',
+                streamingAssetsUrl: 'StreamingAssets',
+                companyName: 'azgames.io',
+                productName: 'Undead Corridor',
+                productVersion: '26041701',
+                gameId: 'undead-corridor'
+              };
+              const canvas = document.getElementById('unity-canvas');
+              const loading = document.getElementById('loading');
+              const fill = document.getElementById('fill');
+              const status = document.getElementById('status');
+              const error = document.getElementById('error');
+
+              const script = document.createElement('script');
+              script.src = buildUrl + '/undead-corridor-v26041701.loader.js';
+              script.onload = () => {
+                createUnityInstance(canvas, config, p => {
+                  const pct = Math.round(p * 100);
+                  fill.style.width = pct + '%';
+                  status.textContent = 'Downloading ' + pct + '%';
+                }).then(instance => {
+                  window.unityInstance = instance;
+                  loading.style.display = 'none';
+                  canvas.focus();
+                }).catch(message => {
+                  status.textContent = 'Could not start the game.';
+                  error.style.display = 'block';
+                  error.textContent = String(message);
+                });
+              };
+              script.onerror = () => {
+                status.textContent = 'Could not load the game loader.';
+                error.style.display = 'block';
+                error.textContent = 'The Unity loader failed to download.';
+              };
+              document.body.appendChild(script);
+            </script>
+          </body>
+          </html>
+          HTML
+      - name: Commit hosted build
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Games/undead-corridor
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Host Undead Corridor directly on glaxyias"
+            git push
+          fi
