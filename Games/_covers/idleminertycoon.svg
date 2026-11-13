@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 640">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="hsl(226 52% 24%)"/><stop offset="1" stop-color="hsl(264 58% 12%)"/></linearGradient></defs>
+  <rect width="480" height="640" fill="url(#g)"/>
+  <circle cx="392" cy="90" r="118" fill="hsl(46 75% 62%)" opacity=".16"/>
+  <circle cx="74" cy="540" r="150" fill="hsl(46 75% 62%)" opacity=".10"/>
+  <path d="M0 470L480 330v310H0z" fill="hsl(46 75% 62%)" opacity=".08"/>
+  <text x="240" y="210" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="180" font-weight="900" fill="hsl(46 75% 62%)" opacity=".86">I</text>
+  <text x="240" y="574" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" letter-spacing="6" font-weight="700" fill="#ffffff" opacity=".55">NULL X</text>
+</svg>
