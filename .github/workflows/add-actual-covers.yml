@@ -1,0 +1,65 @@
+name: Add actual game covers and sharpened tags
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: actual-covers
+  cancel-in-progress: false
+
+jobs:
+  covers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Pillow
+        run: python -m pip install --quiet pillow
+
+      - name: Fetch the original UGS thumbnail collection
+        run: |
+          git clone --depth 1 --filter=blob:none --sparse \
+            https://github.com/groffstock/ugs-assets.git .ugs-assets
+          cd .ugs-assets
+          git sparse-checkout set thumbnails
+
+      - name: Apply real covers
+        env:
+          ADD_SCREENSHOTS: "1"
+        run: python scripts/add_actual_covers.py
+
+      - name: Sharpen genre tags
+        run: python scripts/sharpen_game_tags.py
+
+      - name: Bump the main.js cache version
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          path = Path("index.html")
+          text = path.read_text(encoding="utf-8")
+          text = re.sub(r"JS/main\.js\?v=[^\"']+", "JS/main.js?v=20261113actual", text)
+          path.write_text(text, encoding="utf-8")
+          PY
+
+      - name: Commit generated covers and metadata
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add JS/main.js index.html Games/_covers/actual
+          if git diff --cached --quiet; then
+            echo "No cover changes to commit."
+            exit 0
+          fi
+          git commit -m "Add real game covers and sharper genre tags"
+          git push origin HEAD:main
