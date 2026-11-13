@@ -1,0 +1,26 @@
+name: Add missing game covers
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  covers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate covers and update main.js
+        run: python3 scripts/add_missing_covers.py
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- JS/main.js index.html Games/_covers JS/game-filters.js
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "Add cover images for games missing them and wire new games into main.js"
+          git push
