@@ -10773,8 +10773,6 @@ async function handlePlaceholderView(navId, viewName) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  initializeBase44Chat();
-
   const isSplashDisabled = localStorage.getItem('disableStudyCloak') === 'true';
   const cloakOverlay = document.getElementById("educational-cloak");
 

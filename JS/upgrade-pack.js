@@ -590,7 +590,14 @@
   /* ------------------------------------------------------------------ */
   var PALETTE_XP_DONE = false;
 
+  function validGameId(id) {
+    if (id === null || id === undefined) return false;
+    var value = String(id).trim();
+    return value !== '' && !/^(null|undefined|nan)$/i.test(value);
+  }
+
   function recordLaunch(id) {
+    if (!validGameId(id)) return;
     id = String(id);
     var game = gameById(id);
     var now = Date.now();
@@ -870,8 +877,17 @@
     list.innerHTML = '';
     var history = Array.isArray(state.stats.history) ? state.stats.history : [];
 
+    // Older builds could persist a launch with a null/undefined id. Drop those
+    // entries instead of rendering a broken "Play null" card.
+    var clean = history.filter(function (item) { return item && validGameId(item.id); });
+    if (clean.length !== history.length) {
+      state.stats.history = clean;
+      saveStats();
+    }
+    history = clean;
+
     history.slice(0, 12).forEach(function (item) {
-      if (!item || !item.id) return;
+      if (!item || !validGameId(item.id)) return;
       var game = gameById(item.id);
       var title = (game && game.title) || item.title || String(item.id);
       var image = (game && game.image) || item.image || '';
@@ -918,6 +934,7 @@
   function updateRailVisibility() {
     if (!railEl) return;
     var history = Array.isArray(state.stats.history) ? state.stats.history : [];
+    history = history.filter(function (item) { return item && validGameId(item.id); });
     var hero = document.getElementById('heroSection');
     var random = document.querySelector('.random-section');
     var homeVisible = !hero || hero.style.display !== 'none';
