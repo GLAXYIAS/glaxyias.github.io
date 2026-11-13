@@ -1,0 +1,31 @@
+name: Replace Undead Corridor Embed
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  replace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Point the game at the unlocked build
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          page = Path('Games/undead-corridor/index.html')
+          html = page.read_text()
+          old = 'https://gamea.azgame.io/undead-corridor/'
+          new = 'https://glaeesas.github.io/undead-corridor/'
+          if old not in html:
+              raise SystemExit('Locked game URL not found')
+          page.write_text(html.replace(old, new))
+          print('Replaced locked embed URL')
+          PY
+          git diff -- Games/undead-corridor/index.html
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Point Undead Corridor at unlocked build"
+          git push
