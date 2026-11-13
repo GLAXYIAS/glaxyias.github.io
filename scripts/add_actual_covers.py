@@ -77,7 +77,7 @@ def entries(source: str):
         if quote:
             if escape:
                 escape = False
-            elif ch == "\":
+            elif ch == "\\":
                 escape = True
             elif ch == '"':
                 quote = False
