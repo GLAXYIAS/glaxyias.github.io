@@ -48,7 +48,7 @@ jobs:
           from pathlib import Path
           path = Path("index.html")
           text = path.read_text(encoding="utf-8")
-          text = re.sub(r"JS/main\.js\?v=[^\"']+", "JS/main.js?v=20261113actual", text)
+          text = re.sub(r"JS/main\.js\?v=[^\"']+", "JS/main.js?v=20261113actual2", text)
           path.write_text(text, encoding="utf-8")
           PY
 
