@@ -131,15 +131,15 @@ def norm(text: str) -> str:
 
 
 def entries(source: str):
-    depth = 0
+    """Yield every game object, including entries inside the GitLab/new-J IIFEs."""
+    stack = []
     quote = False
     escape = False
-    start = None
     for i, ch in enumerate(source):
         if quote:
             if escape:
                 escape = False
-            elif ch == "\\":
+            elif ch == "\":
                 escape = True
             elif ch == '"':
                 quote = False
@@ -147,16 +147,14 @@ def entries(source: str):
         if ch == '"':
             quote = True
         elif ch == "{":
-            if depth == 0:
-                start = i
-            depth += 1
-        elif ch == "}":
-            depth -= 1
-            if depth == 0 and start is not None:
-                obj = source[start:i + 1]
-                if "id:" in obj and "title:" in obj:
-                    yield start, i + 1, obj
-                start = None
+            stack.append(i)
+        elif ch == "}" and stack:
+            start = stack.pop()
+            obj = source[start:i + 1]
+            if ("id:" in obj and "title:" in obj and "url:" in obj
+                    and obj.count("{") == 1 and obj.count("}") == 1):
+                yield start, i + 1, obj
+
 
 
 def has(text: str, pattern: str) -> bool:
