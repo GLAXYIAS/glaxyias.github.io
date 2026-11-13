@@ -9259,20 +9259,20 @@ let _0xData = [
   const GL = "https://declineoptionalcookies.gitlab.io";
   const gitlabGames = [
     { id: "gl_2048", title: "2048 (GitLab)", url: GL + "/games-a/2048/", external: true, desc: "Classic 2048 from GitLab Pages.", popular: true , image: "../Games/_covers/actual/gl_2048.jpg" , tags: ["Puzzle"] },
-    { id: "gl_wordle", title: "Wordle (GitLab)", url: GL + "/games-a/wordle/", external: true, desc: "Wordle on GitLab Pages.", popular: true , image: "../Games/_covers/gl_wordle.svg" , tags: ["Puzzle"] },
-    { id: "gl_hextris", title: "Hextris (GitLab)", url: GL + "/games-a/hextris/", external: true, desc: "Hextris on GitLab Pages.", popular: true , image: "../Games/_covers/gl_hextris.svg" , tags: ["Puzzle"] },
-    { id: "gl_minesweeper", title: "Minesweeper (GitLab)", url: GL + "/games-a/minesweeper/", external: true, desc: "Minesweeper on GitLab Pages.", popular: true , image: "../Games/_covers/gl_minesweeper.svg" , tags: ["Puzzle"] },
-    { id: "gl_flappy_bird", title: "Flappy Bird (GitLab)", url: GL + "/games-a/flappy-bird/", external: true, desc: "Flappy Bird on GitLab Pages.", popular: true , image: "../Games/_covers/gl_flappy_bird.svg" , tags: ["Platformer"] },
-    { id: "gl_superhot_gl", title: "SUPERHOT (GitLab)", url: GL + "/games-b/superhot/", external: true, desc: "SUPERHOT on GitLab Pages.", popular: true , image: "../Games/_covers/gl_superhot_gl.svg" , tags: ["Shooter"] },
-    { id: "gl_happy_wheels", title: "Happy Wheels (GitLab)", url: GL + "/games-d/happy-wheels/", external: true, desc: "Happy Wheels on GitLab Pages.", popular: true , image: "../Games/_covers/gl_happy_wheels.svg" , tags: ["Racing", "Action", "Multiplayer"] },
-    { id: "gl_retro_bowl_gl", title: "Retro Bowl (GitLab)", url: GL + "/games-h/retro-bowl/", external: true, desc: "Retro Bowl on GitLab Pages.", popular: true , image: "../Games/_covers/gl_retro_bowl_gl.svg" , tags: ["Sports", "Retro"] },
-    { id: "gl_snow_rider", title: "Snow Rider 3D (GitLab)", url: GL + "/games-i/snow-rider-3d/", external: true, desc: "Snow Rider 3D on GitLab Pages.", popular: true , image: "../Games/_covers/gl_snow_rider.svg" , tags: ["Racing", "3D"] },
-    { id: "gl_subway_surfers", title: "Subway Surfers (GitLab)", url: GL + "/games-j/subway-surfers/", external: true, desc: "Subway Surfers on GitLab Pages.", popular: true , image: "../Games/_covers/gl_subway_surfers.svg" , tags: ["Racing"] },
-    { id: "gl_subway_ny", title: "Subway Surfers NY (GitLab)", url: GL + "/games-a/subway-surfers-ny/", external: true, desc: "Subway Surfers NY on GitLab Pages.", popular: true , image: "../Games/_covers/gl_subway_ny.svg" , tags: ["Racing"] },
-    { id: "gl_basket_random_gl", title: "Basket Random (GitLab)", url: GL + "/games-h/basket-random/", external: true, desc: "Basket Random on GitLab Pages.", popular: true , image: "../Games/_covers/gl_basket_random_gl.svg" , tags: ["Sports"] },
-    { id: "gl_iron_snout", title: "Iron Snout (GitLab)", url: GL + "/games-f/iron-snout/", external: true, desc: "Iron Snout on GitLab Pages.", popular: true , image: "../Games/_covers/gl_iron_snout.svg" , tags: ["Action", "Arcade"] },
-    { id: "gl_level_devil", title: "Level Devil (GitLab)", url: GL + "/games-e/level-devil/", external: true, desc: "Level Devil on GitLab Pages.", popular: true , image: "../Games/_covers/gl_level_devil.svg" , tags: ["Platformer", "Puzzle"] },
-    { id: "gl_n_gon", title: "n-gon (GitLab)", url: GL + "/games-j/n-gon/", external: true, desc: "n-gon on GitLab Pages.", popular: true , image: "../Games/_covers/gl_n_gon.svg" , tags: ["Arcade"] }
+    { id: "gl_wordle", title: "Wordle (GitLab)", url: GL + "/games-a/wordle/", external: true, desc: "Wordle on GitLab Pages.", popular: true , image: "../Games/_covers/actual/gl_wordle.jpg" , tags: ["Puzzle"] },
+    { id: "gl_hextris", title: "Hextris (GitLab)", url: GL + "/games-a/hextris/", external: true, desc: "Hextris on GitLab Pages.", popular: true , image: "../Games/_covers/actual/gl_hextris.jpg" , tags: ["Casual"] },
+    { id: "gl_minesweeper", title: "Minesweeper (GitLab)", url: GL + "/games-a/minesweeper/", external: true, desc: "Minesweeper on GitLab Pages.", popular: true , image: "../Games/_covers/actual/gl_minesweeper.jpg" , tags: ["Puzzle"] },
+    { id: "gl_flappy_bird", title: "Flappy Bird (GitLab)", url: GL + "/games-a/flappy-bird/", external: true, desc: "Flappy Bird on GitLab Pages.", popular: true , image: "../Games/_covers/actual/gl_flappy_bird.jpg" , tags: ["Casual"] },
+    { id: "gl_superhot_gl", title: "SUPERHOT (GitLab)", url: GL + "/games-b/superhot/", external: true, desc: "SUPERHOT on GitLab Pages.", popular: true , image: "../Games/_covers/actual/gl_superhot_gl.jpg" , tags: ["Shooter", "Action"] },
+    { id: "gl_happy_wheels", title: "Happy Wheels (GitLab)", url: GL + "/games-d/happy-wheels/", external: true, desc: "Happy Wheels on GitLab Pages.", popular: true , image: "../Games/_covers/actual/gl_happy_wheels.jpg" , tags: ["Casual"] },
+    { id: "gl_retro_bowl_gl", title: "Retro Bowl (GitLab)", url: GL + "/games-h/retro-bowl/", external: true, desc: "Retro Bowl on GitLab Pages.", popular: true , image: "../Games/_covers/actual/gl_retro_bowl_gl.jpg" , tags: ["Retro"] },
+    { id: "gl_snow_rider", title: "Snow Rider 3D (GitLab)", url: GL + "/games-i/snow-rider-3d/", external: true, desc: "Snow Rider 3D on GitLab Pages.", popular: true , image: "../Games/_covers/actual/gl_snow_rider.jpg" , tags: ["Racing", "3D"] },
+    { id: "gl_subway_surfers", title: "Subway Surfers (GitLab)", url: GL + "/games-j/subway-surfers/", external: true, desc: "Subway Surfers on GitLab Pages.", popular: true , image: "../Games/_covers/actual/gl_subway_surfers.jpg" , tags: ["Action", "Racing", "Sports", "Platformer"] },
+    { id: "gl_subway_ny", title: "Subway Surfers NY (GitLab)", url: GL + "/games-a/subway-surfers-ny/", external: true, desc: "Subway Surfers NY on GitLab Pages.", popular: true , image: "../Games/_covers/actual/gl_subway_ny.jpg" , tags: ["Action", "Racing", "Sports", "Platformer"] },
+    { id: "gl_basket_random_gl", title: "Basket Random (GitLab)", url: GL + "/games-h/basket-random/", external: true, desc: "Basket Random on GitLab Pages.", popular: true , image: "../Games/_covers/actual/gl_basket_random_gl.jpg" , tags: ["Sports", "Party", "Multiplayer"] },
+    { id: "gl_iron_snout", title: "Iron Snout (GitLab)", url: GL + "/games-f/iron-snout/", external: true, desc: "Iron Snout on GitLab Pages.", popular: true , image: "../Games/_covers/actual/gl_iron_snout.jpg" , tags: ["Casual"] },
+    { id: "gl_level_devil", title: "Level Devil (GitLab)", url: GL + "/games-e/level-devil/", external: true, desc: "Level Devil on GitLab Pages.", popular: true , image: "../Games/_covers/actual/gl_level_devil.jpg" , tags: ["Action", "Platformer"] },
+    { id: "gl_n_gon", title: "n-gon (GitLab)", url: GL + "/games-j/n-gon/", external: true, desc: "n-gon on GitLab Pages.", popular: true , image: "../Games/_covers/actual/gl_n_gon.jpg" , tags: ["Casual"] }
   ];
   const ids = new Set(_0xData.map(g => g.id));
   gitlabGames.forEach(g => { if (!ids.has(g.id)) { _0xData.push(g); ids.add(g.id); } });
@@ -9283,9 +9283,9 @@ let _0xData = [
   const ids = new Set(_0xData.map(g => g.id));
   const games = [
     { id: "jumbo-mario", title: "Jumbo Mario", url: "https://whatchamacallitexe.github.io/pack-y/jumbo-mario/", image: "../Games/_covers/actual/jumbo-mario.jpg", desc: "A 40th-anniversary Super Mario fan demo packed with oversized levels and classic platforming." , tags: ["Fan Game", "Action", "Platformer", "Party", "Multiplayer"] },
-    { id: "jumping-shell", title: "Jumping Shell", url: "https://whatchamacallitexe.github.io/pack-y/jumping-shell/", image: "../Games/jumping-shell/cover.svg", desc: "Hop and drop your shell across a tricky tower of platforms in this bite-sized puzzler." , tags: ["Platformer", "Arcade"] },
-    { id: "jetski-race", title: "Jetski Race", url: "https://whatchamacallitexe.github.io/pack-y/jetski-race/", image: "../Games/jetski-race/cover.svg", desc: "Race a jet ski across sunny island courses and chase the fastest time on the water." , tags: ["Racing", "Sports"] },
-    { id: "just-hit-the-button", title: "Just Hit The Button", url: "https://whatchamacallitexe.github.io/pack-y/just-hit-the-button/", image: "../Games/just-hit-the-button/cover.svg", desc: "A fast, silly reflex game where hitting the button is the whole point." , tags: ["Party", "Arcade"] }
+    { id: "jumping-shell", title: "Jumping Shell", url: "https://whatchamacallitexe.github.io/pack-y/jumping-shell/", image: "../Games/_covers/actual/jumping-shell.jpg", desc: "Hop and drop your shell across a tricky tower of platforms in this bite-sized puzzler." , tags: ["Action", "Platformer"] },
+    { id: "jetski-race", title: "Jetski Race", url: "https://whatchamacallitexe.github.io/pack-y/jetski-race/", image: "../Games/_covers/actual/jetski-race.jpg", desc: "Race a jet ski across sunny island courses and chase the fastest time on the water." , tags: ["Racing"] },
+    { id: "just-hit-the-button", title: "Just Hit The Button", url: "https://whatchamacallitexe.github.io/pack-y/just-hit-the-button/", image: "../Games/_covers/actual/just-hit-the-button.jpg", desc: "A fast, silly reflex game where hitting the button is the whole point." , tags: ["Casual"] }
   ];
   games.forEach(g => { if (!ids.has(g.id)) { _0xData.push(g); ids.add(g.id); } });
 })();
