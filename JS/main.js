@@ -9248,10 +9248,34 @@ let _0xData = [
     desc: "Play Jelly Mario online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/jelly-mario.jpg" , tags: ["Fan Game", "Action", "Platformer", "Party", "Multiplayer"] },
-  
-  
-  
-  
+  {
+    id: "jetski-race",
+    title: "Jetski Race",
+    url: "https://whatchamacallitexe.github.io/pack-y/jetski-race/index.html",
+    desc: "Play Jetski Race online in your browser.",
+    popular: false
+  },
+  {
+    id: "jumbo-mario",
+    title: "Jumbo Mario",
+    url: "https://whatchamacallitexe.github.io/pack-y/jumbo-mario/index.html",
+    desc: "Play Jumbo Mario online in your browser.",
+    popular: false
+  },
+  {
+    id: "jumping-shell",
+    title: "Jumping Shell",
+    url: "https://whatchamacallitexe.github.io/pack-y/jumping-shell/index.html",
+    desc: "Play Jumping Shell online in your browser.",
+    popular: false
+  },
+  {
+    id: "just-hit-the-button",
+    title: "Just Hit The Button",
+    url: "https://whatchamacallitexe.github.io/pack-y/just-hit-the-button/index.html",
+    desc: "Play Just Hit The Button online in your browser.",
+    popular: false
+  }
 ];
 
 
