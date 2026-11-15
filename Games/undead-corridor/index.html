@@ -8,19 +8,24 @@
     :root{color-scheme:dark}
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0;background:#070505;color:#f4e9dc;font-family:Nunito,system-ui,sans-serif;overflow:hidden}
-    .topbar{height:56px;display:flex;align-items:center;gap:18px;padding:0 20px;background:#120b0b;border-bottom:1px solid #3a1d1d}
+    body{margin:0;background:#070505;color:#f4e9dc;font-family:Nunito,system-ui,sans-serif;overflow:hidden;display:flex;flex-direction:column}
+    .topbar{flex:0 0 56px;display:flex;align-items:center;gap:18px;padding:0 20px;background:#120b0b;border-bottom:1px solid #3a1d1d}
     .topbar a{color:#ffd84d;text-decoration:none;font-weight:800;letter-spacing:.04em}
-    .topbar span{color:#9d8585;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
-    .stage{position:relative;height:calc(100vh - 56px);background:#000}
+    .topbar span{color:#9d8585;font-size:13px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+    .modes{flex:0 0 42px;display:flex;align-items:stretch;gap:2px;padding:0 8px;background:#0b0808;border-bottom:1px solid #2b1717;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
+    .modes::-webkit-scrollbar{display:none}
+    .mode{display:flex;align-items:center;padding:0 13px;border:0;border-bottom:2px solid transparent;background:transparent;color:#b9a4a4;font:700 12px/1 Nunito,system-ui,sans-serif;letter-spacing:.04em;text-decoration:none;white-space:nowrap}
+    .mode:hover{color:#ffe77a;background:#1c1010}
+    .mode.active{color:#ffd84d;border-bottom-color:#ffd84d;background:#1c1010}
+    .stage{position:relative;flex:1 1 auto;min-height:0;background:#000}
     #unity-canvas{display:block;width:100%;height:100%;outline:none;background:#000}
-    #loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0b0808;z-index:2}
+    #loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0b0808;z-index:2;padding:18px;text-align:center}
     #loading h1{margin:0 0 4px;font-size:22px;letter-spacing:.06em}
     #loading p{margin:0;color:#9d8585;font-size:13px}
     #bar{width:min(300px,70vw);height:7px;margin-top:22px;background:#2b2020;border-radius:99px;overflow:hidden}
     #fill{height:100%;width:0;background:#ffd84d;transition:width .2s}
     #status{margin-top:10px;min-height:18px;color:#9d8585;font-size:12px}
-    #error{display:none;margin-top:18px;max-width:480px;padding:12px;border:1px solid #6b2b2b;background:#1a0c0c;color:#ffb3b3;font-size:13px;text-align:center}
+    #error{display:none;margin-top:18px;max-width:480px;padding:12px;border:1px solid #6b2b2b;background:#1a0c0c;color:#ffb3b3;font-size:13px}
   </style>
 </head>
 <body>
@@ -28,20 +33,51 @@
     <a href="/">GLAXYIAS</a>
     <span>Undead Corridor</span>
   </header>
+  <nav class="modes" aria-label="Undead Corridor game modes">
+    <a class="mode" data-mode="training" href="?mode=training">Training</a>
+    <a class="mode" data-mode="cleanup" href="?mode=cleanup">Cleanup</a>
+    <a class="mode" data-mode="rooms" href="?mode=rooms">Rooms</a>
+    <a class="mode" data-mode="defense" href="?mode=defense">Defense</a>
+    <a class="mode" data-mode="hospital" href="?mode=hospital">Hospital</a>
+    <a class="mode" data-mode="street" href="?mode=street">Street</a>
+    <a class="mode" data-mode="rescue" href="?mode=rescue">Rescue</a>
+    <a class="mode" data-mode="waves" href="?mode=waves">Waves</a>
+  </nav>
   <main class="stage">
     <canvas id="unity-canvas" tabindex="0"></canvas>
     <div id="loading">
       <h1>Undead Corridor</h1>
-      <p>Survive the endless waves.</p>
+      <p id="mode-name">Training</p>
       <div id="bar"><div id="fill"></div></div>
       <div id="status">Downloading 0%</div>
       <div id="error"></div>
     </div>
   </main>
   <script>
+    const MODE_NAMES = {
+      training: 'Training',
+      cleanup: 'Cleanup',
+      rooms: 'Rooms',
+      defense: 'Defense',
+      hospital: 'Hospital',
+      street: 'Street',
+      rescue: 'Rescue',
+      waves: 'Waves'
+    };
+    const requested = new URLSearchParams(location.search).get('mode');
+    const mode = Object.prototype.hasOwnProperty.call(MODE_NAMES, requested || '') ? requested : 'training';
+    const modeName = MODE_NAMES[mode];
+    document.title = 'Undead Corridor — ' + modeName;
+    document.getElementById('mode-name').textContent = modeName;
+    document.querySelectorAll('.mode').forEach(link => {
+      const active = link.dataset.mode === mode;
+      link.classList.toggle('active', active);
+      if (active) link.setAttribute('aria-current', 'page');
+    });
+
     const buildUrl = 'Build';
     const config = {
-      dataUrl: buildUrl + '/undead-corridor-v26041701.data.unityweb?v=3',
+      dataUrl: buildUrl + '/modes/' + mode + '.data.unityweb?v=all1',
       frameworkUrl: buildUrl + '/undead-corridor-v26041701.framework.js.unityweb',
       codeUrl: buildUrl + '/undead-corridor-v26041701.wasm.unityweb',
       streamingAssetsUrl: 'StreamingAssets',
@@ -68,7 +104,7 @@
         loading.style.display = 'none';
         canvas.focus();
       }).catch(message => {
-        status.textContent = 'Could not start the game.';
+        status.textContent = 'Could not start ' + modeName + '.';
         error.style.display = 'block';
         error.textContent = String(message);
       });
