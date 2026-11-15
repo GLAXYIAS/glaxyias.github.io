@@ -12,15 +12,35 @@
     p { margin: 0 0 22px; color: #9d8585; font-size: 14px; }
     a { display: inline-block; padding: 12px 24px; border-radius: 8px; background: #ffd84d; color: #140b0b; font-weight: 800; text-decoration: none; }
   </style>
-  <script>
-    window.location.replace('https://gamea.azgame.io/undead-corridor/');
-  </script>
 </head>
 <body>
   <main>
     <h1>Undead Corridor</h1>
-    <p>Opening the game&hellip;</p>
-    <a href="https://gamea.azgame.io/undead-corridor/">Open Undead Corridor</a>
+    <p id="msg">Opening the game&hellip;</p>
+    <a id="open" href="https://gamea.azgame.io/undead-corridor/" target="_blank" rel="noopener">Play Undead Corridor</a>
   </main>
+  <script>
+    (function () {
+      var GAME = 'https://gamea.azgame.io/undead-corridor/';
+      var framed = false;
+      try { framed = window.top !== window.self; } catch (e) { framed = true; }
+
+      /* A top-level page is the only reliable way to run this game. */
+      if (!framed) {
+        window.location.replace(GAME);
+        return;
+      }
+
+      /* Older site shells still frame game pages. Never nest the game again:
+         show a button that opens it as its own tab. */
+      document.getElementById('msg').textContent = 'This game needs its own tab.';
+      document.getElementById('open').addEventListener('click', function (event) {
+        event.preventDefault();
+        var win = null;
+        try { win = window.open(GAME, '_blank', 'noopener'); } catch (e) {}
+        if (!win) window.location.href = GAME;
+      });
+    })();
+  </script>
 </body>
 </html>
