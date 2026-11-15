@@ -24,12 +24,15 @@ DEFAULT_DATA = REPO_ROOT / "Games/undead-corridor/Build/undead-corridor-v2604170
 HEADER = b"UnityWebData1.0\x00"
 LOCK_OVERLAYS = {"Game Locked Overlay", "Game Locked Label", "Loading Ad Overlay"}
 
-# 19 SceneTraining, 10 SceneHome (Cleanup), 12 SceneRooms, 15 SceneDefense,
+# UI/menu order is Training, Cleanup, Rooms, Defense, Hospital, Street,
+# Rescue, Waves. Scene numbers come from the build's BuildSettings.scenes:
+# 3 SceneModeTraining, 10 SceneHome (Cleanup), 12 SceneRooms, 15 SceneDefense,
 # 11 SceneHospital, 16 SceneStreetCrowd, 18 SceneRescue, 17 SceneCrowdWaves.
-# The four self-contained scenes boot directly. The wave modes use the real
-# SceneLoading startup so their global setup runs before the gameplay scene.
+# These self-contained scenes boot directly. SceneModeTraining shows the proper
+# training settings screen and Start leads into the playable scene. The wave
+# modes use the real SceneLoading startup so their global setup runs first.
 MODES = {
-    "training": ("level19", "Training", False),
+    "training": ("level3", "Training", False),
     "cleanup": ("level10", "Cleanup", False),
     "rooms": ("level12", "Rooms", False),
     "defense": ("level15", "Defense", False),
