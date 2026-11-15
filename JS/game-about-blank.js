@@ -9,6 +9,11 @@
   if (window.__nxGameAboutBlank) return;
   window.__nxGameAboutBlank = true;
 
+  /* These games must run as a real top-level page, not in the popup shell. */
+  var DIRECT_GAMES = {
+    undead_corridor: '/Games/undead-corridor/index.html?direct=2'
+  };
+
   function renderShell(popup, popupDoc, shell) {
     var parsed = new DOMParser().parseFromString(shell, 'text/html');
     popupDoc.title = parsed.title || 'Game';
@@ -60,6 +65,11 @@
     var original = window.launchGame;
 
     window.launchGame = function (gameId) {
+      if (DIRECT_GAMES[String(gameId)]) {
+        window.location.href = (location.origin || 'https://glaxyias.github.io') + DIRECT_GAMES[String(gameId)];
+        return;
+      }
+
       var useIframe = true;
       try {
         useIframe = window.localStorage.getItem('nx_use_iframe') !== 'false';
