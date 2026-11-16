@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
-"""Build self-hosted Undead Corridor data files for every game mode.
-
-The original WebGL build boots through the AZ/CrazyGames SDK scene and its menu
-buttons are not wired. The start-up scene (SceneLoading) still does important
-one-time initialization, so keep it at build slot 0, remove only its AZ lock
-overlays, and make it load the selected gameplay scene from build slot 1. This
-is how the game's normal flow starts every mode, without the locked menu.
-"""
+"""Build self-hosted Undead Corridor data files for every game mode."""
 
 from __future__ import annotations
 
@@ -24,22 +17,23 @@ DEFAULT_DATA = REPO_ROOT / "Games/undead-corridor/Build/undead-corridor-v2604170
 HEADER = b"UnityWebData1.0\x00"
 LOCK_OVERLAYS = {"Game Locked Overlay", "Game Locked Label", "Loading Ad Overlay"}
 
-# UI/menu order is Training, Cleanup, Rooms, Defense, Hospital, Street,
-# Rescue, Waves. Scene numbers come from the build's BuildSettings.scenes:
-# 3 SceneModeTraining, 10 SceneHome (Cleanup), 12 SceneRooms, 15 SceneDefense,
-# 11 SceneHospital, 16 SceneStreetCrowd, 18 SceneRescue, 17 SceneCrowdWaves.
-# SceneModeTraining boots directly and shows the training settings screen;
-# every gameplay mode uses the real SceneLoading startup so global HUD and
-# game setup run, then loads the mode scene from slot 1.
+# Every mode boots directly into its own settings scene, so the player gets a
+# real loadout/settings screen and Start leads into the playable scene. The
+# setup scenes' SettingsStartGame controller is disabled because its Start()
+# waits on menu-only globals and otherwise leaves the scene stuck on black.
+# Scene numbers come from the build's BuildSettings.scenes:
+# 3 SceneModeTraining, 2 SceneSettingsCleanup, 4 SceneSettingsRooms,
+# 5 SceneSettingsDefense, 6 SceneSettingsHospital, 7 SceneSettingsStreet,
+# 8 SceneSettingsRescue, 9 SceneSettingsWaves.
 MODES = {
     "training": ("level3", "Training", False),
-    "cleanup": ("level10", "Cleanup", True),
-    "rooms": ("level12", "Rooms", True),
-    "defense": ("level15", "Defense", True),
-    "hospital": ("level11", "Hospital", True),
-    "street": ("level16", "Street", True),
-    "rescue": ("level18", "Rescue", True),
-    "waves": ("level17", "Waves", True),
+    "cleanup": ("level2", "Cleanup", False),
+    "rooms": ("level4", "Rooms", False),
+    "defense": ("level5", "Defense", False),
+    "hospital": ("level6", "Hospital", False),
+    "street": ("level7", "Street", False),
+    "rescue": ("level8", "Rescue", False),
+    "waves": ("level9", "Waves", False),
 }
 
 
@@ -103,6 +97,26 @@ def hide_result(env: UnityPy.Environment, scene: str) -> None:
             pass
 
 
+def disable_setup_controller(env: UnityPy.Environment, scene: str) -> None:
+    """Stop a settings scene's menu-only controller from stalling startup."""
+    scripts = {
+        obj.path_id: obj.read().m_ClassName
+        for obj in env.objects
+        if obj.type.name == "MonoScript"
+    }
+    for obj in env.objects:
+        if obj.assets_file.name != scene or obj.type.name != "MonoBehaviour":
+            continue
+        try:
+            raw = bytearray(obj.get_raw_data())
+            script_id = struct.unpack_from("<q", raw, 20)[0]
+            if scripts.get(script_id) == "SettingsStartGame":
+                raw[12] = 0  # m_Enabled
+                obj.set_raw_data(bytes(raw))
+        except Exception:
+            pass
+
+
 def extract_scene(raw_gzip: bytes, scene: str) -> bytes:
     """Return one scene serialized file from a UnityWebData build."""
     entries = read_container(gzip.decompress(raw_gzip))
@@ -128,6 +142,7 @@ def build_variant(raw_gzip: bytes, scene: str, boot: bool, bootstrap_scene: byte
             raise SystemExit(f"missing scene {scene!r} in bundle")
 
         hide_result(env, scene)
+        disable_setup_controller(env, scene)
         if boot:
             boot_path = Path(tmp) / "bootstrap-scene.bin"
             boot_path.write_bytes(bootstrap_scene)
