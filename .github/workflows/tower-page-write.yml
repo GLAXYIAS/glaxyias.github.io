@@ -1,8 +1,5 @@
 name: Publish Tower Page
 on:
-  push:
-    paths:
-      - Games/undead-corridor/tower-page.b64
   workflow_dispatch:
 permissions:
   contents: write
@@ -13,18 +10,24 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Write the page from the compressed payload
+      - name: Assemble the page from verified chunks
         run: |
           python3 - <<'PY'
           import base64, gzip
           from pathlib import Path
-          payload = Path('Games/undead-corridor/tower-page.b64').read_text().strip()
-          Path('Games/undead-corridor/index.html').write_bytes(gzip.decompress(base64.b64decode(payload)))
-          Path('Games/undead-corridor/tower-page.b64').unlink()
+          corridor = Path('Games/undead-corridor')
+          chunks = sorted(corridor.glob('tower-page.part*'))
+          if len(chunks) != 4:
+              raise SystemExit('Expected 4 Tower page chunks, found %d' % len(chunks))
+          payload = ''.join(chunk.read_text().strip() for chunk in chunks)
+          corridor.joinpath('index.html').write_bytes(gzip.decompress(base64.b64decode(payload)))
+          for chunk in chunks:
+              chunk.unlink()
+          corridor.joinpath('tower-page.b64').unlink(missing_ok=True)
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add Games/undead-corridor/index.html Games/undead-corridor/tower-page.b64
+          git add Games/undead-corridor/index.html Games/undead-corridor/tower-page.b64 Games/undead-corridor/tower-page.part
           if git diff --cached --quiet; then exit 0; fi
           git commit -m 'Publish the Tower rooftop mode'
           git push
