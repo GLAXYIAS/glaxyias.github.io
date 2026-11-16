@@ -44,10 +44,11 @@ MODES = {
     "waves": ("level9", "Waves", False),
 }
 
-# Hallway keeps the cleanup loadout screen, but sends the player to the unused
-# kitchen-room combat scene instead of the SceneHome cleanup map. The room scene
-# uses the same player, weapons and zombie prefabs, so it needs no extra assets.
-GAMEPLAY_OVERRIDES = {"hallway": "level14"}
+# Hallway keeps the cleanup loadout screen, but sends the player to the larger
+# street/barricade combat scene. Its zombie spawn point is across the street
+# instead of on top of the player, giving the opening seconds some breathing
+# room while the same player, weapons and zombie prefabs are used.
+GAMEPLAY_OVERRIDES = {"hallway": "level15"}
 # Equal-length replacements keep every serialized string length field valid.
 SETUP_REPLACEMENTS = {
     b"Cleanup": b"Hallway",
