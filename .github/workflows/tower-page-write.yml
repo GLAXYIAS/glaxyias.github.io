@@ -1,0 +1,30 @@
+name: Publish Tower Page
+on:
+  workflow_dispatch:
+    inputs:
+      payload:
+        description: gzip and base64 encoded Tower page
+        required: true
+        type: string
+permissions:
+  contents: write
+jobs:
+  write-page:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Write the page from the compressed payload
+        env:
+          PAGE_PAYLOAD: ${{ github.event.inputs.payload }}
+        run: |
+          python3 - <<'PY'
+          import base64, gzip, os
+          from pathlib import Path
+          Path('Games/undead-corridor/index.html').write_bytes(gzip.decompress(base64.b64decode(os.environ['PAGE_PAYLOAD'])))
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add Games/undead-corridor/index.html
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Publish the Tower rooftop mode'
+          git push
