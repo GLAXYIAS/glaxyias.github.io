@@ -367,7 +367,6 @@
       line-height:.9;
       letter-spacing:.035em;
       text-transform:uppercase;
-      text-shadow:0 2px 0 #4a1511;
     }
     .loading-copy h1 span{color:var(--red)}
     .loading-sub{
@@ -540,7 +539,7 @@
     const MODE_INFO = {
       hallway: {
         label: 'Hallway',
-        blurb: 'Endless corridor. More doors, more dead, no time to get comfortable.',
+        blurb: 'A different route through the outbreak. Same dead, new rooms, no clean exit.',
         tone: '#d23b2e'
       },
       training: {
@@ -586,7 +585,7 @@
     };
 
     const MODE_ORDER = ['hallway', 'training', 'cleanup', 'rooms', 'defense', 'hospital', 'street', 'rescue', 'waves'];
-    const MODE_DATA = { hallway: 'cleanup' };
+    const MODE_DATA = {};
 
     const FUN_FACTS = [
       'Honey never spoils. Archaeologists have found edible honey in ancient Egyptian tombs.',
@@ -647,7 +646,7 @@
     const buildUrl = 'Build';
     const dataMode = MODE_DATA[mode] || mode;
     const config = {
-      dataUrl: buildUrl + '/modes/' + dataMode + '.data.unityweb?v=setups2',
+      dataUrl: buildUrl + '/modes/' + dataMode + '.data.unityweb?v=setups3',
       frameworkUrl: buildUrl + '/undead-corridor-v26041701.framework.js.unityweb',
       codeUrl: buildUrl + '/undead-corridor-v26041701.wasm.unityweb',
       streamingAssetsUrl: 'StreamingAssets',

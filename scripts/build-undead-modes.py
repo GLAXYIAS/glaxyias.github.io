@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Build self-hosted Undead Corridor data files for every game mode."""
+"""Build self-hosted Undead Corridor data files for every game mode.
+
+The original WebGL build boots through the AZ/CrazyGames SDK scene and its menu
+buttons are not wired. The start-up scene (SceneLoading) still does important
+one-time initialization, so keep it at build slot 0, remove only its AZ lock
+overlays, and make it load the selected gameplay scene from build slot 1. This
+is how the game's normal flow starts every mode, without the locked menu.
+"""
 
 from __future__ import annotations
 
@@ -26,6 +33,7 @@ LOCK_OVERLAYS = {"Game Locked Overlay", "Game Locked Label", "Loading Ad Overlay
 # 5 SceneSettingsDefense, 6 SceneSettingsHospital, 7 SceneSettingsStreet,
 # 8 SceneSettingsRescue, 9 SceneSettingsWaves.
 MODES = {
+    "hallway": ("level2", "Hallway", False),
     "training": ("level3", "Training", False),
     "cleanup": ("level2", "Cleanup", False),
     "rooms": ("level4", "Rooms", False),
@@ -34,6 +42,17 @@ MODES = {
     "street": ("level7", "Street", False),
     "rescue": ("level8", "Rescue", False),
     "waves": ("level9", "Waves", False),
+}
+
+# Hallway keeps the cleanup loadout screen, but sends the player to the unused
+# kitchen-room combat scene instead of the SceneHome cleanup map. The room scene
+# uses the same player, weapons and zombie prefabs, so it needs no extra assets.
+GAMEPLAY_OVERRIDES = {"hallway": "level14"}
+# Equal-length replacements keep every serialized string length field valid.
+SETUP_REPLACEMENTS = {
+    b"Cleanup": b"Hallway",
+    b"cleanup": b"hallway",
+    b"Cleared corridors": b"Hallway corridors",
 }
 
 
@@ -130,7 +149,14 @@ def extract_scene(raw_gzip: bytes, scene: str) -> bytes:
         return env.file.files[scene].save()
 
 
-def build_variant(raw_gzip: bytes, scene: str, boot: bool, bootstrap_scene: bytes) -> bytes:
+def build_variant(
+    raw_gzip: bytes,
+    scene: str,
+    boot: bool,
+    bootstrap_scene: bytes,
+    gameplay_override: str | None = None,
+    setup_replacements: dict[bytes, bytes] | None = None,
+) -> bytes:
     entries = read_container(gzip.decompress(raw_gzip))
     data_index = next(i for i, (name, _) in enumerate(entries) if str(name).endswith("data.unity3d"))
     with tempfile.TemporaryDirectory() as tmp:
@@ -140,9 +166,28 @@ def build_variant(raw_gzip: bytes, scene: str, boot: bool, bootstrap_scene: byte
         bundle = env.file
         if scene not in bundle.files or "level0" not in bundle.files:
             raise SystemExit(f"missing scene {scene!r} in bundle")
+        if gameplay_override and gameplay_override not in bundle.files:
+            raise SystemExit(f"missing gameplay scene {gameplay_override!r} in bundle")
 
         hide_result(env, scene)
         disable_setup_controller(env, scene)
+        if setup_replacements:
+            setup_bytes = bundle.files[scene].save()
+            for old, new in setup_replacements.items():
+                if len(old) != len(new):
+                    raise SystemExit(f"unequal setup replacement {old!r} -> {new!r}")
+                setup_bytes = setup_bytes.replace(old, new)
+            patched_path = Path(tmp) / "setup-patched.bin"
+            patched_path.write_bytes(setup_bytes)
+            patched_env = UnityPy.load(str(patched_path))
+            patched_file = patched_env.file
+            patched_file.name = scene
+            patched_file.flags = getattr(bundle.files[scene], "flags", 4)
+            bundle.files[scene] = patched_file
+        if gameplay_override:
+            gameplay_file = bundle.files[gameplay_override]
+            gameplay_file.flags = getattr(bundle.files["level10"], "flags", 4)
+            bundle.files["level10"] = gameplay_file
         if boot:
             boot_path = Path(tmp) / "bootstrap-scene.bin"
             boot_path.write_bytes(bootstrap_scene)
@@ -195,7 +240,16 @@ def main() -> None:
     for slug in selected:
         scene, label, boot = MODES[slug]
         output = args.out_dir / f"{slug}.data.unityweb"
-        output.write_bytes(build_variant(raw, scene, boot, bootstrap_scene))
+        output.write_bytes(
+            build_variant(
+                raw,
+                scene,
+                boot,
+                bootstrap_scene,
+                gameplay_override=GAMEPLAY_OVERRIDES.get(slug),
+                setup_replacements=SETUP_REPLACEMENTS if slug == "hallway" else None,
+            )
+        )
         print(f"{label:9} {scene:8} boot={boot!s:5} -> {output} ({output.stat().st_size} bytes)")
 
 
