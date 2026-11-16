@@ -28,14 +28,14 @@ LOCK_OVERLAYS = {"Game Locked Overlay", "Game Locked Label", "Loading Ad Overlay
 # Rescue, Waves. Scene numbers come from the build's BuildSettings.scenes:
 # 3 SceneModeTraining, 10 SceneHome (Cleanup), 12 SceneRooms, 15 SceneDefense,
 # 11 SceneHospital, 16 SceneStreetCrowd, 18 SceneRescue, 17 SceneCrowdWaves.
-# These self-contained scenes boot directly. SceneModeTraining shows the proper
-# training settings screen and Start leads into the playable scene. The wave
-# modes use the real SceneLoading startup so their global setup runs first.
+# SceneModeTraining boots directly and shows the training settings screen;
+# every gameplay mode uses the real SceneLoading startup so global HUD and
+# game setup run, then loads the mode scene from slot 1.
 MODES = {
     "training": ("level3", "Training", False),
-    "cleanup": ("level10", "Cleanup", False),
-    "rooms": ("level12", "Rooms", False),
-    "defense": ("level15", "Defense", False),
+    "cleanup": ("level10", "Cleanup", True),
+    "rooms": ("level12", "Rooms", True),
+    "defense": ("level15", "Defense", True),
     "hospital": ("level11", "Hospital", True),
     "street": ("level16", "Street", True),
     "rescue": ("level18", "Rescue", True),
