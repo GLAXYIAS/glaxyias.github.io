@@ -5,32 +5,84 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
   <title>Undead Corridor</title>
   <style>
-    :root{color-scheme:dark}
+    :root{color-scheme:dark;--yellow:#ffd84d;--red:#c43b32;--ink:#070505;--panel:#120b0b;--line:#3a1d1d;--muted:#9d8585}
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0;background:#070505;color:#f4e9dc;font-family:Nunito,system-ui,sans-serif;overflow:hidden;display:flex;flex-direction:column}
-    .topbar{flex:0 0 56px;display:flex;align-items:center;gap:18px;padding:0 20px;background:#120b0b;border-bottom:1px solid #3a1d1d}
-    .topbar a{color:#ffd84d;text-decoration:none;font-weight:800;letter-spacing:.04em}
-    .topbar span{color:#9d8585;font-size:13px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
-    .modes{flex:0 0 auto;display:flex;align-items:stretch;flex-wrap:wrap;gap:2px;padding:0 8px;background:#0b0808;border-bottom:1px solid #2b1717}
-    .mode{display:flex;align-items:center;height:40px;padding:0 9px;border:0;border-bottom:2px solid transparent;background:transparent;color:#b9a4a4;font:700 11px/1 Nunito,system-ui,sans-serif;letter-spacing:.04em;text-decoration:none;white-space:nowrap}
+    body{margin:0;background:var(--ink);color:#f4e9dc;font-family:Nunito,system-ui,sans-serif;overflow:hidden;display:flex;flex-direction:column}
+    button{font:inherit}
+    .topbar{flex:0 0 56px;display:flex;align-items:center;gap:18px;padding:0 20px;background:var(--panel);border-bottom:1px solid var(--line)}
+    .topbar a{color:var(--yellow);text-decoration:none;font-weight:800;letter-spacing:.04em}
+    .topbar span{color:var(--muted);font-size:13px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+    .topbar .change-mode{margin-left:auto;padding:6px 10px;border:1px solid #5a3434;background:#1c1010;color:#e7cccc;font-size:11px;font-weight:800;letter-spacing:.06em;cursor:pointer;text-transform:uppercase}
+    .topbar .change-mode:hover{color:var(--yellow);border-color:#8c5c3a}
+    .modes{flex:0 0 auto;display:flex;align-items:stretch;flex-wrap:wrap;gap:2px;padding:0 8px 4px;background:var(--panel);border-bottom:1px solid #2b1717}
+    .mode{display:flex;align-items:center;height:36px;padding:0 9px;border:0;border-bottom:2px solid transparent;background:transparent;color:#b9a4a4;font:700 11px/1 Nunito,system-ui,sans-serif;letter-spacing:.04em;text-decoration:none;white-space:nowrap}
     .mode:hover{color:#ffe77a;background:#1c1010}
-    .mode.active{color:#ffd84d;border-bottom-color:#ffd84d;background:#1c1010}
+    .mode.active{color:var(--yellow);border-bottom-color:var(--yellow);background:#1c1010}
     .stage{position:relative;flex:1 1 auto;min-height:0;background:#000}
     #unity-canvas{display:block;width:100%;height:100%;outline:none;background:#000}
-    #loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0b0808;z-index:2;padding:18px;text-align:center}
-    #loading h1{margin:0 0 4px;font-size:22px;letter-spacing:.06em}
-    #loading p{margin:0;color:#9d8585;font-size:13px}
-    #bar{width:min(300px,70vw);height:7px;margin-top:22px;background:#2b2020;border-radius:99px;overflow:hidden}
-    #fill{height:100%;width:0;background:#ffd84d;transition:width .2s}
-    #status{margin-top:10px;min-height:18px;color:#9d8585;font-size:12px}
-    #error{display:none;margin-top:18px;max-width:480px;padding:12px;border:1px solid #6b2b2b;background:#1a0c0c;color:#ffb3b3;font-size:13px}
+    #loading,#select{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;text-align:center}
+    #loading{background:radial-gradient(ellipse at 50% 35%,#260e0e 0,#0b0808 55%,#050303 100%);overflow:hidden}
+    #loading::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,216,77,.025) 0 1px,transparent 1px 4px);pointer-events:none;animation:scan 5s linear infinite}
+    #loading::after{content:"";position:absolute;width:min(50vw,300px);height:min(50vw,300px);border:1px solid rgba(255,216,77,.16);border-radius:50%;box-shadow:0 0 70px rgba(196,59,50,.17),inset 0 0 40px rgba(255,216,77,.05);animation:pulse 2.8s ease-in-out infinite;pointer-events:none}
+    .loading-card{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:min(460px,100%)}
+    .eyebrow{color:#c7a85a;font-size:10px;font-weight:900;letter-spacing:.22em;text-transform:uppercase;margin-bottom:8px}
+    #loading h1{margin:0 0 4px;font-size:clamp(24px,7vw,38px);letter-spacing:.08em;line-height:.95;text-shadow:0 3px 0 #3a1111}
+    #mode-name{margin:0;color:var(--yellow);font-size:12px;font-weight:900;letter-spacing:.22em;text-transform:uppercase}
+    .loader-doorway{width:64px;height:78px;margin:20px 0 16px;border:2px solid #7b3d33;border-bottom:0;position:relative;background:linear-gradient(180deg,rgba(255,216,77,.16),rgba(196,59,50,.06));box-shadow:0 0 32px rgba(196,59,50,.24)}
+    .loader-doorway::before{content:"";position:absolute;inset:7px 7px 0;background:repeating-linear-gradient(180deg,rgba(255,216,77,.34) 0 2px,transparent 2px 8px);opacity:.55;animation:flicker 1.4s steps(2) infinite}
+    .loader-doorway::after{content:"";position:absolute;left:50%;bottom:10px;width:7px;height:7px;border-radius:50%;background:var(--yellow);transform:translateX(-50%);box-shadow:0 0 10px var(--yellow);animation:pulse 1.5s ease-in-out infinite}
+    #bar{width:min(330px,78vw);height:9px;margin-top:4px;background:#2b2020;border:1px solid #432626;border-radius:99px;overflow:hidden;position:relative}
+    #fill{height:100%;width:0;background:linear-gradient(90deg,#b12f29,var(--yellow));transition:width .25s ease;position:relative;overflow:hidden}
+    #fill::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 0 35%,rgba(255,255,255,.55) 48%,transparent 62% 100%);transform:translateX(-120%);animation:shine 1.3s linear infinite}
+    #status{margin-top:10px;min-height:18px;color:#d3b6ac;font-size:12px;letter-spacing:.03em}
+    #fact-wrap{position:relative;z-index:1;margin-top:24px;max-width:390px;min-height:52px;padding:10px 14px;border-left:2px solid #8f3a32;background:rgba(34,14,13,.72);text-align:left}
+    #fact-wrap b{display:block;color:#d7ba70;font-size:9px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:4px}
+    #fact{display:block;color:#eadbd2;font-size:12px;line-height:1.45}
+    #hint{position:relative;z-index:1;margin-top:12px;color:#7f6a6a;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+    #error{display:none;margin-top:16px;max-width:480px;padding:12px;border:1px solid #6b2b2b;background:#1a0c0c;color:#ffb3b3;font-size:13px;position:relative;z-index:1}
+    #select{background:linear-gradient(180deg,rgba(10,5,5,.94),rgba(20,8,8,.98));overflow:auto;align-items:stretch;justify-content:flex-start;text-align:left}
+    #select[hidden],#loading[hidden]{display:none}
+    .select-inner{width:min(880px,100%);margin:auto;padding:12px 0 20px}
+    .select-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:14px}
+    .select-head h2{margin:0;font-size:clamp(22px,5vw,34px);letter-spacing:.05em;line-height:1}
+    .select-head p{margin:5px 0 0;color:var(--muted);font-size:12px;line-height:1.4}
+    .select-enter{border:1px solid #8b5e2d;background:var(--yellow);color:#1a0d0a;padding:11px 16px;font-weight:900;font-size:12px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap;box-shadow:4px 4px 0 #6e261f}
+    .select-enter:hover{background:#ffe77a}
+    .select-enter:focus-visible{outline:2px solid #fff;outline-offset:3px}
+    .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    .mode-card{position:relative;display:flex;flex-direction:column;min-height:104px;padding:12px;border:1px solid #3b2422;background:linear-gradient(145deg,#1d1010,#110909);color:#e8d6c8;text-decoration:none;overflow:hidden}
+    .mode-card::after{content:"";position:absolute;right:-18px;bottom:-26px;width:70px;height:70px;border:1px solid rgba(255,216,77,.13);border-radius:50%}
+    .mode-card:hover,.mode-card:focus-visible{border-color:#a97638;outline:none;transform:translateY(-1px)}
+    .mode-card.active{border-color:var(--yellow);box-shadow:inset 0 0 0 1px rgba(255,216,77,.35)}
+    .mode-card .num{color:#815b35;font-size:9px;font-weight:900;letter-spacing:.18em}
+    .mode-card strong{display:block;margin:7px 0 4px;color:var(--yellow);font-size:14px;letter-spacing:.03em}
+    .mode-card small{color:#aa9490;font-size:10px;line-height:1.35}
+    .select-foot{display:flex;justify-content:space-between;gap:12px;margin-top:12px;color:#8d7471;font-size:10px;line-height:1.4}
+    .select-foot kbd{border:1px solid #4b3331;background:#1d1111;padding:1px 5px;color:#e3c8a0;font:inherit}
+    #control-hint{position:absolute;left:50%;bottom:14px;z-index:3;transform:translateX(-50%);padding:7px 12px;background:rgba(10,5,5,.76);border:1px solid #5b382f;color:#e8d6c8;font-size:10px;letter-spacing:.06em;text-transform:uppercase;opacity:0;pointer-events:none;transition:opacity .35s ease;white-space:nowrap;max-width:94vw;overflow:hidden;text-overflow:ellipsis}
+    #control-hint.show{opacity:1}
+    @keyframes scan{to{transform:translateY(16px)}}
+    @keyframes pulse{0%,100%{opacity:.58;transform:scale(.97)}50%{opacity:1;transform:scale(1.03)}}
+    @keyframes flicker{0%,100%{opacity:.5}50%{opacity:.95}}
+    @keyframes shine{to{transform:translateX(120%)}}
+    @media (max-width:720px){
+      .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .select-head{display:block}
+      .select-enter{margin-top:12px;width:100%}
+      .select-foot{display:block}
+      .select-foot span{display:block;margin-top:5px}
+      .topbar .change-mode{font-size:10px}
+    }
+    @media (max-width:380px){.cards{grid-template-columns:1fr 1fr}.mode-card{min-height:96px;padding:10px}}
+    @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
   </style>
 </head>
 <body>
   <header class="topbar">
     <a href="/">GLAXYIAS</a>
     <span>Undead Corridor</span>
+    <button class="change-mode" id="change-mode" type="button" hidden>Change mode</button>
   </header>
   <nav class="modes" aria-label="Undead Corridor game modes">
     <a class="mode" data-mode="training" href="?mode=training">Training</a>
@@ -44,36 +96,77 @@
   </nav>
   <main class="stage">
     <canvas id="unity-canvas" tabindex="0"></canvas>
-    <div id="loading">
-      <h1>Undead Corridor</h1>
-      <p id="mode-name">Training</p>
-      <div id="bar"><div id="fill"></div></div>
-      <div id="status">Downloading 0%</div>
-      <div id="error"></div>
+    <div id="select" role="dialog" aria-modal="true" aria-labelledby="select-title">
+      <div class="select-inner">
+        <div class="select-head">
+          <div>
+            <div class="eyebrow">Choose your corridor</div>
+            <h2 id="select-title">Pick a mode</h2>
+            <p id="select-copy">Eight ways to survive. Pick a room, take a breath, and step inside.</p>
+          </div>
+          <button class="select-enter" id="enter-game" type="button">Enter the corridor</button>
+        </div>
+        <div class="cards" id="mode-cards"></div>
+        <div class="select-foot">
+          <span><kbd>Esc</kbd> while playing returns here to change modes.</span>
+          <span>Progress and settings are loaded by the game.</span>
+        </div>
+      </div>
     </div>
+    <div id="loading" hidden>
+      <div class="loading-card">
+        <div class="eyebrow">Preparing the corridor</div>
+        <h1>Undead Corridor</h1>
+        <p id="mode-name">Training</p>
+        <div class="loader-doorway" aria-hidden="true"></div>
+        <div id="bar"><div id="fill"></div></div>
+        <div id="status" role="status" aria-live="polite">Waking the dead…</div>
+        <div id="fact-wrap"><b>Corridor fact</b><span id="fact"></span></div>
+        <div id="hint">The dead are patient. This download is not.</div>
+        <div id="error"></div>
+      </div>
+    </div>
+    <div id="control-hint">WASD / arrows move · SPACE or click to fire · Esc changes mode</div>
   </main>
   <script>
-    const MODE_NAMES = {
-      training: 'Training',
-      cleanup: 'Cleanup',
-      rooms: 'Rooms',
-      defense: 'Defense',
-      hospital: 'Hospital',
-      street: 'Street',
-      rescue: 'Rescue',
-      waves: 'Waves'
+    const MODE_INFO = {
+      training: { label: 'Training', blurb: 'Learn the controls with a patient instructor. No score, no shame.', fact: 'Training mode is the only place where missing the target is considered “research.”' },
+      cleanup: { label: 'Cleanup', blurb: 'Clear the rooms, watch the doors, and keep the corridor quiet.', fact: 'The Cleanup job listing says “light housekeeping.” It is not light housekeeping.' },
+      rooms: { label: 'Rooms', blurb: 'Open every door. Pick your loadout. Try not to leave anything behind.', fact: 'The rooms were numbered before the residents stopped counting.' },
+      defense: { label: 'Defense', blurb: 'Hold the line while the horde tests every barricade you have.', fact: 'A barricade only has to work once per zombie. There are a lot of zombies.' },
+      hospital: { label: 'Hospital', blurb: 'The halls are dark, the patients are restless, and the exit is far.', fact: 'The hospital’s night shift never clocked out. That is one of the quieter problems.' },
+      street: { label: 'Street', blurb: 'Take the fight outside. Mind the crowd. Mind the noise.', fact: 'The street is clear for exactly as long as it takes the first one to notice you.' },
+      rescue: { label: 'Rescue', blurb: 'Get the survivors out before the corridor fills up.', fact: 'Survivors move faster when they can hear the door unlocking.' },
+      waves: { label: 'Waves', blurb: 'They keep coming. You keep shooting. See how many waves you can answer.', fact: 'Wave one is a warm-up. Wave two is a misunderstanding. Wave three is personal.' }
     };
+    const MODE_ORDER = Object.keys(MODE_INFO);
     const requested = new URLSearchParams(location.search).get('mode');
-    const mode = Object.prototype.hasOwnProperty.call(MODE_NAMES, requested || '') ? requested : 'training';
-    const modeName = MODE_NAMES[mode];
-    document.title = 'Undead Corridor — ' + modeName;
-    document.getElementById('mode-name').textContent = modeName;
+    const mode = Object.prototype.hasOwnProperty.call(MODE_INFO, requested || '') ? requested : 'training';
+    const modeInfo = MODE_INFO[mode];
+    document.title = 'Undead Corridor — ' + modeInfo.label;
+    document.getElementById('mode-name').textContent = modeInfo.label;
+    document.getElementById('select-copy').textContent = modeInfo.blurb;
     document.querySelectorAll('.mode').forEach(link => {
       const active = link.dataset.mode === mode;
       link.classList.toggle('active', active);
       if (active) link.setAttribute('aria-current', 'page');
     });
-
+    const cards = document.getElementById('mode-cards');
+    MODE_ORDER.forEach((key, index) => {
+      const info = MODE_INFO[key];
+      const card = document.createElement('a');
+      card.className = 'mode-card' + (key === mode ? ' active' : '');
+      card.href = '?mode=' + key;
+      card.dataset.mode = key;
+      if (key === mode) card.setAttribute('aria-current', 'page');
+      card.innerHTML = '<span class="num">0' + (index + 1) + '</span><strong>' + info.label + '</strong><small>' + info.blurb + '</small>';
+      card.addEventListener('click', event => {
+        if (key !== mode) return;
+        event.preventDefault();
+        enterGame();
+      });
+      cards.appendChild(card);
+    });
     const buildUrl = 'Build';
     const config = {
       dataUrl: buildUrl + '/modes/' + mode + '.data.unityweb?v=all4',
@@ -86,34 +179,106 @@
       gameId: 'undead-corridor'
     };
     const canvas = document.getElementById('unity-canvas');
+    const select = document.getElementById('select');
     const loading = document.getElementById('loading');
     const fill = document.getElementById('fill');
     const status = document.getElementById('status');
     const error = document.getElementById('error');
-
-    const script = document.createElement('script');
-    script.src = buildUrl + '/undead-corridor-v26041701.loader.js';
-    script.onload = () => {
-      createUnityInstance(canvas, config, p => {
-        const pct = Math.round(p * 100);
-        fill.style.width = pct + '%';
-        status.textContent = 'Downloading ' + pct + '%';
-      }).then(instance => {
-        window.unityInstance = instance;
-        loading.style.display = 'none';
+    const enterButton = document.getElementById('enter-game');
+    const changeMode = document.getElementById('change-mode');
+    const controlHint = document.getElementById('control-hint');
+    const factElement = document.getElementById('fact');
+    let gameInstance = null;
+    let started = false;
+    let factTimer = null;
+    let currentFact = -1;
+    const facts = MODE_ORDER.map(key => MODE_INFO[key].fact);
+    function showFact() {
+      if (!factElement) return;
+      let next = Math.floor(Math.random() * facts.length);
+      if (next === currentFact) next = (next + 1) % facts.length;
+      currentFact = next;
+      factElement.textContent = facts[next];
+    }
+    function startFacts() {
+      showFact();
+      if (factTimer) clearInterval(factTimer);
+      factTimer = setInterval(showFact, 3200);
+    }
+    function stopFacts() {
+      if (factTimer) clearInterval(factTimer);
+      factTimer = null;
+    }
+    function showSelect() {
+      select.hidden = false;
+      changeMode.hidden = true;
+      controlHint.classList.remove('show');
+      enterButton.focus({ preventScroll: true });
+    }
+    function hideSelect() {
+      select.hidden = true;
+      if (started) changeMode.hidden = false;
+    }
+    function enterGame() {
+      hideSelect();
+      if (gameInstance) {
+        try { gameInstance.SendMessage('ЭкранПаузы', 'Resume'); } catch (ignored) {}
         canvas.focus();
-      }).catch(message => {
-        status.textContent = 'Could not start ' + modeName + '.';
+        return;
+      }
+      if (started) return;
+      started = true;
+      loading.hidden = false;
+      startFacts();
+      const script = document.createElement('script');
+      script.src = buildUrl + '/undead-corridor-v26041701.loader.js';
+      script.onload = () => {
+        createUnityInstance(canvas, config, p => {
+          const pct = Math.max(0, Math.min(100, Math.round(p * 100)));
+          fill.style.width = pct + '%';
+          status.textContent = pct < 100 ? 'Opening the corridor… ' + pct + '%' : 'Almost inside…';
+        }).then(instance => {
+          gameInstance = instance;
+          window.unityInstance = instance;
+          stopFacts();
+          loading.hidden = true;
+          canvas.focus();
+          changeMode.hidden = false;
+          controlHint.classList.add('show');
+          setTimeout(() => controlHint.classList.remove('show'), 6500);
+          [600, 1500, 2800].forEach(delay => setTimeout(() => {
+            try { instance.SendMessage('ЭкранПаузы', 'Resume'); } catch (ignored) {}
+          }, delay));
+        }).catch(message => {
+          started = false;
+          stopFacts();
+          status.textContent = 'Could not start ' + modeInfo.label + '.';
+          error.style.display = 'block';
+          error.textContent = String(message);
+          startFacts();
+        });
+      };
+      script.onerror = () => {
+        started = false;
+        stopFacts();
+        status.textContent = 'Could not load the game loader.';
         error.style.display = 'block';
-        error.textContent = String(message);
-      });
-    };
-    script.onerror = () => {
-      status.textContent = 'Could not load the game loader.';
-      error.style.display = 'block';
-      error.textContent = 'The Unity loader failed to download.';
-    };
-    document.body.appendChild(script);
+        error.textContent = 'The Unity loader failed to download.';
+        startFacts();
+      };
+      document.body.appendChild(script);
+    }
+    enterButton.addEventListener('click', enterGame);
+    changeMode.addEventListener('click', showSelect);
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && !select.hidden) return;
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        showSelect();
+      }
+    });
+    showFact();
+    showSelect();
   </script>
 </body>
 </html>
