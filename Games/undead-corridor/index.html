@@ -28,6 +28,8 @@
     button{font:inherit}
     .stage{position:relative;width:100%;height:100%;background:#000}
     #unity-canvas{display:block;width:100%;height:100%;outline:none;background:#000}
+    #tower-canvas{position:absolute;inset:0;z-index:2;display:block;width:100%;height:100%;outline:none;background:#07121b;touch-action:none;cursor:crosshair}
+    #tower-canvas[hidden]{display:none}
 
     /* ---------- mode picker ---------- */
     #select,#loading{position:absolute;inset:0;z-index:4}
@@ -482,6 +484,7 @@
 <body>
   <main class="stage">
     <canvas id="unity-canvas" tabindex="0"></canvas>
+    <canvas id="tower-canvas" tabindex="0" hidden aria-label="Tower rooftop survival"></canvas>
 
     <div id="select" aria-labelledby="hero-title">
       <div class="select-shell">
@@ -523,7 +526,7 @@
         </div>
         <div class="loading-copy">
           <div class="loading-kicker" id="mode-name">Loading mode</div>
-          <h1><span id="loading-mode">Hallway</span></h1>
+          <h1><span id="loading-mode">Tower</span></h1>
           <p class="loading-sub">Pulling on the gloves. The corridor is already waiting.</p>
           <div class="load-track"><div id="fill"></div></div>
           <div id="status" role="status" aria-live="polite">Getting the game ready&hellip;</div>
@@ -538,10 +541,10 @@
 
   <script>
     const MODE_INFO = {
-      hallway: {
-        label: 'Hallway',
-        blurb: 'A different route through the outbreak. Same dead, new rooms, no clean exit.',
-        tone: '#d23b2e'
+      tower: {
+        label: 'Tower',
+        blurb: 'Rooftop last stand. They descend the ropes; the chopper stays out of sight.',
+        tone: '#e0a33c'
       },
       training: {
         label: 'Training',
@@ -585,7 +588,7 @@
       }
     };
 
-    const MODE_ORDER = ['hallway', 'training', 'cleanup', 'rooms', 'defense', 'hospital', 'street', 'rescue', 'waves'];
+    const MODE_ORDER = ['tower', 'training', 'cleanup', 'rooms', 'defense', 'hospital', 'street', 'rescue', 'waves'];
     const MODE_DATA = {};
 
     const FUN_FACTS = [
@@ -623,7 +626,7 @@
 
     const params = new URLSearchParams(location.search);
     const requested = params.get('mode');
-    const mode = Object.prototype.hasOwnProperty.call(MODE_INFO, requested || '') ? requested : 'hallway';
+    const mode = Object.prototype.hasOwnProperty.call(MODE_INFO, requested || '') ? requested : 'tower';
     const modeInfo = MODE_INFO[mode];
     const shouldPlay = params.get('play') === '1';
 
@@ -658,6 +661,8 @@
     };
 
     const canvas = document.getElementById('unity-canvas');
+    const towerCanvas = document.getElementById('tower-canvas');
+    const towerCtx = towerCanvas.getContext('2d');
     const select = document.getElementById('select');
     const loading = document.getElementById('loading');
     const fill = document.getElementById('fill');
@@ -686,6 +691,7 @@
       factTimer = null;
     }
     function showSelect() {
+      if (tower.active) stopTower();
       select.hidden = false;
       loading.hidden = true;
       controlHint.classList.remove('show');
@@ -697,6 +703,10 @@
 
     function enterGame() {
       hideSelect();
+      if (mode === 'tower') {
+        startTower();
+        return;
+      }
       if (gameInstance) {
         try { gameInstance.SendMessage('ЭкранПаузы', 'Resume'); } catch (ignored) {}
         canvas.focus();
@@ -742,6 +752,672 @@
         startFacts();
       };
       document.body.appendChild(script);
+    }
+
+    /* ---------- Tower: rooftop rope insertion ---------- */
+    const TOWER_ROPE_SPOTS = [0.2, 0.5, 0.8];
+    const tower = {
+      active: false, raf: 0, last: 0, width: 0, height: 0, dpr: 1,
+      roofY: 0, ropes: [], time: 0, intro: 0, spawnTimer: 0,
+      health: 100, score: 0, wave: 1, ammo: 12, maxAmmo: 12, reload: 0, cooldown: 0, flash: 0,
+      player: { x: 0, angle: -Math.PI / 2 },
+      zombies: [], bullets: [], particles: [],
+      keys: {}, pointer: { x: 0, y: 0, down: false },
+      gameOver: false
+    };
+
+    function towerResize() {
+      if (!tower.active) return;
+      const rect = towerCanvas.getBoundingClientRect();
+      const width = Math.max(240, rect.width);
+      const height = Math.max(320, rect.height);
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      tower.width = width;
+      tower.height = height;
+      tower.dpr = dpr;
+      towerCanvas.width = Math.round(width * dpr);
+      towerCanvas.height = Math.round(height * dpr);
+      towerCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      tower.roofY = Math.max(230, Math.min(height * 0.7, height - 104));
+      tower.ropes = TOWER_ROPE_SPOTS.map(spot => ({ x: width * spot }));
+      tower.player.x = Math.max(36, Math.min(width - 36, tower.player.x || width / 2));
+      tower.pointer.x = Math.max(0, Math.min(width, tower.pointer.x || width / 2));
+      tower.pointer.y = Math.max(0, Math.min(height, tower.pointer.y || tower.roofY - 140));
+      tower.zombies.forEach(zombie => {
+        zombie.x = tower.ropes[zombie.rope] ? tower.ropes[zombie.rope].x : zombie.x;
+        if (zombie.state === 'roof') zombie.y = tower.roofY;
+        else if (zombie.state === 'descend') {
+          const eased = 1 - Math.pow(1 - zombie.descent, 2);
+          zombie.y = -36 + (tower.roofY + 36) * eased;
+        }
+      });
+    }
+
+    function towerAddZombie(ropeIndex, delay) {
+      const rope = tower.ropes[ropeIndex % tower.ropes.length];
+      const hp = 2 + Math.floor(tower.wave / 4);
+      tower.zombies.push({
+        rope: ropeIndex % tower.ropes.length,
+        ropeX: rope.x,
+        x: rope.x,
+        y: -40,
+        state: 'wait',
+        delay: delay || 0,
+        descent: 0,
+        duration: Math.max(1.6, 2.55 - tower.wave * 0.035),
+        hp: hp,
+        maxHp: hp,
+        speed: 23 + tower.wave * 1.6,
+        hit: 0,
+        seed: Math.random() * 11
+      });
+    }
+
+    function towerReset() {
+      tower.health = 100;
+      tower.score = 0;
+      tower.wave = 1;
+      tower.ammo = tower.maxAmmo;
+      tower.reload = 0;
+      tower.cooldown = 0;
+      tower.flash = 0;
+      tower.intro = 3.4;
+      tower.time = 0;
+      tower.spawnTimer = 5.8;
+      tower.gameOver = false;
+      tower.zombies = [];
+      tower.bullets = [];
+      tower.particles = [];
+      tower.player.x = tower.width / 2;
+      tower.player.angle = -Math.PI / 2;
+      tower.pointer.x = tower.width / 2;
+      tower.pointer.y = tower.roofY - 150;
+      tower.pointer.down = false;
+      tower.keys = {};
+      towerAddZombie(0, 0.8);
+      towerAddZombie(1, 1.8);
+      towerAddZombie(2, 2.8);
+    }
+
+    function towerReload() {
+      if (tower.gameOver || tower.reload > 0 || tower.ammo >= tower.maxAmmo) return;
+      tower.reload = 1.25;
+    }
+
+    function towerFire() {
+      if (!tower.active || tower.gameOver || tower.reload > 0 || tower.cooldown > 0) return;
+      if (tower.ammo <= 0) {
+        towerReload();
+        return;
+      }
+      tower.ammo -= 1;
+      tower.cooldown = 0.13;
+      tower.flash = 0.07;
+      const angle = tower.player.angle;
+      const muzzleY = tower.roofY - 47;
+      tower.bullets.push({
+        x: tower.player.x + Math.cos(angle) * 22,
+        y: muzzleY + Math.sin(angle) * 22,
+        vx: Math.cos(angle) * 960,
+        vy: Math.sin(angle) * 960,
+        life: 0.9
+      });
+      if (tower.ammo === 0) tower.reload = 1.25;
+    }
+
+    function towerBurst(x, y, color, count) {
+      for (let i = 0; i < count; i += 1) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 25 + Math.random() * 90;
+        tower.particles.push({
+          x: x, y: y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 25,
+          life: 0.25 + Math.random() * 0.35,
+          max: 0.6,
+          color: color
+        });
+      }
+    }
+
+    function towerSpawnWave() {
+      tower.wave += 1;
+      const count = Math.random() < 0.55 ? 1 : 2;
+      for (let i = 0; i < count; i += 1) {
+        towerAddZombie(Math.floor(Math.random() * tower.ropes.length), i * 0.7);
+      }
+      tower.spawnTimer = Math.max(3.8, 6.4 - tower.wave * 0.2);
+    }
+
+    function towerUpdate(dt) {
+      tower.time += dt;
+      tower.flash = Math.max(0, tower.flash - dt);
+      tower.intro = Math.max(0, tower.intro - dt);
+      if (tower.gameOver) return;
+
+      let move = 0;
+      if (tower.keys.KeyA || tower.keys.ArrowLeft) move -= 1;
+      if (tower.keys.KeyD || tower.keys.ArrowRight) move += 1;
+      tower.player.x += move * 195 * dt;
+      tower.player.x = Math.max(38, Math.min(tower.width - 38, tower.player.x));
+
+      tower.cooldown = Math.max(0, tower.cooldown - dt);
+      if (tower.reload > 0) {
+        tower.reload = Math.max(0, tower.reload - dt);
+        if (tower.reload === 0) tower.ammo = tower.maxAmmo;
+      }
+      if (tower.keys.Space || tower.pointer.down) towerFire();
+
+      tower.spawnTimer -= dt;
+      if (tower.spawnTimer <= 0) towerSpawnWave();
+
+      for (let i = tower.zombies.length - 1; i >= 0; i -= 1) {
+        const zombie = tower.zombies[i];
+        if (zombie.hit > 0) zombie.hit = Math.max(0, zombie.hit - dt);
+        if (zombie.state === 'wait') {
+          zombie.delay -= dt;
+          if (zombie.delay <= 0) zombie.state = 'descend';
+        } else if (zombie.state === 'descend') {
+          zombie.descent = Math.min(1, zombie.descent + dt / zombie.duration);
+          const eased = 1 - Math.pow(1 - zombie.descent, 2);
+          zombie.y = -36 + (tower.roofY + 36) * eased;
+          zombie.x = zombie.ropeX + Math.sin(tower.time * 3.2 + zombie.seed) * 3;
+          if (zombie.descent >= 1) {
+            zombie.state = 'roof';
+            zombie.y = tower.roofY;
+            zombie.x = zombie.ropeX;
+          }
+        } else {
+          zombie.y = tower.roofY;
+          const dx = tower.player.x - zombie.x;
+          if (Math.abs(dx) > 28) zombie.x += Math.sign(dx) * zombie.speed * dt;
+          if (Math.abs(dx) < 36) tower.health = Math.max(0, tower.health - dt * 4.5);
+        }
+      }
+
+      for (let i = tower.bullets.length - 1; i >= 0; i -= 1) {
+        const bullet = tower.bullets[i];
+        bullet.x += bullet.vx * dt;
+        bullet.y += bullet.vy * dt;
+        bullet.life -= dt;
+        let hit = false;
+        if (bullet.life <= 0 || bullet.x < -20 || bullet.x > tower.width + 20 || bullet.y < -30 || bullet.y > tower.height + 20) {
+          tower.bullets.splice(i, 1);
+          continue;
+        }
+        for (let j = tower.zombies.length - 1; j >= 0; j -= 1) {
+          const zombie = tower.zombies[j];
+          if (Math.abs(bullet.x - zombie.x) < 14 && bullet.y > zombie.y - 68 && bullet.y < zombie.y + 7) {
+            zombie.hp -= 1;
+            zombie.hit = 0.14;
+            hit = true;
+            towerBurst(bullet.x, bullet.y, '#d8b47b', 3);
+            if (zombie.hp <= 0) {
+              tower.score += 10;
+              towerBurst(zombie.x, zombie.y - 38, '#5f8d61', 9);
+              tower.zombies.splice(j, 1);
+            }
+            break;
+          }
+        }
+        if (hit) tower.bullets.splice(i, 1);
+      }
+
+      for (let i = tower.particles.length - 1; i >= 0; i -= 1) {
+        const particle = tower.particles[i];
+        particle.life -= dt;
+        if (particle.life <= 0) {
+          tower.particles.splice(i, 1);
+          continue;
+        }
+        particle.x += particle.vx * dt;
+        particle.y += particle.vy * dt;
+        particle.vy += 220 * dt;
+      }
+
+      if (tower.health <= 0) {
+        tower.health = 0;
+        tower.gameOver = true;
+        towerBurst(tower.player.x, tower.roofY - 38, '#d23b2e', 14);
+      }
+    }
+
+    function towerDrawSkyline(ctx) {
+      for (let layer = 0; layer < 2; layer += 1) {
+        let x = -32;
+        let index = 0;
+        while (x < tower.width + 40) {
+          const buildingWidth = 34 + ((index * 37 + layer * 19) % 56);
+          const height = 38 + ((index * 53 + layer * 41) % (105 + layer * 42));
+          const base = tower.roofY - 6 - layer * 5;
+          ctx.fillStyle = layer === 0 ? '#1b2a32' : '#111e26';
+          ctx.fillRect(x, base - height, buildingWidth, height);
+          if (index % 2 === 0) {
+            ctx.fillStyle = layer === 0 ? 'rgba(238,178,106,.18)' : 'rgba(238,178,106,.1)';
+            for (let wy = base - height + 12; wy < base - 12; wy += 16) {
+              for (let wx = x + 7; wx < x + buildingWidth - 7; wx += 13) {
+                if ((wx + wy + layer) % 3 === 0) ctx.fillRect(wx, wy, 4, 6);
+              }
+            }
+          }
+          x += buildingWidth + 7;
+          index += 1;
+        }
+      }
+    }
+
+    function towerDrawZombie(ctx, zombie) {
+      const descending = zombie.state !== 'roof';
+      const fade = zombie.hit > 0 ? 0.55 : 1;
+      const stride = descending ? 0 : Math.sin(tower.time * 9 + zombie.seed) * 5;
+      ctx.save();
+      ctx.translate(zombie.x, zombie.y);
+      ctx.globalAlpha = fade;
+
+      if (descending) {
+        ctx.strokeStyle = '#253438';
+        ctx.lineWidth = 7;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(-6, -32);
+        ctx.lineTo(-9, -8);
+        ctx.moveTo(6, -32);
+        ctx.lineTo(10, -6);
+        ctx.stroke();
+        ctx.fillStyle = '#4b7252';
+        ctx.fillRect(-11, -57, 22, 28);
+        ctx.fillStyle = '#18262b';
+        ctx.fillRect(-12, -36, 24, 7);
+        ctx.strokeStyle = '#4b7252';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(-8, -54);
+        ctx.lineTo(-15, -74);
+        ctx.moveTo(8, -54);
+        ctx.lineTo(15, -74);
+        ctx.stroke();
+        ctx.fillStyle = '#b8a28b';
+        ctx.beginPath();
+        ctx.arc(0, -65, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#1d201d';
+        ctx.beginPath();
+        ctx.arc(0, -69, 8, Math.PI, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#d94738';
+        ctx.fillRect(-5, -66, 3, 2);
+        ctx.fillRect(2, -66, 3, 2);
+      } else {
+        ctx.fillStyle = '#202d31';
+        ctx.fillRect(-9, -30, 7, 30 + stride);
+        ctx.fillRect(2, -30, 7, 30 - stride);
+        ctx.fillStyle = '#3e6447';
+        ctx.fillRect(-12, -58, 24, 30);
+        ctx.fillStyle = '#283b33';
+        ctx.fillRect(-12, -36, 24, 7);
+        ctx.strokeStyle = '#42694d';
+        ctx.lineWidth = 6;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(-11, -54);
+        ctx.lineTo(-21 - stride * 0.4, -36);
+        ctx.moveTo(11, -54);
+        ctx.lineTo(21 + stride * 0.4, -37);
+        ctx.stroke();
+        ctx.fillStyle = '#b8a28b';
+        ctx.beginPath();
+        ctx.arc(0, -66, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#20231f';
+        ctx.beginPath();
+        ctx.arc(0, -70, 8, Math.PI, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#e2543f';
+        ctx.fillRect(-5, -67, 3, 2);
+        ctx.fillRect(2, -67, 3, 2);
+      }
+
+      if (zombie.hp < zombie.maxHp && zombie.state === 'roof') {
+        ctx.globalAlpha = 0.8;
+        ctx.fillStyle = '#281412';
+        ctx.fillRect(-15, -83, 30, 4);
+        ctx.fillStyle = '#d65c47';
+        ctx.fillRect(-15, -83, 30 * Math.max(0, zombie.hp / zombie.maxHp), 4);
+      }
+      ctx.restore();
+    }
+
+    function towerDrawPlayer(ctx) {
+      const base = tower.roofY;
+      const x = tower.player.x;
+      const angle = tower.player.angle;
+      ctx.save();
+      ctx.translate(x, base);
+      ctx.fillStyle = '#1c292c';
+      ctx.fillRect(-9, -30, 7, 30);
+      ctx.fillRect(2, -30, 7, 30);
+      ctx.fillStyle = '#3f6180';
+      ctx.fillRect(-12, -60, 24, 31);
+      ctx.fillStyle = '#263d4b';
+      ctx.fillRect(-12, -37, 24, 7);
+      ctx.fillStyle = '#c8b092';
+      ctx.beginPath();
+      ctx.arc(0, -68, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#202522';
+      ctx.beginPath();
+      ctx.arc(0, -72, 8, Math.PI, Math.PI * 2);
+      ctx.fill();
+      ctx.save();
+      ctx.translate(0, -47);
+      ctx.rotate(angle);
+      ctx.strokeStyle = '#cbb18b';
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(24, 0);
+      ctx.stroke();
+      ctx.strokeStyle = '#252c2b';
+      ctx.lineWidth = 7;
+      ctx.beginPath();
+      ctx.moveTo(18, 0);
+      ctx.lineTo(38, 0);
+      ctx.stroke();
+      if (tower.flash > 0) {
+        ctx.fillStyle = '#ffd17b';
+        ctx.beginPath();
+        ctx.moveTo(38, 0);
+        ctx.lineTo(49, -5);
+        ctx.lineTo(46, 0);
+        ctx.lineTo(49, 5);
+        ctx.closePath();
+        ctx.fill();
+      }
+      ctx.restore();
+      ctx.restore();
+    }
+
+    function towerDrawRooftop(ctx) {
+      ctx.fillStyle = '#101a1e';
+      ctx.fillRect(0, tower.roofY, tower.width, tower.height - tower.roofY);
+      ctx.fillStyle = '#202c30';
+      ctx.fillRect(0, tower.roofY, tower.width, 11);
+      ctx.fillStyle = '#344247';
+      ctx.fillRect(0, tower.roofY + 11, tower.width, 3);
+      ctx.strokeStyle = 'rgba(136,158,155,.13)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < tower.width; x += 46) {
+        ctx.beginPath();
+        ctx.moveTo(x, tower.roofY + 14);
+        ctx.lineTo(x - 24, tower.height);
+        ctx.stroke();
+      }
+      ctx.fillStyle = '#182428';
+      ctx.fillRect(tower.width * 0.06, tower.roofY - 36, 58, 25);
+      ctx.fillRect(tower.width * 0.09, tower.roofY - 43, 30, 7);
+      ctx.strokeStyle = '#455c5e';
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 4; i += 1) {
+        ctx.beginPath();
+        ctx.moveTo(tower.width * 0.07, tower.roofY - 30 + i * 5);
+        ctx.lineTo(tower.width * 0.06 + 52, tower.roofY - 30 + i * 5);
+        ctx.stroke();
+      }
+      ctx.fillStyle = '#263439';
+      ctx.fillRect(tower.width * 0.83, tower.roofY - 25, 34, 25);
+      ctx.fillStyle = '#6d4c39';
+      ctx.fillRect(tower.width * 0.87, tower.roofY - 126, 4, 104);
+      ctx.fillStyle = '#a64c35';
+      ctx.beginPath();
+      ctx.arc(tower.width * 0.872, tower.roofY - 129, 3.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(187,146,100,.4)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(tower.width * 0.34, tower.roofY - 15);
+      ctx.bezierCurveTo(tower.width * 0.46, tower.roofY - 2, tower.width * 0.62, tower.roofY - 20, tower.width * 0.74, tower.roofY - 8);
+      ctx.stroke();
+    }
+
+    function towerDrawHud(ctx) {
+      ctx.fillStyle = 'rgba(5,9,12,.9)';
+      ctx.fillRect(0, 0, tower.width, 67);
+      ctx.fillStyle = '#f0d6b0';
+      ctx.font = '900 19px Impact, "Arial Black", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('TOWER', 16, 24);
+      ctx.fillStyle = '#8b9b98';
+      ctx.font = '700 9px "Trebuchet MS", sans-serif';
+      ctx.fillText('ROPE INSERTION // ROOFTOP', 16, 38);
+      const healthWidth = Math.min(148, tower.width * 0.33);
+      ctx.fillStyle = '#2b1a16';
+      ctx.fillRect(16, 47, healthWidth, 7);
+      ctx.fillStyle = tower.health > 35 ? '#d8aa52' : '#d34a37';
+      ctx.fillRect(16, 47, healthWidth * (tower.health / 100), 7);
+      ctx.fillStyle = '#6f7d79';
+      ctx.font = '700 8px "Trebuchet MS", sans-serif';
+      ctx.fillText('HEALTH', 16, 63);
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#e9d4b5';
+      ctx.font = '700 11px "Trebuchet MS", sans-serif';
+      ctx.fillText('WAVE ' + String(tower.wave).padStart(2, '0'), tower.width - 16, 23);
+      ctx.fillText('SCORE ' + String(tower.score).padStart(4, '0'), tower.width - 16, 38);
+      ctx.fillStyle = tower.reload > 0 ? '#d08a54' : '#9dada7';
+      ctx.fillText(tower.reload > 0 ? 'RELOADING…' : 'AMMO ' + String(tower.ammo).padStart(2, '0') + '/' + tower.maxAmmo, tower.width - 16, 58);
+    }
+
+    function towerDraw() {
+      const ctx = towerCtx;
+      const width = tower.width;
+      const height = tower.height;
+      const roofY = tower.roofY;
+      ctx.clearRect(0, 0, width, height);
+
+      const sky = ctx.createLinearGradient(0, 0, 0, roofY);
+      sky.addColorStop(0, '#07121d');
+      sky.addColorStop(0.52, '#1b3442');
+      sky.addColorStop(0.82, '#795044');
+      sky.addColorStop(1, '#c47751');
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, width, roofY);
+
+      ctx.fillStyle = 'rgba(245,215,168,.7)';
+      ctx.beginPath();
+      ctx.arc(width * 0.77, height * 0.18, 22, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(245,215,168,.06)';
+      ctx.beginPath();
+      ctx.arc(width * 0.77, height * 0.18, 40, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(22,38,48,.34)';
+      ctx.fillRect(0, height * 0.27, width, 7);
+      ctx.fillRect(width * 0.17, height * 0.35, width * 0.46, 5);
+
+      towerDrawSkyline(ctx);
+      towerDrawRooftop(ctx);
+
+      for (let i = 0; i < tower.ropes.length; i += 1) {
+        const rope = tower.ropes[i];
+        const sway = Math.sin(tower.time * 1.2 + i * 2.1) * 2;
+        ctx.strokeStyle = 'rgba(218,193,145,.72)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(rope.x - 2, 0);
+        ctx.lineTo(rope.x + sway, roofY - 11);
+        ctx.stroke();
+        ctx.fillStyle = '#887556';
+        ctx.fillRect(rope.x - 5 + sway, roofY - 14, 10, 4);
+      }
+
+      const ordered = tower.zombies.slice().sort((a, b) => a.y - b.y);
+      ordered.forEach(zombie => towerDrawZombie(ctx, zombie));
+      towerDrawPlayer(ctx);
+
+      ctx.fillStyle = '#f5d39a';
+      tower.bullets.forEach(bullet => {
+        ctx.beginPath();
+        ctx.arc(bullet.x, bullet.y, 2.3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,208,125,.5)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(bullet.x, bullet.y);
+        ctx.lineTo(bullet.x - bullet.vx * 0.025, bullet.y - bullet.vy * 0.025);
+        ctx.stroke();
+      });
+      tower.particles.forEach(particle => {
+        ctx.globalAlpha = Math.max(0, particle.life / particle.max);
+        ctx.fillStyle = particle.color;
+        ctx.fillRect(particle.x - 1.5, particle.y - 1.5, 3, 3);
+      });
+      ctx.globalAlpha = 1;
+
+      if (!tower.gameOver) {
+        ctx.strokeStyle = 'rgba(255,202,99,.85)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(tower.pointer.x, tower.pointer.y, 8, 0, Math.PI * 2);
+        ctx.moveTo(tower.pointer.x - 13, tower.pointer.y);
+        ctx.lineTo(tower.pointer.x - 4, tower.pointer.y);
+        ctx.moveTo(tower.pointer.x + 4, tower.pointer.y);
+        ctx.lineTo(tower.pointer.x + 13, tower.pointer.y);
+        ctx.moveTo(tower.pointer.x, tower.pointer.y - 13);
+        ctx.lineTo(tower.pointer.x, tower.pointer.y - 4);
+        ctx.moveTo(tower.pointer.x, tower.pointer.y + 4);
+        ctx.lineTo(tower.pointer.x, tower.pointer.y + 13);
+        ctx.stroke();
+      }
+
+      towerDrawHud(ctx);
+
+      if (tower.intro > 0 && !tower.gameOver) {
+        const alpha = Math.min(1, tower.intro / 0.55);
+        ctx.globalAlpha = alpha * 0.92;
+        ctx.fillStyle = '#f3dfc2';
+        ctx.textAlign = 'center';
+        ctx.font = '900 25px Impact, "Arial Black", sans-serif';
+        ctx.fillText('ROPE INSERTION', width / 2, roofY * 0.38);
+        ctx.fillStyle = '#d9b47b';
+        ctx.font = '700 11px "Trebuchet MS", sans-serif';
+        ctx.fillText('THE CHOPPER STAYS OUT OF SIGHT', width / 2, roofY * 0.38 + 19);
+        ctx.globalAlpha = 1;
+      }
+
+      ctx.fillStyle = 'rgba(0,0,0,.48)';
+      ctx.fillRect(0, height - 25, width, 25);
+      ctx.fillStyle = '#c1b2a0';
+      ctx.textAlign = 'center';
+      ctx.font = '700 9px "Trebuchet MS", sans-serif';
+      ctx.fillText('A/D MOVE   ·   MOUSE AIM   ·   CLICK/SPACE FIRE   ·   R RELOAD   ·   ESC MODES', width / 2, height - 9);
+
+      if (tower.gameOver) {
+        ctx.fillStyle = 'rgba(3,7,9,.72)';
+        ctx.fillRect(0, 0, width, height);
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#f0d6b0';
+        ctx.font = '900 32px Impact, "Arial Black", sans-serif';
+        ctx.fillText('TOWER OVERRUN', width / 2, height * 0.4);
+        ctx.fillStyle = '#d7b183';
+        ctx.font = '700 13px "Trebuchet MS", sans-serif';
+        ctx.fillText('SCORE ' + tower.score + '   //   WAVE ' + tower.wave, width / 2, height * 0.4 + 26);
+        ctx.fillStyle = '#f0d6b0';
+        ctx.font = '700 11px "Trebuchet MS", sans-serif';
+        ctx.fillText('CLICK OR PRESS ENTER TO REDEPLOY', width / 2, height * 0.4 + 58);
+        ctx.fillStyle = '#a88e7b';
+        ctx.fillText('ESC FOR MODE SELECT', width / 2, height * 0.4 + 77);
+      }
+    }
+
+    function towerContextMenu(event) {
+      event.preventDefault();
+    }
+
+    function towerPointerMove(event) {
+      if (!tower.active) return;
+      const rect = towerCanvas.getBoundingClientRect();
+      tower.pointer.x = event.clientX - rect.left;
+      tower.pointer.y = event.clientY - rect.top;
+      tower.player.angle = Math.atan2(tower.pointer.y - (tower.roofY - 47), tower.pointer.x - tower.player.x);
+    }
+
+    function towerPointerDown(event) {
+      if (!tower.active) return;
+      event.preventDefault();
+      if (tower.gameOver) {
+        towerReset();
+        return;
+      }
+      towerPointerMove(event);
+      tower.pointer.down = true;
+      towerFire();
+    }
+
+    function towerPointerUp() {
+      tower.pointer.down = false;
+    }
+
+    function towerKeyDown(event) {
+      if (!tower.active) return;
+      if (event.code === 'Space' || event.code === 'ArrowLeft' || event.code === 'ArrowRight' || event.code === 'KeyA' || event.code === 'KeyD' || event.code === 'KeyR' || event.code === 'Enter') {
+        event.preventDefault();
+      }
+      tower.keys[event.code] = true;
+      if (event.code === 'KeyR') {
+        if (tower.gameOver) towerReset();
+        else towerReload();
+      }
+      if (event.code === 'Enter' && tower.gameOver) towerReset();
+    }
+
+    function towerKeyUp(event) {
+      tower.keys[event.code] = false;
+    }
+
+    function towerLoop(timestamp) {
+      if (!tower.active) return;
+      const dt = Math.min(0.033, Math.max(0, (timestamp - tower.last) / 1000));
+      tower.last = timestamp;
+      towerUpdate(dt);
+      towerDraw();
+      tower.raf = requestAnimationFrame(towerLoop);
+    }
+
+    function startTower() {
+      if (tower.active) return;
+      tower.active = true;
+      towerCanvas.hidden = false;
+      canvas.style.display = 'none';
+      loading.hidden = true;
+      controlHint.classList.remove('show');
+      towerResize();
+      towerReset();
+      window.addEventListener('resize', towerResize);
+      window.addEventListener('keydown', towerKeyDown);
+      window.addEventListener('keyup', towerKeyUp);
+      window.addEventListener('pointerup', towerPointerUp);
+      towerCanvas.addEventListener('pointermove', towerPointerMove);
+      towerCanvas.addEventListener('pointerdown', towerPointerDown);
+      towerCanvas.addEventListener('contextmenu', towerContextMenu);
+      towerCanvas.focus();
+      tower.last = performance.now();
+      tower.raf = requestAnimationFrame(towerLoop);
+    }
+
+    function stopTower() {
+      if (!tower.active) return;
+      tower.active = false;
+      if (tower.raf) cancelAnimationFrame(tower.raf);
+      tower.raf = 0;
+      window.removeEventListener('resize', towerResize);
+      window.removeEventListener('keydown', towerKeyDown);
+      window.removeEventListener('keyup', towerKeyUp);
+      window.removeEventListener('pointerup', towerPointerUp);
+      towerCanvas.removeEventListener('pointermove', towerPointerMove);
+      towerCanvas.removeEventListener('pointerdown', towerPointerDown);
+      towerCanvas.removeEventListener('contextmenu', towerContextMenu);
+      towerCanvas.hidden = true;
+      canvas.style.display = 'block';
+      towerCtx.clearRect(0, 0, tower.width, tower.height);
     }
 
     document.addEventListener('keydown', event => {
