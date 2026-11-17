@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fragen</title>
+  <meta name="description" content="Play Fragen, a fast-paced multiplayer browser FPS.">
+  <meta http-equiv="refresh" content="0; url=https://whatchamacallitexe.github.io/fragen/">
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      background: #090c15; color: #e9d5ff;
+      font-family: system-ui, sans-serif;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+    }
+    a { color: #e9d5ff; font-weight: bold; }
+  </style>
+  <script>
+    (function () {
+      var target = "https://whatchamacallitexe.github.io/fragen/";
+      try {
+        if (window.top && window.top !== window) {
+          window.top.location.replace(target);
+          return;
+        }
+      } catch (e) {}
+      window.location.replace(target);
+    })();
+  </script>
+</head>
+<body>
+  <div>
+    <p>Loading Fragen…</p>
+    <p>If you are not redirected, <a href="https://whatchamacallitexe.github.io/fragen/" target="_top">click here</a>.</p>
+  </div>
+</body>
+</html>
