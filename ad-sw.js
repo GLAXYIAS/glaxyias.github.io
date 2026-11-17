@@ -15,7 +15,8 @@ var AD_HOSTS = [
   'venatusmedia.com', 'gamemonetize.com', 'gamedistribution.com', 'adnxs.com', 'criteo.com',
   'revcontent.com', 'mgid.com', 'scorecardresearch.com', 'quantserve.com', 'hotjar.com',
   'connect.facebook.net', 'btloader.com', 'confiant.com', 'snigelweb.com', 'freestar.com',
-  'pubmatic.com', 'rubiconproject.com'
+  'pubmatic.com', 'rubiconproject.com', 'poki.com', 'poki-sdk', 'game-cdn.poki.com',
+  'crazygames.com', 'sdk.crazygames.com', 'gdsdk.com', 'html5.gamedistribution.com'
 ];
 var AD_PATH = /\/(pagead|adsbygoogle|adserver|ads?\.js|adframe|prebid|popunder|banner-ads?)\b/i;
 

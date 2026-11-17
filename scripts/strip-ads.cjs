@@ -2,9 +2,9 @@
  *
  * The site already ships JS/adblock.js, but no page loaded it, so the games' ad tags ran
  * unchecked. This puts the blocker first in <head> on every page, deletes the hard-coded ad
- * script tags (AdSense, AdinPlay, Cadmus, Google IMA video ads, AdThrive, btloader, pop/push
- * networks), and teaches the blocker the ad hosts it was missing plus stubs for games that
- * expect an ad SDK.
+ * script tags (AdSense, AdinPlay, Cadmus, Google IMA video ads, AdThrive, btloader, Poki /
+ * CrazyGames / GameDistribution SDKs, pop/push networks), removes injected popunder blocks, and
+ * teaches the blocker the hosts it was missing plus stubs for games that expect an ad SDK.
  *
  * Idempotent: run from the repository root, safe to run again after new games are added.
  */
@@ -21,6 +21,7 @@ const AD_HOSTS = [
   'onclickads', 'juicyads', 'adcash', 'tsyndicate', 'hilltopads', 'monetag',
   'gamemonetize', 'gamedistribution', 'playwire', 'nitropay', 'venatus', 'ezoic',
   'btloader', 'confiant', 'snigel', 'freestar', 'pubmatic', 'rubiconproject',
+  'poki-sdk', 'game-cdn\\.poki', 'poki\\.com', 'crazygames', 'gdsdk',
 ].join('|');
 const AD_SCRIPT = new RegExp(
   '<script\\b[^>]*\\bsrc\\s*=\\s*["\'][^"\']*(?:' + AD_HOSTS + ')[^"\']*["\'][^>]*>\\s*</script>',
@@ -55,6 +56,13 @@ for (const file of walk(ROOT)) {
     text = text.replace(AD_SCRIPT, '');
   }
 
+  // Pages copied from ad-heavy sites carry injected blocks that build a hidden iframe and run
+  // obfuscated code inside it (popunders). Nothing legitimate uses these markers.
+  const beforeInjection = text;
+  text = text.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, (block) =>
+    /__CF\$cv\$params|challenge-platform\/h\/b/.test(block) ? '' : block);
+  if (text !== beforeInjection) stripped += 1;
+
   if (!/JS\/adblock\.js/.test(text)) {
     if (/<head[^>]*>/i.test(text)) {
       text = text.replace(/<head[^>]*>/i, (m) => m + BLOCKER_TAG);
@@ -77,7 +85,9 @@ if (fs.existsSync(blockerPath)) {
   const anchor = "'connect.facebook.net'";
   const extra = anchor + ", 'imasdk.googleapis.com', 'script.ac', 'adthrive.com', 'raptive.com'," +
     " 'adinplay.com', 'adnplay.com', 'marmalade.tv', 'btloader.com', 'confiant.com'," +
-    " 'snigelweb.com', 'freestar.com', 'pubmatic.com', 'rubiconproject.com'";
+    " 'snigelweb.com', 'freestar.com', 'pubmatic.com', 'rubiconproject.com'," +
+    " 'poki.com', 'poki-sdk', 'game-cdn.poki.com', 'crazygames.com', 'sdk.crazygames.com'," +
+    " 'gdsdk.com', 'html5.gamedistribution.com'";
   if (!js.includes("'script.ac'")) {
     if (!js.includes(anchor)) throw new Error('adblock.js domain list changed; update strip-ads.cjs');
     js = js.replace(anchor, extra);
@@ -88,7 +98,7 @@ if (fs.existsSync(blockerPath)) {
       '/* Stubs for games that talk to an ad SDK directly: with the SDK blocked the page must still run. */',
       '(function () {',
       '  window.__adsStubbed = true;',
-      '  var AD = /(googlesyndication|googleadservices|doubleclick|adsbygoogle|google-analytics|googletagmanager|googletagservices|adinplay|script\\.ac|2mdn\\.net|imasdk\\.googleapis|adthrive|raptive|taboola|outbrain|adsterra|exoclick|popads|onclickads|juicyads|adcash|tsyndicate|hilltopads|monetag|ezoic|nitropay|playwire|venatus|btloader|confiant|snigel|freestar|pubmatic|rubiconproject)/i;',
+      '  var AD = /(googlesyndication|googleadservices|doubleclick|adsbygoogle|google-analytics|googletagmanager|googletagservices|adinplay|script\\.ac|2mdn\\.net|imasdk\\.googleapis|adthrive|raptive|taboola|outbrain|adsterra|exoclick|popads|onclickads|juicyads|adcash|tsyndicate|hilltopads|monetag|ezoic|nitropay|playwire|venatus|btloader|confiant|snigel|freestar|pubmatic|rubiconproject|poki|crazygames|gdsdk|gamedistribution)/i;',
       '  var bad = function (url) { return !!url && AD.test(String(url)); };',
       '  // Removing an ad node later still lets its request go out, so refuse the URL up front.',
       '  [HTMLScriptElement.prototype, HTMLIFrameElement.prototype].forEach(function (proto) {',
@@ -107,6 +117,33 @@ if (fs.existsSync(blockerPath)) {
       '    document.write = function (html) { if (bad(html)) return; return write(html); };',
       '  } catch (e) {}',
       '  var run = function (fn) { try { if (typeof fn === "function") fn(); } catch (e) {} };',
+      '  // Game-portal SDKs: without them the game waits forever, with them it shows ads.',
+      '  try {',
+      '    if (!window.PokiSDK) window.PokiSDK = {',
+      '      init: function () { return Promise.resolve(); },',
+      '      gameLoadingFinished: function () {}, gameplayStart: function () {}, gameplayStop: function () {},',
+      '      commercialBreak: function () { return Promise.resolve(true); },',
+      '      rewardedBreak: function () { return Promise.resolve(true); },',
+      '      displayAd: function () { return Promise.resolve(); }, destroyAd: function () {},',
+      '      getLanguage: function () { return Promise.resolve("en"); },',
+      '      setDebug: function () {}, captureError: function () {}',
+      '    };',
+      '    if (!window.gdsdk) window.gdsdk = {',
+      '      showAd: function () { return Promise.resolve(); },',
+      '      preloadAd: function () { return Promise.resolve(); },',
+      '      canShowAd: function () { return Promise.resolve(false); },',
+      '      openConsole: function () {}',
+      '    };',
+      '    if (!window.CrazyGames) window.CrazyGames = { SDK: {',
+      '      environment: "disabled",',
+      '      init: function () { return Promise.resolve(); },',
+      '      game: { gameplayStart: function () {}, gameplayStop: function () {}, happytime: function () {},',
+      '        inviteLink: function () { return Promise.resolve(""); }, showInviteButton: function () {}, hideInviteButton: function () {} },',
+      '      ad: { requestAd: function (t, cb) { if (cb && cb.adFinished) cb.adFinished(); }, hasAdblock: function () { return Promise.resolve(false); } },',
+      '      data: { getItem: function () { return null; }, setItem: function () {}, removeItem: function () {} },',
+      '      user: { getUser: function () { return Promise.resolve(null); }, isUserAccountAvailable: false, showAuthPrompt: function () { return Promise.resolve(null); } }',
+      '    } };',
+      '  } catch (e) {}',
       '  try {',
       '    if (!window.aiptag) {',
       '      window.aiptag = {',
