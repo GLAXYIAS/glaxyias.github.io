@@ -2,9 +2,8 @@
  *
  * The site already ships JS/adblock.js, but no page loaded it, so the games' ad tags ran
  * unchecked. This puts the blocker first in <head> on every page, deletes the hard-coded ad
- * script tags (AdSense, AdinPlay, Cadmus, Google IMA video ads, AdThrive, btloader, Poki /
- * CrazyGames / GameDistribution SDKs, pop/push networks), removes injected popunder blocks, and
- * teaches the blocker the hosts it was missing plus stubs for games that expect an ad SDK.
+ * script tags (AdSense, AdinPlay, Cadmus, Google IMA video ads, AdThrive, pop/push networks),
+ * and teaches the blocker the ad hosts it was missing plus stubs for games that expect an ad SDK.
  *
  * Idempotent: run from the repository root, safe to run again after new games are added.
  */
@@ -22,6 +21,7 @@ const AD_HOSTS = [
   'gamemonetize', 'gamedistribution', 'playwire', 'nitropay', 'venatus', 'ezoic',
   'btloader', 'confiant', 'snigel', 'freestar', 'pubmatic', 'rubiconproject',
   'poki-sdk', 'game-cdn\\.poki', 'poki\\.com', 'crazygames', 'gdsdk',
+  'tag\\.min\\.js', 'aiptag',
 ].join('|');
 const AD_SCRIPT = new RegExp(
   '<script\\b[^>]*\\bsrc\\s*=\\s*["\'][^"\']*(?:' + AD_HOSTS + ')[^"\']*["\'][^>]*>\\s*</script>',
@@ -63,6 +63,14 @@ for (const file of walk(ROOT)) {
     /__CF\$cv\$params|challenge-platform\/h\/b/.test(block) ? '' : block);
   if (text !== beforeInjection) stripped += 1;
 
+  // AdInPlay runs from several small inline blocks that start the ad manager; the game glue
+  // below them keeps its own script and falls back to the blocker's no-op aiptag stub.
+  text = text.replace(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi, (block, attrs, body) => {
+    if (/\bsrc\s*=/i.test(attrs) || body.length > 6000) return block;
+    if (/createUnityInstance|unityFramework|gameInstance/.test(body)) return block;
+    return /\baiptag\b|aipDisplayTag/.test(body) ? '' : block;
+  });
+
   if (!/JS\/adblock\.js/.test(text)) {
     if (/<head[^>]*>/i.test(text)) {
       text = text.replace(/<head[^>]*>/i, (m) => m + BLOCKER_TAG);
@@ -71,7 +79,10 @@ for (const file of walk(ROOT)) {
       text = text.replace(/<html[^>]*>/i, (m) => m + BLOCKER_TAG);
       injected++;
     } else {
-      continue; // fragment, not a page
+      // Malformed pages with no <head> or <html> (usually a stray tag first); a script at the very
+      // top still runs before everything else, so the blocker is in place either way.
+      text = BLOCKER_TAG + '\n' + text;
+      injected++;
     }
   }
 
@@ -112,6 +123,14 @@ if (fs.existsSync(blockerPath)) {
       '      });',
       '    } catch (e) {}',
       '  });',
+      '  // setAttribute("src", ...) skips the property above.',
+      '  try {',
+      '    var setAttr = Element.prototype.setAttribute;',
+      '    Element.prototype.setAttribute = function (name, value) {',
+      '      if (String(name).toLowerCase() === "src" && bad(value)) return;',
+      '      return setAttr.apply(this, arguments);',
+      '    };',
+      '  } catch (e) {}',
       '  try {',
       '    var write = document.write.bind(document);',
       '    document.write = function (html) { if (bad(html)) return; return write(html); };',
@@ -171,7 +190,12 @@ if (fs.existsSync(blockerPath)) {
 }
 
 // The root worker reaches documents rebuilt by games, which an in-page blocker misses.
+const workerSrc = path.join(__dirname, 'ad-sw.js');
 const workerDest = path.join(ROOT, 'ad-sw.js');
+if (fs.existsSync(workerSrc) && !fs.existsSync(workerDest)) {
+  fs.copyFileSync(workerSrc, workerDest);
+  console.log('ad-sw.js added');
+}
 if (fs.existsSync(workerDest) && fs.existsSync(blockerPath)) {
   let js = fs.readFileSync(blockerPath, 'utf8');
   if (!js.includes('ad-sw.js')) {
