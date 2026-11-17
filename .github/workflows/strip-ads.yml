@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: strip-ads
@@ -39,3 +40,10 @@ jobs:
           fi
           git commit -m "Load the ad blocker everywhere and remove ad scripts"
           git push
+
+      # Pushes made with the workflow token do not start other workflows, so the commit above
+      # would never reach Pages on its own. workflow_dispatch is exempt from that rule.
+      - name: Deploy the stripped site
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run static.yml --ref main --repo "$GITHUB_REPOSITORY"
