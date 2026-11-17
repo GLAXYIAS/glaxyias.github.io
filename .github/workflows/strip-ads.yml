@@ -1,0 +1,41 @@
+name: Strip ads
+
+# Loads JS/adblock.js on every page and removes hard-coded ad tags, then commits the result.
+# Run it again after adding games so new pages are covered too.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - scripts/strip-ads.cjs
+      - ad-sw.js
+      - .github/workflows/strip-ads.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: strip-ads
+  cancel-in-progress: true
+
+jobs:
+  strip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Remove ad scripts and load the blocker
+        run: node scripts/strip-ads.cjs
+      - name: Commit the result
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "no ads to strip"
+            exit 0
+          fi
+          git commit -m "Load the ad blocker everywhere and remove ad scripts"
+          git push
