@@ -1,4 +1,5 @@
 /* Fragen and 17-0 catalog additions. Loaded after JS/main.js. */
+/* Published 2026-11-17 */
 (function () {
   "use strict";
 
