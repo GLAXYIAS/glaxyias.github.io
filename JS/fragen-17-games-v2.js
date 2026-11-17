@@ -1,5 +1,6 @@
 /* Fragen and 17-0 catalog additions. Loaded after JS/main.js. */
 /* Direct launch: these two games must not sit inside the sandboxed game shell. */
+/* Published 2026-11-17 */
 (function () {
   "use strict";
 
