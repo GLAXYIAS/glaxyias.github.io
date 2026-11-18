@@ -3635,7 +3635,6 @@ let _0xData = [
   {
     id: "bad-ice-cream-alt",
     title: "Bad Ice Cream Alt",
-    url: "https://whatchamacallitexe.github.io/pack-n/bad-ice-cream-alt/index.html",
     desc: "Play Bad Ice Cream Alt online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/bad-ice-cream-alt.jpg" , tags: ["Cooking"] },
@@ -4813,7 +4812,6 @@ let _0xData = [
   {
     id: "civiballs-2",
     title: "Civiballs 2",
-    url: "https://whatchamacallitexe.github.io/pack-n/civiballs-2/index.html",
     desc: "Play Civiballs 2 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/civiballs-2.jpg" , tags: ["Puzzle"] },
@@ -5148,7 +5146,6 @@ let _0xData = [
   {
     id: "chips-challenge",
     title: "Chips Challenge",
-    url: "https://whatchamacallitexe.github.io/pack-o/chips-challenge/index.html",
     desc: "Play Chips Challenge online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/chips-challenge.jpg" , tags: ["Casual"] },
@@ -5221,7 +5218,6 @@ let _0xData = [
   {
     id: "dbzdevolution",
     title: "Dbzdevolution",
-    url: "https://whatchamacallitexe.github.io/pack-p/dbzdevolution/index.html",
     desc: "Play Dbzdevolution online in your browser.",
     popular: false
   , image: "../Games/_covers/dbzdevolution.svg" , tags: ["Idle"] },
@@ -5325,7 +5321,6 @@ let _0xData = [
   {
     id: "dementium",
     title: "Dementium",
-    url: "https://whatchamacallitexe.github.io/pack-p/dementium/index.html",
     desc: "Play Dementium online in your browser.",
     popular: false
   , image: "../Games/_covers/dementium.svg" , tags: ["Horror"] },
@@ -5345,7 +5340,6 @@ let _0xData = [
   {
     id: "diamondhollow2",
     title: "Diamondhollow2",
-    url: "https://whatchamacallitexe.github.io/pack-p/diamondhollow2/index.html",
     desc: "Play Diamondhollow2 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/diamondhollow2.jpg" , tags: ["Casual"] },
@@ -5365,7 +5359,6 @@ let _0xData = [
   {
     id: "digdeep",
     title: "Digdeep",
-    url: "https://whatchamacallitexe.github.io/pack-p/digdeep/index.html",
     desc: "Play Digdeep online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/digdeep.jpg" , tags: ["Casual"] },
@@ -7543,7 +7536,6 @@ let _0xData = [
   {
     id: "king-of-fighters-94",
     title: "King Of Fighters 94",
-    url: "https://whatchamacallitexe.github.io/pack-z/king-of-fighters-94/index.html",
     desc: "Play King Of Fighters 94 online in your browser.",
     popular: false
   , image: "../Games/_covers/king-of-fighters-94.svg" , tags: ["Fighting", "Action"] },
@@ -7770,7 +7762,6 @@ let _0xData = [
   {
     id: "losangelesshark",
     title: "Losangelesshark",
-    url: "https://whatchamacallitexe.github.io/pack-z/losangelesshark/index.html",
     desc: "Play Losangelesshark online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/losangelesshark.jpg" , tags: ["Casual"] },
@@ -8815,7 +8806,6 @@ let _0xData = [
   {
     id: "tonyhawkproskater",
     title: "Tonyhawkproskater",
-    url: "https://whatchamacallitexe.github.io/pack-ar/tonyhawkproskater/index.html",
     desc: "Play Tonyhawkproskater online in your browser.",
     popular: false
   , image: "../Games/_covers/tonyhawkproskater.svg" , tags: ["Sports"] },
