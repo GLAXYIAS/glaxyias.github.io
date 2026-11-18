@@ -1,0 +1,163 @@
+name: Add Azgames games
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  add:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Mirror the games and add catalog cards
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, re, urllib.request
+
+          UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
+
+          def fetch(url, tries=4):
+              last = None
+              for _ in range(tries):
+                  try:
+                      req = urllib.request.Request(url, headers=UA)
+                      with urllib.request.urlopen(req, timeout=180) as res:
+                          return res.read()
+                  except Exception as exc:
+                      last = exc
+              raise SystemExit("download failed: %s (%s)" % (url, last))
+
+          GAMES = [
+              {
+                  "slug": "ragdoll-playground",
+                  "host": "https://game.azgame.io/ragdoll-playground/",
+                  "ver": "25041512",
+                  "name": "ragdoll-playground-v25041512",
+                  "id": "az-ragdoll-playground",
+                  "title": "Ragdoll Playground",
+                  "desc": "A physics sandbox where you throw, drag and destroy ragdolls in a fully interactive playground.",
+                  "cover": "https://azgames.io/upload/imgs/ragdollplayground.png",
+                  "tags": ["Non-HTML", "Sandbox", "Simulation"],
+              },
+              {
+                  "slug": "orbit-kick",
+                  "host": "https://gamea.azgame.io/orbit-kick/",
+                  "ver": "25120203",
+                  "name": "orbit-kick-v25120203",
+                  "id": "az-orbit-kick",
+                  "title": "Orbit Kick",
+                  "desc": "Curve your shots around planets and time your kicks to score through orbiting goals.",
+                  "cover": "https://azgames.io/upload/imgs/orbitkick3.png",
+                  "tags": ["Non-HTML", "Sports", "Arcade & Other"],
+              },
+          ]
+
+          for g in GAMES:
+              page = fetch(g["host"]).decode("utf-8", "replace")
+              page = re.sub(r'<link rel="canonical"[^>]*>', "", page, count=1)
+              page = re.sub(r'<script[^>]+src="https://(?:games\.azgame\.io/lib|api\.azgame\.io/static|www\.gstatic\.com)[^"]*"[^>]*>\s*</script>', "", page)
+
+              clean = (
+                  "<script>\n"
+                  'var buildUrl = "Build";\n'
+                  'var versionFolder = "' + g["ver"] + '/";\n'
+                  'var loaderUrl = buildUrl + "/' + g["name"] + '.loader.js";\n'
+                  "var config = {\n"
+                  '  dataUrl: buildUrl + "/' + g["name"] + '.data.unityweb",\n'
+                  '  frameworkUrl: buildUrl + "/' + g["name"] + '.framework.js.unityweb",\n'
+                  '  codeUrl: buildUrl + "/' + g["name"] + '.wasm.unityweb",\n'
+                  '  streamingAssetsUrl: "StreamingAssets",\n'
+                  '  companyName: "azgames.io",\n'
+                  "  productName: " + json.dumps(g["title"]) + ",\n"
+                  '  productVersion: "' + g["ver"] + '"\n'
+                  "};\n"
+                  "config.gameId = " + json.dumps(g["slug"]) + ";\n"
+                  'config.enableMoreGame = "no";\n'
+                  "config.enablePromotion = false;\n"
+                  "</script>"
+              )
+              page, hits = re.subn(r"<script>\s*var buildUrl.*?</script>", clean, page, count=1, flags=re.S)
+              if hits != 1:
+                  raise SystemExit("config block not found: " + g["slug"])
+              page = re.sub(r'<script type="module">.*?</script>', "", page, flags=re.S)
+
+              out = pathlib.Path("Games") / g["slug"]
+              out.mkdir(parents=True, exist_ok=True)
+              (out / "index.html").write_text(page, encoding="utf-8")
+
+              build_base = "https://games.azgame.io/game/%s/%s/Build" % (g["slug"], g["ver"])
+              for suffix in ("loader.js", "data.unityweb", "framework.js.unityweb", "wasm.unityweb"):
+                  name = "%s.%s" % (g["name"], suffix)
+                  data = fetch(build_base + "/" + name)
+                  dest = out / "Build" / name
+                  dest.parent.mkdir(parents=True, exist_ok=True)
+                  dest.write_bytes(data)
+                  print(name, len(data))
+
+              version_dir = out / g["ver"]
+              for rel in (
+                  "theme/game.css",
+                  "logo.png",
+                  "loading.png",
+                  "theme/fonts/Fredoka-Bold.ttf",
+                  "theme/fonts/Fredoka-Bold.woff",
+                  "theme/fonts/Fredoka-Bold.woff2",
+              ):
+                  dest = version_dir / rel
+                  dest.parent.mkdir(parents=True, exist_ok=True)
+                  dest.write_bytes(fetch(g["host"].rstrip("/") + "/" + g["ver"] + "/" + rel))
+
+              cover = pathlib.Path("Games/_covers/actual") / (g["slug"] + ".png")
+              cover.parent.mkdir(parents=True, exist_ok=True)
+              cover.write_bytes(fetch(g["cover"]))
+              print("mirrored", g["slug"])
+
+          main_js = pathlib.Path("JS/main.js")
+          src = main_js.read_text(encoding="utf-8")
+          lines = []
+          for g in GAMES:
+              if ('id: "%s"' % g["id"]) in src:
+                  continue
+              lines.append(
+                  "  { id: %s, title: %s, url: %s, desc: %s, popular: false, image: %s, tags: [%s] },"
+                  % (
+                      json.dumps(g["id"]),
+                      json.dumps(g["title"]),
+                      json.dumps("Games/%s/index.html" % g["slug"]),
+                      json.dumps(g["desc"]),
+                      json.dumps("Games/_covers/actual/%s.png" % g["slug"]),
+                      ", ".join(json.dumps(t) for t in g["tags"]),
+                  )
+              )
+          if lines:
+              marker = "let _0xData = ["
+              idx = src.find(marker)
+              if idx < 0:
+                  raise SystemExit("_0xData not found")
+              insert = idx + len(marker)
+              src = src[:insert] + "\n" + "\n".join(lines) + src[insert:]
+              main_js.write_text(src, encoding="utf-8")
+              print("added", len(lines), "cards")
+          PY
+
+      - name: Commit the mirror
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config http.postBuffer 524288000
+          git config http.version HTTP/1.1
+          git add Games/ragdoll-playground Games/orbit-kick Games/_covers/actual JS/main.js
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+            exit 0
+          fi
+          git commit -m "Add Ragdoll Playground and Orbit Kick"
+          git push origin HEAD:main
