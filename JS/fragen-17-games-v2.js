@@ -49,6 +49,17 @@
     return count;
   }
 
+  function watchBarVisibility(bar) {
+    var grid = document.getElementById("gameGrid");
+    if (!grid) return;
+    var sync = function () {
+      var showing = !!grid.style.display && grid.style.display !== "none";
+      bar.style.setProperty("display", showing ? "flex" : "none", "important");
+    };
+    new MutationObserver(sync).observe(grid, { attributes: true, attributeFilter: ["style"] });
+    sync();
+  }
+
   function addNonHtmlFilter() {
     var bar = document.getElementById("nx-filter-bar");
     var tagSel = document.getElementById("nx-filter-tag");
@@ -97,6 +108,8 @@
         btn.setAttribute("aria-pressed", "false");
       });
     }
+
+    watchBarVisibility(bar);
     return true;
   }
 
