@@ -33,10 +33,10 @@ jobs:
           mkdir -p Games/_covers/actual
           u82="$(og build-a-82-0-team/)"; echo "82-0 cover: $u82"; test -n "$u82"
           u162="$(og build-a-162-0-team/)"; echo "162-0 cover: $u162"; test -n "$u162"
-          ugoat="$(og build-the-goat-team/)"; echo "GOAT cover: $ugoats"; test -n "$ugoats"
+          ug="$(og build-the-goat-team/)"; echo "GOAT cover: $ug"; test -n "$ug"
           curl -fsSL --retry 4 -A 'Mozilla/5.0' "$u82" -o Games/_covers/actual/firstdown-82.png
           curl -fsSL --retry 4 -A 'Mozilla/5.0' "$u162" -o Games/_covers/actual/firstdown-162.png
-          curl -fsSL --retry 4 -A 'Mozilla/5.0' "$ugoats" -o Games/_covers/actual/firstdown-goat.png
+          curl -fsSL --retry 4 -A 'Mozilla/5.0' "$ug" -o Games/_covers/actual/firstdown-goat.png
           curl -fsSL --retry 4 -A 'Mozilla/5.0' 'https://glaxyias.github.io/veck.io/logo-v2.webp' -o Games/_covers/actual/veck-io.webp
           file Games/_covers/actual/firstdown-82.png Games/_covers/actual/firstdown-162.png Games/_covers/actual/firstdown-goat.png Games/_covers/actual/veck-io.webp
 
