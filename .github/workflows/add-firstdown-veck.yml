@@ -22,11 +22,21 @@ jobs:
           echo "afc6efaa367bbbe5cd973f442b6db1f074d6426d5336255aa52d56f5ead95e6b  JS/main.js" | sha256sum --check --strict
 
       - name: Fetch cover images
+        shell: bash
         run: |
+          set -euo pipefail
+          og() {
+            curl -sL -A 'Mozilla/5.0' "https://www.firstdown.studio/$1" \
+              | grep -o 'https://www\.firstdown\.studio/[^"\\]*opengraph-image\.png[^"\\]*' \
+              | head -n 1
+          }
           mkdir -p Games/_covers/actual
-          curl -fsSL --retry 4 -A 'Mozilla/5.0' 'https://www.firstdown.studio/build-a-82-0-team/opengraph-image.png' -o Games/_covers/actual/firstdown-82.png
-          curl -fsSL --retry 4 -A 'Mozilla/5.0' 'https://www.firstdown.studio/build-a-162-0-team/opengraph-image.png' -o Games/_covers/actual/firstdown-162.png
-          curl -fsSL --retry 4 -A 'Mozilla/5.0' 'https://www.firstdown.studio/build-the-goat-team/opengraph-image.png?d2d9488737d00345' -o Games/_covers/actual/firstdown-goat.png
+          u82="$(og build-a-82-0-team/)"; echo "82-0 cover: $u82"; test -n "$u82"
+          u162="$(og build-a-162-0-team/)"; echo "162-0 cover: $u162"; test -n "$u162"
+          ugoat="$(og build-the-goat-team/)"; echo "GOAT cover: $ugoats"; test -n "$ugoats"
+          curl -fsSL --retry 4 -A 'Mozilla/5.0' "$u82" -o Games/_covers/actual/firstdown-82.png
+          curl -fsSL --retry 4 -A 'Mozilla/5.0' "$u162" -o Games/_covers/actual/firstdown-162.png
+          curl -fsSL --retry 4 -A 'Mozilla/5.0' "$ugoats" -o Games/_covers/actual/firstdown-goat.png
           curl -fsSL --retry 4 -A 'Mozilla/5.0' 'https://glaxyias.github.io/veck.io/logo-v2.webp' -o Games/_covers/actual/veck-io.webp
           file Games/_covers/actual/firstdown-82.png Games/_covers/actual/firstdown-162.png Games/_covers/actual/firstdown-goat.png Games/_covers/actual/veck-io.webp
 
