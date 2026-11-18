@@ -7,7 +7,6 @@ let _0xData = [
   { id: "blood", title: "BloodVox", url: "../Games/bloodvox/index.html", desc: "Custom game", popular: true , image: "../Games/_covers/actual/blood.jpg" , tags: ["Horror", "Shooter"] },
   { id: "cloverpit", title: "cloverpit", url: "../Games/cloverpit/index.html", desc: "Clover Pit is a roguelite gambling game where you spin, bet, and chase huge payouts while trying not to go broke.", popular: true , image: "../Games/_covers/actual/cloverpit.jpg" , tags: ["Roguelike", "Horror", "Puzzle"] },
   { id: "feedingablackhole", title: "Feeding A Black Hole", url: "../Games/feedingablackhole/index.html", desc: "Feed a growing black hole, consume objects, and explore the world to become bigger and more powerful.", popular: true, image: "../Games/_covers/actual/feedingablackhole.jpg" , tags: ["Puzzle", "Idle", "Casual"] },
-  { id: "deadsignal", title: "DeadSignal", url: "../Games/DeadSignal/index.html", desc: "A Null-X-Team Special Creation!", popular: true , image: "../Games/_covers/actual/deadsignal.jpg" , tags: ["Horror", "Simulation", "Puzzle"] },
   { id: "y_io", title: "Yohoho.io", url: "../Games/yohoho/index.html", image: "../Games/_covers/actual/y_io.jpg", desc: "A pirate battle royale game where you collect gold and fight opponents.", popular: true , tags: ["Party", "Multiplayer"] },
   { id: "b_er", title: "Bitcoin Clicker", url: "../Games/Bitcoin/index.html", image: "../Games/_covers/actual/b_er.jpg", jsbin: "https://glaxyias.github.io/Bitcoin-clicker/", isEmbedCode: true, desc: "A Homemade Special.", popular: true , tags: ["Idle"] },
   { id: "s_lp", title: "Slope", url: "../Games/slope/index.html", image: "../Games/_covers/actual/s_lp.jpg", desc: "A fast-paced 3D platformer. Stay on the track!", popular: true , tags: ["Platformer", "Casual"] },
@@ -29,16 +28,7 @@ let _0xData = [
   { id: "t_to", title: "Tung Tung Tung Sahur Obby", url: "../Games/T^3sahurobby/index.html", image: "../Games/_covers/actual/t_to.jpg", desc: "Meme-inspired obstacle map built to test jumping accuracy.", popular: true , tags: ["Platformer", "Casual"] },
   { id: "t_tb", title: "Tung Baldi Basics", url: "../Games/tungbaldibasics/index.html", desc: "Horror puzzle game featuring surreal environments and puzzle challenges.", popular: true , image: "../Games/_covers/actual/t_tb.jpg" , tags: ["Fan Game"] },
   { id: "w_dl", title: "Wordle", url: "../Games/wordle/index.html", desc: "Figure out the daily hidden five-letter word within six attempts.", popular: true , image: "../Games/_covers/actual/w_dl.jpg" , tags: ["Puzzle", "Casual"] },
-  { id: "v_3x", title: "Vex 3 Xmas", url: "../Games/Vex/Vex3Xmas/index.html", desc: "Festive holiday edition of the classic stickman parkour challenge.", popular: true , image: "../Games/_covers/actual/v_3x.jpg" , tags: ["Action", "Platformer"] },
   { id: "v_4", title: "Vex 4", url: "../Games/Vex/Vex4/index.html", desc: "Sprint, leap, and dodge deadly stage traps dynamically.", popular: true , image: "../Games/_covers/actual/v_4.jpg" , tags: ["Action", "Platformer"] },
-  { id: "v_5", title: "Vex 5", url: "../Games/Vex/Vex5/index.html", desc: "Hardcore level obstacles matching elite timing requirements.", popular: true , image: "../Games/_covers/actual/v_5.jpg" , tags: ["Action", "Platformer"] },
-  { id: "v_6", title: "Vex 6", url: "../Games/Vex/Vex6/index.html", desc: "Refined stickman parkour tracks with brand new stage assets.", popular: true , image: "../Games/_covers/actual/v_6.jpg" , tags: ["Action", "Platformer"] },
-  { id: "v_7", title: "Vex 7", url: "../Games/Vex/Vex7/index.html", desc: "Complex levels engineered to test your reflexes.", popular: true , image: "../Games/_covers/actual/v_7.jpg" , tags: ["Action", "Platformer"] },
-  { id: "v_8", title: "Vex 8", url: "../Games/Vex/Vex8/index.html", desc: "The absolute latest installment in the Vex platforming franchise.", popular: true , image: "../Games/_covers/actual/v_8.jpg" , tags: ["Action", "Platformer"] },
-  { id: "v_ch", title: "Vex Challenges", url: "../Games/Vex/VexChallenges/index.html", desc: "Bite-sized high-speed speedrunning tasks for testing agility.", popular: true , image: "../Games/_covers/actual/v_ch.jpg" , tags: ["Action", "Platformer"] },
-  { id: "v_x2", title: "Vex x3m 2", url: "../Games/Vex/Vexx3m2/index.html", desc: "Extreme driving mechanics combined with classic Vex obstacle formats.", popular: true , image: "../Games/_covers/actual/v_x2.jpg" , tags: ["Action", "Platformer"] },
-  { id: "v_xm", title: "Vex x3m", url: "../Games/Vex/Vexx3m/index.html", desc: "Blast through motorcycle speed trials with tight balance adjustments.", popular: true , image: "../Games/_covers/actual/v_xm.jpg" , tags: ["Action", "Platformer"] },
-  { id: "v_3", title: "Vex 3", url: "../Games/Vex/Vex3/index.html", image: "../Games/_covers/actual/v_3.jpg", desc: "The iconic original entry into the parkour system.", popular: true , tags: ["Action", "Platformer"] },
   { id: "slice_master", title: "Slice Master", url: "../Games/slicemaster/index.html", desc: "Flip your blades accurately to chop items clean in half down the line.", popular: true , image: "../Games/_covers/actual/slice_master.jpg" , tags: ["Puzzle"] },
   { id: "skinwalker", title: "Skinwalker", url: "../Games/skinwalker/index.html", desc: "Atmospheric survival horror centered around staying undetected outdoors.", popular: true , image: "../Games/_covers/actual/skinwalker.jpg" , tags: ["Horror"] },
   { id: "skib_shooter", title: "Skib Shooters", url: "../Games/skibshooter/index.html", desc: "Dynamic target arena where waves of attackers stream in continuously.", popular: true , image: "../Games/_covers/actual/skib_shooter.jpg" , tags: ["Shooter", "Action"] },
@@ -50,7 +40,6 @@ let _0xData = [
   { id: "m_d", title: "Mutilate a Doll", url: "../Games/mutilateadoll/mutilateadoll.html", desc: "A sandbox ragdoll simulation game where you can experiment with physics, weapons, and chaos. (Will Cause Massive Lag)", popular: true , image: "../Games/_covers/actual/m_d.jpg" , tags: ["Horror"] },
   { id: "b_md", title: "Bacon May Die", url: "../Games/bakonmaydie/index.html", desc: "Fast-paced side-scrolling brawler where a fearless pig battles endless enemy waves using melee attacks and powerful weapons.", popular: true , image: "../Games/_covers/actual/b_md.jpg" , tags: ["Action", "Fighting"] },
   { id: "a_df", title: "A Dance of Fire and Ice", url: "../Games/ADOFAI/ADOFAI.html", image: "../Games/_covers/actual/a_df.jpg", desc: "Rhythm-based precision game where you guide two orbiting planets through challenging musical tracks.", popular: true , tags: ["Rhythm", "Puzzle"] },
-  { id: "a_sr", title: "Amazing Strange Rope Police", url: "../Games/ASRP/index.html", image: "../Games/_covers/actual/a_sr.jpg", desc: "Open-world action game where you use superhuman abilities, vehicles, and gadgets to fight crime across a massive city.", popular: true , tags: ["Simulation"] },
   { id: "a_oc", title: "Ages of Conflict", url: "../Games/AOC/index.html", desc: "Strategic world simulation where nations wage wars, form alliances, and reshape the map through dynamic conflicts.", popular: true , image: "../Games/_covers/actual/a_oc.jpg" , tags: ["Sports"] },
   { id: "mx3", title: "Moto X3M", url: "../Games/MotoX3m/MotoX3m/index.html", image: "../Games/_covers/actual/mx3.jpg", desc: "Race through explosive obstacle courses packed with ramps, traps, and high-speed motorcycle stunts.", popular: true , tags: ["Racing"] },
   { id: "mx3_2", title: "Moto X3M 2", url: "../Games/MotoX3m/MotoX3m2/index.html", image: "../Games/_covers/actual/mx3_2.jpg", desc: "The sequel featuring tougher tracks, bigger jumps, and even more dangerous stunt challenges.", popular: true , tags: ["Racing"] },
@@ -72,13 +61,11 @@ let _0xData = [
   { id: "babel_tower", title: "Babel Tower", url: "../Games/babeltower/index.html", desc: "Build the legendary tower of Babel by managing resources, hiring workers, and upgrading your production lines in this strategic idle game.", popular: true , image: "../Games/_covers/actual/babel_tower.jpg" , tags: ["Casual"] },
   { id: "baby_chicco", title: "Baby Chicco Adventure", url: "../Games/bcadventure/index.html", desc: "Guide a cute little penguin through a dangerous world filled with obstacles, enemies, and platforming challenges in this classic side-scrolling adventure.", popular: true , image: "../Games/_covers/actual/baby_chicco.jpg" , tags: ["Action", "Adventure", "Simulation"] },
   { id: "baby_sniper_vietnam", title: "Baby Sniper in Vietnam", url: "../Games/BSV/index.html", image: "../Games/_covers/actual/baby_sniper_vietnam.jpg", desc: "Take on critical missions, hone your long-range accuracy, and clear strategic targets under the cover of dense jungle terrain in this tactical sniping simulation.", popular: true , tags: ["Shooter", "Action", "Simulation"] },
-  { id: "backrooms", title: "The Backrooms", url: "../Games/backrooms/index.html", desc: "Explore the eerie, endless yellow hallways of the Backrooms while trying to find an exit and avoid the terrifying entities lurking in the shadows.", popular: true , image: "../Games/_covers/actual/backrooms.jpg" , tags: ["Horror"] },
   { id: "bad_bodyguard", title: "Bad Bodyguard", url: "../Games/badbodyguard/index.html", desc: "Navigate chaotic security situations, make split-second defensive decisions, and protect your high-profile clients from wild incoming hazards in this unpredictable simulation.", popular: true , image: "../Games/_covers/actual/bad_bodyguard.jpg" , tags: ["Action"] },
   { id: "car_crash_3", title: "Car Crash 3", url: "../Games/carcrash3/index.html", desc: "Test the limits of high-speed structural physics, unleash vehicle destruction across sandbox stunt arenas, and watch realistic damage dynamics play out in this high-impact driving simulator.", popular: true , image: "../Games/_covers/actual/car_crash_3.jpg" , tags: ["Racing"] },
   { id: "stick_merge", title: "Stick Merge", url: "../Games/stickmerge/index.html", image: "../Games/_covers/actual/stick_merge.jpg", desc: "Merge various weapons together to create more powerful firearms and eliminate targets.", popular: true , tags: ["Puzzle"] },
   { id: "strike_force_kitty", title: "Strike Force Kitty", url: "../Games/strikeforcekitty/index.html", image: "../Games/_covers/actual/strike_force_kitty.jpg", desc: "Lead a squad of adorable kittens to rescue the princess, defeating enemies and collecting outfits along the way.", popular: true , tags: ["Shooter", "Action"] },
   { id: "superhot", title: "SUPERHOT", url: "../Games/superhot/index.html", image: "../Games/_covers/actual/superhot.jpg", desc: "An innovative first-person shooter where time moves only when you move.", popular: true , tags: ["Shooter", "Action"] },
-  { id: "arena_king", title: "Arena King", url: "../Games/arenaking/index.html", image: "../Games/_covers/actual/arena_king.jpg", desc: "Battle opponents in the arena, collect gold, and grow your crown to become the ultimate king.", popular: true , tags: ["Fighting", "Action"] },
   { id: "a_dark_room", title: "A Dark Room", url: "../Games/adarkroom/index.html", jsbin: "https://codepen.io/Glaeesas/embed/019f90ef-3bea-753d-be5c-54659e699c0a?default-tab=result&theme-id=dark", isEmbedCode: true, image: "../Games/_covers/actual/a_dark_room.jpg", desc: "An atmospheric, text-based survival adventure that starts with a cold room and a single spark.", popular: true , tags: ["Puzzle", "Idle"] },
   { id: "a_date_with_death", title: "A Date with Death", url: "../Games/adatewithdeath/index.html", image: "../Games/_covers/actual/a_date_with_death.jpg", desc: "A romance chat sim where you chat, customize your look, and place your soul on the line against the Grim Reaper.", popular: true , tags: ["Visual Novel", "Adventure"] },
   { id: "day_in_the_office", title: "A Day in the Office", url: "../Games/dayintheoffice/index.html", image: "../Games/_covers/actual/day_in_the_office.jpg", desc: "A surreal horror game where you navigate an endless work day that you can never escape.", popular: true , tags: ["Adventure", "Casual"] },
@@ -90,7 +77,6 @@ let _0xData = [
   { id: "jailbreakobby", title: "jailbreakobby", url: "../Games/jailbreakobby/index.html", desc: "Parkour through a prison complex, dodge guards, and race for freedom in this high-stakes escape obby.", popular: true , image: "../Games/_covers/actual/jailbreakobby.jpg" , tags: ["Action", "Platformer"] },
   { id: "luckyblockobby", title: "luckyblockobby", url: "../Games/luckyblockobby/index.html", desc: "Jump through obstacle courses packed with lucky blocks, random rewards, and surprise challenges.", popular: true , image: "../Games/_covers/actual/luckyblockobby.jpg" , tags: ["Action", "Platformer", "Puzzle"] },
   { id: "ninjaobby", title: "ninjaobby", url: "../Games/ninjaobby/index.html", desc: "Leap across rooftops, dodge traps, and master precise parkour moves in this ninja-themed obstacle course.", popular: true , image: "../Games/_covers/actual/ninjaobby.jpg" , tags: ["Action", "Platformer"] },
-  { id: "clickerobby", title: "clickerobby", url: "../Games/clickerobby/index.html", desc: "Combine clicker progression with parkour stages—level up your power as you race through challenging maps.", popular: true , image: "../Games/_covers/clickerobby.svg" , tags: ["Action", "Platformer", "Idle"] },
   { id: "obbyforbrainrot", title: "obbyforbrainrot", url: "../Games/obbyforbrainrot/index.html", desc: "A chaotic meme-inspired obstacle course filled with viral brainrot vibes, wild jumps, and nonstop laughs.", popular: true , image: "../Games/_covers/obbyforbrainrot.svg" , tags: ["Fan Game", "Action", "Platformer", "Puzzle"] },
   { id: "leafblower", title: "leafblower", url: "../Games/leafblower/index.html", desc: "Clear yards of leaves with your leaf blower, upgrade your gear, and grow your lawn-care empire in this idle-style game.", popular: true, image: "../Games/_covers/actual/leafblower.jpg" , tags: ["Casual"] },
   { id: "ultrakill", title: "ultrakill", url: "../Games/ultrakill/index.html", desc: "A hyper-violent, style-focused FPS where every kill chains into the next—move fast, shoot faster, and stay stylish.", popular: true , image: "../Games/_covers/actual/ultrakill.jpg" , tags: ["Casual"] },
@@ -123,10 +109,8 @@ let _0xData = [
   { id: "circloo-2", title: "Circloo 2", url: "https://whatchamacallitexe.github.io/pack-d/circloo-2/", desc: "Play Circloo 2 online in your browser.", popular: true , image: "../Games/_covers/actual/circloo-2.jpg" , tags: ["Casual"] },
   { id: "circloo", title: "Circloo", url: "https://whatchamacallitexe.github.io/pack-d/circloo/", desc: "Play Circloo online in your browser.", popular: true , image: "../Games/_covers/actual/circloo.jpg" , tags: ["Casual"] },
   { id: "color-match", title: "Color Match", url: "https://whatchamacallitexe.github.io/pack-a/color-match/", desc: "Play Color Match online in your browser.", popular: true , image: "../Games/_covers/actual/color-match.jpg" , tags: ["Puzzle"] },
-  { id: "connect-3", title: "Connect 3", url: "https://whatchamacallitexe.github.io/pack-b/connect-3/", desc: "Play Connect 3 online in your browser.", popular: true , image: "../Games/_covers/actual/connect-3.jpg" , tags: ["Puzzle"] },
   { id: "crossy-road", title: "Crossy Road", url: "https://whatchamacallitexe.github.io/pack-n/crossy-road/", desc: "Play Crossy Road online in your browser.", popular: true , image: "../Games/_covers/actual/crossy-road.jpg" , tags: ["Casual"] },
   { id: "cubes-2048-io", title: "Cubes 2048 Io", url: "https://whatchamacallitexe.github.io/pack-a/cubes-2048-io/", desc: "Play Cubes 2048 Io online in your browser.", popular: true , image: "../Games/_covers/actual/cubes-2048-io.jpg" , tags: ["Puzzle", "Party", "Multiplayer"] },
-  { id: "cut-the-rope", title: "Cut The Rope", url: "https://whatchamacallitexe.github.io/pack-n/cut-the-rope/", desc: "Play Cut The Rope online in your browser.", popular: true , image: "../Games/_covers/actual/cut-the-rope.jpg" , tags: ["Puzzle"] },
   { id: "deal-or-no-deal", title: "Deal Or No Deal", url: "https://whatchamacallitexe.github.io/pack-b/deal-or-no-deal/", desc: "Play Deal Or No Deal online in your browser.", popular: true , image: "../Games/_covers/actual/deal-or-no-deal.jpg" , tags: ["Casual"] },
   { id: "deepest-sword", title: "Deepest Sword", url: "https://whatchamacallitexe.github.io/pack-b/deepest-sword/", desc: "Play Deepest Sword online in your browser.", popular: true , image: "../Games/_covers/actual/deepest-sword.jpg" , tags: ["Action"] },
   { id: "dino-bros", title: "Dino Bros", url: "https://whatchamacallitexe.github.io/pack-b/dino-bros/", desc: "Play Dino Bros online in your browser.", popular: true , image: "../Games/_covers/actual/dino-bros.jpg" , tags: ["Party", "Multiplayer"] },
@@ -158,26 +142,19 @@ let _0xData = [
   { id: "riddle-transfer-2", title: "Riddle Transfer 2", url: "https://whatchamacallitexe.github.io/pack-h/riddle-transfer-2/", desc: "Play Riddle Transfer 2 online in your browser.", popular: true , image: "../Games/_covers/actual/riddle-transfer-2.jpg" , tags: ["Puzzle"] },
   { id: "riddle-transfer", title: "Riddle Transfer", url: "https://whatchamacallitexe.github.io/pack-h/riddle-transfer/", desc: "Play Riddle Transfer online in your browser.", popular: true , image: "../Games/_covers/actual/riddle-transfer.jpg" , tags: ["Puzzle"] },
   { id: "roper", title: "Roper", url: "https://whatchamacallitexe.github.io/pack-f/roper/", desc: "Play Roper online in your browser.", popular: true , image: "../Games/_covers/actual/roper.jpg" , tags: ["Casual"] },
-  { id: "save-the-doge", title: "Save The Doge", url: "https://whatchamacallitexe.github.io/pack-f/save-the-doge/", desc: "Play Save The Doge online in your browser.", popular: true , image: "../Games/_covers/save-the-doge.svg" , tags: ["Casual"] },
-  { id: "solitaire", title: "Solitaire", url: "https://whatchamacallitexe.github.io/pack-a/solitaire/", desc: "Play Solitaire online in your browser.", popular: true , image: "../Games/_covers/actual/solitaire.jpg" , tags: ["Puzzle", "Cards"] },
   { id: "spider-solitaire", title: "Spider Solitaire", url: "https://whatchamacallitexe.github.io/pack-d/spider-solitaire/", desc: "Play Spider Solitaire online in your browser.", popular: true , image: "../Games/_covers/actual/spider-solitaire.jpg" , tags: ["Puzzle", "Cards"] },
-  { id: "swingo", title: "Swingo", url: "https://whatchamacallitexe.github.io/pack-a/swingo/", desc: "Play Swingo online in your browser.", popular: true , image: "../Games/_covers/swingo.svg" , tags: ["Casual"] },
   { id: "the-impossible-quiz", title: "The Impossible Quiz", url: "https://whatchamacallitexe.github.io/pack-i/the-impossible-quiz/", desc: "Play The Impossible Quiz online in your browser.", popular: true , image: "../Games/_covers/actual/the-impossible-quiz.jpg" , tags: ["Puzzle", "Party"] },
   { id: "tiny-islands", title: "Tiny Islands", url: "https://whatchamacallitexe.github.io/pack-b/tiny-islands/", desc: "Play Tiny Islands online in your browser.", popular: true , image: "../Games/_covers/actual/tiny-islands.jpg" , tags: ["Survival", "Adventure"] },
   { id: "traffic-mania", title: "Traffic Mania", url: "https://whatchamacallitexe.github.io/pack-a/traffic-mania/", desc: "Play Traffic Mania online in your browser.", popular: true , image: "../Games/_covers/actual/traffic-mania.jpg" , tags: ["Racing"] },
   { id: "twitch-tetris", title: "Twitch Tetris", url: "https://whatchamacallitexe.github.io/pack-j/twitch-tetris/", desc: "Play Twitch Tetris online in your browser.", popular: true , image: "../Games/_covers/actual/twitch-tetris.jpg" , tags: ["Puzzle", "Retro"] },
   { id: "wallsmash", title: "Wallsmash", url: "https://whatchamacallitexe.github.io/pack-a/wallsmash/", desc: "Play Wallsmash online in your browser.", popular: true , image: "../Games/_covers/actual/wallsmash.jpg" , tags: ["Fighting", "Action"] },
-  { id: "waterworks", title: "Waterworks", url: "https://whatchamacallitexe.github.io/pack-b/waterworks/", desc: "Play Waterworks online in your browser.", popular: true , image: "../Games/_covers/actual/waterworks.jpg" , tags: ["Casual"] },
   { id: "wheely-2", title: "Wheely 2", url: "https://whatchamacallitexe.github.io/pack-ap/wheely2/index.html", desc: "Play Wheely 2 online in your browser.", popular: true , image: "../Games/_covers/actual/wheely-2.jpg" , tags: ["Casual"] },
   { id: "wizard-mike", title: "Wizard Mike", url: "https://whatchamacallitexe.github.io/pack-b/wizard-mike/", desc: "Play Wizard Mike online in your browser.", popular: true , image: "../Games/_covers/actual/wizard-mike.jpg" , tags: ["Adventure"] },
   { id: "wood-block-puzzle", title: "Wood Block Puzzle", url: "https://whatchamacallitexe.github.io/pack-c/wood-block-puzzle/", desc: "Play Wood Block Puzzle online in your browser.", popular: true , image: "../Games/_covers/actual/wood-block-puzzle.jpg" , tags: ["Puzzle"] },
-  { id: "woodventure", title: "Woodventure", url: "https://whatchamacallitexe.github.io/pack-c/woodventure/", desc: "Play Woodventure online in your browser.", popular: true , image: "../Games/_covers/woodventure.svg" , tags: ["Casual"] },
   { id: "word-slide", title: "Word Slide", url: "https://whatchamacallitexe.github.io/pack-b/word-slide/", desc: "Play Word Slide online in your browser.", popular: true , image: "../Games/_covers/actual/word-slide.jpg" , tags: ["Puzzle"] },
-  { id: "wordle-unlimited", title: "Wordle Unlimited", url: "https://whatchamacallitexe.github.io/pack-a/wordle-unlimited/", desc: "Play Wordle Unlimited online in your browser.", popular: true , image: "../Games/_covers/actual/wordle-unlimited.jpg" , tags: ["Puzzle"] },
   { id: "xx142-b2exe", title: "Xx142 B2exe", url: "https://whatchamacallitexe.github.io/pack-c/xx142-b2exe/", desc: "Play Xx142 B2exe online in your browser.", popular: true , image: "../Games/_covers/actual/xx142-b2exe.jpg" , tags: ["Casual"] },
   { id: "baldis-basics", title: "Baldis Basics", url: "https://whatchamacallitexe.github.io/pack-e/baldis-basics/", desc: "Play Baldis Basics online in your browser.", popular: true , image: "../Games/_covers/actual/baldis-basics.jpg" , tags: ["Fan Game"] },
   { id: "big-red-button", title: "Big Red Button", url: "https://whatchamacallitexe.github.io/pack-b/big-red-button/", desc: "Play Big Red Button online in your browser.", popular: true , image: "../Games/_covers/actual/big-red-button.jpg" , tags: ["Casual"] },
-  { id: "bottle-flip", title: "Bottle Flip", url: "https://whatchamacallitexe.github.io/pack-e/bottle-flip/", desc: "Play Bottle Flip online in your browser.", popular: true , image: "../Games/_covers/bottle-flip.svg" , tags: ["Action", "Platformer"] },
   { id: "capybara-clicker", title: "Capybara Clicker", url: "https://whatchamacallitexe.github.io/pack-g/capybara-clicker/", desc: "Play Capybara Clicker online in your browser.", popular: true , image: "../Games/_covers/actual/capybara-clicker.jpg" , tags: ["Idle"] },
   { id: "core-ball", title: "Core Ball", url: "https://whatchamacallitexe.github.io/pack-d/core-ball/", desc: "Play Core Ball online in your browser.", popular: true , image: "../Games/_covers/actual/core-ball.jpg" , tags: ["Casual"] },
   { id: "doodle-jump", title: "Doodle Jump", url: "https://whatchamacallitexe.github.io/pack-e/doodle-jump/", desc: "Play Doodle Jump online in your browser.", popular: true , image: "../Games/_covers/actual/doodle-jump.jpg" , tags: ["Action", "Platformer"] },
@@ -185,11 +162,8 @@ let _0xData = [
   { id: "duck-life-3-evolution", title: "Duck Life 3 Evolution", url: "https://whatchamacallitexe.github.io/pack-e/duck-life-3-evolution/", desc: "Play Duck Life 3 Evolution online in your browser.", popular: true , image: "../Games/_covers/actual/duck-life-3-evolution.jpg" , tags: ["Idle", "Simulation"] },
   { id: "duck-life-4", title: "Duck Life 4", url: "https://whatchamacallitexe.github.io/pack-f/duck-life-4/", desc: "Play Duck Life 4 online in your browser.", popular: true , image: "../Games/_covers/actual/duck-life-4.jpg" , tags: ["Simulation"] },
   { id: "duck-life", title: "Duck Life", url: "https://whatchamacallitexe.github.io/pack-c/duck-life/", desc: "Play Duck Life online in your browser.", popular: true , image: "../Games/_covers/actual/duck-life.jpg" , tags: ["Simulation"] },
-  { id: "eel-slap", title: "Eel Slap", url: "https://whatchamacallitexe.github.io/pack-c/eel-slap/", desc: "Play Eel Slap online in your browser.", popular: true , image: "../Games/_covers/actual/eel-slap.jpg" , tags: ["Casual"] },
   { id: "fake-virus", title: "Fake Virus", url: "https://whatchamacallitexe.github.io/pack-d/fake-virus/", desc: "Play Fake Virus online in your browser.", popular: true , image: "../Games/_covers/actual/fake-virus.jpg" , tags: ["Casual"] },
   { id: "flappy-bird", title: "Flappy Bird", url: "https://whatchamacallitexe.github.io/pack-a/flappy-bird/", desc: "Play Flappy Bird online in your browser.", popular: true , image: "../Games/_covers/actual/flappy-bird.jpg" , tags: ["Casual"] },
-  { id: "guess-the-kitty", title: "Guess The Kitty", url: "https://whatchamacallitexe.github.io/pack-f/guess-the-kitty/", desc: "Play Guess The Kitty online in your browser.", popular: true , image: "../Games/_covers/guess-the-kitty.svg" , tags: ["Puzzle", "Party"] },
-  { id: "hacker-typer", title: "Hacker Typer", url: "https://whatchamacallitexe.github.io/pack-c/hacker-typer/", desc: "Play Hacker Typer online in your browser.", popular: true , image: "../Games/_covers/hacker-typer.svg" , tags: ["Puzzle"] },
   { id: "idle-breakout", title: "Idle Breakout", url: "https://whatchamacallitexe.github.io/pack-h/idle-breakout/", desc: "Play Idle Breakout online in your browser.", popular: true , image: "../Games/_covers/actual/idle-breakout.jpg" , tags: ["Idle", "Arcade", "Retro"] },
   { id: "idle-light-city", title: "Idle Light City", url: "https://whatchamacallitexe.github.io/pack-g/idle-light-city/", desc: "Play Idle Light City online in your browser.", popular: true , image: "../Games/_covers/idle-light-city.svg" , tags: ["Puzzle", "Idle", "Simulation"] },
   { id: "idle-tree-city", title: "Idle Tree City", url: "https://whatchamacallitexe.github.io/pack-h/idle-tree-city/", desc: "Play Idle Tree City online in your browser.", popular: true , image: "../Games/_covers/idle-tree-city.svg" , tags: ["Idle", "Simulation"] },
@@ -199,12 +173,10 @@ let _0xData = [
   { id: "little-alchemy-2", title: "Little Alchemy 2", url: "https://whatchamacallitexe.github.io/pack-i/little-alchemy-2/", desc: "Play Little Alchemy 2 online in your browser.", popular: true , image: "../Games/_covers/actual/little-alchemy-2.jpg" , tags: ["Idle", "Sandbox"] },
   { id: "papas-burgeria", title: "Papas Burgeria", url: "https://whatchamacallitexe.github.io/pack-b/papas-burgeria/", desc: "Play Papas Burgeria online in your browser.", popular: true , image: "../Games/_covers/actual/papas-burgeria.jpg" , tags: ["Idle", "Simulation", "Cooking"] },
   { id: "papas-freezeria", title: "Papas Freezeria", url: "https://whatchamacallitexe.github.io/pack-d/papas-freezeria/", desc: "Play Papas Freezeria online in your browser.", popular: true , image: "../Games/_covers/actual/papas-freezeria.jpg" , tags: ["Idle", "Simulation", "Cooking"] },
-  { id: "papas-pancakeria", title: "Papas Pancakeria", url: "https://whatchamacallitexe.github.io/pack-e/papas-pancakeria/", desc: "Play Papas Pancakeria online in your browser.", popular: true , image: "../Games/_covers/actual/papas-pancakeria.jpg" , tags: ["Idle", "Simulation", "Cooking"] },
   { id: "papas-pizzeria", title: "Papas Pizzeria", url: "https://whatchamacallitexe.github.io/pack-a/papas-pizzeria/", desc: "Play Papas Pizzeria online in your browser.", popular: true , image: "../Games/_covers/actual/papas-pizzeria.jpg" , tags: ["Idle", "Simulation", "Cooking"] },
   { id: "papas-taco-mia", title: "Papas Taco Mia", url: "https://whatchamacallitexe.github.io/pack-c/papas-taco-mia/", desc: "Play Papas Taco Mia online in your browser.", popular: true , image: "../Games/_covers/actual/papas-taco-mia.jpg" , tags: ["Idle", "Simulation", "Cooking"] },
   { id: "papas-wingeria", title: "Papas Wingeria", url: "https://whatchamacallitexe.github.io/pack-e/papas-wingeria/", desc: "Play Papas Wingeria online in your browser.", popular: true , image: "../Games/_covers/actual/papas-wingeria.jpg" , tags: ["Idle", "Simulation", "Cooking"] },
   { id: "particle-clicker", title: "Particle Clicker", url: "https://whatchamacallitexe.github.io/pack-h/particle-clicker/", desc: "Play Particle Clicker online in your browser.", popular: true , image: "../Games/_covers/actual/particle-clicker.jpg" , tags: ["Idle"] },
-  { id: "pou", title: "Pou", url: "https://whatchamacallitexe.github.io/pack-h/pou/", desc: "Play Pou online in your browser.", popular: true , image: "../Games/_covers/actual/pou.jpg" , tags: ["Simulation", "Casual"] },
   { id: "push-the-square", title: "Push The Square", url: "https://whatchamacallitexe.github.io/pack-f/push-the-square/", desc: "Play Push The Square online in your browser.", popular: true , image: "../Games/_covers/actual/push-the-square.jpg" , tags: ["Casual"] },
   { id: "rise-higher", title: "Rise Higher", url: "https://whatchamacallitexe.github.io/pack-i/rise-higher/", desc: "Play Rise Higher online in your browser.", popular: true , image: "../Games/_covers/actual/rise-higher.jpg" , tags: ["Casual"] },
   { id: "sandboxels", title: "Sandboxels", url: "https://whatchamacallitexe.github.io/pack-i/sandboxels/", desc: "Play Sandboxels online in your browser.", popular: true , image: "../Games/_covers/actual/sandboxels.jpg" , tags: ["Idle", "Simulation", "Sandbox"] },
@@ -221,9 +193,7 @@ let _0xData = [
   { id: "alien-hominid", title: "Alien Hominid", url: "https://whatchamacallitexe.github.io/pack-b/alien-hominid/", desc: "Play Alien Hominid online in your browser.", popular: true , image: "../Games/_covers/actual/alien-hominid.jpg" , tags: ["Casual"] },
   { id: "amidst-the-sky", title: "Amidst The Sky", url: "https://whatchamacallitexe.github.io/pack-b/amidst-the-sky/", desc: "Play Amidst The Sky online in your browser.", popular: true , image: "../Games/_covers/actual/amidst-the-sky.jpg" , tags: ["Casual"] },
   { id: "angry-sharks", title: "Angry Sharks", url: "https://whatchamacallitexe.github.io/pack-b/angry-sharks/", desc: "Play Angry Sharks online in your browser.", popular: true , image: "../Games/_covers/actual/angry-sharks.jpg" , tags: ["Casual"] },
-  { id: "apple-shooter", title: "Apple Shooter", url: "https://whatchamacallitexe.github.io/pack-j/apple-shooter/", desc: "Play Apple Shooter online in your browser.", popular: true , image: "../Games/_covers/actual/apple-shooter.jpg" , tags: ["Shooter", "Action"] },
   { id: "avalanche", title: "Avalanche", url: "https://whatchamacallitexe.github.io/pack-c/avalanche/", desc: "Play Avalanche online in your browser.", popular: true , image: "../Games/_covers/actual/avalanche.jpg" , tags: ["Casual"] },
-  { id: "blumgi-slime", title: "Blumgi Slime", url: "https://whatchamacallitexe.github.io/pack-d/blumgi-slime/", desc: "Play Blumgi Slime online in your browser.", popular: true , image: "../Games/_covers/blumgi-slime.svg" , tags: ["Casual"] },
   { id: "bob-the-robber-2", title: "Bob The Robber 2", url: "https://whatchamacallitexe.github.io/pack-n/bob-the-robber-2/", desc: "Play Bob The Robber 2 online in your browser.", popular: true , image: "../Games/_covers/actual/bob-the-robber-2.jpg" , tags: ["Casual"] },
   { id: "boxel-rebound", title: "Boxel Rebound", url: "https://whatchamacallitexe.github.io/pack-d/boxel-rebound/", desc: "Play Boxel Rebound online in your browser.", popular: true , image: "../Games/_covers/actual/boxel-rebound.jpg" , tags: ["Casual"] },
   { id: "champion-archer", title: "Champion Archer", url: "https://whatchamacallitexe.github.io/pack-j/champion-archer/", desc: "Play Champion Archer online in your browser.", popular: true , image: "../Games/_covers/actual/champion-archer.jpg" , tags: ["Casual"] },
@@ -235,7 +205,6 @@ let _0xData = [
   { id: "fancy-pants-3", title: "Fancy Pants 3", url: "https://whatchamacallitexe.github.io/pack-c/fancy-pants-3/", desc: "Play Fancy Pants 3 online in your browser.", popular: true , image: "../Games/_covers/actual/fancy-pants-3.jpg" , tags: ["Platformer"] },
   { id: "fancy-pants-adventures", title: "Fancy Pants Adventures", url: "https://whatchamacallitexe.github.io/pack-a/fancy-pants-adventures/", desc: "Play Fancy Pants Adventures online in your browser.", popular: true , image: "../Games/_covers/actual/fancy-pants-adventures.jpg" , tags: ["Platformer"] },
   { id: "galaga", title: "Galaga", url: "https://whatchamacallitexe.github.io/pack-i/galaga/", desc: "Play Galaga online in your browser.", popular: true , image: "../Games/_covers/actual/galaga.jpg" , tags: ["Arcade", "Retro"] },
-  { id: "geometry-dash", title: "Geometry Dash", url: "https://whatchamacallitexe.github.io/pack-a/geometry-dash/", desc: "Play Geometry Dash online in your browser.", popular: true , image: "../Games/_covers/actual/geometry-dash.jpg" , tags: ["Platformer", "Rhythm", "Casual"] },
   { id: "gimme-the-airpod", title: "Gimme The Airpod", url: "https://whatchamacallitexe.github.io/pack-e/gimme-the-airpod/", desc: "Play Gimme The Airpod online in your browser.", popular: true , image: "../Games/_covers/actual/gimme-the-airpod.jpg" , tags: ["Casual"] },
   { id: "goodnight", title: "Goodnight", url: "https://whatchamacallitexe.github.io/pack-i/goodnight/", desc: "Play Goodnight online in your browser.", popular: true , image: "../Games/_covers/actual/goodnight.jpg" , tags: ["Casual"] },
   { id: "gunblood", title: "Gunblood", url: "https://whatchamacallitexe.github.io/pack-f/gunblood/", desc: "Play Gunblood online in your browser.", popular: true , image: "../Games/_covers/actual/gunblood.jpg" , tags: ["Horror", "Action"] },
@@ -243,7 +212,6 @@ let _0xData = [
   { id: "iron-snout", title: "Iron Snout", url: "https://whatchamacallitexe.github.io/pack-f/iron-snout/", desc: "Play Iron Snout online in your browser.", popular: true , image: "../Games/_covers/actual/iron-snout.jpg" , tags: ["Casual"] },
   { id: "just-one-boss", title: "Just One Boss", url: "https://whatchamacallitexe.github.io/pack-f/just-one-boss/", desc: "Play Just One Boss online in your browser.", popular: true , image: "../Games/_covers/actual/just-one-boss.jpg" , tags: ["Action"] },
   { id: "level-devil", title: "Level Devil", url: "https://whatchamacallitexe.github.io/pack-e/level-devil/", desc: "Play Level Devil online in your browser.", popular: true , image: "../Games/_covers/actual/level-devil.jpg" , tags: ["Action", "Platformer"] },
-  { id: "mario", title: "Mario", url: "https://whatchamacallitexe.github.io/pack-e/mario/", desc: "Play Mario online in your browser.", popular: true , image: "../Games/_covers/mario.svg" , tags: ["Fan Game", "Action", "Platformer", "Party", "Multiplayer"] },
   { id: "pac-man", title: "Pac Man", url: "https://whatchamacallitexe.github.io/pack-j/pac-man/", desc: "Play Pac Man online in your browser.", popular: true , image: "../Games/_covers/actual/pac-man.jpg" , tags: ["Arcade", "Retro"] },
   { id: "polybranch", title: "Polybranch", url: "https://whatchamacallitexe.github.io/pack-a/polybranch/", desc: "Play Polybranch online in your browser.", popular: true , image: "../Games/_covers/actual/polybranch.jpg" , tags: ["Casual"] },
   { id: "protektor", title: "Protektor", url: "https://whatchamacallitexe.github.io/pack-b/protektor/", desc: "Play Protektor online in your browser.", popular: true , image: "../Games/_covers/protektor.svg" , tags: ["Casual"] },
@@ -254,16 +222,13 @@ let _0xData = [
   { id: "drift-boss", title: "Drift Boss", url: "https://whatchamacallitexe.github.io/pack-e/drift-boss/", desc: "Play Drift Boss online in your browser.", popular: true , image: "../Games/_covers/actual/drift-boss.jpg" , tags: ["Action", "Racing"] },
   { id: "drive-mad", title: "Drive Mad", url: "https://whatchamacallitexe.github.io/pack-e/drive-mad/", desc: "Play Drive Mad online in your browser.", popular: true , image: "../Games/_covers/actual/drive-mad.jpg" , tags: ["Racing", "Casual"] },
   { id: "edge-surf", title: "Edge Surf", url: "https://whatchamacallitexe.github.io/pack-j/edge-surf/", desc: "Play Edge Surf online in your browser.", popular: true , image: "../Games/_covers/actual/edge-surf.jpg" , tags: ["Sports"] },
-  { id: "get-on-top", title: "Get On Top", url: "https://whatchamacallitexe.github.io/pack-g/get-on-top/", desc: "Play Get On Top online in your browser.", popular: true , image: "../Games/_covers/actual/get-on-top.jpg" , tags: ["Casual"] },
   { id: "happy-wheels", title: "Happy Wheels", url: "https://whatchamacallitexe.github.io/pack-d/happy-wheels/", desc: "Play Happy Wheels online in your browser.", popular: true , image: "../Games/_covers/actual/happy-wheels.jpg" , tags: ["Casual"] },
-  { id: "head-soccer", title: "Head Soccer", url: "https://whatchamacallitexe.github.io/pack-g/head-soccer/", desc: "Play Head Soccer online in your browser.", popular: true , image: "../Games/_covers/head-soccer.svg" , tags: ["Sports"] },
   { id: "icycle", title: "Icycle", url: "https://whatchamacallitexe.github.io/pack-i/icycle/", desc: "Play Icycle online in your browser.", popular: true , image: "../Games/_covers/actual/icycle.jpg" , tags: ["Action", "Platformer"] },
   { id: "penalty-kick", title: "Penalty Kick", url: "https://whatchamacallitexe.github.io/pack-d/penalty-kick/", desc: "Play Penalty Kick online in your browser.", popular: true , image: "../Games/_covers/penalty-kick.svg" , tags: ["Fighting", "Action", "Sports"] },
   { id: "volley-random", title: "Volley Random", url: "https://whatchamacallitexe.github.io/pack-c/volley-random/", desc: "Play Volley Random online in your browser.", popular: true , image: "../Games/_covers/actual/volley-random.jpg" , tags: ["Sports", "Party", "Multiplayer"] },
   { id: "backrooms-2d", title: "Backrooms 2d", url: "https://whatchamacallitexe.github.io/pack-h/backrooms-2d/", desc: "Play Backrooms 2d online in your browser.", popular: true , image: "../Games/_covers/actual/backrooms-2d.jpg" , tags: ["Horror", "2D"] },
   { id: "basket-champs", title: "Basket Champs", url: "https://whatchamacallitexe.github.io/pack-d/basket-champs/", desc: "Play Basket Champs online in your browser.", popular: true , image: "../Games/_covers/actual/basket-champs.jpg" , tags: ["Sports"] },
   { id: "big-shot-boxing", title: "Big Shot Boxing", url: "https://whatchamacallitexe.github.io/pack-e/big-shot-boxing/", desc: "Play Big Shot Boxing online in your browser.", popular: true , image: "../Games/_covers/actual/big-shot-boxing.jpg" , tags: ["Fighting", "Action", "Sports"] },
-  { id: "biker-street", title: "Biker Street", url: "https://whatchamacallitexe.github.io/pack-i/biker-street/", desc: "Play Biker Street online in your browser.", popular: true , image: "../Games/_covers/biker-street.svg" , tags: ["Casual"] },
   { id: "boxing-random", title: "Boxing Random", url: "https://whatchamacallitexe.github.io/pack-g/boxing-random/", desc: "Play Boxing Random online in your browser.", popular: true , image: "../Games/_covers/actual/boxing-random.jpg" , tags: ["Fighting", "Action", "Sports", "Party", "Multiplayer"] },
   { id: "car-rush", title: "Car Rush", url: "https://whatchamacallitexe.github.io/pack-f/car-rush/", desc: "Play Car Rush online in your browser.", popular: true , image: "../Games/_covers/actual/car-rush.jpg" , tags: ["Racing"] },
   { id: "cluster-rush", title: "Cluster Rush", url: "https://whatchamacallitexe.github.io/pack-c/cluster-rush/", desc: "Play Cluster Rush online in your browser.", popular: true , image: "../Games/_covers/actual/cluster-rush.jpg" , tags: ["Casual"] },
@@ -279,7 +244,6 @@ let _0xData = [
   { id: "snow-rider-3d", title: "Snow Rider 3d", url: "https://whatchamacallitexe.github.io/pack-i/snow-rider-3d/", desc: "Play Snow Rider 3d online in your browser.", popular: true , image: "../Games/_covers/actual/snow-rider-3d.jpg" , tags: ["Racing", "3D"] },
   { id: "soccer-random", title: "Soccer Random", url: "https://whatchamacallitexe.github.io/pack-g/soccer-random/", desc: "Play Soccer Random online in your browser.", popular: true , image: "../Games/_covers/actual/soccer-random.jpg" , tags: ["Sports", "Party", "Multiplayer"] },
   { id: "sprinter", title: "Sprinter", url: "https://whatchamacallitexe.github.io/pack-b/sprinter/", desc: "Play Sprinter online in your browser.", popular: true , image: "../Games/_covers/actual/sprinter.jpg" , tags: ["Action", "Platformer"] },
-  { id: "stickman-go", title: "Stickman Go", url: "https://whatchamacallitexe.github.io/pack-i/stickman-go/", desc: "Play Stickman Go online in your browser.", popular: true , image: "../Games/_covers/stickman-go.svg" , tags: ["Strategy"] },
   { id: "subway-surfers-ny", title: "Subway Surfers Ny", url: "https://whatchamacallitexe.github.io/pack-a/subway-surfers-ny/", desc: "Play Subway Surfers Ny online in your browser.", popular: true , image: "../Games/_covers/actual/subway-surfers-ny.jpg" , tags: ["Action", "Racing", "Sports", "Platformer"] },
   { id: "subway-surfers", title: "Subway Surfers", url: "https://whatchamacallitexe.github.io/pack-j/subway-surfers/", desc: "Play Subway Surfers online in your browser.", popular: true , image: "../Games/_covers/actual/subway-surfers.jpg" , tags: ["Action", "Racing", "Sports", "Platformer"] },
   { id: "synesthesia", title: "Synesthesia", url: "https://whatchamacallitexe.github.io/pack-i/synesthesia/", desc: "Play Synesthesia online in your browser.", popular: true , image: "../Games/_covers/synesthesia.svg" , tags: ["Casual"] },
@@ -316,28 +280,24 @@ let _0xData = [
   {
     id: "modernclient",
     title: "Modernclient",
-    url: "https://whatchamacallitexe.github.io/pack-a/modernclient/index.html",
     desc: "Play Modernclient online in your browser.",
     popular: true
   , image: "../Games/_covers/modernclient.svg" , tags: ["Casual"] },
   {
     id: "pokemon-black",
     title: "Pokemon Black",
-    url: "https://whatchamacallitexe.github.io/pack-a/pokemon-black/index.html",
     desc: "Play Pokemon Black online in your browser.",
     popular: true
   , image: "../Games/_covers/pokemon-black.svg" , tags: ["Fan Game", "Adventure"] },
   {
     id: "ruffle",
     title: "Ruffle",
-    url: "https://whatchamacallitexe.github.io/pack-a/cubes-2048-io/patch/ruffle/index.html",
     desc: "Play Ruffle online in your browser.",
     popular: false
   , image: "../Games/_covers/ruffle.svg" , tags: ["Casual"] },
   {
     id: "unity2019",
     title: "Unity2019",
-    url: "https://whatchamacallitexe.github.io/pack-a/cubes-2048-io/patch/unity2019/index.html",
     desc: "Play Unity2019 online in your browser.",
     popular: false
   , image: "../Games/_covers/unity2019.svg" , tags: ["3D"] },
@@ -358,7 +318,6 @@ let _0xData = [
   {
     id: "all",
     title: "All",
-    url: "https://whatchamacallitexe.github.io/pack-a/minesweeper/all/index.html",
     desc: "Play All online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/all.jpg" , tags: ["Casual"] },
@@ -379,7 +338,6 @@ let _0xData = [
   {
     id: "unity",
     title: "Unity",
-    url: "https://whatchamacallitexe.github.io/pack-a/wordle-unlimited/patch/unity/index.html",
     desc: "Play Unity online in your browser.",
     popular: false
   , image: "../Games/_covers/unity.svg" , tags: ["3D"] },
@@ -393,14 +351,12 @@ let _0xData = [
   {
     id: "waflash",
     title: "Waflash",
-    url: "https://whatchamacallitexe.github.io/pack-b/fancy-pants-2/patch/waflash/index.html",
     desc: "Play Waflash online in your browser.",
     popular: false
   , image: "../Games/_covers/waflash.svg" , tags: ["Casual"] },
   {
     id: "build",
     title: "Build",
-    url: "https://whatchamacallitexe.github.io/pack-d/duck-life-2/Build/index.html",
     desc: "Play Build online in your browser.",
     popular: false
   , image: "../Games/_covers/build.svg" , tags: ["Idle", "Simulation"] },
@@ -575,7 +531,6 @@ let _0xData = [
   {
     id: "scrap-metal-3",
     title: "Scrap Metal 3",
-    url: "https://whatchamacallitexe.github.io/pack-k/scrap-metal-3/index.html",
     desc: "Play Scrap Metal 3 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/scrap-metal-3.jpg" , tags: ["Casual"] },
@@ -708,7 +663,6 @@ let _0xData = [
   {
     id: "sfk2",
     title: "Sfk2",
-    url: "https://whatchamacallitexe.github.io/pack-k/sfk2/index.html",
     desc: "Play Sfk2 online in your browser.",
     popular: false
   , image: "../Games/_covers/sfk2.svg" , tags: ["Casual"] },
@@ -904,7 +858,6 @@ let _0xData = [
   {
     id: "silent-hill",
     title: "Silent Hill",
-    url: "https://whatchamacallitexe.github.io/pack-k/silent-hill/index.html",
     desc: "Play Silent Hill online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/silent-hill.jpg" , tags: ["Horror"] },
@@ -1037,7 +990,6 @@ let _0xData = [
   {
     id: "slope-plus",
     title: "Slope Plus",
-    url: "https://whatchamacallitexe.github.io/pack-k/slope-plus/index.html",
     desc: "Play Slope Plus online in your browser.",
     popular: false
   , image: "../Games/_covers/slope-plus.svg" , tags: ["Action", "Platformer"] },
@@ -1352,7 +1304,6 @@ let _0xData = [
   {
     id: "soundboard",
     title: "Soundboard",
-    url: "https://whatchamacallitexe.github.io/pack-k/soundboard/index.html",
     desc: "Play Soundboard online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/soundboard.jpg" , tags: ["Party"] },
@@ -1422,7 +1373,6 @@ let _0xData = [
   {
     id: "spiral-roll",
     title: "Spiral Roll",
-    url: "https://whatchamacallitexe.github.io/pack-k/spiral-roll/index.html",
     desc: "Play Spiral Roll online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/spiral-roll.jpg" , tags: ["Casual"] },
@@ -1534,7 +1484,6 @@ let _0xData = [
   {
     id: "stick-fighter",
     title: "Stick Fighter",
-    url: "https://whatchamacallitexe.github.io/pack-k/stick-fighter/index.html",
     desc: "Play Stick Fighter online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/stick-fighter.jpg" , tags: ["Fighting", "Action"] },
@@ -1569,7 +1518,6 @@ let _0xData = [
   {
     id: "stickjet-challenge",
     title: "Stickjet Challenge",
-    url: "https://whatchamacallitexe.github.io/pack-k/stickjet-challenge/index.html",
     desc: "Play Stickjet Challenge online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/stickjet-challenge.jpg" , tags: ["Casual"] },
@@ -1828,7 +1776,6 @@ let _0xData = [
   {
     id: "suma",
     title: "Suma",
-    url: "https://whatchamacallitexe.github.io/pack-k/suma/index.html",
     desc: "Play Suma online in your browser.",
     popular: false
   , image: "../Games/_covers/suma.svg" , tags: ["Casual"] },
@@ -1912,14 +1859,12 @@ let _0xData = [
   {
     id: "supreme-duelist",
     title: "Supreme Duelist",
-    url: "https://whatchamacallitexe.github.io/pack-k/supreme-duelist/index.html",
     desc: "Play Supreme Duelist online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/supreme-duelist.jpg" , tags: ["Fighting", "Action", "Party", "Multiplayer"] },
   {
     id: "survivor-io",
     title: "Survivor Io",
-    url: "https://whatchamacallitexe.github.io/pack-k/survivor-io/index.html",
     desc: "Play Survivor Io online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/survivor-io.jpg" , tags: ["Party", "Multiplayer"] },
@@ -1954,7 +1899,6 @@ let _0xData = [
   {
     id: "switch",
     title: "Switch",
-    url: "https://whatchamacallitexe.github.io/pack-k/switch/index.html",
     desc: "Play Switch online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/switch.jpg" , tags: ["Casual"] },
@@ -2143,28 +2087,24 @@ let _0xData = [
   {
     id: "slow-roads",
     title: "Slow Roads",
-    url: "https://whatchamacallitexe.github.io/pack-k/slow-roads/index.html",
     desc: "Play Slow Roads online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/slow-roads.jpg" , tags: ["Racing", "3D"] },
   {
     id: "snakelike",
     title: "Snakelike",
-    url: "https://whatchamacallitexe.github.io/pack-k/snakelike/index.html",
     desc: "Play Snakelike online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/snakelike.jpg" , tags: ["Retro"] },
   {
     id: "snow-road",
     title: "Snow Road",
-    url: "https://whatchamacallitexe.github.io/pack-k/snow-road/index.html",
     desc: "Play Snow Road online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/snow-road.jpg" , tags: ["Racing"] },
   {
     id: "soccer-bros",
     title: "Soccer Bros",
-    url: "https://whatchamacallitexe.github.io/pack-k/soccer-bros/index.html",
     desc: "Play Soccer Bros online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/soccer-bros.jpg" , tags: ["Sports", "Party", "Multiplayer"] },
@@ -2290,14 +2230,12 @@ let _0xData = [
   {
     id: "spacebar-clicker",
     title: "Spacebar Clicker",
-    url: "https://whatchamacallitexe.github.io/pack-k/spacebar-clicker/index.html",
     desc: "Play Spacebar Clicker online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/spacebar-clicker.jpg" , tags: ["Idle", "Casual"] },
   {
     id: "speed-per-click",
     title: "Speed Per Click",
-    url: "https://whatchamacallitexe.github.io/pack-k/speed-per-click/index.html",
     desc: "Play Speed Per Click online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/speed-per-click.jpg" , tags: ["Casual"] },
@@ -2318,35 +2256,30 @@ let _0xData = [
   {
     id: "sprunked",
     title: "Sprunked",
-    url: "https://whatchamacallitexe.github.io/pack-k/sprunked/index.html",
     desc: "Play Sprunked online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/sprunked.jpg" , tags: ["Casual"] },
   {
     id: "sprunki-clicker",
     title: "Sprunki Clicker",
-    url: "https://whatchamacallitexe.github.io/pack-k/sprunki-clicker/index.html",
     desc: "Play Sprunki Clicker online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/sprunki-clicker.jpg" , tags: ["Idle"] },
   {
     id: "sprunki-pyra-mixed",
     title: "Sprunki Pyra Mixed",
-    url: "https://whatchamacallitexe.github.io/pack-k/sprunki-pyra-mixed/index.html",
     desc: "Play Sprunki Pyra Mixed online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/sprunki-pyra-mixed.jpg" , tags: ["Casual"] },
   {
     id: "sprunki",
     title: "Sprunki",
-    url: "https://whatchamacallitexe.github.io/pack-k/sprunki/index.html",
     desc: "Play Sprunki online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/sprunki.jpg" , tags: ["Casual"] },
   {
     id: "squid-playground",
     title: "Squid Playground",
-    url: "https://whatchamacallitexe.github.io/pack-k/squid-playground/index.html",
     desc: "Play Squid Playground online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/squid-playground.jpg" , tags: ["Casual"] },
@@ -2416,7 +2349,6 @@ let _0xData = [
   {
     id: "stick-duels",
     title: "Stick Duels",
-    url: "https://whatchamacallitexe.github.io/pack-k/stick-duels/index.html",
     desc: "Play Stick Duels online in your browser.",
     popular: false
   , image: "../Games/_covers/stick-duels.svg" , tags: ["Fighting", "Action", "Party", "Multiplayer"] },
@@ -2437,14 +2369,12 @@ let _0xData = [
   {
     id: "stickman-and-guns",
     title: "Stickman And Guns",
-    url: "https://whatchamacallitexe.github.io/pack-k/stickman-and-guns/index.html",
     desc: "Play Stickman And Guns online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/stickman-and-guns.jpg" , tags: ["Action"] },
   {
     id: "stickman-clash",
     title: "Stickman Clash",
-    url: "https://whatchamacallitexe.github.io/pack-k/stickman-clash/index.html",
     desc: "Play Stickman Clash online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/stickman-clash.jpg" , tags: ["Strategy"] },
@@ -2465,7 +2395,6 @@ let _0xData = [
   {
     id: "stickman-kombat-2d",
     title: "Stickman Kombat 2D",
-    url: "https://whatchamacallitexe.github.io/pack-k/stickman-kombat-2d/index.html",
     desc: "Play Stickman Kombat 2D online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/stickman-kombat-2d.jpg" , tags: ["2D"] },
@@ -2486,14 +2415,12 @@ let _0xData = [
   {
     id: "street-fighter-alpha-2",
     title: "Street Fighter Alpha 2",
-    url: "https://whatchamacallitexe.github.io/pack-k/street-fighter-alpha-2/index.html",
     desc: "Play Street Fighter Alpha 2 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/street-fighter-alpha-2.jpg" , tags: ["Fighting", "Action", "Arcade", "Retro"] },
   {
     id: "street-fighter-alpha-3",
     title: "Street Fighter Alpha 3",
-    url: "https://whatchamacallitexe.github.io/pack-k/street-fighter-alpha-3/index.html",
     desc: "Play Street Fighter Alpha 3 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/street-fighter-alpha-3.jpg" , tags: ["Fighting", "Action", "Arcade", "Retro"] },
@@ -2640,7 +2567,6 @@ let _0xData = [
   {
     id: "super-mario-64",
     title: "Super Mario 64",
-    url: "https://whatchamacallitexe.github.io/pack-k/super-mario-64/index.html",
     desc: "Play Super Mario 64 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/super-mario-64.jpg" , tags: ["Fan Game", "Action", "Platformer", "Party", "Multiplayer"] },
@@ -2661,7 +2587,6 @@ let _0xData = [
   {
     id: "super-mario-construct",
     title: "Super Mario Construct",
-    url: "https://whatchamacallitexe.github.io/pack-k/super-mario-construct/index.html",
     desc: "Play Super Mario Construct online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/super-mario-construct.jpg" , tags: ["Fan Game", "Action", "Platformer", "Party", "Multiplayer"] },
@@ -2703,14 +2628,12 @@ let _0xData = [
   {
     id: "super-smash-flash-v08",
     title: "Super Smash Flash V08",
-    url: "https://whatchamacallitexe.github.io/pack-k/super-smash-flash-v08/index.html",
     desc: "Play Super Smash Flash V08 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/super-smash-flash-v08.jpg" , tags: ["Fighting", "Fan Game"] },
   {
     id: "supercold",
     title: "Supercold",
-    url: "https://whatchamacallitexe.github.io/pack-k/supercold/index.html",
     desc: "Play Supercold online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/supercold.jpg" , tags: ["Casual"] },
@@ -2808,7 +2731,6 @@ let _0xData = [
   {
     id: "amorphous",
     title: "Amorphous",
-    url: "https://whatchamacallitexe.github.io/pack-k/amorphous/index.html",
     desc: "Play Amorphous online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/amorphous.jpg" , tags: ["Casual"] },
@@ -2927,7 +2849,6 @@ let _0xData = [
   {
     id: "tapper",
     title: "Tapper",
-    url: "https://whatchamacallitexe.github.io/pack-l/tapper/index.html",
     desc: "Play Tapper online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/tapper.jpg" , tags: ["Arcade", "Retro"] },
@@ -2955,7 +2876,6 @@ let _0xData = [
   {
     id: "tempest-2000",
     title: "Tempest 2000",
-    url: "https://whatchamacallitexe.github.io/pack-l/tempest-2000/index.html",
     desc: "Play Tempest 2000 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/tempest-2000.jpg" , tags: ["Casual"] },
@@ -3011,7 +2931,6 @@ let _0xData = [
   {
     id: "theme-park",
     title: "Theme Park",
-    url: "https://whatchamacallitexe.github.io/pack-l/theme-park/index.html",
     desc: "Play Theme Park online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/theme-park.jpg" , tags: ["Simulation"] },
@@ -3039,7 +2958,6 @@ let _0xData = [
   {
     id: "absolute-madness",
     title: "Absolute Madness",
-    url: "https://whatchamacallitexe.github.io/pack-m/absolute-madness/index.html",
     desc: "Play Absolute Madness online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/absolute-madness.jpg" , tags: ["Casual"] },
@@ -3144,7 +3062,6 @@ let _0xData = [
   {
     id: "action52nes",
     title: "Action52Nes",
-    url: "https://whatchamacallitexe.github.io/pack-m/action52nes/index.html",
     desc: "Play Action52Nes online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/action52nes.jpg" , tags: ["Action"] },
@@ -3158,14 +3075,12 @@ let _0xData = [
   {
     id: "adatewithdeath",
     title: "Adatewithdeath",
-    url: "https://whatchamacallitexe.github.io/pack-m/adatewithdeath/index.html",
     desc: "Play Adatewithdeath online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/adatewithdeath.jpg" , tags: ["Casual"] },
   {
     id: "adayintheoffice",
     title: "Adayintheoffice",
-    url: "https://whatchamacallitexe.github.io/pack-m/adayintheoffice/index.html",
     desc: "Play Adayintheoffice online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/adayintheoffice.jpg" , tags: ["Casual"] },
@@ -3186,21 +3101,18 @@ let _0xData = [
   {
     id: "advancewars",
     title: "Advancewars",
-    url: "https://whatchamacallitexe.github.io/pack-m/advancewars/index.html",
     desc: "Play Advancewars online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/advancewars.jpg" , tags: ["Casual"] },
   {
     id: "advancewars2",
     title: "Advancewars2",
-    url: "https://whatchamacallitexe.github.io/pack-m/advancewars2/index.html",
     desc: "Play Advancewars2 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/advancewars2.jpg" , tags: ["Casual"] },
   {
     id: "advent-neon",
     title: "Advent Neon",
-    url: "https://whatchamacallitexe.github.io/pack-m/advent-neon/index.html",
     desc: "Play Advent Neon online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/advent-neon.jpg" , tags: ["Casual"] },
@@ -3228,14 +3140,12 @@ let _0xData = [
   {
     id: "agesofempire",
     title: "Agesofempire",
-    url: "https://whatchamacallitexe.github.io/pack-m/agesofempire/index.html",
     desc: "Play Agesofempire online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/agesofempire.jpg" , tags: ["Strategy", "Idle"] },
   {
     id: "ai",
     title: "Ai",
-    url: "https://whatchamacallitexe.github.io/pack-m/ai/index.html",
     desc: "Play Ai online in your browser.",
     popular: false
   , image: "../Games/_covers/ai.svg" , tags: ["Casual"] },
@@ -3298,14 +3208,12 @@ let _0xData = [
   {
     id: "alienvspredator",
     title: "Alienvspredator",
-    url: "https://whatchamacallitexe.github.io/pack-m/alienvspredator/index.html",
     desc: "Play Alienvspredator online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/alienvspredator.jpg" , tags: ["Casual"] },
   {
     id: "allocation",
     title: "Allocation",
-    url: "https://whatchamacallitexe.github.io/pack-m/allocation/index.html",
     desc: "Play Allocation online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/allocation.jpg" , tags: ["Casual"] },
@@ -3319,7 +3227,6 @@ let _0xData = [
   {
     id: "ambulance-rush",
     title: "Ambulance Rush",
-    url: "https://whatchamacallitexe.github.io/pack-m/ambulance-rush/index.html",
     desc: "Play Ambulance Rush online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/ambulance-rush.jpg" , tags: ["Casual"] },
@@ -3403,7 +3310,6 @@ let _0xData = [
   {
     id: "angry-birds-2",
     title: "Angry Birds 2",
-    url: "https://whatchamacallitexe.github.io/pack-m/angry-birds-2/index.html",
     desc: "Play Angry Birds 2 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/angry-birds-2.jpg" , tags: ["Puzzle"] },
@@ -3466,14 +3372,12 @@ let _0xData = [
   {
     id: "ant-art-tycoon",
     title: "Ant Art Tycoon",
-    url: "https://whatchamacallitexe.github.io/pack-m/ant-art-tycoon/index.html",
     desc: "Play Ant Art Tycoon online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/ant-art-tycoon.jpg" , tags: ["Idle", "Simulation"] },
   {
     id: "antimatterdimensions",
     title: "Antimatterdimensions",
-    url: "https://whatchamacallitexe.github.io/pack-m/antimatterdimensions/index.html",
     desc: "Play Antimatterdimensions online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/antimatterdimensions.jpg" , tags: ["Idle"] },
@@ -3515,7 +3419,6 @@ let _0xData = [
   {
     id: "arcade-volley",
     title: "Arcade Volley",
-    url: "https://whatchamacallitexe.github.io/pack-m/arcade-volley/index.html",
     desc: "Play Arcade Volley online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/arcade-volley.jpg" , tags: ["Sports", "Arcade"] },
@@ -3543,7 +3446,6 @@ let _0xData = [
   {
     id: "archesspelago",
     title: "Archesspelago",
-    url: "https://whatchamacallitexe.github.io/pack-m/archesspelago/index.html",
     desc: "Play Archesspelago online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/archesspelago.jpg" , tags: ["Puzzle", "Strategy"] },
@@ -3585,7 +3487,6 @@ let _0xData = [
   {
     id: "as-duty-demands",
     title: "As Duty Demands",
-    url: "https://whatchamacallitexe.github.io/pack-m/as-duty-demands/index.html",
     desc: "Play As Duty Demands online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/as-duty-demands.jpg" , tags: ["Casual"] },
@@ -3613,7 +3514,6 @@ let _0xData = [
   {
     id: "astrawasm",
     title: "Astrawasm",
-    url: "https://whatchamacallitexe.github.io/pack-m/astrawasm/index.html",
     desc: "Play Astrawasm online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/astrawasm.jpg" , tags: ["Casual"] },
@@ -3627,7 +3527,6 @@ let _0xData = [
   {
     id: "aviamasters",
     title: "Aviamasters",
-    url: "https://whatchamacallitexe.github.io/pack-m/aviamasters/index.html",
     desc: "Play Aviamasters online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/aviamasters.jpg" , tags: ["Casual"] },
@@ -3669,7 +3568,6 @@ let _0xData = [
   {
     id: "b3313",
     title: "B3313",
-    url: "https://whatchamacallitexe.github.io/pack-m/b3313/index.html",
     desc: "Play B3313 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/b3313.jpg" , tags: ["Casual"] },
@@ -3718,14 +3616,12 @@ let _0xData = [
   {
     id: "backyard-baseball",
     title: "Backyard Baseball",
-    url: "https://whatchamacallitexe.github.io/pack-n/backyard-baseball/index.html",
     desc: "Play Backyard Baseball online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/backyard-baseball.jpg" , tags: ["Sports"] },
   {
     id: "backyard-soccer",
     title: "Backyard Soccer",
-    url: "https://whatchamacallitexe.github.io/pack-n/backyard-soccer/index.html",
     desc: "Play Backyard Soccer online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/backyard-soccer.jpg" , tags: ["Sports"] },
@@ -3746,7 +3642,6 @@ let _0xData = [
   {
     id: "bad-monday-simulator",
     title: "Bad Monday Simulator",
-    url: "https://whatchamacallitexe.github.io/pack-n/bad-monday-simulator/index.html",
     desc: "Play Bad Monday Simulator online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/bad-monday-simulator.jpg" , tags: ["Simulation"] },
@@ -3760,14 +3655,12 @@ let _0xData = [
   {
     id: "bad-piggies-2018",
     title: "Bad Piggies 2018",
-    url: "https://whatchamacallitexe.github.io/pack-n/bad-piggies-2018/index.html",
     desc: "Play Bad Piggies 2018 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/bad-piggies-2018.jpg" , tags: ["Casual"] },
   {
     id: "bad-piggies-latest",
     title: "Bad Piggies Latest",
-    url: "https://whatchamacallitexe.github.io/pack-n/bad-piggies-latest/index.html",
     desc: "Play Bad Piggies Latest online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/bad-piggies-latest.jpg" , tags: ["Casual"] },
@@ -3788,7 +3681,6 @@ let _0xData = [
   {
     id: "baldi-decomp",
     title: "Baldi Decomp",
-    url: "https://whatchamacallitexe.github.io/pack-n/baldi-decomp/index.html",
     desc: "Play Baldi Decomp online in your browser.",
     popular: false
   , image: "../Games/_covers/baldi-decomp.svg" , tags: ["Fan Game"] },
@@ -3816,14 +3708,12 @@ let _0xData = [
   {
     id: "ball-blast",
     title: "Ball Blast",
-    url: "https://whatchamacallitexe.github.io/pack-n/ball-blast/index.html",
     desc: "Play Ball Blast online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/ball-blast.jpg" , tags: ["Casual"] },
   {
     id: "balloon-fight",
     title: "Balloon Fight",
-    url: "https://whatchamacallitexe.github.io/pack-n/balloon-fight/index.html",
     desc: "Play Balloon Fight online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/balloon-fight.jpg" , tags: ["Fighting", "Action"] },
@@ -3837,7 +3727,6 @@ let _0xData = [
   {
     id: "balls-and-bricks",
     title: "Balls And Bricks",
-    url: "https://whatchamacallitexe.github.io/pack-n/balls-and-bricks/index.html",
     desc: "Play Balls And Bricks online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/balls-and-bricks.jpg" , tags: ["Casual"] },
@@ -3851,14 +3740,12 @@ let _0xData = [
   {
     id: "banana-simulator",
     title: "Banana Simulator",
-    url: "https://whatchamacallitexe.github.io/pack-n/banana-simulator/index.html",
     desc: "Play Banana Simulator online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/banana-simulator.jpg" , tags: ["Simulation"] },
   {
     id: "bandit-gunslingers",
     title: "Bandit Gunslingers",
-    url: "https://whatchamacallitexe.github.io/pack-n/bandit-gunslingers/index.html",
     desc: "Play Bandit Gunslingers online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/bandit-gunslingers.jpg" , tags: ["Action"] },
@@ -3907,7 +3794,6 @@ let _0xData = [
   {
     id: "bas",
     title: "Bas",
-    url: "https://whatchamacallitexe.github.io/pack-n/bas/index.html",
     desc: "Play Bas online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/bas.jpg" , tags: ["Casual"] },
@@ -3935,7 +3821,6 @@ let _0xData = [
   {
     id: "basket-slam-dunk-2",
     title: "Basket Slam Dunk 2",
-    url: "https://whatchamacallitexe.github.io/pack-n/basket-slam-dunk-2/index.html",
     desc: "Play Basket Slam Dunk 2 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/basket-slam-dunk-2.jpg" , tags: ["Sports"] },
@@ -3970,7 +3855,6 @@ let _0xData = [
   {
     id: "battle-karts",
     title: "Battle Karts",
-    url: "https://whatchamacallitexe.github.io/pack-n/battle-karts/index.html",
     desc: "Play Battle Karts online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/battle-karts.jpg" , tags: ["Shooter", "Action", "Racing", "Strategy"] },
@@ -3984,7 +3868,6 @@ let _0xData = [
   {
     id: "battles",
     title: "Battles",
-    url: "https://whatchamacallitexe.github.io/pack-n/battles/index.html",
     desc: "Play Battles online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/battles.jpg" , tags: ["Shooter", "Action", "Strategy"] },
@@ -4061,14 +3944,12 @@ let _0xData = [
   {
     id: "bfdi-branches",
     title: "Bfdi Branches",
-    url: "https://whatchamacallitexe.github.io/pack-n/bfdi-branches/index.html",
     desc: "Play Bfdi Branches online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/bfdi-branches.jpg" , tags: ["Casual"] },
   {
     id: "bfdia-5b",
     title: "Bfdia 5B",
-    url: "https://whatchamacallitexe.github.io/pack-n/bfdia-5b/index.html",
     desc: "Play Bfdia 5B online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/bfdia-5b.jpg" , tags: ["Casual"] },
@@ -4089,14 +3970,12 @@ let _0xData = [
   {
     id: "big-tower-tiny-square-2",
     title: "Big Tower Tiny Square 2",
-    url: "https://whatchamacallitexe.github.io/pack-n/big-tower-tiny-square-2/index.html",
     desc: "Play Big Tower Tiny Square 2 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/big-tower-tiny-square-2.jpg" , tags: ["Casual"] },
   {
     id: "big-tower-tiny-square",
     title: "Big Tower Tiny Square",
-    url: "https://whatchamacallitexe.github.io/pack-n/big-tower-tiny-square/index.html",
     desc: "Play Big Tower Tiny Square online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/big-tower-tiny-square.jpg" , tags: ["Casual"] },
@@ -4131,14 +4010,12 @@ let _0xData = [
   {
     id: "bit-burner",
     title: "Bit Burner",
-    url: "https://whatchamacallitexe.github.io/pack-n/bit-burner/index.html",
     desc: "Play Bit Burner online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/bit-burner.jpg" , tags: ["Casual"] },
   {
     id: "bit-planes",
     title: "Bit Planes",
-    url: "https://whatchamacallitexe.github.io/pack-n/bit-planes/index.html",
     desc: "Play Bit Planes online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/bit-planes.jpg" , tags: ["Shooter", "Action", "Simulation"] },
@@ -4173,7 +4050,6 @@ let _0xData = [
   {
     id: "blaze-drifter",
     title: "Blaze Drifter",
-    url: "https://whatchamacallitexe.github.io/pack-n/blaze-drifter/index.html",
     desc: "Play Blaze Drifter online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/blaze-drifter.jpg" , tags: ["Racing"] },
@@ -4215,7 +4091,6 @@ let _0xData = [
   {
     id: "blocky-demolition-derby",
     title: "Blocky Demolition Derby",
-    url: "https://whatchamacallitexe.github.io/pack-n/blocky-demolition-derby/index.html",
     desc: "Play Blocky Demolition Derby online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/blocky-demolition-derby.jpg" , tags: ["Puzzle"] },
@@ -4229,7 +4104,6 @@ let _0xData = [
   {
     id: "blood-tournament",
     title: "Blood Tournament",
-    url: "https://whatchamacallitexe.github.io/pack-n/blood-tournament/index.html",
     desc: "Play Blood Tournament online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/blood-tournament.jpg" , tags: ["Horror"] },
@@ -4292,7 +4166,6 @@ let _0xData = [
   {
     id: "blumgi-racers",
     title: "Blumgi Racers",
-    url: "https://whatchamacallitexe.github.io/pack-n/blumgi-racers/index.html",
     desc: "Play Blumgi Racers online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/blumgi-racers.jpg" , tags: ["Racing"] },
@@ -4306,7 +4179,6 @@ let _0xData = [
   {
     id: "bob-the-robber-5",
     title: "Bob The Robber 5",
-    url: "https://whatchamacallitexe.github.io/pack-n/bob-the-robber-5/index.html",
     desc: "Play Bob The Robber 5 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/bob-the-robber-5.jpg" , tags: ["Casual"] },
@@ -4369,7 +4241,6 @@ let _0xData = [
   {
     id: "boom-slingers",
     title: "Boom Slingers",
-    url: "https://whatchamacallitexe.github.io/pack-n/boom-slingers/index.html",
     desc: "Play Boom Slingers online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/boom-slingers.jpg" , tags: ["Casual"] },
@@ -4397,7 +4268,6 @@ let _0xData = [
   {
     id: "bouncy-motors",
     title: "Bouncy Motors",
-    url: "https://whatchamacallitexe.github.io/pack-n/bouncy-motors/index.html",
     desc: "Play Bouncy Motors online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/bouncy-motors.jpg" , tags: ["Racing"] },
@@ -4446,7 +4316,6 @@ let _0xData = [
   {
     id: "breadskate-forever",
     title: "Breadskate Forever",
-    url: "https://whatchamacallitexe.github.io/pack-n/breadskate-forever/index.html",
     desc: "Play Breadskate Forever online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/breadskate-forever.jpg" , tags: ["Sports"] },
@@ -4572,7 +4441,6 @@ let _0xData = [
   {
     id: "buildnow-gg",
     title: "Buildnow Gg",
-    url: "https://whatchamacallitexe.github.io/pack-n/buildnow-gg/index.html",
     desc: "Play Buildnow Gg online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/buildnow-gg.jpg" , tags: ["Idle", "Simulation"] },
@@ -4614,7 +4482,6 @@ let _0xData = [
   {
     id: "candy-box-1",
     title: "Candy Box 1",
-    url: "https://whatchamacallitexe.github.io/pack-n/candy-box-1/index.html",
     desc: "Play Candy Box 1 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/candy-box-1.jpg" , tags: ["Casual"] },
@@ -4628,21 +4495,18 @@ let _0xData = [
   {
     id: "captchaware",
     title: "Captchaware",
-    url: "https://whatchamacallitexe.github.io/pack-n/captchaware/index.html",
     desc: "Play Captchaware online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/captchaware.jpg" , tags: ["Casual"] },
   {
     id: "capuchin",
     title: "Capuchin",
-    url: "https://whatchamacallitexe.github.io/pack-n/capuchin/index.html",
     desc: "Play Capuchin online in your browser.",
     popular: false
   , image: "../Games/_covers/capuchin.svg" , tags: ["Casual"] },
   {
     id: "ace-attorney",
     title: "Ace Attorney",
-    url: "https://whatchamacallitexe.github.io/pack-k/ace-attorney/index.html",
     desc: "Play Ace Attorney online in your browser.",
     popular: false
   , image: "../Games/_covers/ace-attorney.svg" , tags: ["Visual Novel", "Adventure", "Puzzle"] },
@@ -4691,7 +4555,6 @@ let _0xData = [
   {
     id: "alien-vs-predator",
     title: "Alien Vs Predator",
-    url: "https://whatchamacallitexe.github.io/pack-k/alien-vs-predator/index.html",
     desc: "Play Alien Vs Predator online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/alien-vs-predator.jpg" , tags: ["Casual"] },
@@ -4712,7 +4575,6 @@ let _0xData = [
   {
     id: "a-small-world-cup",
     title: "A Small World Cup",
-    url: "https://whatchamacallitexe.github.io/pack-m/a-small-world-cup/index.html",
     desc: "Play A Small World Cup online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/a-small-world-cup.jpg" , tags: ["Idle", "Simulation"] },
@@ -4824,7 +4686,6 @@ let _0xData = [
   {
     id: "cat-mario",
     title: "Cat Mario",
-    url: "https://whatchamacallitexe.github.io/pack-n/cat-mario/index.html",
     desc: "Play Cat Mario online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/cat-mario.jpg" , tags: ["Fan Game", "Action", "Platformer", "Simulation", "Party"] },
@@ -4838,14 +4699,12 @@ let _0xData = [
   {
     id: "cave-crawler",
     title: "Cave Crawler",
-    url: "https://whatchamacallitexe.github.io/pack-n/cave-crawler/index.html",
     desc: "Play Cave Crawler online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/cave-crawler.jpg" , tags: ["Adventure"] },
   {
     id: "cave-story",
     title: "Cave Story",
-    url: "https://whatchamacallitexe.github.io/pack-n/cave-story/index.html",
     desc: "Play Cave Story online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/cave-story.jpg" , tags: ["Adventure"] },
@@ -4859,7 +4718,6 @@ let _0xData = [
   {
     id: "cell-to-singularity",
     title: "Cell To Singularity",
-    url: "https://whatchamacallitexe.github.io/pack-n/cell-to-singularity/index.html",
     desc: "Play Cell To Singularity online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/cell-to-singularity.jpg" , tags: ["Idle"] },
@@ -4880,7 +4738,6 @@ let _0xData = [
   {
     id: "champion-island",
     title: "Champion Island",
-    url: "https://whatchamacallitexe.github.io/pack-n/champion-island/index.html",
     desc: "Play Champion Island online in your browser.",
     popular: false
   , image: "../Games/_covers/champion-island.svg" , tags: ["Survival", "Adventure"] },
@@ -4908,7 +4765,6 @@ let _0xData = [
   {
     id: "cheese-rolling",
     title: "Cheese Rolling",
-    url: "https://whatchamacallitexe.github.io/pack-n/cheese-rolling/index.html",
     desc: "Play Cheese Rolling online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/cheese-rolling.jpg" , tags: ["Casual"] },
@@ -5041,7 +4897,6 @@ let _0xData = [
   {
     id: "coal-llc",
     title: "Coal Llc",
-    url: "https://whatchamacallitexe.github.io/pack-n/coal-llc/index.html",
     desc: "Play Coal Llc online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/coal-llc.jpg" , tags: ["Casual"] },
@@ -5055,7 +4910,6 @@ let _0xData = [
   {
     id: "cold-front",
     title: "Cold Front",
-    url: "https://whatchamacallitexe.github.io/pack-n/cold-front/index.html",
     desc: "Play Cold Front online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/cold-front.jpg" , tags: ["Casual"] },
@@ -5076,14 +4930,12 @@ let _0xData = [
   {
     id: "command-and-conquer-red-alert",
     title: "Command And Conquer Red Alert",
-    url: "https://whatchamacallitexe.github.io/pack-n/command-and-conquer-red-alert/index.html",
     desc: "Play Command And Conquer Red Alert online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/command-and-conquer-red-alert.jpg" , tags: ["Strategy"] },
   {
     id: "command-and-conquer-tiberian-dawn",
     title: "Command And Conquer Tiberian Dawn",
-    url: "https://whatchamacallitexe.github.io/pack-n/command-and-conquer-tiberian-dawn/index.html",
     desc: "Play Command And Conquer Tiberian Dawn online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/command-and-conquer-tiberian-dawn.jpg" , tags: ["Strategy"] },
@@ -5111,7 +4963,6 @@ let _0xData = [
   {
     id: "count-masters-stickman",
     title: "Count Masters Stickman",
-    url: "https://whatchamacallitexe.github.io/pack-n/count-masters-stickman/index.html",
     desc: "Play Count Masters Stickman online in your browser.",
     popular: false
   , image: "../Games/_covers/count-masters-stickman.svg" , tags: ["Casual"] },
@@ -5181,7 +5032,6 @@ let _0xData = [
   {
     id: "crank-it",
     title: "Crank It",
-    url: "https://whatchamacallitexe.github.io/pack-n/crank-it/index.html",
     desc: "Play Crank It online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/crank-it.jpg" , tags: ["Casual"] },
@@ -5216,7 +5066,6 @@ let _0xData = [
   {
     id: "crazy-motorcycle",
     title: "Crazy Motorcycle",
-    url: "https://whatchamacallitexe.github.io/pack-n/crazy-motorcycle/index.html",
     desc: "Play Crazy Motorcycle online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/crazy-motorcycle.jpg" , tags: ["Racing"] },
@@ -5244,7 +5093,6 @@ let _0xData = [
   {
     id: "creepy-night-funkin",
     title: "Creepy Night Funkin",
-    url: "https://whatchamacallitexe.github.io/pack-n/creepy-night-funkin/index.html",
     desc: "Play Creepy Night Funkin online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/creepy-night-funkin.jpg" , tags: ["Horror"] },
@@ -5328,7 +5176,6 @@ let _0xData = [
   {
     id: "cooking-mama",
     title: "Cooking Mama",
-    url: "https://whatchamacallitexe.github.io/pack-o/cooking-mama/index.html",
     desc: "Play Cooking Mama online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/cooking-mama.jpg" , tags: ["Simulation", "Cooking"] },
@@ -5356,21 +5203,18 @@ let _0xData = [
   {
     id: "dborigins",
     title: "Dborigins",
-    url: "https://whatchamacallitexe.github.io/pack-p/dborigins/index.html",
     desc: "Play Dborigins online in your browser.",
     popular: false
   , image: "../Games/_covers/dborigins.svg" , tags: ["Casual"] },
   {
     id: "dborigins2",
     title: "Dborigins2",
-    url: "https://whatchamacallitexe.github.io/pack-p/dborigins2/index.html",
     desc: "Play Dborigins2 online in your browser.",
     popular: false
   , image: "../Games/_covers/dborigins2.svg" , tags: ["Casual"] },
   {
     id: "dbzattacksaiyans",
     title: "Dbzattacksaiyans",
-    url: "https://whatchamacallitexe.github.io/pack-p/dbzattacksaiyans/index.html",
     desc: "Play Dbzattacksaiyans online in your browser.",
     popular: false
   , image: "../Games/_covers/dbzattacksaiyans.svg" , tags: ["Action"] },
@@ -5412,7 +5256,6 @@ let _0xData = [
   {
     id: "deblob2",
     title: "Deblob2",
-    url: "https://whatchamacallitexe.github.io/pack-p/deblob2/index.html",
     desc: "Play Deblob2 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/deblob2.jpg" , tags: ["Casual"] },
@@ -5489,7 +5332,6 @@ let _0xData = [
   {
     id: "diablo",
     title: "Diablo",
-    url: "https://whatchamacallitexe.github.io/pack-p/diablo/index.html",
     desc: "Play Diablo online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/diablo.jpg" , tags: ["Casual"] },
@@ -5510,7 +5352,6 @@ let _0xData = [
   {
     id: "diddykongracing",
     title: "Diddykongracing",
-    url: "https://whatchamacallitexe.github.io/pack-p/diddykongracing/index.html",
     desc: "Play Diddykongracing online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/diddykongracing.jpg" , tags: ["Racing"] },
@@ -5538,14 +5379,12 @@ let _0xData = [
   {
     id: "digdug2",
     title: "Digdug2",
-    url: "https://whatchamacallitexe.github.io/pack-p/digdug2/index.html",
     desc: "Play Digdug2 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/digdug2.jpg" , tags: ["Casual"] },
   {
     id: "digdug26",
     title: "Digdug26",
-    url: "https://whatchamacallitexe.github.io/pack-p/digdug26/index.html",
     desc: "Play Digdug26 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/digdug26.jpg" , tags: ["Casual"] },
@@ -5566,35 +5405,30 @@ let _0xData = [
   {
     id: "donkeykong",
     title: "Donkeykong",
-    url: "https://whatchamacallitexe.github.io/pack-p/donkeykong/index.html",
     desc: "Play Donkeykong online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/donkeykong.jpg" , tags: ["Casual"] },
   {
     id: "donkeykongcountry",
     title: "Donkeykongcountry",
-    url: "https://whatchamacallitexe.github.io/pack-p/donkeykongcountry/index.html",
     desc: "Play Donkeykongcountry online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/donkeykongcountry.jpg" , tags: ["Casual"] },
   {
     id: "donkeykongcountry2",
     title: "Donkeykongcountry2",
-    url: "https://whatchamacallitexe.github.io/pack-p/donkeykongcountry2/index.html",
     desc: "Play Donkeykongcountry2 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/donkeykongcountry2.jpg" , tags: ["Casual"] },
   {
     id: "donkeykongcountry3",
     title: "Donkeykongcountry3",
-    url: "https://whatchamacallitexe.github.io/pack-p/donkeykongcountry3/index.html",
     desc: "Play Donkeykongcountry3 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/donkeykongcountry3.jpg" , tags: ["Casual"] },
   {
     id: "donkeykongnes",
     title: "Donkeykongnes",
-    url: "https://whatchamacallitexe.github.io/pack-p/donkeykongnes/index.html",
     desc: "Play Donkeykongnes online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/donkeykongnes.jpg" , tags: ["Casual"] },
@@ -5608,7 +5442,6 @@ let _0xData = [
   {
     id: "dontescape2",
     title: "Dontescape2",
-    url: "https://whatchamacallitexe.github.io/pack-p/dontescape2/index.html",
     desc: "Play Dontescape2 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/dontescape2.jpg" , tags: ["Puzzle", "Adventure"] },
@@ -5650,7 +5483,6 @@ let _0xData = [
   {
     id: "bazookaboy",
     title: "Bazookaboy",
-    url: "https://whatchamacallitexe.github.io/pack-q/bazookaboy/index.html",
     desc: "Play Bazookaboy online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/bazookaboy.jpg" , tags: ["Idle", "Simulation"] },
@@ -5664,7 +5496,6 @@ let _0xData = [
   {
     id: "bloodtournament",
     title: "Bloodtournament",
-    url: "https://whatchamacallitexe.github.io/pack-q/bloodtournament/index.html",
     desc: "Play Bloodtournament online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/bloodtournament.jpg" , tags: ["Horror"] },
@@ -5797,7 +5628,6 @@ let _0xData = [
   {
     id: "elastic-face",
     title: "Elastic Face",
-    url: "https://whatchamacallitexe.github.io/pack-r/elastic-face/index.html",
     desc: "Play Elastic Face online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/elastic-face.jpg" , tags: ["Casual"] },
@@ -5930,14 +5760,12 @@ let _0xData = [
   {
     id: "fireboy-and-watergirl-2",
     title: "Fireboy And Watergirl 2",
-    url: "https://whatchamacallitexe.github.io/pack-s/fireboy-and-watergirl-2/index.html",
     desc: "Play Fireboy And Watergirl 2 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/fireboy-and-watergirl-2.jpg" , tags: ["Action", "Platformer"] },
   {
     id: "fireboy-and-watergirl-3",
     title: "Fireboy And Watergirl 3",
-    url: "https://whatchamacallitexe.github.io/pack-s/fireboy-and-watergirl-3/index.html",
     desc: "Play Fireboy And Watergirl 3 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/fireboy-and-watergirl-3.jpg" , tags: ["Action", "Platformer"] },
@@ -6000,7 +5828,6 @@ let _0xData = [
   {
     id: "geometrydashwave",
     title: "Geometrydashwave",
-    url: "https://whatchamacallitexe.github.io/pack-s/geometrydashwave/index.html",
     desc: "Play Geometrydashwave online in your browser.",
     popular: false
   , image: "../Games/_covers/geometrydashwave.svg" , tags: ["Action", "Platformer"] },
@@ -6014,7 +5841,6 @@ let _0xData = [
   {
     id: "georgeandtheprinter",
     title: "Georgeandtheprinter",
-    url: "https://whatchamacallitexe.github.io/pack-s/georgeandtheprinter/index.html",
     desc: "Play Georgeandtheprinter online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/georgeandtheprinter.jpg" , tags: ["Casual"] },
@@ -6049,14 +5875,12 @@ let _0xData = [
   {
     id: "gimmietheairpod",
     title: "Gimmietheairpod",
-    url: "https://whatchamacallitexe.github.io/pack-s/gimmietheairpod/index.html",
     desc: "Play Gimmietheairpod online in your browser.",
     popular: false
   , image: "../Games/_covers/gimmietheairpod.svg" , tags: ["Casual"] },
   {
     id: "gladdihoppers",
     title: "Gladdihoppers",
-    url: "https://whatchamacallitexe.github.io/pack-s/gladdihoppers/index.html",
     desc: "Play Gladdihoppers online in your browser.",
     popular: false
   , image: "../Games/_covers/gladdihoppers.svg" , tags: ["Casual"] },
@@ -6091,7 +5915,6 @@ let _0xData = [
   {
     id: "goldminer",
     title: "Goldminer",
-    url: "https://whatchamacallitexe.github.io/pack-s/goldminer/index.html",
     desc: "Play Goldminer online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/goldminer.jpg" , tags: ["Casual"] },
@@ -6217,7 +6040,6 @@ let _0xData = [
   {
     id: "idleidlegamedev",
     title: "Idleidlegamedev",
-    url: "https://whatchamacallitexe.github.io/pack-s/idleidlegamedev/index.html",
     desc: "Play Idleidlegamedev online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/idleidlegamedev.jpg" , tags: ["Idle"] },
@@ -6392,14 +6214,12 @@ let _0xData = [
   {
     id: "good-monkey-mart",
     title: "Good Monkey Mart",
-    url: "https://whatchamacallitexe.github.io/pack-t/good-monkey-mart/index.html",
     desc: "Play Good Monkey Mart online in your browser.",
     popular: false
   , image: "../Games/_covers/good-monkey-mart.svg" , tags: ["Casual"] },
   {
     id: "google-baseball",
     title: "Google Baseball",
-    url: "https://whatchamacallitexe.github.io/pack-t/google-baseball/index.html",
     desc: "Play Google Baseball online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/google-baseball.jpg" , tags: ["Sports"] },
@@ -6441,7 +6261,6 @@ let _0xData = [
   {
     id: "gta",
     title: "Gta",
-    url: "https://whatchamacallitexe.github.io/pack-t/gta/index.html",
     desc: "Play Gta online in your browser.",
     popular: false
   , image: "../Games/_covers/gta.svg" , tags: ["Casual"] },
@@ -6455,7 +6274,6 @@ let _0xData = [
   {
     id: "gunmayhem2-goof",
     title: "Gunmayhem2 Goof",
-    url: "https://whatchamacallitexe.github.io/pack-t/gunmayhem2-goof/index.html",
     desc: "Play Gunmayhem2 Goof online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/gunmayhem2-goof.jpg" , tags: ["Action"] },
@@ -6476,7 +6294,6 @@ let _0xData = [
   {
     id: "hanger-2",
     title: "Hanger 2",
-    url: "https://whatchamacallitexe.github.io/pack-u/hanger-2/index.html",
     desc: "Play Hanger 2 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/hanger-2.jpg" , tags: ["Casual"] },
@@ -6539,14 +6356,12 @@ let _0xData = [
   {
     id: "hobo-2",
     title: "Hobo 2",
-    url: "https://whatchamacallitexe.github.io/pack-u/hobo-2/index.html",
     desc: "Play Hobo 2 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/hobo-2.jpg" , tags: ["Casual"] },
   {
     id: "hobo-3",
     title: "Hobo 3",
-    url: "https://whatchamacallitexe.github.io/pack-u/hobo-3/index.html",
     desc: "Play Hobo 3 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/hobo-3.jpg" , tags: ["Casual"] },
@@ -6560,14 +6375,12 @@ let _0xData = [
   {
     id: "hobo-5",
     title: "Hobo 5",
-    url: "https://whatchamacallitexe.github.io/pack-u/hobo-5/index.html",
     desc: "Play Hobo 5 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/hobo-5.jpg" , tags: ["Casual"] },
   {
     id: "hobo",
     title: "Hobo",
-    url: "https://whatchamacallitexe.github.io/pack-u/hobo/index.html",
     desc: "Play Hobo online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/hobo.jpg" , tags: ["Casual"] },
@@ -6595,14 +6408,12 @@ let _0xData = [
   {
     id: "badtimesim",
     title: "Badtimesim",
-    url: "https://whatchamacallitexe.github.io/pack-v/badtimesim/index.html",
     desc: "Play Badtimesim online in your browser.",
     popular: false
   , image: "../Games/_covers/badtimesim.svg" , tags: ["Casual"] },
   {
     id: "battlekarts",
     title: "Battlekarts",
-    url: "https://whatchamacallitexe.github.io/pack-v/battlekarts/index.html",
     desc: "Play Battlekarts online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/battlekarts.jpg" , tags: ["Shooter", "Action", "Racing", "Strategy"] },
@@ -6749,7 +6560,6 @@ let _0xData = [
   {
     id: "circlo-o-2",
     title: "Circlo O 2",
-    url: "https://whatchamacallitexe.github.io/pack-o/circlo-o-2/index.html",
     desc: "Play Circlo O 2 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/circlo-o-2.jpg" , tags: ["Casual"] },
@@ -6763,7 +6573,6 @@ let _0xData = [
   {
     id: "cannon-fodder",
     title: "Cannon Fodder",
-    url: "https://whatchamacallitexe.github.io/pack-w/cannon-fodder/index.html",
     desc: "Play Cannon Fodder online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/cannon-fodder.jpg" , tags: ["Casual"] },
@@ -6819,21 +6628,18 @@ let _0xData = [
   {
     id: "dragonx-gui",
     title: "Dragonx Gui",
-    url: "https://whatchamacallitexe.github.io/eagler/dragonx-gui/index.html",
     desc: "Play Dragonx Gui online in your browser.",
     popular: false
   , image: "../Games/_covers/dragonx-gui.svg" , tags: ["Casual"] },
   {
     id: "dragonx-v2",
     title: "Dragonx V2",
-    url: "https://whatchamacallitexe.github.io/eagler/dragonx-v2/index.html",
     desc: "Play Dragonx V2 online in your browser.",
     popular: false
   , image: "../Games/_covers/dragonx-v2.svg" , tags: ["Casual"] },
   {
     id: "dragonx-v3",
     title: "Dragonx V3",
-    url: "https://whatchamacallitexe.github.io/eagler/dragonx-v3/index.html",
     desc: "Play Dragonx V3 online in your browser.",
     popular: false
   , image: "../Games/_covers/dragonx-v3.svg" , tags: ["Casual"] },
@@ -6847,28 +6653,24 @@ let _0xData = [
   {
     id: "eagler-reborn",
     title: "Eagler Reborn",
-    url: "https://whatchamacallitexe.github.io/eagler/eagler-reborn/index.html",
     desc: "Play Eagler Reborn online in your browser.",
     popular: false
   , image: "../Games/_covers/eagler-reborn.svg" , tags: ["Casual"] },
   {
     id: "eaglercraft-1.11.2",
     title: "Eaglercraft 1.11.2",
-    url: "https://whatchamacallitexe.github.io/eagler/eaglercraft-1.11.2/index.html",
     desc: "Play Eaglercraft 1.11.2 online in your browser.",
     popular: false
   , image: "../Games/_covers/eaglercraft-1-11-2.svg" , tags: ["Idle", "Survival", "Simulation"] },
   {
     id: "eaglercraft-26-2",
     title: "Eaglercraft 26 2",
-    url: "https://whatchamacallitexe.github.io/eagler/eaglercraft-26-2/index.html",
     desc: "Play Eaglercraft 26 2 online in your browser.",
     popular: false
   , image: "../Games/_covers/eaglercraft-26-2.svg" , tags: ["Idle", "Survival", "Simulation"] },
   {
     id: "eaglercraft-26.3",
     title: "Eaglercraft 26.3",
-    url: "https://whatchamacallitexe.github.io/eagler/eaglercraft-26.3/index.html",
     desc: "Play Eaglercraft 26.3 online in your browser.",
     popular: false
   , image: "../Games/_covers/eaglercraft-26-3.svg" , tags: ["Idle", "Survival", "Simulation"] },
@@ -6903,7 +6705,6 @@ let _0xData = [
   {
     id: "eaglercraft-ultimate",
     title: "Eaglercraft Ultimate",
-    url: "https://whatchamacallitexe.github.io/eagler/eaglercraft-ultimate/index.html",
     desc: "Play Eaglercraft Ultimate online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/eaglercraft-ultimate.jpg" , tags: ["Idle", "Survival", "Simulation"] },
@@ -6931,42 +6732,36 @@ let _0xData = [
   {
     id: "eaglercraftz-1.20",
     title: "Eaglercraftz 1.20",
-    url: "https://whatchamacallitexe.github.io/eagler/eaglercraftz-1.20/index.html",
     desc: "Play Eaglercraftz 1.20 online in your browser.",
     popular: false
   , image: "../Games/_covers/eaglercraftz-1-20.svg" , tags: ["Idle", "Survival", "Simulation"] },
   {
     id: "eaglerforge-intl",
     title: "Eaglerforge Intl",
-    url: "https://whatchamacallitexe.github.io/eagler/eaglerforge-intl/index.html",
     desc: "Play Eaglerforge Intl online in your browser.",
     popular: false
   , image: "../Games/_covers/eaglerforge-intl.svg" , tags: ["Casual"] },
   {
     id: "eaglymc-1.20",
     title: "Eaglymc 1.20",
-    url: "https://whatchamacallitexe.github.io/eagler/eaglymc-1.20/index.html",
     desc: "Play Eaglymc 1.20 online in your browser.",
     popular: false
   , image: "../Games/_covers/eaglymc-1-20.svg" , tags: ["Casual"] },
   {
     id: "eb-nextgen",
     title: "Eb Nextgen",
-    url: "https://whatchamacallitexe.github.io/eagler/eb-nextgen/index.html",
     desc: "Play Eb Nextgen online in your browser.",
     popular: false
   , image: "../Games/_covers/eb-nextgen.svg" , tags: ["Casual"] },
   {
     id: "eclient-1.5.2",
     title: "Eclient 1.5.2",
-    url: "https://whatchamacallitexe.github.io/eagler/eclient-1.5.2/index.html",
     desc: "Play Eclient 1.5.2 online in your browser.",
     popular: false
   , image: "../Games/_covers/eclient-1-5-2.svg" , tags: ["Casual"] },
   {
     id: "eclipse",
     title: "Eclipse",
-    url: "https://whatchamacallitexe.github.io/eagler/eclipse/index.html",
     desc: "Play Eclipse online in your browser.",
     popular: false
   , image: "../Games/_covers/eclipse.svg" , tags: ["Casual"] },
@@ -6980,7 +6775,6 @@ let _0xData = [
   {
     id: "flame",
     title: "Flame",
-    url: "https://whatchamacallitexe.github.io/eagler/flame/index.html",
     desc: "Play Flame online in your browser.",
     popular: false
   , image: "../Games/_covers/flame.svg" , tags: ["Casual"] },
@@ -6994,7 +6788,6 @@ let _0xData = [
   {
     id: "ghost-1.12",
     title: "Ghost 1.12",
-    url: "https://whatchamacallitexe.github.io/eagler/ghost-1.12/index.html",
     desc: "Play Ghost 1.12 online in your browser.",
     popular: false
   , image: "../Games/_covers/ghost-1-12.svg" , tags: ["Casual"] },
@@ -7036,7 +6829,6 @@ let _0xData = [
   {
     id: "kone",
     title: "Kone",
-    url: "https://whatchamacallitexe.github.io/eagler/kone/index.html",
     desc: "Play Kone online in your browser.",
     popular: false
   , image: "../Games/_covers/kone.svg" , tags: ["Casual"] },
@@ -7057,14 +6849,12 @@ let _0xData = [
   {
     id: "larpc-1.12",
     title: "Larpc 1.12",
-    url: "https://whatchamacallitexe.github.io/eagler/larpc-1.12/index.html",
     desc: "Play Larpc 1.12 online in your browser.",
     popular: false
   , image: "../Games/_covers/larpc-1-12.svg" , tags: ["Casual"] },
   {
     id: "larpc-1.14",
     title: "Larpc 1.14",
-    url: "https://whatchamacallitexe.github.io/eagler/larpc-1.14/index.html",
     desc: "Play Larpc 1.14 online in your browser.",
     popular: false
   , image: "../Games/_covers/larpc-1-14.svg" , tags: ["Casual"] },
@@ -7085,14 +6875,12 @@ let _0xData = [
   {
     id: "moonlight",
     title: "Moonlight",
-    url: "https://whatchamacallitexe.github.io/eagler/moonlight/index.html",
     desc: "Play Moonlight online in your browser.",
     popular: false
   , image: "../Games/_covers/moonlight.svg" , tags: ["Puzzle"] },
   {
     id: "myven",
     title: "Myven",
-    url: "https://whatchamacallitexe.github.io/eagler/myven/index.html",
     desc: "Play Myven online in your browser.",
     popular: false
   , image: "../Games/_covers/myven.svg" , tags: ["Casual"] },
@@ -7155,7 +6943,6 @@ let _0xData = [
   {
     id: "official-1.8.8-wasm",
     title: "Official 1.8.8 Wasm",
-    url: "https://whatchamacallitexe.github.io/eagler/official-1.8.8-wasm/index.html",
     desc: "Play Official 1.8.8 Wasm online in your browser.",
     popular: false
   , image: "../Games/_covers/official-1-8-8-wasm.svg" , tags: ["Casual"] },
@@ -7197,7 +6984,6 @@ let _0xData = [
   {
     id: "premium-dragon",
     title: "Premium Dragon",
-    url: "https://whatchamacallitexe.github.io/eagler/premium-dragon/index.html",
     desc: "Play Premium Dragon online in your browser.",
     popular: false
   , image: "../Games/_covers/premium-dragon.svg" , tags: ["Casual"] },
@@ -7218,14 +7004,12 @@ let _0xData = [
   {
     id: "reflex",
     title: "Reflex",
-    url: "https://whatchamacallitexe.github.io/eagler/reflex/index.html",
     desc: "Play Reflex online in your browser.",
     popular: false
   , image: "../Games/_covers/reflex.svg" , tags: ["Casual"] },
   {
     id: "resent-5",
     title: "Resent 5",
-    url: "https://whatchamacallitexe.github.io/eagler/resent-5/index.html",
     desc: "Play Resent 5 online in your browser.",
     popular: false
   , image: "../Games/_covers/resent-5.svg" , tags: ["Casual"] },
@@ -7239,7 +7023,6 @@ let _0xData = [
   {
     id: "shadow-2.5",
     title: "Shadow 2.5",
-    url: "https://whatchamacallitexe.github.io/eagler/shadow-2.5/index.html",
     desc: "Play Shadow 2.5 online in your browser.",
     popular: false
   , image: "../Games/_covers/shadow-2-5.svg" , tags: ["Casual"] },
@@ -7253,7 +7036,6 @@ let _0xData = [
   {
     id: "solar-3.5",
     title: "Solar 3.5",
-    url: "https://whatchamacallitexe.github.io/eagler/solar-3.5/index.html",
     desc: "Play Solar 3.5 online in your browser.",
     popular: false
   , image: "../Games/_covers/solar-3-5.svg" , tags: ["Casual"] },
@@ -7267,14 +7049,12 @@ let _0xData = [
   {
     id: "starlike",
     title: "Starlike",
-    url: "https://whatchamacallitexe.github.io/eagler/starlike/index.html",
     desc: "Play Starlike online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/starlike.jpg" , tags: ["Casual"] },
   {
     id: "stratus",
     title: "Stratus",
-    url: "https://whatchamacallitexe.github.io/eagler/stratus/index.html",
     desc: "Play Stratus online in your browser.",
     popular: false
   , image: "../Games/_covers/stratus.svg" , tags: ["Casual"] },
@@ -7302,14 +7082,12 @@ let _0xData = [
   {
     id: "via",
     title: "Via",
-    url: "https://whatchamacallitexe.github.io/eagler/via/index.html",
     desc: "Play Via online in your browser.",
     popular: false
   , image: "../Games/_covers/via.svg" , tags: ["Casual"] },
   {
     id: "voltan",
     title: "Voltan",
-    url: "https://whatchamacallitexe.github.io/eagler/voltan/index.html",
     desc: "Play Voltan online in your browser.",
     popular: false
   , image: "../Games/_covers/voltan.svg" , tags: ["Casual"] },
@@ -7344,14 +7122,12 @@ let _0xData = [
   {
     id: "backyardbaseball09",
     title: "Backyardbaseball09",
-    url: "https://whatchamacallitexe.github.io/pack-ad/backyardbaseball09/index.html",
     desc: "Play Backyardbaseball09 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/backyardbaseball09.jpg" , tags: ["Sports"] },
   {
     id: "backyardbaseball10",
     title: "Backyardbaseball10",
-    url: "https://whatchamacallitexe.github.io/pack-ad/backyardbaseball10/index.html",
     desc: "Play Backyardbaseball10 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/backyardbaseball10.jpg" , tags: ["Sports"] },
@@ -7372,7 +7148,6 @@ let _0xData = [
   {
     id: "badparenting",
     title: "Badparenting",
-    url: "https://whatchamacallitexe.github.io/pack-ad/badparenting/index.html",
     desc: "Play Badparenting online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/badparenting.jpg" , tags: ["Casual"] },
@@ -7393,14 +7168,12 @@ let _0xData = [
   {
     id: "banjokazooie",
     title: "Banjokazooie",
-    url: "https://whatchamacallitexe.github.io/pack-ad/banjokazooie/index.html",
     desc: "Play Banjokazooie online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/banjokazooie.jpg" , tags: ["Idle", "Simulation"] },
   {
     id: "banjotooie",
     title: "Banjotooie",
-    url: "https://whatchamacallitexe.github.io/pack-ad/banjotooie/index.html",
     desc: "Play Banjotooie online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/banjotooie.jpg" , tags: ["Casual"] },
@@ -7421,7 +7194,6 @@ let _0xData = [
   {
     id: "barryhasasecret",
     title: "Barryhasasecret",
-    url: "https://whatchamacallitexe.github.io/pack-ad/barryhasasecret/index.html",
     desc: "Play Barryhasasecret online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/barryhasasecret.jpg" , tags: ["Casual"] },
@@ -7456,7 +7228,6 @@ let _0xData = [
   {
     id: "basketbattle",
     title: "Basketbattle",
-    url: "https://whatchamacallitexe.github.io/pack-ad/basketbattle/index.html",
     desc: "Play Basketbattle online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/basketbattle.jpg" , tags: ["Shooter", "Action", "Sports", "Strategy"] },
@@ -7477,7 +7248,6 @@ let _0xData = [
   {
     id: "backyardbaseball",
     title: "Backyardbaseball",
-    url: "https://whatchamacallitexe.github.io/pack-ae/backyardbaseball/index.html",
     desc: "Play Backyardbaseball online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/backyardbaseball.jpg" , tags: ["Sports"] },
@@ -7547,7 +7317,6 @@ let _0xData = [
   {
     id: "basketballlegendsgoodywoody",
     title: "Basketballlegendsgoodywoody",
-    url: "https://whatchamacallitexe.github.io/pack-af/basketballlegendsgoodywoody/index.html",
     desc: "Play Basketballlegendsgoodywoody online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/basketballlegendsgoodywoody.jpg" , tags: ["Sports"] },
@@ -7561,28 +7330,24 @@ let _0xData = [
   {
     id: "basketrandomgood",
     title: "Basketrandomgood",
-    url: "https://whatchamacallitexe.github.io/pack-af/basketrandomgood/index.html",
     desc: "Play Basketrandomgood online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/basketrandomgood.jpg" , tags: ["Sports", "Party", "Multiplayer"] },
   {
     id: "basketslamdunk2",
     title: "Basketslamdunk2",
-    url: "https://whatchamacallitexe.github.io/pack-af/basketslamdunk2/index.html",
     desc: "Play Basketslamdunk2 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/basketslamdunk2.jpg" , tags: ["Sports"] },
   {
     id: "ben10alienforce",
     title: "Ben10Alienforce",
-    url: "https://whatchamacallitexe.github.io/pack-af/ben10alienforce/index.html",
     desc: "Play Ben10Alienforce online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/ben10alienforce.jpg" , tags: ["Casual"] },
   {
     id: "ben10omniverse",
     title: "Ben10Omniverse",
-    url: "https://whatchamacallitexe.github.io/pack-af/ben10omniverse/index.html",
     desc: "Play Ben10Omniverse online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/ben10omniverse.jpg" , tags: ["Casual"] },
@@ -7617,7 +7382,6 @@ let _0xData = [
   {
     id: "ancient-sins",
     title: "Ancient Sins",
-    url: "https://whatchamacallitexe.github.io/pack-m/ancient-sins/index.html",
     desc: "Play Ancient Sins online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/ancient-sins.jpg" , tags: ["Casual"] },
@@ -7631,7 +7395,6 @@ let _0xData = [
   {
     id: "animal-crossing-wild-world",
     title: "Animal Crossing Wild World",
-    url: "https://whatchamacallitexe.github.io/pack-m/animal-crossing-wild-world/index.html",
     desc: "Play Animal Crossing Wild World online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/animal-crossing-wild-world.jpg" , tags: ["Adventure"] },
@@ -7645,14 +7408,12 @@ let _0xData = [
   {
     id: "icedodo",
     title: "Icedodo",
-    url: "https://whatchamacallitexe.github.io/pack-x/icedodo/index.html",
     desc: "Play Icedodo online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/icedodo.jpg" , tags: ["Casual"] },
   {
     id: "idle-idle-gamedev",
     title: "Idle Idle Gamedev",
-    url: "https://whatchamacallitexe.github.io/pack-x/idle-idle-gamedev/index.html",
     desc: "Play Idle Idle Gamedev online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/idle-idle-gamedev.jpg" , tags: ["Idle"] },
@@ -7687,28 +7448,24 @@ let _0xData = [
   {
     id: "inside-story",
     title: "Inside Story",
-    url: "https://whatchamacallitexe.github.io/pack-x/inside-story/index.html",
     desc: "Play Inside Story online in your browser.",
     popular: false
   , image: "../Games/_covers/inside-story.svg" , tags: ["Adventure"] },
   {
     id: "iron-soldier",
     title: "Iron Soldier",
-    url: "https://whatchamacallitexe.github.io/pack-x/iron-soldier/index.html",
     desc: "Play Iron Soldier online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/iron-soldier.jpg" , tags: ["Shooter", "Action"] },
   {
     id: "jacksmithencryptedorsmthn",
     title: "Jacksmithencryptedorsmthn",
-    url: "https://whatchamacallitexe.github.io/pack-y/jacksmithencryptedorsmthn/index.html",
     desc: "Play Jacksmithencryptedorsmthn online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/jacksmithencryptedorsmthn.jpg" , tags: ["Casual"] },
   {
     id: "jamesbondjr",
     title: "Jamesbondjr",
-    url: "https://whatchamacallitexe.github.io/pack-y/jamesbondjr/index.html",
     desc: "Play Jamesbondjr online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/jamesbondjr.jpg" , tags: ["Casual"] },
@@ -7722,14 +7479,12 @@ let _0xData = [
   {
     id: "kaizo-mario-world",
     title: "Kaizo Mario World",
-    url: "https://whatchamacallitexe.github.io/pack-z/kaizo-mario-world/index.html",
     desc: "Play Kaizo Mario World online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/kaizo-mario-world.jpg" , tags: ["Fan Game", "Action", "Platformer", "Party", "Multiplayer"] },
   {
     id: "karateka",
     title: "Karateka",
-    url: "https://whatchamacallitexe.github.io/pack-z/karateka/index.html",
     desc: "Play Karateka online in your browser.",
     popular: false
   , image: "../Games/_covers/karateka.svg" , tags: ["Fighting", "Action"] },
@@ -7743,14 +7498,12 @@ let _0xData = [
   {
     id: "karnovs-revenge",
     title: "Karnovs Revenge",
-    url: "https://whatchamacallitexe.github.io/pack-z/karnovs-revenge/index.html",
     desc: "Play Karnovs Revenge online in your browser.",
     popular: false
   , image: "../Games/_covers/karnovs-revenge.svg" , tags: ["Casual"] },
   {
     id: "kart-fighter",
     title: "Kart Fighter",
-    url: "https://whatchamacallitexe.github.io/pack-z/kart-fighter/index.html",
     desc: "Play Kart Fighter online in your browser.",
     popular: false
   , image: "../Games/_covers/kart-fighter.svg" , tags: ["Fighting", "Action", "Racing"] },
@@ -7764,7 +7517,6 @@ let _0xData = [
   {
     id: "killer-instinct",
     title: "Killer Instinct",
-    url: "https://whatchamacallitexe.github.io/pack-z/killer-instinct/index.html",
     desc: "Play Killer Instinct online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/killer-instinct.jpg" , tags: ["Horror"] },
@@ -7785,7 +7537,6 @@ let _0xData = [
   {
     id: "king-of-fighters-2002",
     title: "King Of Fighters 2002",
-    url: "https://whatchamacallitexe.github.io/pack-z/king-of-fighters-2002/index.html",
     desc: "Play King Of Fighters 2002 online in your browser.",
     popular: false
   , image: "../Games/_covers/king-of-fighters-2002.svg" , tags: ["Fighting", "Action"] },
@@ -7799,28 +7550,24 @@ let _0xData = [
   {
     id: "king-of-fighters-97",
     title: "King Of Fighters 97",
-    url: "https://whatchamacallitexe.github.io/pack-z/king-of-fighters-97/index.html",
     desc: "Play King Of Fighters 97 online in your browser.",
     popular: false
   , image: "../Games/_covers/king-of-fighters-97.svg" , tags: ["Fighting", "Action"] },
   {
     id: "king-of-fighters-98",
     title: "King Of Fighters 98",
-    url: "https://whatchamacallitexe.github.io/pack-z/king-of-fighters-98/index.html",
     desc: "Play King Of Fighters 98 online in your browser.",
     popular: false
   , image: "../Games/_covers/king-of-fighters-98.svg" , tags: ["Fighting", "Action"] },
   {
     id: "kirby-64",
     title: "Kirby 64",
-    url: "https://whatchamacallitexe.github.io/pack-z/kirby-64/index.html",
     desc: "Play Kirby 64 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/kirby-64.jpg" , tags: ["Fan Game", "Action", "Platformer"] },
   {
     id: "kirby-and-the-amazing-mirror",
     title: "Kirby And The Amazing Mirror",
-    url: "https://whatchamacallitexe.github.io/pack-z/kirby-and-the-amazing-mirror/index.html",
     desc: "Play Kirby And The Amazing Mirror online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/kirby-and-the-amazing-mirror.jpg" , tags: ["Fan Game", "Action", "Platformer", "Puzzle"] },
@@ -7834,21 +7581,18 @@ let _0xData = [
   {
     id: "kirby-super-star",
     title: "Kirby Super Star",
-    url: "https://whatchamacallitexe.github.io/pack-z/kirby-super-star/index.html",
     desc: "Play Kirby Super Star online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/kirby-super-star.jpg" , tags: ["Fan Game", "Action", "Platformer"] },
   {
     id: "kirbys-adventure",
     title: "Kirbys Adventure",
-    url: "https://whatchamacallitexe.github.io/pack-z/kirbys-adventure/index.html",
     desc: "Play Kirbys Adventure online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/kirbys-adventure.jpg" , tags: ["Fan Game", "Action", "Platformer", "Adventure"] },
   {
     id: "kirbys-dream-land-2",
     title: "Kirbys Dream Land 2",
-    url: "https://whatchamacallitexe.github.io/pack-z/kirbys-dream-land-2/index.html",
     desc: "Play Kirbys Dream Land 2 online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/kirbys-dream-land-2.jpg" , tags: ["Fan Game", "Action", "Platformer"] },
@@ -7862,28 +7606,24 @@ let _0xData = [
   {
     id: "kirbys-dream-land",
     title: "Kirbys Dream Land",
-    url: "https://whatchamacallitexe.github.io/pack-z/kirbys-dream-land/index.html",
     desc: "Play Kirbys Dream Land online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/kirbys-dream-land.jpg" , tags: ["Fan Game", "Action", "Platformer"] },
   {
     id: "klonoa-door-to-phantomile",
     title: "Klonoa Door To Phantomile",
-    url: "https://whatchamacallitexe.github.io/pack-z/klonoa-door-to-phantomile/index.html",
     desc: "Play Klonoa Door To Phantomile online in your browser.",
     popular: false
   , image: "../Games/_covers/klonoa-door-to-phantomile.svg" , tags: ["Casual"] },
   {
     id: "knightmare-tower",
     title: "Knightmare Tower",
-    url: "https://whatchamacallitexe.github.io/pack-z/knightmare-tower/index.html",
     desc: "Play Knightmare Tower online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/knightmare-tower.jpg" , tags: ["Horror", "Adventure"] },
   {
     id: "knuckles-chaotix",
     title: "Knuckles Chaotix",
-    url: "https://whatchamacallitexe.github.io/pack-z/knuckles-chaotix/index.html",
     desc: "Play Knuckles Chaotix online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/knuckles-chaotix.jpg" , tags: ["Casual"] },
@@ -7897,7 +7637,6 @@ let _0xData = [
   {
     id: "last-fire-red",
     title: "Last Fire Red",
-    url: "https://whatchamacallitexe.github.io/pack-z/last-fire-red/index.html",
     desc: "Play Last Fire Red online in your browser.",
     popular: false
   , image: "../Games/_covers/last-fire-red.svg" , tags: ["Casual"] },
@@ -7911,7 +7650,6 @@ let _0xData = [
   {
     id: "last-stand",
     title: "Last Stand",
-    url: "https://whatchamacallitexe.github.io/pack-z/last-stand/index.html",
     desc: "Play Last Stand online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/last-stand.jpg" , tags: ["Survival"] },
@@ -7946,7 +7684,6 @@ let _0xData = [
   {
     id: "lego-batman-2-superheroes",
     title: "Lego Batman 2 Superheroes",
-    url: "https://whatchamacallitexe.github.io/pack-z/lego-batman-2-superheroes/index.html",
     desc: "Play Lego Batman 2 Superheroes online in your browser.",
     popular: false
   , image: "../Games/_covers/lego-batman-2-superheroes.svg" , tags: ["Fan Game", "Action"] },
@@ -7960,28 +7697,24 @@ let _0xData = [
   {
     id: "lego-indiana-jones",
     title: "Lego Indiana Jones",
-    url: "https://whatchamacallitexe.github.io/pack-z/lego-indiana-jones/index.html",
     desc: "Play Lego Indiana Jones online in your browser.",
     popular: false
   , image: "../Games/_covers/lego-indiana-jones.svg" , tags: ["Fan Game"] },
   {
     id: "legoindianajones2",
     title: "Legoindianajones2",
-    url: "https://whatchamacallitexe.github.io/pack-z/legoindianajones2/index.html",
     desc: "Play Legoindianajones2 online in your browser.",
     popular: false
   , image: "../Games/_covers/legoindianajones2.svg" , tags: ["Fan Game"] },
   {
     id: "legoninjago",
     title: "Legoninjago",
-    url: "https://whatchamacallitexe.github.io/pack-z/legoninjago/index.html",
     desc: "Play Legoninjago online in your browser.",
     popular: false
   , image: "../Games/_covers/legoninjago.svg" , tags: ["Fan Game", "Action", "Platformer"] },
   {
     id: "legostarwars",
     title: "Legostarwars",
-    url: "https://whatchamacallitexe.github.io/pack-z/legostarwars/index.html",
     desc: "Play Legostarwars online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/legostarwars.jpg" , tags: ["Fan Game"] },
@@ -8163,7 +7896,6 @@ let _0xData = [
   {
     id: "cannonfodder",
     title: "Cannonfodder",
-    url: "https://whatchamacallitexe.github.io/pack-ag/cannonfodder/index.html",
     desc: "Play Cannonfodder online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/cannonfodder.jpg" , tags: ["Casual"] },
@@ -8219,7 +7951,6 @@ let _0xData = [
   {
     id: "chronotrigger",
     title: "Chronotrigger",
-    url: "https://whatchamacallitexe.github.io/pack-ag/chronotrigger/index.html",
     desc: "Play Chronotrigger online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/chronotrigger.jpg" , tags: ["Adventure"] },
@@ -8275,14 +8006,12 @@ let _0xData = [
   {
     id: "doom",
     title: "Doom",
-    url: "https://whatchamacallitexe.github.io/pack-ah/doom/index.html",
     desc: "Play Doom online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/doom.jpg" , tags: ["Horror", "Shooter", "Action"] },
   {
     id: "duckhunt",
     title: "Duckhunt",
-    url: "https://whatchamacallitexe.github.io/pack-ah/duckhunt/index.html",
     desc: "Play Duckhunt online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/duckhunt.jpg" , tags: ["Casual"] },
@@ -8324,7 +8053,6 @@ let _0xData = [
   {
     id: "effinghail",
     title: "Effinghail",
-    url: "https://whatchamacallitexe.github.io/pack-ai/effinghail/index.html",
     desc: "Play Effinghail online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/effinghail.jpg" , tags: ["Casual"] },
@@ -8597,14 +8325,12 @@ let _0xData = [
   {
     id: "rainbow-six",
     title: "Rainbow Six",
-    url: "https://whatchamacallitexe.github.io/pack-ak/rainbow-six/index.html",
     desc: "Play Rainbow Six online in your browser.",
     popular: false
   , image: "../Games/_covers/rainbow-six.svg" , tags: ["Casual"] },
   {
     id: "rayman",
     title: "Rayman",
-    url: "https://whatchamacallitexe.github.io/pack-ak/rayman/index.html",
     desc: "Play Rayman online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/rayman.jpg" , tags: ["Action", "Platformer"] },
@@ -8716,14 +8442,12 @@ let _0xData = [
   {
     id: "tony-hawk-pro-skater",
     title: "Tony Hawk Pro Skater",
-    url: "https://whatchamacallitexe.github.io/pack-am/tony-hawk-pro-skater/index.html",
     desc: "Play Tony Hawk Pro Skater online in your browser.",
     popular: false
   , image: "../Games/_covers/tony-hawk-pro-skater.svg" , tags: ["Sports"] },
   {
     id: "ultimate-mortal-kombat",
     title: "Ultimate Mortal Kombat",
-    url: "https://whatchamacallitexe.github.io/pack-an/ultimate-mortal-kombat/index.html",
     desc: "Play Ultimate Mortal Kombat online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/ultimate-mortal-kombat.jpg" , tags: ["Fighting", "Action", "Arcade", "Retro"] },
@@ -8870,7 +8594,6 @@ let _0xData = [
   {
     id: "wolfenstein3d",
     title: "Wolfenstein3D",
-    url: "https://whatchamacallitexe.github.io/pack-ao/wolfenstein3d/index.html",
     desc: "Play Wolfenstein3D online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/wolfenstein3d.jpg" , tags: ["Casual"] },
@@ -8940,7 +8663,6 @@ let _0xData = [
   {
     id: "xevious",
     title: "Xevious",
-    url: "https://whatchamacallitexe.github.io/pack-aq/xevious/index.html",
     desc: "Play Xevious online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/xevious.jpg" , tags: ["Casual"] },
@@ -9052,7 +8774,6 @@ let _0xData = [
   {
     id: "tempoverdose",
     title: "Tempoverdose",
-    url: "https://whatchamacallitexe.github.io/pack-ar/tempoverdose/index.html",
     desc: "Play Tempoverdose online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/tempoverdose.jpg" , tags: ["Casual"] },
@@ -9108,7 +8829,6 @@ let _0xData = [
   {
     id: "jelly-mario",
     title: "Jelly Mario",
-    url: "https://whatchamacallitexe.github.io/pack-y/jelly-mario/index.html",
     desc: "Play Jelly Mario online in your browser.",
     popular: false
   , image: "../Games/_covers/actual/jelly-mario.jpg" , tags: ["Fan Game", "Action", "Platformer", "Party", "Multiplayer"] },
@@ -9192,7 +8912,6 @@ let _0xData = [
   {
     id: "baby-chicco-adventure",
     title: "Baby Chicco Adventure",
-    url: "https://whatchamacallitexe.github.io/pack-ab/baby-chicco-adventure/index.html",
     desc: "Play Baby Chicco Adventure online in your browser.",
     popular: false
   },
@@ -9206,14 +8925,12 @@ let _0xData = [
   {
     id: "baby-sniper-in-vietnam",
     title: "Baby Sniper In Vietnam",
-    url: "https://whatchamacallitexe.github.io/pack-ac/baby-sniper-in-vietnam/index.html",
     desc: "Play Baby Sniper In Vietnam online in your browser.",
     popular: false
   },
   {
     id: "drivemad",
     title: "Drivemad",
-    url: "https://whatchamacallitexe.github.io/pack-ah/drivemad/index.html",
     desc: "Play Drivemad online in your browser.",
     popular: false
   },
@@ -9248,7 +8965,6 @@ let _0xData = [
   {
     id: "gun-mayhem",
     title: "Gun Mayhem",
-    url: "https://whatchamacallitexe.github.io/pack-d/gun-mayhem/index.html",
     desc: "Play Gun Mayhem online in your browser.",
     popular: false
   },
@@ -9290,7 +9006,6 @@ let _0xData = [
   {
     id: "a-dark-room",
     title: "A Dark Room",
-    url: "https://whatchamacallitexe.github.io/pack-k/a-dark-room/index.html",
     desc: "Play A Dark Room online in your browser.",
     popular: false
   },
@@ -9339,14 +9054,12 @@ let _0xData = [
   {
     id: "adventure-capitalist",
     title: "Adventure Capitalist",
-    url: "https://whatchamacallitexe.github.io/pack-m/adventure-capitalist/index.html",
     desc: "Play Adventure Capitalist online in your browser.",
     popular: false
   },
   {
     id: "baseball-bros",
     title: "Baseball Bros",
-    url: "https://whatchamacallitexe.github.io/pack-n/baseball-bros/index.html",
     desc: "Play Baseball Bros online in your browser.",
     popular: false
   },
@@ -9360,7 +9073,6 @@ let _0xData = [
   {
     id: "cookie-clicker",
     title: "Cookie Clicker",
-    url: "https://whatchamacallitexe.github.io/pack-n/cookie-clicker/index.html",
     desc: "Play Cookie Clicker online in your browser.",
     popular: false
   },
