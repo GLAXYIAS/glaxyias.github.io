@@ -9154,6 +9154,237 @@ let _0xData = [
     url: "https://whatchamacallitexe.github.io/pack-y/just-hit-the-button/index.html",
     desc: "Play Just Hit The Button online in your browser.",
     popular: false
+  },
+  {
+    id: "build-a-17-0-team",
+    title: "Build A 17 0 Team",
+    url: "https://whatchamacallitexe.github.io/17-and-0/build-a-17-0-team/index.html",
+    desc: "Play Build A 17 0 Team online in your browser.",
+    popular: false
+  },
+  {
+    id: "results",
+    title: "Results",
+    url: "https://whatchamacallitexe.github.io/17-and-0/build-a-17-0-team/results/index.html",
+    desc: "Play Results online in your browser.",
+    popular: false
+  },
+  {
+    id: "17-and-0",
+    title: "17 And 0",
+    url: "https://whatchamacallitexe.github.io/17-and-0/index.html",
+    desc: "Play 17 And 0 online in your browser.",
+    popular: false
+  },
+  {
+    id: "fragen",
+    title: "Fragen",
+    url: "https://whatchamacallitexe.github.io/fragen/index.html",
+    desc: "Play Fragen online in your browser.",
+    popular: false
+  },
+  {
+    id: "wordle",
+    title: "Wordle",
+    url: "https://whatchamacallitexe.github.io/pack-a/wordle/index.html",
+    desc: "Play Wordle online in your browser.",
+    popular: false
+  },
+  {
+    id: "babel-tower",
+    title: "Babel Tower",
+    url: "https://whatchamacallitexe.github.io/pack-aa/babel-tower/index.html",
+    desc: "Play Babel Tower online in your browser.",
+    popular: false
+  },
+  {
+    id: "bacon-may-die",
+    title: "Bacon May Die",
+    url: "https://whatchamacallitexe.github.io/pack-aa/bacon-may-die/index.html",
+    desc: "Play Bacon May Die online in your browser.",
+    popular: false
+  },
+  {
+    id: "baby-chicco-adventure",
+    title: "Baby Chicco Adventure",
+    url: "https://whatchamacallitexe.github.io/pack-ab/baby-chicco-adventure/index.html",
+    desc: "Play Baby Chicco Adventure online in your browser.",
+    popular: false
+  },
+  {
+    id: "basket-random",
+    title: "Basket Random",
+    url: "https://whatchamacallitexe.github.io/pack-ab/basket-random/index.html",
+    desc: "Play Basket Random online in your browser.",
+    popular: false
+  },
+  {
+    id: "baby-sniper-in-vietnam",
+    title: "Baby Sniper In Vietnam",
+    url: "https://whatchamacallitexe.github.io/pack-ac/baby-sniper-in-vietnam/index.html",
+    desc: "Play Baby Sniper In Vietnam online in your browser.",
+    popular: false
+  },
+  {
+    id: "drivemad",
+    title: "Drivemad",
+    url: "https://whatchamacallitexe.github.io/pack-ah/drivemad/index.html",
+    desc: "Play Drivemad online in your browser.",
+    popular: false
+  },
+  {
+    id: "ragdoll-drop",
+    title: "Ragdoll Drop",
+    url: "https://whatchamacallitexe.github.io/pack-ak/ragdoll-drop/index.html",
+    desc: "Play Ragdoll Drop online in your browser.",
+    popular: false
+  },
+  {
+    id: "retro-bowl",
+    title: "Retro Bowl",
+    url: "https://whatchamacallitexe.github.io/pack-ak/retro-bowl/index.html",
+    desc: "Play Retro Bowl online in your browser.",
+    popular: false
+  },
+  {
+    id: "among-us",
+    title: "Among Us",
+    url: "https://whatchamacallitexe.github.io/pack-d/among-us/index.html",
+    desc: "Play Among Us online in your browser.",
+    popular: false
+  },
+  {
+    id: "gun-mayhem-2",
+    title: "Gun Mayhem 2",
+    url: "https://whatchamacallitexe.github.io/pack-d/gun-mayhem-2/index.html",
+    desc: "Play Gun Mayhem 2 online in your browser.",
+    popular: false
+  },
+  {
+    id: "gun-mayhem",
+    title: "Gun Mayhem",
+    url: "https://whatchamacallitexe.github.io/pack-d/gun-mayhem/index.html",
+    desc: "Play Gun Mayhem online in your browser.",
+    popular: false
+  },
+  {
+    id: "ages-of-conflict",
+    title: "Ages Of Conflict",
+    url: "https://whatchamacallitexe.github.io/pack-f/ages-of-conflict/index.html",
+    desc: "Play Ages Of Conflict online in your browser.",
+    popular: false
+  },
+  {
+    id: "eggy-car",
+    title: "Eggy Car",
+    url: "https://whatchamacallitexe.github.io/pack-f/eggy-car/index.html",
+    desc: "Play Eggy Car online in your browser.",
+    popular: false
+  },
+  {
+    id: "a-dance-of-fire-and-ice",
+    title: "A Dance Of Fire And Ice",
+    url: "https://whatchamacallitexe.github.io/pack-g/a-dance-of-fire-and-ice/index.html",
+    desc: "Play A Dance Of Fire And Ice online in your browser.",
+    popular: false
+  },
+  {
+    id: "bitcoin-clicker",
+    title: "Bitcoin Clicker",
+    url: "https://whatchamacallitexe.github.io/pack-g/bitcoin-clicker/index.html",
+    desc: "Play Bitcoin Clicker online in your browser.",
+    popular: false
+  },
+  {
+    id: "stick-merge",
+    title: "Stick Merge",
+    url: "https://whatchamacallitexe.github.io/pack-h/stick-merge/index.html",
+    desc: "Play Stick Merge online in your browser.",
+    popular: false
+  },
+  {
+    id: "a-dark-room",
+    title: "A Dark Room",
+    url: "https://whatchamacallitexe.github.io/pack-k/a-dark-room/index.html",
+    desc: "Play A Dark Room online in your browser.",
+    popular: false
+  },
+  {
+    id: "a-day-in-the-office",
+    title: "A Day In The Office",
+    url: "https://whatchamacallitexe.github.io/pack-k/a-day-in-the-office/index.html",
+    desc: "Play A Day In The Office online in your browser.",
+    popular: false
+  },
+  {
+    id: "ahoy-survival",
+    title: "Ahoy Survival",
+    url: "https://whatchamacallitexe.github.io/pack-k/ahoy-survival/index.html",
+    desc: "Play Ahoy Survival online in your browser.",
+    popular: false
+  },
+  {
+    id: "slope",
+    title: "Slope",
+    url: "https://whatchamacallitexe.github.io/pack-k/slope/index.html",
+    desc: "Play Slope online in your browser.",
+    popular: false
+  },
+  {
+    id: "throw-a-potato",
+    title: "Throw A Potato",
+    url: "https://whatchamacallitexe.github.io/pack-l/throw-a-potato/index.html",
+    desc: "Play Throw A Potato online in your browser.",
+    popular: false
+  },
+  {
+    id: "a-date-with-death",
+    title: "A Date With Death",
+    url: "https://whatchamacallitexe.github.io/pack-m/a-date-with-death/index.html",
+    desc: "Play A Date With Death online in your browser.",
+    popular: false
+  },
+  {
+    id: "adventneon",
+    title: "Adventneon",
+    url: "https://whatchamacallitexe.github.io/pack-m/adventneon/index.html",
+    desc: "Play Adventneon online in your browser.",
+    popular: false
+  },
+  {
+    id: "adventure-capitalist",
+    title: "Adventure Capitalist",
+    url: "https://whatchamacallitexe.github.io/pack-m/adventure-capitalist/index.html",
+    desc: "Play Adventure Capitalist online in your browser.",
+    popular: false
+  },
+  {
+    id: "baseball-bros",
+    title: "Baseball Bros",
+    url: "https://whatchamacallitexe.github.io/pack-n/baseball-bros/index.html",
+    desc: "Play Baseball Bros online in your browser.",
+    popular: false
+  },
+  {
+    id: "car-crash-3",
+    title: "Car Crash 3",
+    url: "https://whatchamacallitexe.github.io/pack-n/car-crash-3/index.html",
+    desc: "Play Car Crash 3 online in your browser.",
+    popular: false
+  },
+  {
+    id: "cookie-clicker",
+    title: "Cookie Clicker",
+    url: "https://whatchamacallitexe.github.io/pack-n/cookie-clicker/index.html",
+    desc: "Play Cookie Clicker online in your browser.",
+    popular: false
+  },
+  {
+    id: "idle-miner-tycoon",
+    title: "Idle Miner Tycoon",
+    url: "https://whatchamacallitexe.github.io/pack-x/idle-miner-tycoon/index.html",
+    desc: "Play Idle Miner Tycoon online in your browser.",
+    popular: false
   }
 ];
 
