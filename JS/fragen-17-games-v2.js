@@ -1,4 +1,4 @@
-/* Catalog extras: direct-launch cards and the empty-search request form. */
+/* Catalog extras: direct-launch cards, imported-game filter and empty-search form. */
 (function () {
   "use strict";
 
@@ -17,6 +17,105 @@
     event.stopImmediatePropagation();
     window.location.assign(url);
   }, true);
+
+  /* ------------------------------------------------- imported (non-HTML) games */
+
+  var NON_HTML_ID = "Non-HTML";
+  var NON_HTML_IDS = [
+    "17-and-0",
+    "build-a-17-0-team",
+    "firstdown-82-0",
+    "firstdown-162-0",
+    "firstdown-goat",
+    "fragen",
+    "veck-io",
+    "undead_corridor",
+    "az-ragdoll-playground",
+    "az-orbit-kick"
+  ];
+
+  function tagNonHtml() {
+    if (typeof _0xData === "undefined" || !Array.isArray(_0xData)) return 0;
+    var wanted = Object.create(null);
+    for (var i = 0; i < NON_HTML_IDS.length; i++) wanted[NON_HTML_IDS[i]] = true;
+    var count = 0;
+    for (var j = 0; j < _0xData.length; j++) {
+      var game = _0xData[j];
+      if (!game || !wanted[String(game.id)]) continue;
+      if (!Array.isArray(game.tags)) game.tags = [];
+      if (game.tags.indexOf(NON_HTML_ID) === -1) game.tags.push(NON_HTML_ID);
+      count++;
+    }
+    return count;
+  }
+
+  function addNonHtmlFilter() {
+    var bar = document.getElementById("nx-filter-bar");
+    var tagSel = document.getElementById("nx-filter-tag");
+    if (!bar || !tagSel) return false;
+    if (document.getElementById("nx-filter-nonhtml")) return true;
+
+    var count = 0;
+    if (typeof _0xData !== "undefined" && Array.isArray(_0xData)) {
+      for (var i = 0; i < _0xData.length; i++) {
+        if (_0xData[i] && String(_0xData[i].id) && NON_HTML_IDS.indexOf(String(_0xData[i].id)) !== -1) count++;
+      }
+    }
+
+    var option = tagSel.querySelector('option[value="' + NON_HTML_ID + '"]');
+    if (!option) {
+      option = document.createElement("option");
+      option.value = NON_HTML_ID;
+      tagSel.appendChild(option);
+    }
+    option.textContent = "Non-HTML games (" + count + ")";
+
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.id = "nx-filter-nonhtml";
+    btn.setAttribute("aria-pressed", "false");
+    btn.textContent = "Non-HTML games";
+
+    var recent = document.getElementById("nx-filter-recent");
+    if (recent && recent.parentNode === bar) bar.insertBefore(btn, recent);
+    else bar.appendChild(btn);
+
+    btn.addEventListener("click", function () {
+      var on = btn.getAttribute("aria-pressed") !== "true";
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+      tagSel.value = on ? NON_HTML_ID : "";
+      if (typeof applyLibraryFilters === "function") applyLibraryFilters();
+    });
+
+    tagSel.addEventListener("change", function () {
+      btn.setAttribute("aria-pressed", tagSel.value === NON_HTML_ID ? "true" : "false");
+    });
+
+    var clear = document.getElementById("nx-filter-clear");
+    if (clear) {
+      clear.addEventListener("click", function () {
+        btn.setAttribute("aria-pressed", "false");
+      });
+    }
+    return true;
+  }
+
+  function bootImportedFilter() {
+    tagNonHtml();
+    if (addNonHtmlFilter()) return;
+    var tries = 0;
+    var timer = setInterval(function () {
+      tries++;
+      tagNonHtml();
+      if (addNonHtmlFilter() || tries >= 100) clearInterval(timer);
+    }, 50);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bootImportedFilter);
+  } else {
+    bootImportedFilter();
+  }
 
   /* ---------------------------------------------------------------- form link */
 
@@ -73,12 +172,11 @@
     var tries = 0;
     clearInterval(poll);
     poll = setInterval(function () {
-      tries++;
       if (grid.querySelectorAll("[data-game-id]").length > 0) {
         hide();
         return;
       }
-      if (tries >= 20) {
+      if (++tries >= 20) {
         clearInterval(poll);
         title.textContent = 'No game found for "' + query + '"';
         panel.style.display = "block";
