@@ -8872,6 +8872,42 @@ let _0xData = [
     popular: false
   },
   {
+    id: "firstdown-82-0",
+    title: "Build A 82-0 Team",
+    url: "https://whatchamacallitexe.github.io/17-and-0/build-a-82-0-team/",
+    image: "../Games/_covers/actual/firstdown-82.png",
+    desc: "Spin random NBA teams, draft a starting five and a head coach, and chase an undefeated 82-0 season.",
+    popular: false,
+    tags: ["Sports","Basketball"]
+  },
+  {
+    id: "firstdown-162-0",
+    title: "Build A 162-0 Team",
+    url: "https://whatchamacallitexe.github.io/17-and-0/build-a-162-0-team/",
+    image: "../Games/_covers/actual/firstdown-162.png",
+    desc: "Spin random MLB teams and draft a full lineup plus DH to build a perfect 162-0 baseball season.",
+    popular: false,
+    tags: ["Sports","Baseball"]
+  },
+  {
+    id: "firstdown-goat",
+    title: "Build The GOAT Team",
+    url: "https://whatchamacallitexe.github.io/17-and-0/build-the-goat-team/",
+    image: "../Games/_covers/actual/firstdown-goat.png",
+    desc: "Draft seven NFL legends from random team-seasons and build the highest-scoring GOAT roster.",
+    popular: false,
+    tags: ["Sports","Football"]
+  },
+  {
+    id: "veck-io",
+    title: "Veck.io",
+    url: "https://glaxyias.github.io/veck.io/",
+    image: "../Games/_covers/actual/veck-io.webp",
+    desc: "Fast low-poly FPS deathmatch. Pick a loadout and fight bots in a neon arena, right in your browser.",
+    popular: false,
+    tags: ["Shooter","Action","Multiplayer"]
+  },
+  {
     id: "fragen",
     title: "Fragen",
     url: "https://whatchamacallitexe.github.io/fragen/index.html",
