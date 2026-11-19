@@ -31,6 +31,7 @@ jobs:
           set -euo pipefail
           GAME="Games/1v1-lol"
           SRC="https://1v1lolreloaded.com"
+          CDN="https://cdn.1v1lolreloaded.com"
           mkdir -p "$GAME/js" "$GAME/mocks" "$GAME/fonts/blinker" "$GAME/Build" "$GAME/StreamingAssets/aa/WebGL"
 
           curl -fsSL --retry 3 -o "$GAME/index.html" "$SRC/index.html"
@@ -47,7 +48,7 @@ jobs:
           curl -fsSL --retry 3 -o "$GAME/loader-ch2-bg.jpg" "$SRC/loader-ch2-bg.jpg"
 
           curl -fsSL --retry 3 -o "$GAME/Build/WebGL.loader.js" "$SRC/Build/WebGL.loader.js"
-          curl -fsSL --retry 3 -o "$GAME/Build/WebGL.framework.js.c0de4610.unityweb" "$SRC/Build/WebGL.framework.js.c0de4610.unityweb"
+          curl -fsSL --retry 3 -o "$GAME/Build/WebGL.framework.js.c0de4610.unityweb" "$CDN/Build/WebGL.framework.js.c0de4610.unityweb"
 
           curl -fsSL --retry 3 -o "$GAME/StreamingAssets/aa/settings.json" "$SRC/StreamingAssets/aa/settings.json"
           curl -fsSL --retry 3 -o "$GAME/StreamingAssets/aa/catalog.json" "$SRC/StreamingAssets/aa/catalog.json"
