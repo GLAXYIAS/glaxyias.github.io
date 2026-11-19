@@ -1,21 +1,18 @@
 /**
- * Home-page profile modal.
+ * Home-page profile modal shell.
  *
- * The Profile item in the left nav used to dump the whole profile page into the
- * middle of the home page without its stylesheet, which looked squashed. It now
- * opens profile/profile.html fullscreen in an iframe, with ?embed=1 hiding that
- * page's own sidebar. The chat keeps linking to profile.html directly, so its
- * version is untouched.
+ * Opens the panel, keeps focus contained and closes it again. The panel content
+ * is the profile card already present in index.html, filled by
+ * JS/profile-data.js. The old iframe that loaded profile/profile.html (and
+ * bounced to the login page when signed out) is gone.
  */
 (function () {
   'use strict';
 
   var modal = document.getElementById('profile-modal');
-  var frame = document.getElementById('profile-modal-frame');
   var closeBtn = document.getElementById('profile-modal-close');
-  if (!modal || !frame || !closeBtn) return;
+  if (!modal || !closeBtn) return;
 
-  var PROFILE_URL = 'profile/profile.html?embed=1';
   var lastFocused = null;
   var previousNavId = null;
 
@@ -42,8 +39,8 @@
     var activeNav = document.querySelector('.left-nav .nav-item.active');
     previousNavId = (activeNav && activeNav.id) || null;
 
-    // Fresh load every time so a new avatar / bio is never stale.
-    frame.src = PROFILE_URL + '&v=' + Date.now();
+    // Fill the in-page profile card (no nested document).
+    if (window.nxProfilePanel) window.nxProfilePanel.load();
 
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');

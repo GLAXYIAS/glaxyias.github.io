@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>!function(){try{if(localStorage.getItem("1v1_debug_console"))return;}catch(e){}var n=function(){};console.log=n;console.info=n;console.debug=n;console.warn=n;console.trace=n;console.table=n;console.group=n;console.groupEnd=n;console.time=n;console.timeEnd=n;}();</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1v1.LOL RELOADED - Play Free Online</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <!-- ★[2026-08-25] This page is the bare Unity shell: it is noindex, and hosts embed it in an
+       iframe. Anyone sharing it (fullscreen tab, a host copying the frame URL) used to unfurl a
+       leftover dev title with no image. Point every sharing signal at the LANDING instead, so the
+       share renders the real site and the ranking signal consolidates there rather than on a
+       noindex shell. -->
+  <link rel="canonical" href="https://1v1lolreloaded.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://1v1lolreloaded.com/">
+  <meta property="og:site_name" content="1v1.LOL RELOADED">
+  <meta property="og:title" content="1v1.LOL RELOADED - Play Free Online">
+  <meta property="og:description" content="Play 1v1.LOL free in your browser: Battle Royale, ranked 1v1 Clash, Box Fight and Zone Wars. No download, no signup, live servers.">
+  <meta property="og:image" content="https://1v1lolreloaded.com/assets/brand/og-card-v1.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="1v1.LOL RELOADED - Play Free Online">
+  <meta name="twitter:description" content="Play 1v1.LOL free in your browser. No download, no signup, live servers.">
+  <meta name="twitter:image" content="https://1v1lolreloaded.com/assets/brand/og-card-v1.jpg">
+  <!-- ★2026-06-21 showcase console hygiene + clean tab title: on the PUBLIC build (non-localhost) silence the
+       dev/mock console spam (keep warn/error for real issues) and use a clean tab title. Runs FIRST, before the
+       mocks/firebase/Unity load. Localhost dev is untouched → full logs + the descriptive build title kept. -->
+  <script>
+    (function () {
+      var h = location.hostname;
+      if (h !== 'localhost' && h !== '127.0.0.1' && h !== '0.0.0.0') {
+        var noop = function () {};
+        console.log = noop; console.debug = noop; console.info = noop;
+        try { document.title = '1v1.LOL RELOADED'; } catch (e) {}
+      }
+    })();
+  </script>
+  <!-- Preroll first (js/ads.js): the loading screen stays hidden until ads.js lets Unity start, so it does not flash
+       before the ad (owner, 2026-11-12). Only on the host the ad tag serves. If ads.js never ran (blocked, failed),
+       the screen comes back at DOMContentLoaded. -->
+  <style>html.aip-wait #unity-loading { visibility: hidden; }</style>
+  <script>
+    (function () {
+      var h = location.hostname;
+      if (h !== '1v1lolreloaded.com' && h !== 'www.1v1lolreloaded.com') return;
+      var root = document.documentElement;
+      root.classList.add('aip-wait');
+      document.addEventListener('DOMContentLoaded', function () { if (!window.aipAds) root.classList.remove('aip-wait'); });
+    })();
+  </script>
+  <style>
+    /* Brand hero font, matches the 1v1lolreloaded.com landing page (served from web root /fonts/). */
+    @font-face { font-family: 'Dimbo'; src: url('fonts/dimbo.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: swap; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body { background: #0c0c16; color: #e8eaf0; font-family: sans-serif; }
+    /* Single-game fullscreen (like the 4.23 page): dev info bar hidden, canvas fills the whole viewport. */
+    header { display: none; }
+    header b { color: #ff8c42; }
+    main { position: fixed; inset: 0; }
+    #unity-container { position: fixed; inset: 0; width: 100%; height: 100%; background: #000; overflow: hidden; }
+    #unity-canvas { width: 100%; height: 100%; display: block; }
+    /* Unity WebGL loader - 1v1.LOL RELOADED · Chapter 2 (cinematic game-art backdrop). */
+    #unity-loading {
+      position: absolute; inset: 0; overflow: hidden; color: #fff;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px;
+      background: #0a0e1e;
+    }
+    /* blurred Chapter-2 (Western desert map) backdrop, kept light (96KB jpg) for fast first-load */
+    #unity-loading::before {
+      content: ''; position: absolute; inset: -6%; z-index: 0;
+      background: #0a0e1e url('loader-ch2-bg.jpg') center/cover no-repeat;
+      filter: blur(13px) brightness(0.5) saturate(1.18);
+      transform: scale(1.08);
+    }
+    /* dark vignette + top/bottom fade so logo & bar read clearly over the art */
+    #unity-loading::after {
+      content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background:
+        radial-gradient(ellipse 95% 78% at 50% 46%, rgba(6,9,22,0.15), rgba(6,9,22,0.86) 100%),
+        linear-gradient(180deg, rgba(6,9,22,0.42) 0%, rgba(6,9,22,0) 28%, rgba(6,9,22,0) 68%, rgba(6,9,22,0.5) 100%);
+    }
+    .loading-hero { display: flex; flex-direction: column; align-items: center; gap: 6px; line-height: 1; position: relative; z-index: 2; }
+    .loading-logo {
+      font-family: 'Dimbo', 'Impact', 'Arial Black', sans-serif;
+      font-size: clamp(78px, 14vw, 150px); font-weight: normal; letter-spacing: 4px; line-height: 1; color: #fff;
+      text-shadow: 0 3px 6px rgba(0,0,0,0.55), 0 0 22px rgba(255, 165, 95, 0.32), 0 0 48px rgba(255, 120, 50, 0.22);
+    }
+    .loading-logo .v { color: #ef4444; text-shadow: 0 3px 6px rgba(0,0,0,0.5), 0 0 16px rgba(239, 68, 68, 0.75), 0 0 34px rgba(239, 68, 68, 0.5); }
+    .loading-reloaded {
+      font-family: 'Dimbo', 'Impact', 'Arial Black', sans-serif;
+      font-size: clamp(24px, 4.6vw, 46px); letter-spacing: 11px; line-height: 1;
+      background: linear-gradient(135deg, #ffe0b0, #ff8c42, #ff6b35, #ffe0b0); background-size: 300% 300%;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      animation: gradientShift 4s ease-in-out infinite; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    }
+    @keyframes gradientShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    /* CHAPTER 2 badge */
+    .loading-chapter {
+      position: relative; z-index: 2; margin-top: 4px;
+      font-family: 'Dimbo', 'Impact', 'Arial Black', sans-serif;
+      font-size: clamp(15px, 2.5vw, 24px); letter-spacing: 7px; color: #ffe0b0; padding: 7px 24px 6px;
+      border-radius: 999px; background: rgba(255, 140, 66, 0.10);
+      border: 1px solid rgba(255, 175, 110, 0.5);
+      box-shadow: 0 0 20px rgba(255, 130, 60, 0.2), inset 0 0 14px rgba(255, 150, 80, 0.08);
+      text-shadow: 0 0 9px rgba(255, 150, 80, 0.5);
+    }
+    .loading-chapter b { color: #ff8c42; font-weight: normal; }
+    .loading-bar-container {
+      position: relative; z-index: 2; margin-top: 4px;
+      width: min(360px, 72vw); height: 5px; background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255, 175, 110, 0.22); border-radius: 3px; overflow: hidden; box-shadow: 0 1px 8px rgba(0,0,0,0.45);
+    }
+    .loading-bar-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, #ff6b35, #ff8c42, #ffd081, #ff8c42); background-size: 200% 100%;
+      animation: barShimmer 2s linear infinite; box-shadow: 0 0 16px rgba(255, 140, 66, 0.7); transition: width 0.18s ease-out;
+    }
+    @keyframes barShimmer { from { background-position: 0% 0; } to { background-position: 200% 0; } }
+    .loading-percent { position: relative; z-index: 2; font-family: 'Courier New', monospace; font-size: 12px; letter-spacing: 3px; color: rgba(255, 240, 225, 0.85); text-shadow: 0 1px 3px rgba(0,0,0,0.6); }
+    .loading-stage { position: relative; z-index: 2; margin-top: -10px; font-family: 'Blinker', system-ui, sans-serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,240,225,0.5); text-shadow: 0 1px 3px rgba(0,0,0,0.6); }
+    .err { color: #ef4444; padding: 16px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 6px; font-family: monospace; font-size: 12px; white-space: pre-wrap; margin-top: 12px; max-width: 600px; max-height: 200px; overflow: auto; }
+  </style>
+</head>
+<body>
+  <!-- [2026-06-30] Windows desktop-download CTA ("Download for PC") removed per request. -->
+  <header>
+    TEST BUILD <b>v446</b>: Wayback WebGL core (NewCI/Prod/8, Aug 2023) + bundles repacked from win2023 Steam build (same v446 source, Aug 2023). Unity 2020.3.45f1, IL2CPP, Mono-canon.
+  </header>
+  <main>
+    <div id="unity-container">
+      <canvas id="unity-canvas"></canvas>
+      <div id="unity-loading">
+        <div class="loading-hero">
+          <div class="loading-logo">1<span class="v">v</span>1.LOL</div>
+          <div class="loading-reloaded">RELOADED</div>
+        </div>
+        <div class="loading-chapter">CHAPTER&nbsp;<b>2</b></div>
+        <div class="loading-bar-container"><div id="loading-bar-fill" class="loading-bar-fill"></div></div>
+        <div id="progress-status" class="loading-percent">000%</div>
+        <div id="progress-stage" class="loading-stage">Downloading&hellip;</div>
+      </div>
+      <div id="unity-error" class="err" style="display:none;"></div>
+    </div>
+  </main>
+
+  <!-- en-US locale force. v441 Addressables catalog has only English/Hebrew/Spanish
+       locale bundles. If browser navigator.language is e.g. 'ru-RU', Localization
+       package requests a locale that doesn't exist → memory OOB in EvaluateKey.
+       Pin everything to en-US before Unity starts. -->
+  <script>
+    // ★DIAG 2026-06-04: find the REAL THROW SITE of caught ArgumentOutOfRange / "Sequence contains no
+    // elements". IL2CPP managed exceptions are C++ throws via the framework's ___cxa_throw JS import; the
+    // console stack is only the Unity logger (post-catch). We wrap that import (found by its `new ExceptionInfo`
+    // body) to SNAPSHOT the stack AT THROW TIME into window.__lastThrow, but log NOTHING per-throw. Then when
+    // the matching error is actually LOGGED, we print that throw-site stack ONCE per unique site (quiet).
+    // Ghidra-map the raw offsets (ram=0x80000000+offset). Toggle off: CXATRACE=0.
+    // ★2026-06-12 PERF: was Infinity, every Error creation captured unbounded stacks (expensive when IL2CPP
+    // throws per-frame, e.g. the BR-scene AOOR). THROWSITE only reads ~15 frames (slice(1,15)); 40 is plenty.
+    try { Error.stackTraceLimit = 40; } catch(e){}
+    window.__lastThrow = '';
+    (function(){
+      var _oe = console.error.bind(console);
+      var seen = {}, _errN = {};
+      console.error = function(){
+        try {
+          // ★2026-06-10 PERF: FMOD (WebGL audio) spams "error code 36/37 add/createDSP", esp. on weapon pickup.
+          // It's harmless audio-engine noise, but routing every call through _pushLog + the (very slow in Chrome)
+          // real console.error AMPLIFIES it into real main-thread lag. Suppress fast: count the first few, then
+          // drop entirely (toggle FMODLOG=1 to see them). This is pure log-noise suppression, the WASM DSP
+          // attempts themselves are unchanged, but the JS-side per-call cost (the actual lag source) is gone.
+          var a0 = arguments[0];
+          if (typeof a0 === 'string' && a0.indexOf('FMOD returns error code') >= 0) {
+            _errN.FMOD = (_errN.FMOD || 0) + 1;
+            if (_errN.FMOD === 4) _oe('%c[THROTTLE] suppressing FMOD audio-error spam (toggle: FMODLOG=1)', 'color:#f80');
+            try { if (_errN.FMOD > 3 && localStorage.getItem('FMODLOG') !== '1') return; } catch(e){ if (_errN.FMOD > 3) return; }
+          }
+          // ★2026-06-12 PERF: emscripten "FS.syncfs operations in flight at once" warnings spam during gameplay
+          // (IndexedDB sync). Each console.error with DevTools open renders a MULTI-THOUSAND-frame async rAF
+          // stack (~288k log lines per session) → main-thread jank, "teleporting" camera. Same throttle pattern.
+          if (typeof a0 === 'string' && a0.indexOf('FS.syncfs operations in flight') >= 0) {
+            _errN.SYNCFS = (_errN.SYNCFS || 0) + 1;
+            if (_errN.SYNCFS === 3) _oe('%c[THROTTLE] suppressing FS.syncfs warning spam (toggle: SYNCFSLOG=1)', 'color:#f80');
+            try { if (_errN.SYNCFS > 2 && localStorage.getItem('SYNCFSLOG') !== '1') return; } catch(e){ if (_errN.SYNCFS > 2) return; }
+          }
+          var msg=''; for (var i=0;i<arguments.length;i++){ msg += ' ' + String(arguments[i]); }
+          var m = (msg.indexOf('ArgumentOutOfRange')>=0) ? 'AOOR'
+                : (msg.indexOf('Sequence contains no elements')>=0) ? 'SEQ-EMPTY'
+                : (msg.indexOf('IndexOutOfRange')>=0) ? 'IOOR'
+                : (msg.indexOf('NullReference')>=0) ? 'NRE' : null;
+          if (m) {
+            if (window.__lastThrow) {
+              var key = m + '|' + window.__lastThrow.split('\n').slice(1,15).join('|');
+              if (!seen[key]) { seen[key]=1; _oe('[THROWSITE ' + m + '] real throw stack:\n' + window.__lastThrow); }
+              // ★2026-06-12: CONSUME the capture, some managed throws bypass ___cxa_throw, and a stale
+              // __lastThrow then got attributed to the WRONG exception (post-match SEQ-EMPTY printed the
+              // boot NRE's stack byte-for-byte). One capture = one print; bypassing throws print nothing.
+              window.__lastThrow = '';
+            }
+            // THROTTLE the repetitive per-frame Unity error itself so the log stays readable for diagnosis.
+            _errN[m] = (_errN[m] || 0) + 1;
+            if (_errN[m] === 4) _oe('%c[THROTTLE] suppressing further "' + m + '" spam (toggle: SPAM=1)', 'color:#f80');
+            try { if (_errN[m] > 3 && localStorage.getItem('SPAM') !== '1') return; } catch(e){ if (_errN[m] > 3) return; }
+          }
+        } catch(_){}
+        return _oe.apply(null, arguments);
+      };
+    })();
+    (function(){
+      if (window.__CXAHOOK) return; window.__CXAHOOK = 1;
+      try { if (localStorage.getItem('CXATRACE') === '0') return; } catch(e){}
+      var origInst = WebAssembly.instantiate;
+      function cap(){ try { throw new Error('T'); } catch(e){ window.__lastThrow = e.stack || ''; } }
+      function wrapImports(imports){
+        try { for (var ns in imports){ var lib=imports[ns]; if(!lib||typeof lib!=='object')continue;
+          for (var k in lib){ try {
+            var f=lib[k];
+            if (typeof f==='function' && Function.prototype.toString.call(f).indexOf('new ExceptionInfo')>=0){
+              (function(orig){ lib[k]=function(){ cap(); return orig.apply(this,arguments); }; })(f);
+              (console.error.bind(console))('%c[CXAHOOK] wrapped ___cxa_throw at imports.'+ns+'.'+k, 'color:#0ff');
+            }
+          } catch(e){} } } } catch(e){}
+      }
+      WebAssembly.instantiate = function(buf, imports){ if (imports) wrapImports(imports); return origInst.apply(this, arguments); };
+    })();
+    try {
+      Object.defineProperty(navigator, 'language',  { get: function() { return 'en-US'; }, configurable: true });
+      Object.defineProperty(navigator, 'languages', { get: function() { return ['en-US', 'en']; }, configurable: true });
+      var _orig = { DT: Intl.DateTimeFormat, NF: Intl.NumberFormat, C: Intl.Collator, PR: Intl.PluralRules, L: Intl.Locale };
+      function forceEnLocale(Orig) {
+        function Wrapper() {
+          var args = Array.prototype.slice.call(arguments);
+          if (args.length === 0 || args[0] == null || (Array.isArray(args[0]) && args[0].length === 0)) args[0] = 'en-US';
+          var inst = new (Function.prototype.bind.apply(Orig, [null].concat(args)))();
+          var origResolved = inst.resolvedOptions.bind(inst);
+          inst.resolvedOptions = function() { var r = origResolved(); r.locale = 'en-US'; return r; };
+          return inst;
+        }
+        Wrapper.prototype = Orig.prototype;
+        return Wrapper;
+      }
+      Intl.DateTimeFormat = forceEnLocale(_orig.DT);
+      Intl.NumberFormat   = forceEnLocale(_orig.NF);
+      Intl.Collator       = forceEnLocale(_orig.C);
+      Intl.PluralRules    = forceEnLocale(_orig.PR);
+      if (_orig.L) Intl.Locale = forceEnLocale(_orig.L);
+      console.log('[locale-force] navigator.language + Intl.* pinned to en-US');
+    } catch (e) { console.warn('[locale-force] failed:', e); }
+  </script>
+
+  <!-- Firebase SDK (v7 era, compatible with v441 Playtika auth wrapper). -->
+  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-remote-config.js"></script>
+
+  <!-- Mocks. server-mock = HTTP intercept layer. firebase = SDK init.
+       login = guest UID helper. firebase-config = RC defaults for v441 18 handlers. -->
+  <!-- 2026-05-27 EXPERIMENT result: _KILL_PSF=true DID NOT unblock splash @10/100 with offers populated.
+       Conclusion: PsfLightManager + TheBoxService SDK is NOT the multicast cascade blocker. The actual
+       blocker is some other CBFCFCPKGBJ subscriber that runs after StoreOffersManager when multicast
+       doesn't abort. Identification requires runtime probing of subscriber execution order. -->
+  <script src="mocks/server-mock.js?v=8d583a25"></script>
+  <script src="mocks/firebase.js?v=2054f8b4"></script>
+  <script src="mocks/login.js?v=958b82f1"></script>
+  <script src="mocks/firebase-config.js?v=38c23d42"></script>
+
+  <!--
+    URL stability guard (same as 4.23 prod).
+    Unity's `_SetUrlPostfix` JSLib (WebGL.framework.js.unityweb) does
+    `history.pushState(null, "", params)`. Playtika canonical SPA-analytics hook,
+    fired after party/match creation to ping their GA setup. Served at root "/" on
+    Playtika it's harmless; in our deployment under `/test-446/` it truncates the URL
+    to `/`, breaking reloads/bookmarks/deep-links for logged-in users.
+    Trap pushState/replaceState and skip any call originating from _SetUrlPostfix
+    (detected via stack frame). The canonical client never reads URL state, so this is
+    a pure JS-side side effect. Other history.pushState (legit SPA routing) still works.
+  -->
+  <script>
+  (function(){
+    var _origPush = history.pushState;
+    var _origReplace = history.replaceState;
+    function _isUnityUrlTrack() {
+      var stack = '';
+      try { throw new Error(); } catch (e) { stack = e.stack || ''; }
+      return stack.indexOf('_SetUrlPostfix') !== -1;
+    }
+    history.pushState = function(state, title, url) {
+      if (_isUnityUrlTrack()) return; // suppress Unity Playtika analytics URL mutation
+      return _origPush.apply(history, arguments);
+    };
+    history.replaceState = function(state, title, url) {
+      if (_isUnityUrlTrack()) return;
+      return _origReplace.apply(history, arguments);
+    };
+  })();
+  </script>
+
+  <!-- v441 RC dispatch. After Unity instance is ready and our setDefaultValues()
+       cached the JSON in 'conf', SendMessage('PersistantObjects','ActivateRemoteConfig',json)
+       triggers FirebaseConfigHandler.ActivateRemoteConfig which fans out to all 18 handlers. -->
+  <script>
+    // ★2026-06-03 RC-RACE ROOT CAUSE CONFIRMED (winver decompile + LSMPROBE + multi-agent verify).
+    // The splash @10% ("Downloading Assets") was NEVER a BattlePass exception. It is a TIMING RACE:
+    //   • `_didGetRemoteConfig` (the LSM bar's first job) is set in exactly ONE place. EGFFAIOLPBN @37160 - //     reached only from AppInitializer.BJINHNBHJLP (GetRemoteConfig stage) @34009.
+    //   • BJINHNBHJLP @33994 starts: `if (FirebaseConfigHandler.PMNIEENPMDI) return true;` (early-return @33996
+    //     that SKIPS @34009). PMNIEENPMDI is set true UNCONDITIONALLY by ActivateRemoteConfig @21401.
+    //   • Our OLD code fired SendMessage(ActivateRemoteConfig) at +1ms → PMNIEENPMDI=true BEFORE the stage ran
+    //     → early-return → EGFFAIOLPBN never fires → `_didGetRemoteConfig` stays false forever → splash pinned
+    //     @10% (no managed exception, matches the clean log; the "Bad PKCS7 padding" line is unrelated).
+    //   • On WebGL the RC proxy (DLJBOHAFEJN.IIHJIDENGDC @21053) is a no-op (no Firebase fetch), so our manual
+    //     SendMessage is the ONLY activation, but it must land AT THE RIGHT TIME, not at +1ms.
+    // CANONICAL FIX: do NOT pre-set PMNIEENPMDI. Wait until FirebaseManager.DidInit==true. By then BJINHNBHJLP
+    // has passed its early-return (PMNIEENPMDI still false), awaited DidInit @34000, called FetchRemoteConfig
+    // @34002 (which creates a fresh HAMBJKCHIGL TCS @21393, required, else SetResult NREs on null), and is now
+    // parked on `await ACMCMPJGICJ` @34003. Our single ActivateRemoteConfig then runs the handler foreach and
+    // HAMBJKCHIGL.SetResult @21418 → the await resolves → @34009 EGFFAIOLPBN → `_didGetRemoteConfig=true` → boot.
+    // Gating on DidInit is deadlock-free: ELGBKKFMPBJ @33965 awaits BJINHNBHJLP (GetRemoteConfig) BEFORE
+    // BBMCDLDANDN (auth/_CheckIfConnected), so we MUST NOT gate on an auth signal, but DidInit is set by
+    // FirebaseManager init independently of (prior to) the GetRemoteConfig stage, so it always arrives.
+    // DidInit = static bool @ FirebaseManager_StaticFields+0x28 (class cell 0x9ad118 → SF@classPtr+0x5c;
+    // SF+0x24=Instance, +0x28=DidInit, il2cpp.h:69581-69592, consistent with the LSMPROBE/upstream FB read).
+    // MUST be fired exactly ONCE (a 2nd ActivateRemoteConfig double-completes FDNPENFOAHN.SetResult @20992).
+    window._rcDispatched = false;
+    window.onUnityReady = window.onUnityReady || function() {
+      if (window._rcDispatched) return;
+      var attempts = 0;
+      function firebaseDidInit() {
+        try {
+          var M = window.unityInstance && window.unityInstance.Module; if (!M) return false;
+          var h32 = M.HEAPU32, h8 = M.HEAPU8; if (!h32 || !h8) return false;
+          var HL = h32.length * 4;
+          var cp = h32[0x9ad118 >>> 2] >>> 0; if (cp <= 0x10000 || cp >= HL) return false;   // FirebaseManager classPtr
+          var sf = h32[(cp + 0x5c) >>> 2] >>> 0; if (sf <= 0x10000 || sf >= HL) return false; // static_fields
+          return h8[sf + 0x28] === 1;                                                          // DidInit
+        } catch (e) { return false; }
+      }
+      var doDispatch = function() {
+        try {
+          var configJson = JSON.stringify(conf);
+          window.unityInstance.SendMessage('PersistantObjects', 'ActivateRemoteConfig', configJson);
+          console.log('%c[v446] ActivateRemoteConfig dispatched POST-DidInit (' + configJson.length + ' bytes), canonical RC timing', 'color:#0f8;font-weight:bold');
+        } catch (e) {
+          console.warn('[v446] ActivateRemoteConfig failed:', e.message);
+        }
+      };
+      var tryDispatch = function() {
+        if (window._rcDispatched) return;
+        attempts++;
+        var ready = window.unityInstance && typeof conf !== 'undefined' && conf;
+        if (ready && firebaseDidInit()) {
+          window._rcDispatched = true;
+          // small margin so BJINHNBHJLP's DidInit-await continuation has run FetchRemoteConfig (new HAMBJKCHIGL)
+          setTimeout(doDispatch, 300);
+          return;
+        }
+        if (attempts < 1400) { setTimeout(tryDispatch, 50); return; }   // ~70s budget for DidInit
+        // hard fallback: DidInit never observed (read offset wrong / Firebase init failed). Boot is already
+        // dead at this point, so deliver RC anyway as a last resort.
+        console.error('[v446] FirebaseManager.DidInit never observed after ~70s, dispatching RC as fallback');
+        window._rcDispatched = true;
+        doDispatch();
+      };
+      tryDispatch();
+    };
+  </script>
+
+  <!-- v441 WebGL JS bridges. framework.js extern functions (_InitBanners,
+       _ShowBanners, _HideBanners, _ShowInter, _ShowWebVideoAd, _ShowWebRVAd,
+       _SignIn*, _CheckIfConnected, _RefreshToken, _SetCOPPAFlag, etc.)
+       invoke these `window.X()` directly. Without them: ReferenceError → splash hangs. -->
+  <script src="js/bridges.js?v=056fa8d4"></script>
+
+  <script>
+    // Initialize Firebase first (needed before remoteConfig()/auth() calls).
+    if (typeof initializeFireBase === 'function') {
+      initializeFireBase();
+    } else {
+      console.warn('[v446] initializeFireBase not defined');
+    }
+    if (typeof initRemoteConfig === 'function') {
+      console.log('[v446] Calling initRemoteConfig()');
+      initRemoteConfig();
+    } else {
+      console.warn('[v446] initRemoteConfig not defined');
+    }
+  </script>
+
+  <!-- Master switch for ALL the boot diagnostics below (IDB-TXN, FRAME, DLPROBE, ADDRPROBE).
+       Default ON (disabled): these wrap requestAnimationFrame (per-frame), IndexedDB, and
+       Module.cachedFetch, and emit verbose console.log, added main-thread/event-loop overhead
+       that the prod build never had. Set window._DIAG_OFF=false in the console to re-enable. -->
+  <script>window._DIAG_OFF = true;</script>
+
+  <!-- 2026-05-28 IDB/syncfs DIAGNOSTIC: instrument IndexedDB transaction lifecycle + FS.syncfs
+       to find WHY DownloadDependenciesAsync.IsDone never flips in foreground. Hypothesis: an IDB
+       transaction (bundle cache write OR IDBFS PlayerPrefs sync) opens but never commits while
+       Unity's rAF loop saturates the main thread, so the completion callback never fires.
+       Logs transaction open/complete/abort with timing + outstanding count. Pure observability. -->
+  <script>
+    (function() {
+      if (window._DIAG_OFF) return;
+      var _t0 = performance.now();
+      function ts() { return ((performance.now() - _t0) / 1000).toFixed(1) + 's'; }
+      var txnOpen = 0, txnDone = 0;
+      try {
+        var origTxn = IDBDatabase.prototype.transaction;
+        IDBDatabase.prototype.transaction = function(stores, mode) {
+          var tx = origTxn.apply(this, arguments);
+          txnOpen++;
+          var n = txnOpen;
+          var dbName = this.name;
+          var opened = performance.now();
+          var settled = false;
+          function settle(how) {
+            if (settled) return; settled = true;
+            txnDone++;
+            var dur = (performance.now() - opened).toFixed(0);
+            // Only log slow (>500ms) or write transactions to avoid flood
+            if (mode === 'readwrite' || +dur > 500) {
+              console.log('%c[IDB-TXN#' + n + '] ' + how + ' db=' + dbName + ' mode=' + (mode||'readonly') +
+                          ' dur=' + dur + 'ms outstanding=' + (txnOpen - txnDone) + ' @' + ts(),
+                          +dur > 1000 ? 'color:#f44;font-weight:bold' : 'color:#08c');
+            }
+          }
+          tx.addEventListener('complete', function() { settle('COMPLETE'); });
+          tx.addEventListener('error', function() { settle('ERROR'); });
+          tx.addEventListener('abort', function() { settle('ABORT'); });
+          return tx;
+        };
+        console.log('%c[IDB-TXN] transaction instrumentation installed', 'color:#08c');
+      } catch (e) { console.warn('[IDB-TXN] hook failed:', e); }
+      // Periodically report outstanding (uncommitted) transactions, a stuck count = the deadlock.
+      setInterval(function() {
+        var outstanding = txnOpen - txnDone;
+        if (outstanding > 0) {
+          console.log('%c[IDB-TXN] OUTSTANDING=' + outstanding + ' (opened=' + txnOpen + ' done=' + txnDone + ') @' + ts(),
+                      outstanding > 2 ? 'color:#f44;font-weight:bold' : 'color:#888');
+        }
+      }, 2000);
+    })();
+  </script>
+
+  <!-- 2026-05-28 FRAME-TIMING DIAGNOSTIC: wrap requestAnimationFrame to measure per-frame CPU
+       duration (time spent inside the Unity main-loop callback) and inter-frame gap. Decides
+       whether @10/100 is CPU saturation (frames overrun >16ms, fps drops → multicast subscribers
+       flood per-frame work, starving the download's `await Task.Yield()`) vs a logical stall
+       (frames ~16ms/60fps but downloadHandle.IsDone never flips). Pure observability. -->
+  <script>
+    (function() {
+      if (window._DIAG_OFF) return;
+      var _rt0 = performance.now();
+      function rts() { return ((performance.now() - _rt0) / 1000).toFixed(1) + 's'; }
+      var origRAF = window.requestAnimationFrame.bind(window);
+      var frames = 0, sumDur = 0, maxDur = 0, longFrames = 0, lastStart = 0, sumGap = 0, maxGap = 0;
+      window.requestAnimationFrame = function(cb) {
+        return origRAF(function(t) {
+          var start = performance.now();
+          if (lastStart) { var gap = start - lastStart; sumGap += gap; if (gap > maxGap) maxGap = gap; }
+          lastStart = start;
+          try { return cb(t); }
+          finally {
+            var dur = performance.now() - start;
+            frames++; sumDur += dur; if (dur > maxDur) maxDur = dur; if (dur > 50) longFrames++;
+          }
+        });
+      };
+      setInterval(function() {
+        if (frames === 0) { console.log('%c[FRAME] 0 frames/3s (rAF paused, backgrounded?) @' + rts(), 'color:#a0a'); return; }
+        console.log('%c[FRAME] ' + frames + ' frames/3s (~' + (frames / 3).toFixed(0) + 'fps) avgDur=' +
+                    (sumDur / frames).toFixed(1) + 'ms maxDur=' + maxDur.toFixed(0) + 'ms long(>50ms)=' + longFrames +
+                    ' avgGap=' + (sumGap / Math.max(1, frames)).toFixed(1) + 'ms maxGap=' + maxGap.toFixed(0) + 'ms @' + rts(),
+                    (maxDur > 50 || frames / 3 < 30) ? 'color:#f80;font-weight:bold' : 'color:#0a0');
+        frames = 0; sumDur = 0; maxDur = 0; longFrames = 0; sumGap = 0; maxGap = 0;
+      }, 3000);
+      console.log('%c[FRAME] rAF frame-timing instrumentation installed', 'color:#0a0');
+    })();
+  </script>
+
+  <script>
+    // "Powered by" badge, only inside an iframe on EXTERNAL sites (ported verbatim from the 3.8 game page
+    // root index.html:205-232; lost in the Chapter 2 page migration). On our own landing (apex iframes the
+    // game same-hostname) the badge stays hidden; on a third-party embed the cross-origin parent access
+    // throws → isExternal=true → badge links back to 1v1lolreloaded.com.
+    // Restyled 2026-11-10 to the current design system (DESIGN.md): ink plate with a hairline rule, the
+    // favicon tile, the outlined wordmark from assets/brand/logo.svg, labels in Blinker 600 (system fallback).
+    (function() {
+      if (window.parent === window) return; // not in iframe
+      var isExternal = false;
+      try { isExternal = window.parent.location.hostname !== window.location.hostname; } catch(e) { isExternal = true; }
+      if (!isExternal) return;
+
+      try {
+        new FontFace('Blinker', 'url(fonts/blinker/blinker-600.woff2) format("woff2")', { weight: '600' })
+          .load().then(function(f) { document.fonts.add(f); }).catch(function() {});
+      } catch (e) {}
+
+      var LABEL = "font:600 9px/9px Blinker,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;letter-spacing:0.09em;text-transform:uppercase;color:#8b93a5;white-space:nowrap;";
+      var TILE = '<rect width="64" height="64" rx="8.00" fill="#0a0a0c"/><g transform="translate(-0.268 13.979) scale(0.37207 0.46509)"><path fill="#f4f4f5" stroke="#f4f4f5" stroke-width="3.5" stroke-linejoin="miter" stroke-miterlimit="10" d="M51.04 7.0 35.3 76.0H13.7L23.91 32.4Q24.42 30.1 25.06 27.9Q25.7 25.7 26.59 23.5L10.09 27.0L9.42 14.1L30.14 7.0Z"/><g transform="translate(2.50 0)"><path fill="#e11d48" stroke="#e11d48" stroke-width="3.5" stroke-linejoin="miter" stroke-miterlimit="10" d="M112.27 26.0Q111.45 29.7 110.31 33.55Q109.18 37.4 107.97 40.95Q106.76 44.5 105.5 47.4Q102.83 53.9 100.22 58.65Q97.6 63.4 96.21 65.6Q93.32 70.1 90.37 72.3Q87.43 74.5 83.97 75.25Q80.5 76.0 75.8 76.0H61Q58.6 76.0 57.09 74.45Q55.57 72.9 55.56 70.7L54.17 26.0H77.17L73.6 63.4H74.5Q76.6 63.4 77.61 62.15Q78.62 60.9 80.56 57.0Q81.91 54.2 83.02 51.2Q84.13 48.2 85.28 44.2Q86.83 39.1 87.82 34.1Q88.8 29.1 89.37 26.0Z"/></g><g transform="translate(5.00 0)"><path fill="#f4f4f5" stroke="#f4f4f5" stroke-width="3.5" stroke-linejoin="miter" stroke-miterlimit="10" d="M158.64 7.0 142.9 76.0H121.3L131.51 32.4Q132.02 30.1 132.66 27.9Q133.3 25.7 134.19 23.5L117.69 27.0L117.02 14.1L137.74 7.0Z"/></g></g>';
+      var WORD = '<path fill="#f4f4f5" d="M51.04 7.0 35.3 76.0H13.7L23.91 32.4Q24.42 30.1 25.06 27.9Q25.7 25.7 26.59 23.5L10.09 27.0L9.42 14.1L30.14 7.0Z"/><path fill="#e11d48" d="M112.27 26.0Q111.45 29.7 110.31 33.55Q109.18 37.4 107.97 40.95Q106.76 44.5 105.5 47.4Q102.83 53.9 100.22 58.65Q97.6 63.4 96.21 65.6Q93.32 70.1 90.37 72.3Q87.43 74.5 83.97 75.25Q80.5 76.0 75.8 76.0H61Q58.6 76.0 57.09 74.45Q55.57 72.9 55.56 70.7L54.17 26.0H77.17L73.6 63.4H74.5Q76.6 63.4 77.61 62.15Q78.62 60.9 80.56 57.0Q81.91 54.2 83.02 51.2Q84.13 48.2 85.28 44.2Q86.83 39.1 87.82 34.1Q88.8 29.1 89.37 26.0Z"/><path fill="#f4f4f5" d="M158.64 7.0 142.9 76.0H121.3L131.51 32.4Q132.02 30.1 132.66 27.9Q133.3 25.7 134.19 23.5L117.69 27.0L117.02 14.1L137.74 7.0Z"/><path fill="#f4f4f5" d="M168.72 57.5Q172.22 57.5 174 59.4Q175.79 61.3 174.95 65.1L173.99 69.2Q173.29 72.7 171.24 74.35Q169.2 76.0 165.4 76.0H161.4Q153.6 76.0 155.16 68.4L156.02 64.3Q157.62 57.5 164.72 57.5Z"/><path fill="#f4f4f5" d="M218.04 7.0 206.75 54.8Q206.36 57.0 207.03 57.9Q207.7 58.8 210 58.8H232.8L230.98 75.1Q224 76.0 215.18 76.2Q206.37 76.4 197.77 76.4Q192.77 76.4 189.35 74.3Q185.93 72.2 184.5 68.55Q183.07 64.9 184.17 60.3L196.24 7.0Z"/><path fill="#f4f4f5" d="M279.96 5.6Q291.36 5.6 298.08 8.8Q304.8 12.0 306.65 19.95Q308.51 27.9 305.35 42.3Q303.02 52.9 299.77 59.8Q296.51 66.7 291.98 70.5Q287.45 74.3 281.26 75.85Q275.08 77.4 266.98 77.4Q255.08 77.4 248.51 74.15Q241.95 70.9 240.45 62.9Q238.95 54.9 242.09 40.7Q244.51 30.2 247.71 23.35Q250.91 16.5 255.35 12.6Q259.79 8.7 265.82 7.15Q271.86 5.6 279.96 5.6ZM278.35 21.7Q274.75 21.7 272.46 23.3Q270.17 24.9 268.49 29.3Q266.8 33.7 264.65 42.3Q262.76 50.2 262.5 54.3Q262.24 58.4 263.81 59.85Q265.39 61.3 268.89 61.3Q272.69 61.3 274.93 59.7Q277.17 58.1 278.91 53.65Q280.64 49.2 282.69 40.7Q284.58 32.8 284.83 28.75Q285.09 24.7 283.52 23.2Q281.95 21.7 278.35 21.7Z"/><path fill="#f4f4f5" d="M343.24 7.0 331.95 54.8Q331.56 57.0 332.23 57.9Q332.9 58.8 335.2 58.8H358L356.18 75.1Q349.2 76.0 340.38 76.2Q331.57 76.4 322.97 76.4Q317.97 76.4 314.55 74.3Q311.13 72.2 309.7 68.55Q308.27 64.9 309.37 60.3L321.44 7.0Z"/>';
+
+      var b = document.createElement('a');
+      b.href = 'https://1v1lolreloaded.com';
+      b.target = '_blank';
+      b.rel = 'noopener';
+      b.setAttribute('aria-label', 'Powered by 1v1.LOL RELOADED');
+      b.style.cssText = 'position:fixed;bottom:8px;left:8px;z-index:99999;display:flex;align-items:center;gap:8px;padding:5px 10px 5px 5px;background:rgba(10,10,12,0.92);border:1px solid #2b2f3b;border-radius:4px;text-decoration:none;opacity:0.85;transition:opacity 120ms,border-color 120ms;';
+      b.onmouseenter = function(){ b.style.opacity = '1'; b.style.borderColor = '#3b82f6'; };
+      b.onmouseleave = function(){ b.style.opacity = '0.85'; b.style.borderColor = '#2b2f3b'; };
+      b.innerHTML =
+        '<svg width="26" height="26" viewBox="0 0 64 64" aria-hidden="true" style="display:block;flex:none">' + TILE + '</svg>' +
+        '<span style="display:flex;flex-direction:column;gap:5px">' +
+          '<span style="' + LABEL + '">Powered by</span>' +
+          '<span style="display:flex;align-items:flex-end;gap:6px">' +
+            '<svg width="58.3" height="12" viewBox="9.4 5.6 348.6 71.8" aria-hidden="true" style="display:block;flex:none">' + WORD + '</svg>' +
+            '<span style="' + LABEL + 'letter-spacing:0.3em">Reloaded</span>' +
+          '</span>' +
+        '</span>';
+
+      document.body.appendChild(b);
+    })();
+  </script>
+
+  <!-- Mirror of the CDN payloads for embedders that cannot reach it (1v1lol.ru). Must wrap fetch before the loader runs. -->
+  <script src="js/cdn-mirror.js?v=410308a0"></script>
+  <script>
+    /* The Unity data payload is 128 MB, over the per-file limit for the repo, so it
+       is stored as two parts and stitched back together by js/local-host.js. */
+    window.NX_1V1_DATA_PARTS = ['Build/WebGL.data.c0de4610.unityweb.part1', 'Build/WebGL.data.c0de4610.unityweb.part2'];
+    window.NX_1V1_DATA_SIZE = 128452201;
+  </script>
+  <script src="js/local-host.js"></script>
+  <script src="Build/WebGL.loader.js?v=a2f6fac2"></script>
+  <!-- AdinPlay ads (preroll, banner column, rewarded) behind the bridges' ad hooks. Between the loader and boot.js:
+       it holds createUnityInstance until the preroll is over and sees Unity's AudioContext being created. -->
+  <script src="js/boot.js?v=c88ac32d"></script>
+</body>
+</html>

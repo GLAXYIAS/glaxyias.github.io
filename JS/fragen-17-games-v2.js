@@ -27,6 +27,14 @@
       desc: "Curve, bounce and blast a football past the keeper, then spend your cash on power and bounce upgrades between shots.",
       image: "https://azgames.io/upload/cache/upload/imgs/orbitkick3-m180x180.png",
       tags: ["Sports", "Casual"]
+    },
+    {
+      id: "1v1-lol",
+      title: "1v1.LOL",
+      url: "../Games/1v1-lol/index.html",
+      desc: "Build, box fight and drop into battle royale in a fast browser shooter with 1v1 Clash, Zone Wars and creative mode.",
+      image: "../Games/1v1-lol/cover.webp",
+      tags: ["Shooter", "Multiplayer", "Action"]
     }
   ];
 
@@ -69,6 +77,7 @@
     "undead_corridor",
     "ragdoll-playground",
     "orbit-kick",
+    "1v1-lol",
   ];
 
   function tagNonHtml() {
