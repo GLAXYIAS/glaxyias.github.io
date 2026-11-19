@@ -1,0 +1,1170 @@
+/* Preload hover-state assets so first hover doesn't flash */
+#ACCOUNTSCREEN::after {
+	content: "";
+	position: absolute;
+	width: 0;
+	height: 0;
+	overflow: hidden;
+	z-index: -1;
+	background-image:
+		url('../Shared/Assets/PlaysaurusAccounts/pa-buttons-hover.webp'),
+		url('../Shared/Assets/PlaysaurusAccounts/pa-cancel-hover.webp');
+}
+
+/* Playsaurus Account Screen (Main Menu) */
+#ACCOUNTSCREEN {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.6);
+	z-index: 999;
+	justify-content: center;
+	align-items: center;
+}
+
+#ACCOUNTSCREEN .account-frame {
+	background: transparent;
+	padding: 0;
+	border: none;
+	box-shadow: none;
+}
+
+#ACCOUNTSCREEN .account-popup {
+	background-color: transparent;
+	border: 0 solid transparent;
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/container3.webp');
+	border-image-slice: 40 42 52 42 fill;
+	border-image-repeat: stretch;
+	border-image-width: auto;
+	padding: 16px 40px 22px;
+	max-width: 400px;
+	width: 85vw;
+	position: relative;
+	border-radius: 0;
+}
+
+#ACCOUNTSCREEN .account-title {
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+#ACCOUNTSCREEN .account-title .account-logo {
+	max-width: 200px;
+	height: auto;
+	display: block;
+	margin: 0 auto;
+}
+
+#ACCOUNTSCREEN .account-info {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	margin-bottom: 12px;
+	gap: 4px;
+}
+
+#ACCOUNTSCREEN .account-avatar-frame {
+	padding: 0;
+	border: none;
+	background: none;
+	box-shadow: none;
+	border-radius: 50%;
+}
+
+#ACCOUNTSCREEN #accountAvatar {
+	width: 78px;
+	height: 78px;
+	border-radius: 50%;
+	background: #4a5a6a;
+	object-fit: cover;
+	display: block;
+}
+
+#ACCOUNTSCREEN .account-welcome {
+	color: #838383;
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 17px;
+	margin: 0;
+}
+
+#ACCOUNTSCREEN .account-welcome:empty {
+	display: none;
+}
+
+#ACCOUNTSCREEN #accountUsername {
+	color: #000000;
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 20px;
+	margin: 0;
+}
+
+#ACCOUNTSCREEN #accountMemberSince {
+	color: #828282;
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 11px;
+	margin: 0 0 4px 0;
+}
+
+#ACCOUNTSCREEN .account-points-box {
+	background-color: transparent;
+	border: 0 solid transparent;
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/points-container.webp');
+	border-image-slice: 40 fill;
+	border-image-repeat: stretch;
+	border-image-width: auto;
+	border-radius: 0;
+	padding: 8px 26px;
+	margin: 2px auto 0;
+	width: fit-content;
+	max-width: 100%;
+	box-sizing: border-box;
+	display: grid;
+	grid-template-columns: auto auto;
+	column-gap: 16px;
+	align-items: center;
+	justify-items: center;
+	cursor: pointer;
+}
+
+#ACCOUNTSCREEN .points-icon-wrap {
+	position: relative;
+	width: 104px;
+	height: 104px;
+	flex-shrink: 0;
+}
+
+#ACCOUNTSCREEN .points-shadow {
+	position: absolute;
+	left: 24%;
+	top: 90%;
+	width: 87%;
+	height: auto;
+	transform: translate(-50%, -50%);
+	pointer-events: none;
+	z-index: 0;
+}
+
+#ACCOUNTSCREEN .points-icon {
+	position: relative;
+	z-index: 1;
+	width: 104px;
+	height: 104px;
+	object-fit: contain;
+}
+
+#ACCOUNTSCREEN .points-text {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	line-height: 1;
+}
+
+#ACCOUNTSCREEN .points-value {
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 44px;
+	line-height: 100%;
+	letter-spacing: 0;
+	text-align: center;
+	/* White fill + teal->pink gradient outline (matches the Rewards title border).
+	   Horizontal/vertical padding keeps the (overflowing) stroke inside the
+	   background box so the gradient outline isn't clipped at the edges. */
+	-webkit-text-fill-color: #FFFFFF;
+	-webkit-text-stroke: 8px transparent;
+	background: linear-gradient(180deg, #235359 0%, #FF0091 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	padding: 4px 10px;
+	display: block;
+}
+
+#ACCOUNTSCREEN .points-unit-label {
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 18px;
+	line-height: 100%;
+	letter-spacing: 0;
+	text-align: center;
+	text-transform: uppercase;
+	/* White fill + teal->pink gradient outline (matches the Rewards title border). */
+	-webkit-text-fill-color: #FFFFFF;
+	-webkit-text-stroke: 3.5px transparent;
+	background: linear-gradient(180deg, #235359 0%, #FF0091 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	padding: 2px 6px;
+	margin-top: 2px;
+}
+
+#ACCOUNTSCREEN .account-buttons {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	align-items: center;
+}
+
+#ACCOUNTSCREEN .account-buttons-grid {
+	display: grid;
+	/* Fixed-width columns so buttons keep a consistent size instead of
+	   shrink-wrapping to their text. This also gives the text-fit logic real
+	   room to grow the font rather than just shrink it. */
+	grid-template-columns: repeat(2, minmax(0, 180px));
+	justify-content: center;
+	width: 100%;
+	gap: 8px;
+}
+
+
+#ACCOUNTSCREEN .account-btn {
+	width: 100%;
+	max-width: 180px;
+	height: 50px;
+	padding: 0 8px;
+	box-sizing: border-box;
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 16px;
+	line-height: 100%;
+	letter-spacing: 0;
+	text-align: center;
+	cursor: pointer;
+	border: none;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	background-color: transparent;
+	color: #1E484E;
+	text-shadow: none;
+	outline: none;
+}
+
+#ACCOUNTSCREEN .btn-green:hover,
+#ACCOUNTSCREEN .btn-red:hover,
+#ACCOUNTSCREEN .btn-green:active,
+#ACCOUNTSCREEN .btn-red:active {
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/pa-buttons-hover.webp');
+}
+
+#ACCOUNTSCREEN .btn-close:hover,
+#ACCOUNTSCREEN .btn-close:active {
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/pa-cancel-hover.webp');
+}
+
+#ACCOUNTSCREEN .btn-green,
+#ACCOUNTSCREEN .btn-red {
+	background-image: none;
+	border-style: solid;
+	border-color: transparent;
+	border-width: 12px 24px 12px 24px;
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/pa-buttons.webp');
+	border-image-slice: 39 80 89 47 fill;
+	border-image-repeat: stretch;
+	border-image-width: 13px 26px 29px 15px;
+}
+
+#ACCOUNTSCREEN .btn-close {
+	background-image: none;
+	border-style: solid;
+	border-color: transparent;
+	border-width: 16px 24px 16px 24px;
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/pa-cancel.webp');
+	border-image-slice: 39 80 89 47 fill;
+	border-image-repeat: stretch;
+	border-image-width: 13px 26px 29px 15px;
+	width: 100%;
+	max-width: 180px;
+	height: 50px;
+	margin-top: 4px;
+	font-size: 16px;
+}
+
+#ACCOUNTSCREEN .account-verify-notice {
+	text-align: center;
+	padding: 10px 20px;
+}
+
+#ACCOUNTSCREEN .account-verify-text {
+	color: #ffcc44;
+	font-family: 'KanitM', sans-serif;
+	font-size: 15px;
+	margin: 0 0 20px 0;
+	text-shadow: 2px 2px 3px rgba(0,0,0,0.9), -1px -1px 2px rgba(0,0,0,0.5);
+	line-height: 1.4;
+}
+
+#ACCOUNTSCREEN .account-verify-buttons {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+}
+
+/* Playsaurus Sign In Screen (PC) */
+#OAUTHLOGINSCREEN {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.6);
+	z-index: 999;
+	justify-content: center;
+	align-items: center;
+}
+
+#OAUTHLOGINSCREEN .login-frame {
+	background: transparent;
+	padding: 0;
+	border: none;
+	box-shadow: none;
+}
+
+#OAUTHLOGINSCREEN .login-popup {
+	background-color: transparent;
+	border: 0 solid transparent;
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/container3.webp');
+	border-image-slice: 40 42 52 42 fill;
+	border-image-repeat: stretch;
+	border-image-width: auto;
+	padding: 24px 44px 40px;
+	max-width: 400px;
+	width: 85vw;
+	position: relative;
+	border-radius: 0;
+}
+
+#OAUTHLOGINSCREEN .account-title {
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+#OAUTHLOGINSCREEN .account-title .account-logo {
+	max-width: 200px;
+	height: auto;
+	display: block;
+	margin: 0 auto;
+}
+
+
+#OAUTHLOGINSCREEN .oauth-login-body {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	min-height: 110px;
+	margin-bottom: 18px;
+}
+
+#OAUTHLOGINSCREEN .oauth-login-message {
+	color: #1E484E;
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 15px;
+	line-height: 130%;
+	text-align: center;
+	text-shadow: none;
+}
+
+/* The spinner is grey-on-dark where it came from (the old auth popup); on this light panel it
+   needs the account palette instead. */
+#OAUTHLOGINSCREEN .lds-spinner div:after {
+	background: #1E484E;
+}
+
+#OAUTHLOGINSCREEN .account-buttons {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	align-items: center;
+}
+
+#OAUTHLOGINSCREEN .account-btn {
+	width: 100%;
+	max-width: 160px;
+	height: 50px;
+	padding: 0 8px;
+	box-sizing: border-box;
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 16px;
+	line-height: 100%;
+	letter-spacing: 0;
+	text-align: center;
+	cursor: pointer;
+	border: none;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	background-color: transparent;
+	color: #1E484E;
+	text-shadow: none;
+	outline: none;
+}
+
+#OAUTHLOGINSCREEN .btn-green:hover,
+#OAUTHLOGINSCREEN .btn-green:active {
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/pa-buttons-hover.webp');
+}
+
+#OAUTHLOGINSCREEN .btn-close:hover,
+#OAUTHLOGINSCREEN .btn-close:active {
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/pa-cancel-hover.webp');
+}
+
+#OAUTHLOGINSCREEN .btn-green {
+	background-image: none;
+	border-style: solid;
+	border-color: transparent;
+	border-width: 12px 24px 18px 24px;
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/pa-buttons.webp');
+	border-image-slice: 39 80 89 47 fill;
+	border-image-repeat: stretch;
+	border-image-width: 13px 26px 29px 15px;
+}
+
+#OAUTHLOGINSCREEN .btn-close {
+	background-image: none;
+	border-style: solid;
+	border-color: transparent;
+	border-width: 12px 24px 24px 24px;
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/pa-cancel.webp');
+	border-image-slice: 39 80 89 47 fill;
+	border-image-repeat: stretch;
+	border-image-width: 13px 26px 29px 15px;
+	margin-top: 5px;
+}
+
+/* Account button tooltip (PC only) */
+#accountBtnTooltip {
+	display: none;
+	position: absolute;
+	bottom: 110%;
+	left: 50%;
+	transform: translateX(-50%);
+	background: rgba(15, 15, 15, 0.92);
+	color: #ffffff;
+	font-family: 'KanitM', sans-serif;
+	font-size: 13px;
+	padding: 5px 10px;
+	border-radius: 4px;
+	white-space: nowrap;
+	pointer-events: none;
+	z-index: 20;
+	border: 1px solid rgba(139, 115, 85, 0.6);
+	text-shadow: none;
+}
+
+/* Playsaurus Cloud Saves Screen (PC) */
+#CLOUDSAVESSCREEN {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.6);
+	z-index: 999;
+	justify-content: center;
+	align-items: center;
+}
+
+#CLOUDSAVESSCREEN .login-frame {
+	background: transparent;
+	padding: 0;
+	border: none;
+	box-shadow: none;
+}
+
+#CLOUDSAVESSCREEN .cloud-saves-popup {
+	background-color: transparent;
+	border: 0 solid transparent;
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/container3.webp');
+	border-image-slice: 40 42 52 42 fill;
+	border-image-repeat: stretch;
+	border-image-width: auto;
+	padding: 16px 40px 32px;
+	max-width: 400px;
+	width: 85vw;
+	position: relative;
+	border-radius: 0;
+}
+
+#CLOUDSAVESSCREEN .account-title {
+	text-align: center;
+	margin-bottom: 16px;
+}
+
+#CLOUDSAVESSCREEN .account-title .account-logo {
+	max-width: 200px;
+	height: auto;
+	display: block;
+	margin: 0 auto;
+}
+
+/* Scroll section background uses container2 (matches the Rewards scroll box) */
+.cloud-saves-scroll {
+	background-color: transparent;
+	border: 0 solid transparent;
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/container2.webp');
+	border-image-slice: 40 fill;
+	border-image-repeat: stretch;
+	border-image-width: 22px;
+	border-radius: 0;
+	padding: 12px;
+	margin-bottom: 14px;
+	min-height: 120px;
+}
+
+.cloud-saves-list {
+	max-height: 280px;
+	overflow-y: auto;
+	padding-right: 8px;
+	scrollbar-width: thin;
+	scrollbar-color: #FFFFFF #91D7D7;
+}
+
+.cloud-saves-list::-webkit-scrollbar {
+	width: 10px;
+}
+
+.cloud-saves-list::-webkit-scrollbar-track {
+	background: #91D7D7;
+	border-radius: 10px;
+}
+
+.cloud-saves-list::-webkit-scrollbar-thumb {
+	background: #FFFFFF;
+	border-radius: 10px;
+	border: 2px solid transparent;
+	background-clip: padding-box;
+}
+
+.cloud-saves-list::-webkit-scrollbar-thumb:hover {
+	background: #FFFFFF;
+	background-clip: padding-box;
+}
+
+.cloud-saves-loading,
+.cloud-saves-empty {
+	text-align: center;
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 24px;
+	color: #1E484E;
+	padding: 44px 16px 48px;
+}
+
+.cloud-save-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: none;
+	border: 0 solid transparent;
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/container3.webp');
+	border-image-slice: 40 42 52 42 fill;
+	border-image-repeat: stretch;
+	border-image-width: 16px 16px 22px 16px;
+	border-radius: 0;
+	padding: 10px 14px 14px;
+	margin-bottom: 8px;
+	gap: 10px;
+}
+
+.cloud-save-item:last-child {
+	margin-bottom: 0;
+}
+
+.cloud-save-info {
+	flex: 1;
+	min-width: 0;
+}
+
+.cloud-save-name {
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 14px;
+	color: #1E484E;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.cloud-save-details {
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 12px;
+	color: #1E484E;
+	opacity: 0.85;
+	margin-top: 2px;
+}
+
+.cloud-save-time {
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 11px;
+	color: #1E484E;
+	opacity: 0.65;
+	margin-top: 2px;
+}
+
+.cloud-save-delete-btn {
+	flex-shrink: 0;
+	height: 44px;
+	min-width: 88px;
+	padding: 0 8px;
+	font-size: 14px;
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	line-height: 1;
+	text-align: center;
+	cursor: pointer;
+	color: #1E484E;
+	text-shadow: none;
+	outline: none;
+	background-image: none;
+	background-color: transparent;
+	border-style: solid;
+	border-color: transparent;
+	border-width: 12px 18px 12px 18px;
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/pa-cancel.webp');
+	border-image-slice: 39 80 89 47 fill;
+	border-image-repeat: stretch;
+	border-image-width: 10px 20px 22px 12px;
+}
+
+.cloud-save-delete-btn:hover,
+.cloud-save-delete-btn:active {
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/pa-cancel-hover.webp');
+}
+
+.cloud-save-delete-btn:disabled {
+	opacity: 0.5;
+	cursor: default;
+}
+
+#CLOUDSAVESSCREEN .account-buttons {
+	display: flex;
+	justify-content: center;
+}
+
+#CLOUDSAVESSCREEN .account-btn {
+	width: 100%;
+	max-width: 180px;
+	height: 56px;
+	padding: 0 8px;
+	box-sizing: border-box;
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 16px;
+	line-height: 100%;
+	letter-spacing: 0;
+	text-align: center;
+	cursor: pointer;
+	border: none;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	background-color: transparent;
+	color: #1E484E;
+	text-shadow: none;
+	outline: none;
+}
+
+#CLOUDSAVESSCREEN .btn-green:hover,
+#CLOUDSAVESSCREEN .btn-green:active {
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/pa-buttons-hover.webp');
+}
+
+#CLOUDSAVESSCREEN .btn-close:hover,
+#CLOUDSAVESSCREEN .btn-close:active {
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/pa-cancel-hover.webp');
+}
+
+#CLOUDSAVESSCREEN .btn-green {
+	background-image: none;
+	border-style: solid;
+	border-color: transparent;
+	border-width: 12px 24px 12px 24px;
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/pa-buttons.webp');
+	border-image-slice: 39 80 89 47 fill;
+	border-image-repeat: stretch;
+	border-image-width: 13px 26px 29px 15px;
+}
+
+#CLOUDSAVESSCREEN .btn-close {
+	background-image: none;
+	border-style: solid;
+	border-color: transparent;
+	border-width: 16px 24px 16px 24px;
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/pa-cancel.webp');
+	border-image-slice: 39 80 89 47 fill;
+	border-image-repeat: stretch;
+	border-image-width: 13px 26px 29px 15px;
+}
+
+/* Playsaurus Rewards Screen */
+#REWARDSSCREEN {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.6);
+	z-index: 999;
+	justify-content: center;
+	align-items: center;
+	/* Stroke around the "Rewards" title; the flanking stars reuse this exact color. */
+	--rewards-title-stroke: #912975;
+}
+
+#REWARDSSCREEN .account-frame {
+	background: transparent;
+	padding: 0;
+	border: none;
+	box-shadow: none;
+}
+
+#REWARDSSCREEN .rewards-popup {
+	background-color: transparent;
+	border: 0 solid transparent;
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/container3.webp');
+	border-image-slice: 40 42 52 42 fill;
+	border-image-repeat: stretch;
+	border-image-width: auto;
+	padding: 22px 34px 30px;
+	max-width: 460px;
+	width: 90vw;
+	position: relative;
+	border-radius: 0;
+}
+
+/* Header: user/points on the left, Playsaurus account logo on the right */
+#REWARDSSCREEN .rewards-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 10px;
+}
+
+#REWARDSSCREEN .rewards-user {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+}
+
+#REWARDSSCREEN .rewards-avatar-frame {
+	flex-shrink: 0;
+	border-radius: 50%;
+}
+
+#REWARDSSCREEN .rewards-avatar {
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	background: #4a5a6a;
+	object-fit: cover;
+	display: block;
+}
+
+#REWARDSSCREEN .rewards-user-text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+
+#REWARDSSCREEN .rewards-username {
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 18px;
+	color: #000000;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#REWARDSSCREEN .rewards-points {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+}
+
+#REWARDSSCREEN .rewards-points-icon {
+	width: 28px;
+	height: 28px;
+	object-fit: contain;
+	/* Left-align the coin with the start of the username above it */
+	margin-left: 0;
+	filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
+}
+
+#REWARDSSCREEN .rewards-points-value {
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 18px;
+	color: #CE35A8;
+}
+
+#REWARDSSCREEN .rewards-points-unit {
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 14px;
+	color: #CE35A8;
+	text-transform: lowercase;
+}
+
+#REWARDSSCREEN .rewards-logo {
+	flex-shrink: 0;
+	height: 46px;
+	width: auto;
+	display: block;
+}
+
+/* Title: "Rewards" flanked by reward-star assets, using the points palette
+   (white fill + magenta stroke, matching the account points display). */
+.rewards-title {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
+	margin: 0 0 12px 0;
+}
+
+/* Each title flourish is a cluster of two masked stars sitting side by side:
+   a larger pink star (::after, inner) and a smaller orange star (::before, outer).
+   The container is unmasked so each star keeps its own shape. The reward_star asset
+   is already angled left; stars 2 & 4 (reading L->R) are flipped horizontally so
+   they angle right, while stars 1 & 3 keep the asset's natural angle. */
+.rewards-title-star {
+	position: relative;
+	width: 54px;
+	height: 30px;
+	flex-shrink: 0;
+}
+
+.rewards-title-star::before,
+.rewards-title-star::after {
+	content: "";
+	position: absolute;
+	-webkit-mask: url('../Shared/Assets/PlaysaurusAccounts/reward_star.webp') center / contain no-repeat;
+	mask: url('../Shared/Assets/PlaysaurusAccounts/reward_star.webp') center / contain no-repeat;
+}
+
+/* Main star, inner side. Left flourish = star 2 -> flipped to angle right. */
+.rewards-title-star::after {
+	width: 30px;
+	height: 30px;
+	top: 0;
+	right: 0;
+	background-color: #FFE194;
+	transform: scaleX(-1);
+}
+
+/* Orange star (16%), outer side, smaller. Left flourish = star 1 -> natural angle. */
+.rewards-title-star::before {
+	width: 24px;
+	height: 24px;
+	top: 3px;
+	left: 0;
+	background-color: #FFAA0F29;
+}
+
+/* Right flourish: star 3 (pink, inner) keeps natural angle; star 4 (orange, outer) is flipped. */
+.rewards-title .rewards-title-star:last-child::after {
+	right: auto;
+	left: 0;
+	transform: none;
+}
+
+.rewards-title .rewards-title-star:last-child::before {
+	left: auto;
+	right: 0;
+	transform: scaleX(-1);
+}
+
+.rewards-title-text {
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 34px;
+	line-height: 1;
+	/* Solid white fill with a teal->pink gradient outline (Figma brand border).
+	   The gradient is painted as the text background and clipped to the glyphs;
+	   the transparent stroke ring reveals it, while the white fill covers the
+	   glyph interior so only the outline shows the gradient. */
+	-webkit-text-fill-color: #FFFFFF;
+	-webkit-text-stroke: 7px transparent;
+	background: linear-gradient(180deg, #235359 0%, #FF0091 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	padding: 6px 8px;
+	text-shadow: none;
+}
+
+.rewards-note {
+	text-align: center;
+	color: #1E484E;
+	opacity: 0.75;
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 12px;
+	margin: 0 0 12px 0;
+	text-shadow: none;
+}
+
+/* Scroll section background uses container2 */
+.rewards-scroll {
+	background-color: transparent;
+	border: 0 solid transparent;
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/container2.webp');
+	border-image-slice: 40 fill;
+	border-image-repeat: stretch;
+	border-image-width: 22px;
+	border-radius: 0;
+	padding: 12px;
+	margin-bottom: 14px;
+	min-height: 120px;
+}
+
+.rewards-list {
+	max-height: 280px;
+	overflow-y: auto;
+	padding-right: 8px;
+	scrollbar-width: thin;
+	scrollbar-color: #FFFFFF #91D7D7;
+}
+
+.rewards-list::-webkit-scrollbar {
+	width: 10px;
+}
+
+.rewards-list::-webkit-scrollbar-track {
+	background: #91D7D7;
+	border-radius: 10px;
+}
+
+.rewards-list::-webkit-scrollbar-thumb {
+	background: #FFFFFF;
+	border-radius: 10px;
+	border: 2px solid transparent;
+	background-clip: padding-box;
+}
+
+.rewards-list::-webkit-scrollbar-thumb:hover {
+	background: #FFFFFF;
+	background-clip: padding-box;
+}
+
+.reward-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: none;
+	border: 0 solid transparent;
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/container3.webp');
+	border-image-slice: 40 42 52 42 fill;
+	border-image-repeat: stretch;
+	border-image-width: 16px 16px 22px 16px;
+	border-radius: 0;
+	padding: 10px 14px 14px;
+	margin-bottom: 8px;
+	gap: 10px;
+}
+
+.reward-item:last-child {
+	margin-bottom: 0;
+}
+
+.reward-icon {
+	width: 40px;
+	height: 40px;
+	object-fit: contain;
+	flex-shrink: 0;
+}
+
+.reward-info {
+	flex: 1;
+	min-width: 0;
+}
+
+.reward-label {
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 14px;
+	color: #1E484E;
+}
+
+.reward-time {
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 11px;
+	color: #62B4B4;
+	margin-top: 2px;
+}
+
+.reward-message {
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 12px;
+	color: #62B4B4;
+	margin-top: 2px;
+}
+
+.rewards-loading,
+.rewards-empty {
+	display: none;
+	text-align: center;
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 24px;
+	color: #1E484E;
+	padding: 44px 16px 48px;
+}
+
+.rewards-unsupported {
+	display: none;
+	text-align: center;
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 12px;
+	color: #b86b00;
+	padding: 6px 0;
+}
+
+#REWARDSSCREEN .account-buttons {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+}
+
+#REWARDSSCREEN .account-btn {
+	width: 100%;
+	max-width: 180px;
+	height: 56px;
+	padding: 0 8px;
+	box-sizing: border-box;
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	font-size: 16px;
+	line-height: 100%;
+	letter-spacing: 0;
+	text-align: center;
+	cursor: pointer;
+	border: none;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	background-color: transparent;
+	color: #1E484E;
+	text-shadow: none;
+	outline: none;
+}
+
+#REWARDSSCREEN .btn-green:hover,
+#REWARDSSCREEN .btn-green:active {
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/pa-buttons-hover.webp');
+}
+
+#REWARDSSCREEN .btn-close:hover,
+#REWARDSSCREEN .btn-close:active {
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/pa-cancel-hover.webp');
+}
+
+#REWARDSSCREEN .btn-green {
+	background-image: none;
+	border-style: solid;
+	border-color: transparent;
+	border-width: 12px 24px 12px 24px;
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/pa-buttons.webp');
+	border-image-slice: 39 80 89 47 fill;
+	border-image-repeat: stretch;
+	border-image-width: 13px 26px 29px 15px;
+}
+
+#REWARDSSCREEN .btn-close {
+	background-image: none;
+	border-style: solid;
+	border-color: transparent;
+	border-width: 16px 24px 16px 24px;
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/pa-cancel.webp');
+	border-image-slice: 39 80 89 47 fill;
+	border-image-repeat: stretch;
+	border-image-width: 13px 26px 29px 15px;
+}
+
+.reward-claim-btn {
+	flex-shrink: 0;
+	min-width: 100px;
+	height: 44px;
+	padding: 0 8px;
+	font-size: 14px;
+	font-family: 'Matiz', sans-serif;
+	font-weight: 900;
+	line-height: 1;
+	text-align: center;
+	cursor: pointer;
+	color: #1E484E;
+	text-shadow: none;
+	outline: none;
+	background-image: none;
+	background-color: transparent;
+	border-style: solid;
+	border-color: transparent;
+	border-width: 12px 18px 12px 18px;
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/pa-buttons.webp');
+	border-image-slice: 39 80 89 47 fill;
+	border-image-repeat: stretch;
+	border-image-width: 10px 20px 22px 12px;
+}
+
+.reward-claim-btn:hover,
+.reward-claim-btn:active {
+	border-image-source: url('../Shared/Assets/PlaysaurusAccounts/pa-buttons-hover.webp');
+}
+
+.reward-claim-btn:disabled {
+	opacity: 0.5;
+	cursor: default;
+}
+
+/* Notification dot for pending rewards */
+.notification-dot {
+	display: none;
+	position: absolute;
+	top: -3px;
+	right: -3px;
+	width: 12px;
+	height: 12px;
+	background: #ff4444;
+	border-radius: 50%;
+	border: 2px solid #3a2a1a;
+	pointer-events: none;
+	z-index: 5;
+}
+
+#playsaurusAccountBtn .notification-dot {
+	top: -2px;
+	right: -2px;
+	width: 14px;
+	height: 14px;
+}
+
+#ACCOUNTSCREEN .account-btn {
+	position: relative;
+}
+
+/* Danger/red (pa-cancel) buttons: text must always be #60112C */
+#ACCOUNTSCREEN .btn-close,
+#OAUTHLOGINSCREEN .btn-close,
+#CLOUDSAVESSCREEN .btn-close,
+#REWARDSSCREEN .btn-close,
+.cloud-save-delete-btn {
+	color: #60112C;
+}

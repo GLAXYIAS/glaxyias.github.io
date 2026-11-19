@@ -1,0 +1,4067 @@
+BODY {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+}
+
+@font-face {
+  font-family: "CFont";
+  src: url("Shared/Fonts/newfont.ttf");
+}
+
+@font-face {
+  font-family: "KanitB";
+  src: url("Shared/Fonts/Kanit-Bold.ttf");
+}
+
+@font-face {
+  font-family: "KanitM";
+  src: url("Shared/Fonts/Kanit-Medium.ttf");
+}
+
+@font-face {
+  font-family: "BubbleGum";
+  src: url("Shared/Fonts/bubblegum.ttf");
+}
+
+@font-face {
+  font-family: "Matiz";
+  src: url("Shared/Fonts/Matiz.ttf");
+}
+
+#WRAPPERD {
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-image: url("Shared/Assets/World/title4.png");
+  background-color: #2a231a;
+  background-size: 100% 100%;
+}
+
+#LANGUAGESELECTIOND {
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #1f1d1c;
+  background-size: 100% 100%;
+  z-index: -1;
+  visibility: hidden;
+  overflow-y: auto;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+#STAGED {
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#PARTICLESD {
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#TITLED {
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  z-index: 9;
+  visibility: visible;
+}
+
+#NEWGAME {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  left: 25%;
+  top: 25%;
+  z-index: -1;
+  visibility: hidden;
+  background-repeat: no-repeat;
+  background-image: url("Shared/Assets/UI/tooltip.png");
+  background-color: #2a231a;
+  background-size: 100% 100%;
+}
+
+#gname {
+  font-size: 21px;
+  text-align: center;
+}
+
+#gameNameText {
+  font-size: 22px;
+}
+
+#TUTORIALD {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  z-index: -1;
+  visibility: hidden;
+}
+
+#DIALOGUED {
+  position: absolute;
+  left: 27.5%;
+  top: 25%;
+  width: 45%;
+  height: 30%;
+  margin: 0;
+  padding: 0;
+  z-index: 999;
+  visibility: hidden;
+}
+
+#TUTORIALDI {
+  position: absolute;
+  width: 50%;
+  height: 27%;
+  left: 25%;
+  top: 13%;
+  visibility: visible;
+  cursor: pointer;
+}
+
+#TUTORIALTEXT {
+  position: absolute;
+  width: 36%;
+  height: 22%;
+  left: 38%;
+  top: 14%;
+  visibility: visible;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.5vw;
+  overflow: auto;
+}
+
+#tutorialNextText {
+  position: absolute;
+  width: 36%;
+  height: 5%;
+  left: 38%;
+  top: 37%;
+  visibility: visible;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.5vw;
+  overflow: auto;
+  pointer-events: none;
+  text-align: right;
+}
+
+#personTalkingNameText {
+  position: absolute;
+  width: 13%;
+  height: 5%;
+  left: 26%;
+  top: 14%;
+  visibility: visible;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.5vw;
+  overflow: auto;
+  pointer-events: none;
+  text-align: left;
+}
+
+#tutorialTextContent {
+  height: 100%;
+}
+
+#SELLD {
+  position: absolute;
+  width: 50%;
+  height: 60%;
+  left: 25%;
+  top: 20%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#BUYD {
+  position: absolute;
+  width: 50%;
+  height: 60%;
+  left: 25%;
+  top: 20%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#CLOSEb {
+  position: relative;
+  width: 5%;
+  height: 5%;
+  left: 94%;
+  top: 6%;
+  cursor: pointer;
+}
+
+#BTS1 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 0%;
+  top: 5%;
+  cursor: pointer;
+}
+
+#BTS2 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 20%;
+  top: 5%;
+  cursor: pointer;
+}
+
+#BTS3 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 40%;
+  top: 5%;
+  cursor: pointer;
+}
+
+#BTS4 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 60%;
+  top: 5%;
+  cursor: pointer;
+}
+
+#BTB1 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 0%;
+  top: 5%;
+  cursor: pointer;
+}
+
+#BTB2 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 20%;
+  top: 5%;
+  cursor: pointer;
+}
+
+#BTB3 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 40%;
+  top: 5%;
+  cursor: pointer;
+}
+
+#BTB4 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 60%;
+  top: 5%;
+  cursor: pointer;
+}
+
+#BB2 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 2%;
+  top: 11%;
+  cursor: pointer;
+}
+
+#BB3 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 2%;
+  top: 16%;
+  cursor: pointer;
+}
+
+#BB4 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 2%;
+  top: 22%;
+  cursor: pointer;
+}
+
+#BB5 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 2%;
+  top: 27%;
+  cursor: pointer;
+}
+
+#BB6 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 2%;
+  top: 32%;
+  cursor: pointer;
+}
+
+#BB7 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 2%;
+  top: 37%;
+  cursor: pointer;
+}
+
+#BB8 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 2%;
+  top: 42%;
+  cursor: pointer;
+}
+
+#BB9 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 2%;
+  top: 47%;
+  cursor: pointer;
+}
+
+#BB10 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 2%;
+  top: 52%;
+  cursor: pointer;
+}
+
+#BB11 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 2%;
+  top: 57%;
+  cursor: pointer;
+}
+
+#BB12 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 2%;
+  top: 62%;
+  cursor: pointer;
+}
+
+#BB13 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 2%;
+  top: 67%;
+  cursor: pointer;
+}
+
+#BB14 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 2%;
+  top: 72%;
+  cursor: pointer;
+}
+
+#BB15 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 2%;
+  top: 77%;
+  cursor: pointer;
+}
+
+#BB16 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 2%;
+  top: 82%;
+  cursor: pointer;
+}
+
+#BB17 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 2%;
+  top: 87%;
+  cursor: pointer;
+}
+
+#BB18 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 2%;
+  top: 92%;
+  cursor: pointer;
+}
+
+#BB19 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 2%;
+  top: 97%;
+  cursor: pointer;
+}
+
+#PAGES1 {
+  position: absolute;
+  width: 3.86%;
+  height: 5.3%;
+  left: 33%;
+  top: 96.3%;
+  cursor: pointer;
+}
+
+#PAGES2 {
+  position: absolute;
+  width: 3.86%;
+  height: 5.3%;
+  left: 38.77%;
+  top: 96.3%;
+  cursor: pointer;
+}
+
+#PAGES3 {
+  position: absolute;
+  width: 3.86%;
+  height: 5.3%;
+  left: 44.54%;
+  top: 96.3%;
+  cursor: pointer;
+}
+
+#PAGES4 {
+  position: absolute;
+  width: 3.86%;
+  height: 5.3%;
+  left: 50.31%;
+  top: 96.3%;
+  cursor: pointer;
+}
+
+#PAGES5 {
+  position: absolute;
+  width: 3.86%;
+  height: 5.3%;
+  left: 56.08%;
+  top: 96.3%;
+  cursor: pointer;
+}
+
+#PAGES6 {
+  position: absolute;
+  width: 3.86%;
+  height: 5.3%;
+  left: 61.85%;
+  top: 96.3%;
+  cursor: pointer;
+}
+
+#HIRED {
+  position: absolute;
+  width: 50%;
+  height: 60%;
+  left: 25%;
+  top: 20%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#COLLECTD {
+  position: absolute;
+  width: 50%;
+  height: 60%;
+  left: 25%;
+  top: 20%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#SUPBD {
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  z-index: -1;
+  visibility: visible;
+}
+
+#SUPERD {
+  position: absolute;
+  width: 50%;
+  height: 75%;
+  left: 25%;
+  top: 15%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#SUPERPOOLD {
+  position: absolute;
+  width: 50%;
+  height: 75%;
+  left: 25%;
+  top: 15%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#EQUIPD {
+  position: absolute;
+  width: 50%;
+  height: 75%;
+  left: 25%;
+  top: 15%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#ULD {
+  position: absolute;
+  width: 50%;
+  height: 70%;
+  left: 25%;
+  top: 20%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#SUPSELLD {
+  position: absolute;
+  width: 50%;
+  height: 60%;
+  left: 25%;
+  top: 20%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#HTS1 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 0%;
+  top: 5%;
+  cursor: pointer;
+}
+
+#HTS2 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 20%;
+  top: 5%;
+  cursor: pointer;
+}
+
+#BUFFBUTTON1 {
+  position: absolute;
+  width: 2.2%;
+  height: 5.5%;
+  left: 90.3%;
+  top: 11.5%;
+  z-index: 3;
+  cursor: pointer;
+}
+
+#BUFFBUTTON2 {
+  position: absolute;
+  width: 2.2%;
+  height: 5.5%;
+  left: 90.3%;
+  top: 17.5%;
+  z-index: 3;
+  cursor: pointer;
+}
+
+#BUFFBUTTON3 {
+  position: absolute;
+  width: 2.2%;
+  height: 5.5%;
+  left: 90.3%;
+  top: 23.5%;
+  z-index: 3;
+  cursor: pointer;
+}
+
+#BUFFBUTTON4 {
+  position: absolute;
+  width: 2.2%;
+  height: 5.5%;
+  left: 90.3%;
+  top: 29.5%;
+  z-index: 3;
+  cursor: pointer;
+}
+
+#BUFFBUTTON5 {
+  position: absolute;
+  width: 2.2%;
+  height: 5.5%;
+  left: 90.3%;
+  top: 35.5%;
+  z-index: 3;
+  cursor: pointer;
+}
+
+#PLACE1 {
+  position: absolute;
+  width: 10%;
+  height: 20%;
+  left: 18.3%;
+  top: 46.2%;
+  cursor: pointer;
+  z-index: 2;
+  cursor: pointer;
+}
+
+#PLACE2 {
+  position: absolute;
+  width: 10%;
+  height: 20%;
+  left: 38.3%;
+  top: 51.2%;
+  cursor: pointer;
+  z-index: 2;
+  cursor: pointer;
+}
+
+#PLACE3 {
+  position: absolute;
+  width: 10%;
+  height: 20%;
+  left: 63.2%;
+  top: 46.2%;
+  cursor: pointer;
+  z-index: 2;
+  cursor: pointer;
+}
+
+#PLACE4 {
+  position: absolute;
+  width: 5%;
+  height: 20%;
+  left: 62.5%;
+  top: 26.2%;
+  cursor: pointer;
+  z-index: 2;
+  cursor: pointer;
+}
+
+#PLACE5 {
+  position: absolute;
+  width: 15%;
+  height: 20%;
+  left: 10.3%;
+  top: 46.2%;
+  cursor: pointer;
+  z-index: -1;
+  cursor: pointer;
+}
+
+#PLACE6 {
+  position: absolute;
+  width: 20%;
+  height: 23%;
+  left: 32.3%;
+  top: 21.2%;
+  cursor: pointer;
+  z-index: -1;
+  cursor: pointer;
+}
+
+#PLACE7 {
+  position: absolute;
+  width: 17%;
+  height: 35%;
+  left: 63.2%;
+  top: 46.2%;
+  cursor: pointer;
+  z-index: -1;
+  cursor: pointer;
+}
+
+#GARAGE {
+  position: absolute;
+  width: 11%;
+  height: 15%;
+  left: 52%;
+  top: 50%;
+  cursor: pointer;
+  z-index: 2;
+  cursor: pointer;
+}
+
+#EQUIPS {
+  position: absolute;
+  width: 50%;
+  height: 57%;
+  left: 25%;
+  top: 26%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#ENGINEM {
+  position: absolute;
+  width: 5%;
+  height: 8%;
+  left: 25.5%;
+  top: 28%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#ENGINE1 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 31%;
+  top: 28.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#ENGINE2 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 35.3%;
+  top: 28.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#ENGINE3 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 39.6%;
+  top: 28.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#ENGINE4 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 43.9%;
+  top: 28.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#ENGINE5 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 48.2%;
+  top: 28.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#ENGINE6 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 52.5%;
+  top: 28.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#ENGINE7 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 56.8%;
+  top: 28.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#ENGINE8 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 61.1%;
+  top: 28.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#ENGINE9 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 65.4%;
+  top: 28.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#ENGINE10 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 69.7%;
+  top: 28.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#DRILLM {
+  position: absolute;
+  width: 5%;
+  height: 8%;
+  left: 25.5%;
+  top: 38%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#DRILL1 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 31%;
+  top: 38.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#DRILL2 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 35.3%;
+  top: 38.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#DRILL3 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 39.6%;
+  top: 38.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#DRILL4 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 43.9%;
+  top: 38.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#DRILL5 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 48.2%;
+  top: 38.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#DRILL6 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 52.5%;
+  top: 38.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#DRILL7 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 56.8%;
+  top: 38.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#DRILL8 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 61.1%;
+  top: 38.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#DRILL9 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 65.4%;
+  top: 38.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#DRILL10 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 69.7%;
+  top: 38.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#RADIATORM {
+  position: absolute;
+  width: 5%;
+  height: 8%;
+  left: 25.5%;
+  top: 48%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#RADIATOR1 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 31%;
+  top: 48.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#RADIATOR2 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 35.3%;
+  top: 48.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#RADIATOR3 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 39.6%;
+  top: 48.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#RADIATOR4 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 43.9%;
+  top: 48.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#RADIATOR5 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 48.2%;
+  top: 48.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#RADIATOR6 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 52.5%;
+  top: 48.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#RADIATOR7 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 56.8%;
+  top: 48.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#RADIATOR8 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 61.1%;
+  top: 48.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#RADIATOR9 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 65.4%;
+  top: 48.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#RADIATOR10 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 69.7%;
+  top: 48.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#CARGOBAYM {
+  position: absolute;
+  width: 5%;
+  height: 8%;
+  left: 25.5%;
+  top: 58%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#CARGOBAY1 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 31%;
+  top: 58.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#CARGOBAY2 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 35.3%;
+  top: 58.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#CARGOBAY3 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 39.6%;
+  top: 58.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#CARGOBAY4 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 43.9%;
+  top: 58.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#CARGOBAY5 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 48.2%;
+  top: 58.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#CARGOBAY6 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 52.5%;
+  top: 58.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#CARGOBAY7 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 56.8%;
+  top: 58.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#CARGOBAY8 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 61.1%;
+  top: 58.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#CARGOBAY9 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 65.4%;
+  top: 58.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#CARGOBAY10 {
+  position: absolute;
+  width: 4%;
+  height: 6.4%;
+  left: 69.7%;
+  top: 58.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#DELETEE {
+  position: absolute;
+  width: 10%;
+  height: 10%;
+  left: 45%;
+  top: 70.8%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#L5a {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 8.6%;
+  top: 88%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L5b {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 15.7%;
+  top: 88%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L5c {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 22.9%;
+  top: 88%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L5d {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 30.2%;
+  top: 88%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L5e {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 37.5%;
+  top: 88%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L5f {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 44.6%;
+  top: 88%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L5g {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 51.7%;
+  top: 88%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L5h {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 58.8%;
+  top: 88%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L5i {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 65.9%;
+  top: 88%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L5j {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 73%;
+  top: 88%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4a {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 8.6%;
+  top: 70%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4b {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 15.7%;
+  top: 70%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4c {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 22.9%;
+  top: 70%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4d {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 30.2%;
+  top: 70%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4e {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 37.5%;
+  top: 70%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4f {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 44.6%;
+  top: 70%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4g {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 51.7%;
+  top: 70%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4h {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 58.8%;
+  top: 70%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4i {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 65.9%;
+  top: 70%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4j {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 73%;
+  top: 70%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3a {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 8.6%;
+  top: 52%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3b {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 15.7%;
+  top: 52%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3c {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 22.9%;
+  top: 52%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3d {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 30.2%;
+  top: 52%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3e {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 37.5%;
+  top: 52%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3f {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 44.6%;
+  top: 52%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3g {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 51.7%;
+  top: 52%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3h {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 58.8%;
+  top: 52%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3i {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 65.9%;
+  top: 52%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3j {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 73%;
+  top: 52%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2a {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 8.6%;
+  top: 34%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2b {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 15.7%;
+  top: 34%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2c {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 22.9%;
+  top: 34%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2d {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 30.2%;
+  top: 34%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2e {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 37.5%;
+  top: 34%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2f {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 44.6%;
+  top: 34%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2g {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 51.7%;
+  top: 34%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2h {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 58.8%;
+  top: 34%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2i {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 65.9%;
+  top: 34%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2j {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 73%;
+  top: 34%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1a {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 8.6%;
+  top: 16%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1b {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 15.7%;
+  top: 16%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1c {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 22.9%;
+  top: 16%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1d {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 30.2%;
+  top: 16%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1e {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 37.5%;
+  top: 16%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1f {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 44.6%;
+  top: 16%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1g {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 51.7%;
+  top: 16%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1h {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 58.8%;
+  top: 16%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1i {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 65.9%;
+  top: 16%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1j {
+  position: absolute;
+  width: 2.3%;
+  height: 12.8%;
+  left: 73%;
+  top: 16%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L5gap1 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 10.9%;
+  top: 88%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L5gap2 {
+  position: absolute;
+  width: 4.9%;
+  height: 12.8%;
+  left: 18%;
+  top: 88%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L5gap3 {
+  position: absolute;
+  width: 5%;
+  height: 12.8%;
+  left: 25.2%;
+  top: 88%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L5gap4 {
+  position: absolute;
+  width: 5%;
+  height: 12.8%;
+  left: 32.5%;
+  top: 88%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L5gap5 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 39.8%;
+  top: 88%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L5gap6 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 46.9%;
+  top: 88%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L5gap7 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 54%;
+  top: 88%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L5gap8 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 61.1%;
+  top: 88%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L5gap9 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 68.2%;
+  top: 88%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L5gap10 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 75.3%;
+  top: 88%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L5gap11 {
+  position: absolute;
+  width: 8%;
+  height: 14.8%;
+  left: 40%;
+  top: 86%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4gap1 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 10.9%;
+  top: 70%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4gap2 {
+  position: absolute;
+  width: 4.9%;
+  height: 12.8%;
+  left: 18%;
+  top: 70%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4gap3 {
+  position: absolute;
+  width: 5%;
+  height: 12.8%;
+  left: 25.2%;
+  top: 70%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4gap4 {
+  position: absolute;
+  width: 5%;
+  height: 12.8%;
+  left: 32.5%;
+  top: 70%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4gap5 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 39.8%;
+  top: 70%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4gap6 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 46.9%;
+  top: 70%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4gap7 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 54%;
+  top: 70%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4gap8 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 61.1%;
+  top: 70%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4gap9 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 68.2%;
+  top: 70%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4gap10 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 75.3%;
+  top: 70%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L4gap11 {
+  position: absolute;
+  width: 8%;
+  height: 14.8%;
+  left: 40%;
+  top: 68%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3gap1 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 10.9%;
+  top: 52%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3gap2 {
+  position: absolute;
+  width: 4.9%;
+  height: 12.8%;
+  left: 18%;
+  top: 52%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3gap3 {
+  position: absolute;
+  width: 5%;
+  height: 12.8%;
+  left: 25.2%;
+  top: 52%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3gap4 {
+  position: absolute;
+  width: 5%;
+  height: 12.8%;
+  left: 32.5%;
+  top: 52%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3gap5 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 39.8%;
+  top: 52%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3gap6 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 46.9%;
+  top: 52%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3gap7 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 54%;
+  top: 52%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3gap8 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 61.1%;
+  top: 52%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3gap9 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 68.2%;
+  top: 52%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3gap10 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 75.3%;
+  top: 52%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L3gap11 {
+  position: absolute;
+  width: 8%;
+  height: 14.8%;
+  left: 40%;
+  top: 50%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2gap1 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 10.9%;
+  top: 34%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2gap2 {
+  position: absolute;
+  width: 4.9%;
+  height: 12.8%;
+  left: 18%;
+  top: 34%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2gap3 {
+  position: absolute;
+  width: 5%;
+  height: 12.8%;
+  left: 25.2%;
+  top: 34%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2gap4 {
+  position: absolute;
+  width: 5%;
+  height: 12.8%;
+  left: 32.5%;
+  top: 34%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2gap5 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 39.8%;
+  top: 34%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2gap6 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 46.9%;
+  top: 34%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2gap7 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 54%;
+  top: 34%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2gap8 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 61.1%;
+  top: 34%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2gap9 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 68.2%;
+  top: 34%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2gap10 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 75.3%;
+  top: 34%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L2gap11 {
+  position: absolute;
+  width: 8%;
+  height: 14.8%;
+  left: 40%;
+  top: 32%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1gap1 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 10.9%;
+  top: 16%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1gap2 {
+  position: absolute;
+  width: 4.9%;
+  height: 12.8%;
+  left: 18%;
+  top: 16%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1gap3 {
+  position: absolute;
+  width: 5%;
+  height: 12.8%;
+  left: 25.2%;
+  top: 16%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1gap4 {
+  position: absolute;
+  width: 5%;
+  height: 12.8%;
+  left: 32.5%;
+  top: 16%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1gap5 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 39.8%;
+  top: 16%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1gap6 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 46.9%;
+  top: 16%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1gap7 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 54%;
+  top: 16%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1gap8 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 61.1%;
+  top: 16%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1gap9 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 68.2%;
+  top: 16%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1gap10 {
+  position: absolute;
+  width: 4.8%;
+  height: 12.8%;
+  left: 75.3%;
+  top: 16%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#L1gap11 {
+  position: absolute;
+  width: 8%;
+  height: 14.8%;
+  left: 40%;
+  top: 14%;
+  visibility: visible;
+  z-index: 1;
+}
+
+#CHESTD {
+  position: absolute;
+  width: 50%;
+  height: 60%;
+  left: 25%;
+  top: 20%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#OPENIT {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  left: 25%;
+  top: 25%;
+  cursor: pointer;
+}
+
+#HELPD {
+  position: absolute;
+  width: 50%;
+  height: 80%;
+  left: 25%;
+  top: 10%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#CLOSEhe {
+  position: relative;
+  width: 5%;
+  height: 5%;
+  left: 94%;
+  top: 6%;
+  cursor: pointer;
+}
+
+#H2 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 5%;
+  top: 10%;
+  cursor: pointer;
+}
+
+#H3 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 5%;
+  top: 16%;
+  cursor: pointer;
+}
+
+#H4 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 5%;
+  top: 22%;
+  cursor: pointer;
+}
+
+#H5 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 5%;
+  top: 28%;
+  cursor: pointer;
+}
+
+#H6 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 5%;
+  top: 34%;
+  cursor: pointer;
+}
+
+#H7 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 5%;
+  top: 40%;
+  cursor: pointer;
+}
+
+#H8 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 5%;
+  top: 46%;
+  cursor: pointer;
+}
+
+#H9 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 5%;
+  top: 52%;
+  cursor: pointer;
+}
+
+#H10 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 5%;
+  top: 58%;
+  cursor: pointer;
+}
+
+#H11 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 5%;
+  top: 64%;
+  cursor: pointer;
+}
+
+#H12 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 5%;
+  top: 70%;
+  cursor: pointer;
+}
+
+#H13 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 5%;
+  top: 76%;
+  cursor: pointer;
+}
+
+#H14 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 5%;
+  top: 82%;
+  cursor: pointer;
+}
+
+#H15 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 5%;
+  top: 88%;
+  cursor: pointer;
+}
+
+#H16 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 5%;
+  top: 94%;
+  cursor: pointer;
+}
+
+#H17 {
+  position: absolute;
+  width: 66%;
+  height: 95%;
+  left: 26%;
+  top: 7%;
+  overflow: hidden;
+}
+
+#DebugH {
+  position: absolute;
+  width: 66%;
+  height: 95%;
+  left: 26%;
+  top: 7%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#SIMPLEINPUTFIELD {
+  position: absolute;
+  width: 28%;
+  height: 6%;
+  left: 36%;
+  top: 47%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#simpleInputFieldText {
+  height: 100%;
+  width: 100%;
+  background-color: rgba(70, 63, 55, 1);
+  border: 2px solid #000000;
+  border-radius: 0;
+  box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.3);
+  color: #e8dcc8;
+  font-family: 'KanitM', sans-serif;
+  font-size: 18px;
+  text-align: center;
+  padding: 0 8px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+#simpleInputFieldText:focus {
+  border-color: rgba(180, 160, 120, 0.6);
+  box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.3),
+              0 0 6px rgba(180, 160, 120, 0.2);
+}
+
+#redeemCodeHint {
+  position: absolute;
+  top: 50%;
+  right: -34px;
+  transform: translateY(-50%);
+  z-index: 1000;
+}
+
+#redeemCodeHintIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: rgba(70, 63, 55, 1);
+  border: 2px solid #000000;
+  color: #e8dcc8;
+  font-family: 'KanitM', sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+#redeemCodeHintTooltip {
+  visibility: hidden;
+  position: absolute;
+  bottom: 135%;
+  right: 0;
+  width: 210px;
+  background: rgba(15, 15, 15, 0.95);
+  color: #ffffff;
+  font-family: 'KanitM', sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 8px 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(139, 115, 85, 0.8);
+  text-align: left;
+  pointer-events: none;
+}
+
+#redeemCodeHint:hover #redeemCodeHintTooltip,
+#redeemCodeHint.active #redeemCodeHintTooltip {
+  visibility: visible;
+}
+
+#SIMPLEINPUTFIELDALERT {
+  position: absolute;
+  width: 33.3%;
+  height: 5%;
+  left: 33.3%;
+  top: 48%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#TOOLTIP {
+  position: absolute;
+  width: 120px;
+  height: auto;
+  left: 0%;
+  top: 0%;
+  visibility: hidden;
+  z-index: -1;
+  background-color: #cccccc;
+  background: url(Shared/Assets/UI/tooltip.png) no-repeat 0 0;
+  background-size: 100% 100%;
+  border-radius: 4px;
+  pointer-events: none;
+  font-size: 14px;
+  border: 1px solid black;
+  padding: 12px;
+}
+
+.quest-progress-container {
+  box-sizing: border-box;
+  width: 100%;
+  height: 1em;
+  padding: 0.2em 0.5em;
+}
+
+.quest-progress {
+  border: 1px solid black;
+  border-radius: 0.5em;
+  width: 100%;
+  height: 100%;
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  background: #76E374;
+  box-sizing: border-box;
+}
+
+.quest-progress {
+  border: 1px solid black;
+  border-radius: 0.5em;
+  color: #76E374;
+  background-color: #111111;
+}
+
+.quest-progress::-moz-progress-bar {
+  border: 1px solid black;
+  border-radius: 0.5em;
+  background-color: #111111;
+  background: #76E374;
+}
+
+.quest-progress::-webkit-progress-bar {
+  background: #111111;
+}
+
+.quest-progress::-webkit-progress-value {
+  border: 1px solid black;
+  border-radius: 0.5em;
+  background: #76E374;
+}
+
+#sdebug {
+  cursor: pointer;
+}
+
+#G1 {
+  position: absolute;
+  width: 40%;
+  height: 15%;
+  left: 2.5%;
+  top: 30%;
+  cursor: pointer;
+}
+
+#G2 {
+  position: absolute;
+  width: 40%;
+  height: 15%;
+  left: 2.5%;
+  top: 47%;
+  cursor: pointer;
+}
+
+#G3 {
+  position: absolute;
+  width: 40%;
+  height: 15%;
+  left: 2.5%;
+  top: 64%;
+  cursor: pointer;
+}
+
+#G7 {
+  position: absolute;
+  width: 28%;
+  height: 15%;
+  left: 20%;
+  top: 81.5%;
+  cursor: pointer;
+}
+
+#G7i {
+  position: absolute;
+  width: 9%;
+  height: 15%;
+  left: 10.5%;
+  top: 81.5%;
+  cursor: pointer;
+}
+
+#G1d {
+  position: absolute;
+  width: 5%;
+  height: 15%;
+  left: 44%;
+  top: 30%;
+  cursor: pointer;
+}
+
+#G2d {
+  position: absolute;
+  width: 5%;
+  height: 15%;
+  left: 44%;
+  top: 47%;
+  cursor: pointer;
+}
+
+#G3d {
+  position: absolute;
+  width: 5%;
+  height: 15%;
+  left: 44%;
+  top: 64%;
+  cursor: pointer;
+}
+
+#G1i {
+  position: absolute;
+  width: 5%;
+  height: 15%;
+  left: 49%;
+  top: 30%;
+  cursor: pointer;
+}
+
+#G2i {
+  position: absolute;
+  width: 5%;
+  height: 15%;
+  left: 49%;
+  top: 47%;
+  cursor: pointer;
+}
+
+#G3i {
+  position: absolute;
+  width: 5%;
+  height: 15%;
+  left: 49%;
+  top: 64%;
+  cursor: pointer;
+}
+
+#G1c {
+  position: absolute;
+  width: 5%;
+  height: 15%;
+  left: 43%;
+  top: 30%;
+  cursor: pointer;
+  z-index: -1;
+}
+
+#G2c {
+  position: absolute;
+  width: 5%;
+  height: 15%;
+  left: 43%;
+  top: 47%;
+  cursor: pointer;
+  z-index: -1;
+}
+
+#G3c {
+  position: absolute;
+  width: 5%;
+  height: 15%;
+  left: 43%;
+  top: 64%;
+  cursor: pointer;
+  z-index: -1;
+}
+
+#Gi {
+  position: absolute;
+  width: 28.2%;
+  height: 30%;
+  left: 65%;
+  top: 53%;
+  visibility: hidden;
+  font-size: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  color: #ffffff;
+}
+
+#languageSelection {
+  position: absolute;
+  width: 4%;
+  height: 7%;
+  left: 14%;
+  top: 92.5%;
+  visibility: visible;
+  cursor: pointer;
+}
+
+#steamCloudBackup {
+  position: absolute;
+  width: 4%;
+  height: 7%;
+  left: 18.5%;
+  top: 92.5%;
+  visibility: hidden;
+  cursor: pointer;
+}
+
+#PURCHASED {
+  position: absolute;
+  width: 50%;
+  height: 80%;
+  left: 25%;
+  top: 10%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#CLOSEp {
+  position: relative;
+  width: 5%;
+  height: 5%;
+  left: 94%;
+  top: 6%;
+  cursor: pointer;
+}
+
+#BTP1 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 0%;
+  top: 5%;
+  cursor: pointer;
+}
+
+#BTP2 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 20%;
+  top: 5%;
+  cursor: pointer;
+}
+
+#BTC1 {
+  position: absolute;
+  width: 28%;
+  height: 10%;
+  left: 15.9%;
+  top: 62%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#BTC2 {
+  position: absolute;
+  width: 28%;
+  height: 10%;
+  left: 55.9%;
+  top: 62%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#REDEEM {
+  position: absolute;
+  width: 20%;
+  height: 4%;
+  left: 75%;
+  top: 95%;
+  cursor: pointer;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#buyoptions {
+  position: absolute;
+  width: 98%;
+  height: 70%;
+  left: 1%;
+  top: 10%;
+  text-align: center;
+  z-index: 4;
+}
+
+#confirmations {
+  position: absolute;
+  width: 98%;
+  height: 20%;
+  left: 1%;
+  top: 80%;
+  text-align: center;
+  z-index: 4;
+}
+
+#confirmp {
+  cursor: pointer;
+}
+
+#confirmp2 {
+  cursor: pointer;
+}
+
+#BATTLED {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0%;
+  top: 0%;
+  visibility: hidden;
+  z-index: 10;
+}
+
+#LOGGERD {
+  position: absolute;
+  width: 70%;
+  height: 70%;
+  left: 15%;
+  top: 20%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#LOGGERTAB1 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 0%;
+  top: 5%;
+  cursor: pointer;
+}
+
+#LOGGERTAB2 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 20%;
+  top: 5%;
+  cursor: pointer;
+}
+
+#CLOSEl2 {
+  position: relative;
+  width: 5%;
+  height: 5%;
+  left: 94%;
+  top: 6%;
+  cursor: pointer;
+}
+
+#INFOD {
+  position: absolute;
+  width: 16%;
+  height: 16%;
+  left: 76%;
+  top: 24%;
+  z-index: -1;
+  cursor: pointer;
+}
+
+#fbi2 {
+  border: 0;
+  background-color: #bababa;
+  height: 26px;
+  width: 50px;
+}
+
+#fbi {
+  border: 0px;
+  height: 26px;
+  width: 50px;
+  padding: 5px 5px 5px 5px;
+  z-index: 4;
+}
+
+#TRANSIENTEFFECTSD {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0%;
+  top: 0%;
+  visibility: visible;
+  margin: 0;
+  padding: 0;
+  z-index: -1;
+}
+
+#OILD {
+  position: absolute;
+  width: 50%;
+  height: 60%;
+  left: 25%;
+  top: 20%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#DRILLD {
+  position: absolute;
+  width: 50%;
+  height: 60%;
+  left: 25%;
+  top: 20%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#CLOSEo {
+  position: relative;
+  width: 5%;
+  height: 5%;
+  left: 94%;
+  top: 6%;
+  cursor: pointer;
+}
+
+#CollectOil {
+  position: absolute;
+  width: 20%;
+  height: 6%;
+  left: 40%;
+  top: 91.5%;
+  cursor: pointer;
+}
+
+#OFFLINEPROGRESSD {
+  position: absolute;
+  width: 50%;
+  height: 60%;
+  left: 25%;
+  top: 20%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#ARCHPLACE {
+  position: absolute;
+  width: 15%;
+  height: 16%;
+  left: 25%;
+  top: 27%;
+  cursor: pointer;
+  z-index: 2;
+  cursor: pointer;
+}
+
+#ARCHD {
+  position: absolute;
+  width: 50%;
+  height: 70%;
+  left: 25%;
+  top: 20%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#EXCHOICED {
+  position: absolute;
+  width: 50%;
+  height: 70%;
+  left: 25%;
+  top: 20%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+
+#drillHitbox {
+  position: absolute;
+  width: 13%;
+  height: 23%;
+  left: 80.3%;
+  top: 76%;
+  cursor: pointer;
+  z-index: -1;
+  visibility: hidden;
+}
+
+#bossLevel {
+  position: absolute;
+  width: 72.4%;
+  height: 17.8%;
+  left: 8.2%;
+  top: 11%;
+  cursor: pointer;
+  z-index: -1;
+  visibility: hidden;
+}
+
+#PACKD {
+  position: absolute;
+  width: 50%;
+  height: 60%;
+  left: 25%;
+  top: 20%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#CLOSEpack {
+  position: relative;
+  width: 5%;
+  height: 5%;
+  left: 94%;
+  top: 6%;
+  cursor: pointer;
+}
+
+#PACKANIMATIOND {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0%;
+  top: 0%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#CRAFTINGD {
+  position: absolute;
+  width: 50%;
+  height: 60%;
+  left: 25%;
+  top: 20%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#REACTORD {
+  position: absolute;
+  width: 60%;
+  height: 88%;
+  left: 20%;
+  top: 12%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#CAVESYSTEMD {
+  position: absolute;
+  width: 60%;
+  height: 88%;
+  left: 20%;
+  top: 12%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#TRADINGPOSTD {
+  position: absolute;
+  width: 60%;
+  height: 85%;
+  left: 20%;
+  top: 8%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#CLOSEtrade {
+  position: relative;
+  width: 5%;
+  height: 5%;
+  left: 94%;
+  top: 6%;
+  cursor: pointer;
+}
+
+#TPB1 {
+  position: absolute;
+  width: 20%;
+  height: 3%;
+  left: 2%;
+  top: 11%;
+  cursor: pointer;
+}
+
+#TPB2 {
+  position: absolute;
+  width: 20%;
+  height: 3%;
+  left: 2%;
+  top: 16%;
+  cursor: pointer;
+}
+
+#TPTooltip1 {
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  cursor: pointer;
+  visibility: hidden;
+}
+
+#TPTooltip2 {
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  cursor: pointer;
+  visibility: hidden;
+}
+
+#TPRefreshButton {
+  position: absolute;
+  width: 20%;
+  height: 3%;
+  left: 40%;
+  top: 30%;
+  cursor: pointer;
+}
+
+#QUESTSD {
+  position: absolute;
+  width: 50%;
+  height: 80%;
+  left: 25%;
+  top: 15%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#SETTINGSD {
+  position: absolute;
+  width: 50%;
+  height: 60%;
+  left: 25%;
+  top: 20%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#CLOSEsettings {
+  position: relative;
+  width: 5%;
+  height: 5%;
+  left: 94%;
+  top: 6%;
+  cursor: pointer;
+}
+
+#SETTINGSTAB1 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 0%;
+  top: 5%;
+  cursor: pointer;
+}
+
+#SETTINGSTAB2 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 20%;
+  top: 5%;
+  cursor: pointer;
+}
+
+#SETTINGSTAB3 {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 40%;
+  top: 5%;
+  cursor: pointer;
+}
+
+#SaveHitBox {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 7%;
+  top: 18.5%;
+  cursor: pointer;
+}
+
+#ExportHitBox {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 7%;
+  top: 24%;
+  cursor: pointer;
+}
+
+#TitleHitBox {
+  position: absolute;
+  width: 20%;
+  height: 5%;
+  left: 7%;
+  top: 29.5%;
+  cursor: pointer;
+}
+
+#MusicHitbox {
+  position: absolute;
+  width: 3%;
+  height: 4.5%;
+  left: 7.5%;
+  top: 41%;
+  cursor: pointer;
+}
+
+#ClickSoundHitbox {
+  position: absolute;
+  width: 3%;
+  height: 4.5%;
+  left: 7.5%;
+  top: 46.5%;
+  cursor: pointer;
+}
+
+#IsotopeSoundHitbox {
+  position: absolute;
+  width: 3%;
+  height: 4.5%;
+  left: 7.5%;
+  top: 52%;
+  cursor: pointer;
+}
+
+#CapacitySoundHitbox {
+  position: absolute;
+  width: 3%;
+  height: 4.5%;
+  left: 7.5%;
+  top: 57.5%;
+  cursor: pointer;
+}
+
+#MineralsShownHitbox {
+  position: absolute;
+  width: 3%;
+  height: 4.5%;
+  left: 7.5%;
+  top: 70%;
+  cursor: pointer;
+}
+
+#METALDETECTORPLACE {
+  position: absolute;
+  width: 5%;
+  height: 12%;
+  left: 11%;
+  top: 65%;
+  cursor: pointer;
+  z-index: 2;
+  cursor: pointer;
+}
+
+#NEWSD {
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  z-index: 99999;
+  visibility: hidden;
+}
+
+#PROMOD {
+  position: absolute;
+  width: 50%;
+  height: 65%;
+  left: 25%;
+  top: 18%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#WEAPONFORGED {
+  position: absolute;
+  width: 50%;
+  height: 60%;
+  left: 25%;
+  top: 20%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#PITD {
+  position: absolute;
+  width: 50%;
+  height: 60%;
+  left: 25%;
+  top: 20%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#SMSD {
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  z-index: -1;
+  visibility: visible;
+}
+
+#SMBD {
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#SPECIALD {
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  z-index: -1;
+  visibility: visible;
+}
+
+
+#GEMFORGED {
+  position: absolute;
+  width: 50%;
+  height: 70%;
+  left: 25%;
+  top: 14%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+#OFFERD {
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  z-index: 15;
+  visibility: hidden;
+}
+
+.CONFIRMATIOND {
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  z-index: 15;
+  visibility: hidden;
+}
+
+#loadingOverlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0%;
+  top: 0%;
+  position: absolute;
+  visibility: visible;
+  background: #000000;
+  text-align: center;
+  z-index: 9999;
+}
+
+#loadingOverlay>p {
+  position: relative;
+  top: 60%;
+  left: 0;
+  right: 0;
+  color: #ffffff;
+  font-size: 24px;
+  margin: 0;
+}
+
+.loadingOverlayGameLogo {
+  width: 30%;
+  height: 30%;
+  position: absolute;
+  top: 15%;
+  left: 35%;
+}
+
+.loadingOverlayCompanyLogo {
+  width: 12%;
+  height: 12%;
+  position: absolute;
+  top: 85vh;
+  left: 3vh;
+}
+
+#ONECLICKMINIGAMED {
+  position: absolute;
+  width: 33%;
+  height: 98%;
+  left: 33%;
+  top: 1%;
+  visibility: hidden;
+  z-index: -1;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #151515;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #519650;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #51aa50;
+}
+
+.tooltipImageContainer {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(71, 64, 64, 0.5);
+  border: 1px solid black;
+  overflow: hidden;
+  margin-left: 1px;
+  margin-right: 1px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+
+.tooltipImageContainerInsufficient {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(124, 64, 64, 0.5);
+  border: 1px solid black;
+  overflow: hidden;
+  margin-left: 1px;
+  margin-right: 1px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+
+.tooltipImageCheckMark {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 6px;
+  overflow: none;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.tooltipImageTextOverlay {
+  position: absolute;
+  font: 12px Arial;
+  bottom: 0px;
+  left: 0px;
+  width: 40px;
+  overflow: none;
+  text-align: right;
+  color: white;
+  padding-left: 0px;
+  padding-right: 0px;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+.tooltipImageTextOverlayInsufficient {
+  position: absolute;
+  font: 12px Arial;
+  bottom: 0px;
+  left: 0px;
+  width: 40px;
+  overflow: none;
+  text-align: right;
+  color: rgb(255, 137, 137);
+  padding-left: 0px;
+  padding-right: 0px;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+#loadingBarBg {
+  position: absolute;
+  top: 70%;
+  left: 25%;
+  height: 1%;
+  width: 50%;
+  background-color: rgb(70, 70, 70);
+}
+
+#loadingBar {
+  width: 1%;
+  height: 100%;
+  background-color: rgb(255, 255, 255);
+}
+
+.jittery {
+  width: 100px;
+  height: 100px;
+  animation-name: jitter;
+  animation-duration: 0.5s;
+  animation-iteration-count: infinite;
+  text-shadow: 1px 0 2px #ff0000, 1px 1px 1px #0000ff, 0 1px 1px #00ff00;
+}
+
+@keyframes jitter {
+  0% {
+    text-shadow: 1px 0 2px #ff0000, -1px 1px 1px #0000ff, 0 -1px 1px #00ff00;
+  }
+
+  25% {
+    text-shadow: -1px 0 2px #ff0000, 1px -1px 1px #0000ff, 0 -1px 1px #00ff00;
+  }
+
+  50% {
+    text-shadow: 1px 0 2px #ff0000, 1px 1px 1px #0000ff, 0 1px -1px #00ff00;
+  }
+
+  75% {
+    text-shadow: -1px 0 2px #ff0000, 1px -1px 1px #0000ff, 0 1px -1px #00ff00;
+  }
+
+  100% {
+    text-shadow: 1px 0 2px #ff0000, -1px 1px 1px #0000ff, 0 1px 1px #00ff00;
+  }
+}
+
+.glowRelic {
+  width: 100px;
+  height: 100px;
+  animation-name: glowRelic;
+  animation-duration: 0.5s;
+  animation-iteration-count: infinite;
+  text-shadow: 0 0 4px #444444;
+  color: white;
+}
+
+@keyframes glowRelic {
+  0% {
+    text-shadow: 0.5px 0 4.5px #666666;
+  }
+
+  25% {
+    text-shadow: 0 0.5px 6px #444444;
+  }
+
+  50% {
+    text-shadow: 0 0 8.5px #666666;
+  }
+
+  75% {
+    text-shadow: 0 0.5px 6px #444444;
+  }
+
+  100% {
+    text-shadow: 0.5px 0 4.5px #666666;
+  }
+}
+
+
+xmp {
+  white-space: pre-wrap
+}
+
+.languageSelection:Hover {
+  background: -webkit-linear-gradient(to right, rgba(0, 0, 0, 0), rgba(60, 60, 60, 1), rgba(0, 0, 0, 0));
+  background: -moz-linear-gradient(to right, rgba(0, 0, 0, 0), rgba(60, 60, 60, 1), rgba(0, 0, 0, 0));
+  background: -o-linear-gradient(to right, rgba(0, 0, 0, 0), rgba(60, 60, 60, 1), rgba(0, 0, 0, 0));
+  background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(60, 60, 60, 1), rgba(0, 0, 0, 0));
+  font-size: 20px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  margin-top: 0px;
+  color: #FFFFFF;
+  vertical-align: middle;
+}
+
+.languageSelection {
+  width: 100%;
+  text-align: center;
+  color: #FFFFFF;
+  margin-top: 5px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  cursor: pointer;
+  font-size: 16px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #CCCCCC;
+  vertical-align: middle;
+}
+
+/* Loading Circle */
+
+#purchaseLoadingOverlay {
+  position: absolute;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  width: 100%;
+  height: 100%
+}
+
+.purchaseLoadingOverlay--hidden {
+  display: none !important;
+}
+
+.purchaseLoadingCircle {
+  border: 16px solid rgba(200, 200, 200, 0.4);
+  border-top: 16px solid rgba(120, 233, 112, 0.9);
+  border-radius: 50%;
+  width: 15vw;
+  height: 15vw;
+  animation: spin 2s linear infinite;
+  opacity: 100%;
+}
+
+.purchaseLoadingBackground {
+  background-color: #000;
+  opacity: 60%;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+
+/* Auth Frame */
+
+.auth-popup {
+  display: none;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 9999;
+}
+
+.auth-popup--background {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 0.5;
+}
+
+.auth-popup--page-container {
+  display: flex;
+  /* align-items: center;
+  justify-content: center; */
+  height: 100%;
+  position: relative;
+}
+
+.auth-popup--container {
+  font-family: Arial, Helvetica, sans-serif;
+  width: 70%;
+  max-width: 691px;
+  height: 90%;
+  border: 1px solid white;
+  border-radius: 10px;
+  background-color: white;
+  z-index: 1;
+  box-shadow: 0.5em 0.4em 0.4em 0.15em rgb(0 0 0 / 20%);
+  overflow: hidden;
+  margin: auto;
+}
+
+.auth-popup--auth-frame {
+  width: 100%;
+  height: 100%;
+}
+
+@media (orientation: portrait) {
+
+  .auth-popup--container {
+    width: 95%;
+    max-width: none;
+  }
+}
+
+.auth-popup--loading-overlay {
+  position: absolute;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* opacity: 0.5; */
+  z-index: 9999;
+}
+
+.auth-popup--body {
+  display: flex;
+  flex-wrap: nowrap;
+  column-gap: 2em;
+  padding: 1em;
+  flex-shrink: 0;
+  flex-grow: 1;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  justify-content: center;
+  position: relative;
+  align-items: center;
+  padding: 0;
+}
+
+.auth-popup--close-button {
+  position: absolute;
+  top: 0.4em;
+  right: 0.4em;
+  width: 1.5em;
+  height: 1.5em;
+  cursor: pointer;
+  z-index: 9999;
+}
+
+.auth-popup--close-button img {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+}
+
+.slide-in {
+  animation-duration: 0.3s;
+  animation-name: slide-in-anim;
+  animation-fill-mode: forwards;
+}
+
+.slide-out {
+  animation-duration: 0.3s;
+  animation-name: slide-out-anim;
+  animation-fill-mode: forwards;
+}
+
+@keyframes slide-in-anim {
+  from {
+    margin-left: 100%;
+  }
+
+  to {
+    margin-left: 0%;
+  }
+}
+
+@keyframes slide-out-anim {
+  from {
+    margin-left: 0%;
+  }
+
+  to {
+    margin-left: -100%;
+  }
+}
+
+.lds-spinner {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  z-index: 99999;
+}
+
+.lds-spinner div {
+  transform-origin: 40px 40px;
+  animation: lds-spinner 1.2s linear infinite;
+  z-index: 99999;
+}
+
+.lds-spinner div:after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 3px;
+  left: 37px;
+  width: 6px;
+  height: 18px;
+  border-radius: 20%;
+  background: rgb(189, 189, 189);
+  z-index: 99999;
+}
+
+.lds-spinner div:nth-child(1) {
+  transform: rotate(0deg);
+  animation-delay: -1.1s;
+}
+
+.lds-spinner div:nth-child(2) {
+  transform: rotate(30deg);
+  animation-delay: -1s;
+}
+
+.lds-spinner div:nth-child(3) {
+  transform: rotate(60deg);
+  animation-delay: -0.9s;
+}
+
+.lds-spinner div:nth-child(4) {
+  transform: rotate(90deg);
+  animation-delay: -0.8s;
+}
+
+.lds-spinner div:nth-child(5) {
+  transform: rotate(120deg);
+  animation-delay: -0.7s;
+}
+
+.lds-spinner div:nth-child(6) {
+  transform: rotate(150deg);
+  animation-delay: -0.6s;
+}
+
+.lds-spinner div:nth-child(7) {
+  transform: rotate(180deg);
+  animation-delay: -0.5s;
+}
+
+.lds-spinner div:nth-child(8) {
+  transform: rotate(210deg);
+  animation-delay: -0.4s;
+}
+
+.lds-spinner div:nth-child(9) {
+  transform: rotate(240deg);
+  animation-delay: -0.3s;
+}
+
+.lds-spinner div:nth-child(10) {
+  transform: rotate(270deg);
+  animation-delay: -0.2s;
+}
+
+.lds-spinner div:nth-child(11) {
+  transform: rotate(300deg);
+  animation-delay: -0.1s;
+}
+
+.lds-spinner div:nth-child(12) {
+  transform: rotate(330deg);
+  animation-delay: 0s;
+}
+
+@keyframes lds-spinner {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Loading animation */
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Playsaurus Account Button */
+#playsaurusAccountBtn {
+  position: absolute;
+  left: 0.5%;
+  top: 92.5%;
+  width: 13%;
+  height: 7%;
+  cursor: pointer;
+  z-index: 10;
+}
+
+#playsaurusAccountBtn.account-restricted {
+  cursor: not-allowed;
+}
+
+/* Playsaurus Auth Modal */
+.playsaurus-auth-modal {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  align-items: center;
+  justify-content: center;
+}
+
+.playsaurus-auth-modal-content {
+  width: 800px;
+  height: 720px;
+  max-width: 90%;
+  max-height: 90%;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Playsaurus Auth Modal */
+.playsaurus-auth-modal {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  align-items: center;
+  justify-content: center;
+}
+
+.playsaurus-auth-modal-content {
+  width: 800px;
+  height: 720px;
+  max-width: 90%;
+  max-height: 90%;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}

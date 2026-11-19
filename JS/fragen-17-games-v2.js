@@ -51,6 +51,14 @@
       desc: "Drive through hammer traps, presses and catapults, slow time for cinematic crashes and chase records across three maps.",
       image: "../Games/car-destruction-king/cover.svg",
       tags: ["Driving", "Sandbox", "Action"]
+    },
+    {
+      id: "mr-mine",
+      title: "Mr.Mine",
+      url: "../Games/mr-mine/index.html",
+      desc: "Dig deeper, hire managers, unlock drills and rebuild your mining empire in the long-running idle mining game.",
+      image: "../Games/mr-mine/cover.svg",
+      tags: ["Idle", "Mining", "Simulation"]
     }
   ];
 
@@ -96,6 +104,7 @@
     "1v1-lol",
     "shell-survivor",
     "car-destruction-king",
+    "mr-mine",
   ];
 
   function tagNonHtml() {
