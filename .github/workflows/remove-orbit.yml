@@ -1,0 +1,47 @@
+name: Remove ad-gated Orbit mirror
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  remove:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Drop the game entry, files and this workflow
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import pathlib
+
+          main = pathlib.Path("JS/main.js")
+          src = main.read_text(encoding="utf-8")
+          kept = [line for line in src.splitlines(True) if "az-orbit-kick" not in line]
+          if len(kept) == len(src.splitlines(True)):
+              raise SystemExit("catalog entry not found")
+          main.write_text("".join(kept), encoding="utf-8")
+
+          extras = pathlib.Path("JS/fragen-17-games-v2.js")
+          esrc = extras.read_text(encoding="utf-8")
+          ekept = esrc.replace('    "az-orbit-kick",\n', "")
+          if ekept == esrc:
+              raise SystemExit("filter id not found")
+          extras.write_text(ekept, encoding="utf-8")
+          PY
+          rm -rf Games/orbit-kick Games/_covers/actual/orbit-kick.png
+          git rm -q .github/workflows/remove-orbit.yml
+
+      - name: Commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Remove Orbit Kick mirror (ad-gated build)"
+          git push origin HEAD:main
