@@ -9588,7 +9588,7 @@ function launchGame(gameId) {
     useIframe = localStorage.getItem("nx_use_iframe") !== "false";
   } catch (e) {}
   if (!useIframe) {
-    window.location.replace(gameSrc);
+    window.location.assign(gameSrc);
     return;
   }
 

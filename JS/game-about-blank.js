@@ -58,6 +58,20 @@
     try { popup.focus(); } catch (e) {}
   }
 
+  function directSrc(gameId) {
+    var game = null;
+    try {
+      if (typeof _0xData !== 'undefined' && Array.isArray(_0xData)) {
+        game = _0xData.find(function (g) { return g && String(g.id) === String(gameId); });
+      }
+    } catch (e) {}
+    if (!game || !game.url) return null;
+    var raw = String(game.url);
+    if (/^https?:\/\//i.test(raw)) return raw;
+    var root = (location.origin || 'https://glaxyias.github.io').replace(/\/$/, '') + '/';
+    return root + raw.replace(/^\.\.\//, '').replace(/^\//, '');
+  }
+
   function install() {
     if (typeof window.launchGame !== 'function') return false;
     if (window.launchGame.__nxGameAboutBlank) return true;
@@ -81,7 +95,12 @@
       try {
         popup = window.open('about:blank', '_blank');
       } catch (e) {}
-      if (!popup || !popup.document) return original.apply(this, arguments);
+      if (!popup || !popup.document) {
+        try { if (popup) popup.close(); } catch (e) {}
+        var direct = directSrc(gameId);
+        if (direct) { window.location.assign(direct); return; }
+        return original.apply(this, arguments);
+      }
 
       var popupDoc;
       try {
