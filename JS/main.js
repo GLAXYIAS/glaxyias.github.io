@@ -2,7 +2,6 @@
 // DYNAMIC CORE SYSTEMS & GAMES REGISTER DATA
 // ==========================================
 let _0xData = [
-  { id: "az-ragdoll-playground", title: "Ragdoll Playground", url: "Games/ragdoll-playground/index.html", desc: "A physics sandbox where you throw, drag and destroy ragdolls in a fully interactive playground.", popular: false, image: "Games/_covers/actual/ragdoll-playground.png", tags: ["Non-HTML", "Sandbox", "Simulation"] },
   { id: "az-orbit-kick", title: "Orbit Kick", url: "Games/orbit-kick/index.html", desc: "Curve your shots around planets and time your kicks to score through orbiting goals.", popular: false, image: "Games/_covers/actual/orbit-kick.png", tags: ["Non-HTML", "Sports", "Arcade & Other"] },
   { id: "b_ap", title: "Brotato All Pain No Gain", url: "../Games/brotatoAPNG/Brotato.html", image: "../Games/_covers/actual/b_ap.jpg", desc: "The newest version of Brotato with the All Pain No Gain update.", popular: true , tags: ["Roguelike", "Shooter", "Action"] },
   { id: "undead_corridor", title: "Undead Corridor", url: "../Games/undead-corridor/index.html", desc: "Fight your way through zombie-filled corridors in this intense survival shooter. Use a variety of weapons, take down the undead, and see how long you can survive.", popular: true , image: "../Games/_covers/actual/undead_corridor.jpg" , tags: ["Horror", "Shooter"] },

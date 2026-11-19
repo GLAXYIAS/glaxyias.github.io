@@ -30,7 +30,6 @@
     "fragen",
     "veck-io",
     "undead_corridor",
-    "az-ragdoll-playground",
     "az-orbit-kick"
   ];
 
