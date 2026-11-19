@@ -10299,13 +10299,35 @@ iframe { width: 100%; height: 100vh; border: 0; display: block; background: #000
 
   var loadTimer = setTimeout(onLoadTimeout, LOAD_TIMEOUT_MS);
 
+  var frameLoaded = false;
+  function markFrameLoaded() {
+    if (frameLoaded) return;
+    frameLoaded = true;
+    clearTimeout(loadTimer);
+    hideError();
+    finish();
+  }
+
   function startIframe() {
+    /* Attach the listener before navigating the frame. On a warm cache a game
+       can finish loading before a listener added afterwards, which left the
+       loading overlay up forever when a second game was launched. */
+    frame.addEventListener('load', markFrameLoaded);
     frame.src = GAME_SRC;
-    frame.addEventListener('load', function () {
-      clearTimeout(loadTimer);
-      hideError();
-      finish();
-    });
+
+    /* Safety net in case the load event is missed entirely. */
+    var checks = 0;
+    var guard = setInterval(function () {
+      checks++;
+      if (frameLoaded || checks > 60) { clearInterval(guard); return; }
+      try {
+        var doc = frame.contentDocument;
+        if (doc && doc.readyState === 'complete' && doc.location && doc.location.href && doc.location.href !== 'about:blank') {
+          clearInterval(guard);
+          markFrameLoaded();
+        }
+      } catch (e) { clearInterval(guard); }
+    }, 1000);
   }
 
   if (window.fetch && GAME_SRC.indexOf('http') === 0) {
