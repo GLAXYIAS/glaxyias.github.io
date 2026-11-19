@@ -28,10 +28,10 @@ jobs:
 
           extras = pathlib.Path("JS/fragen-17-games-v2.js")
           esrc = extras.read_text(encoding="utf-8")
-          ekept = esrc.replace('    "az-orbit-kick",\n', "")
-          if ekept == esrc:
+          ekept = [line for line in esrc.splitlines(True) if '"az-orbit-kick"' not in line]
+          if len(ekept) == len(esrc.splitlines(True)):
               raise SystemExit("filter id not found")
-          extras.write_text(ekept, encoding="utf-8")
+          extras.write_text("".join(ekept), encoding="utf-8")
           PY
           rm -rf Games/orbit-kick Games/_covers/actual/orbit-kick.png
           git rm -q .github/workflows/remove-orbit.yml
