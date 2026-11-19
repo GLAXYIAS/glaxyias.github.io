@@ -7,6 +7,41 @@
     "17-and-0": "https://whatchamacallitexe.github.io/17-and-0/index.html"
   };
 
+  /* ------------------------------------------------ games imported from azgames */
+
+  var importedGames = [
+    {
+      id: "ragdoll-playground",
+      title: "Ragdoll Playground",
+      url: "../Games/ragdoll-playground/index.html",
+      desc: "A physics sandbox where you fling, drop, drag and torture a helpless ragdoll across a playground full of traps, props and weapons.",
+      image: "https://azgames.io/upload/cache/upload/imgs/ragdollplayground-m180x180.png",
+      tags: ["Sandbox", "Casual", "Action"]
+    },
+    {
+      id: "orbit-kick",
+      title: "Orbit Kick",
+      url: "../Games/orbit-kick/index.html",
+      desc: "Curve, bounce and blast a football past the keeper, then spend your cash on power and bounce upgrades between shots.",
+      image: "https://azgames.io/upload/cache/upload/imgs/orbitkick3-m180x180.png",
+      tags: ["Sports", "Casual"]
+    }
+  ];
+
+  function addImportedGames() {
+    if (typeof _0xData === "undefined" || !Array.isArray(_0xData)) return 0;
+    var added = 0;
+    for (var i = 0; i < importedGames.length; i++) {
+      var game = importedGames[i];
+      var exists = false;
+      for (var j = 0; j < _0xData.length; j++) {
+        if (_0xData[j] && String(_0xData[j].id) === game.id) { exists = true; break; }
+      }
+      if (!exists) { _0xData.push(game); added++; }
+    }
+    return added;
+  }
+
   document.addEventListener("click", function (event) {
     var node = event.target;
     var card = node && node.closest ? node.closest("[data-game-id]") : null;
@@ -30,6 +65,8 @@
     "fragen",
     "veck-io",
     "undead_corridor",
+    "ragdoll-playground",
+    "orbit-kick",
   ];
 
   function tagNonHtml() {
@@ -112,11 +149,13 @@
   }
 
   function bootImportedFilter() {
+    addImportedGames();
     tagNonHtml();
     if (addNonHtmlFilter()) return;
     var tries = 0;
     var timer = setInterval(function () {
       tries++;
+      addImportedGames();
       tagNonHtml();
       if (addNonHtmlFilter() || tries >= 100) clearInterval(timer);
     }, 50);
