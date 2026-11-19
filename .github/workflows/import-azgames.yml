@@ -1,0 +1,79 @@
+name: Import self-hosted azgames builds
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: import-azgames
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download game builds
+        run: |
+          set -euo pipefail
+          RD="https://games.azgame.io/game/ragdoll-playground/25041512/Build"
+          OD="https://games.azgame.io/game/orbit-kick/25120203/Build"
+          mkdir -p Games/ragdoll-playground/Build Games/orbit-kick/Build Games/orbit-kick/25120203/StreamingAssets
+          for f in ragdoll-playground-v25041512.data.unityweb ragdoll-playground-v25041512.wasm.unityweb ragdoll-playground-v25041512.framework.js.unityweb ragdoll-playground-v25041512.loader.js; do
+            curl -fsSL --retry 4 --retry-delay 3 "$RD/$f" -o "Games/ragdoll-playground/Build/$f"
+          done
+          for f in orbit-kick-v25120203.data.unityweb orbit-kick-v25120203.wasm.unityweb orbit-kick-v25120203.loader.js orbit-kick-v25120203.framework.js.unityweb; do
+            curl -fsSL --retry 4 --retry-delay 3 "$OD/$f" -o "Games/orbit-kick/Build/$f"
+          done
+          curl -fsSL --retry 4 --retry-delay 3 "https://games.azgame.io/lib/gmsoftsdk_v5.js" -o "Games/ragdoll-playground/Build/gmsoftsdk_v5.js"
+          curl -fsSL --retry 4 --retry-delay 3 "https://api.azgame.io/static/gmsdkv1.js" -o "Games/orbit-kick/Build/gmsdkv1.js"
+          curl -fsSL --retry 4 --retry-delay 3 "https://gamea.azgame.io/orbit-kick/25120203/StreamingAssets/UnityServicesProjectConfiguration.json" -o "Games/orbit-kick/25120203/StreamingAssets/UnityServicesProjectConfiguration.json"
+
+      - name: Unpack and patch the Orbit framework
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import gzip
+          p = 'Games/orbit-kick/Build/orbit-kick-v25120203.framework.js.unityweb'
+          raw = gzip.decompress(open(p, 'rb').read()).decode('utf-8')
+          pairs = [
+              ("window['\\x74\\x6f\\x70']['\\x6c\\x6f\\x63\\x61\\x74\\x69\\x6f\\x6e']['\\x68\\x6f\\x73\\x74\\x6e\\x61\\x6d\\x65']", "'gamea.azgame.io'"),
+              ("window['\\x6c\\x6f\\x63\\x61\\x74\\x69\\x6f\\x6e']['\\x68\\x6f\\x73\\x74\\x6e\\x61\\x6d\\x65']", "'gamea.azgame.io'"),
+              ("document['\\x6c\\x6f\\x63\\x61\\x74\\x69\\x6f\\x6e']['\\x68\\x6f\\x73\\x74\\x6e\\x61\\x6d\\x65']", "'gamea.azgame.io'"),
+          ]
+          for old, new in pairs:
+              print(old, raw.count(old))
+              raw = raw.replace(old, new)
+          open(p, 'w', encoding='utf-8', newline='').write(raw)
+          print('hostname replacements:', raw.count('gamea.azgame.io'))
+          PY
+          ls -lh Games/ragdoll-playground/Build Games/orbit-kick/Build Games/orbit-kick/25120203/StreamingAssets
+
+      - name: Materialize game pages and catalog
+        run: |
+          set -euo pipefail
+          base64 -d Games/_import/ragdoll.html.gz.b64 | gunzip > Games/ragdoll-playground/index.html
+          base64 -d Games/_import/orbit.html.gz.b64 | gunzip > Games/orbit-kick/index.html
+          base64 -d Games/_import/catalog.js.gz.b64 | gunzip > JS/fragen-17-games-v2.js
+          rm -rf Games/_import
+          wc -c Games/ragdoll-playground/index.html Games/orbit-kick/index.html JS/fragen-17-games-v2.js
+
+      - name: Commit the builds
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config http.postBuffer 524288000
+          git add -A Games/ragdoll-playground Games/orbit-kick JS/fragen-17-games-v2.js Games/_import
+          if git diff --cached --quiet; then
+            echo "Builds already present, nothing to commit."
+            exit 0
+          fi
+          git commit -m "Self-host Ragdoll Playground and Orbit Kick game builds"
+          git push
