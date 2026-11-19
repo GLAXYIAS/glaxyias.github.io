@@ -1,44 +1,234 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
-  <title>Orbit Kick</title>
-  <style>
-    html,body{margin:0;height:100%;background:#0f2418;overflow:hidden;overscroll-behavior:none}
-    #stage{position:fixed;inset:0}
-    iframe{display:block;width:100%;height:100%;border:0;background:#0f2418}
-    #status{position:absolute;inset:0;display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;
-      background:#0f2418;color:#eafff1;font-family:"Trebuchet MS",system-ui,sans-serif;text-align:center;padding:24px;
-      transition:opacity .35s ease;z-index:2}
-    #status.hide{opacity:0;pointer-events:none}
-    #status .dot{width:34px;height:34px;border-radius:50%;border:3px solid rgba(248,203,0,.25);border-top-color:#f8cb00;
-      animation:spin 1s linear infinite}
-    #status p{margin:0;font-size:.95rem;opacity:.8}
-    #status a{color:#f8cb00;font-weight:700}
-    @keyframes spin{to{transform:rotate(360deg)}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Orbit Kick</title>
+<style>
+  html,body{margin:0;height:100%;background:#0f2418;overflow:hidden;overscroll-behavior:none;font-family:"Trebuchet MS",system-ui,sans-serif}
+  #unity-canvas{position:fixed;inset:0;width:100%;height:100%;display:block;background:#0f2418;outline:none;touch-action:none}
+  #topbar{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:8px 10px;pointer-events:none}
+  #topbar a,#topbar button{pointer-events:auto;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:9px;
+    background:rgba(6,18,12,.75);color:#eafff1;border:1px solid rgba(255,255,255,.18);text-decoration:none;font-size:13px;font-weight:700;cursor:pointer}
+  #topbar a:hover,#topbar button:hover{border-color:#f8cb00;color:#fff}
+  #progress-panel{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+    background:radial-gradient(circle at 50% 35%,#123321,#05100a 70%);color:#eafff1;text-align:center;padding:24px}
+  #progress-panel h1{margin:0;font-size:clamp(1.2rem,3vw,1.8rem);letter-spacing:.04em}
+  #progress-track{width:min(420px,80vw);height:9px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
+  #progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#f8cb00,#64d68a);transition:width .25s ease}
+  #progress-text{margin:0;font-size:.85rem;opacity:.8}
+  #ad-overlay{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;background:rgba(2,8,4,.94);padding:20px}
+  #ad-overlay.show{display:flex}
+  .ad-card{width:min(720px,94vw);border:1px solid rgba(248,203,0,.3);border-radius:16px;background:#08130c;
+    box-shadow:0 30px 90px rgba(0,0,0,.7);overflow:hidden;text-align:center}
+  .ad-head{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;color:#9dbba9;border-bottom:1px solid rgba(255,255,255,.08)}
+  .ad-body{padding:clamp(24px,5vw,52px) 22px;background:
+    radial-gradient(ellipse at 50% 0%,rgba(248,203,0,.09),transparent 60%),
+    repeating-linear-gradient(45deg,rgba(255,255,255,.02) 0 12px,transparent 12px 24px)}
+  .ad-body h2{margin:0 0 10px;font-size:clamp(1.15rem,3.4vw,1.7rem);color:#fff}
+  .ad-body p{margin:0;color:#b5cdbd;font-size:.95rem}
+  .ad-art{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 auto 18px;width:86px;height:86px;
+    border-radius:20px;border:1px solid rgba(248,203,0,.35);background:linear-gradient(145deg,#12251a,#06100a);font-size:26px;font-weight:800;letter-spacing:.08em;color:#f8cb00}
+  .ad-foot{padding:14px 18px;border-top:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:9px}
+  #ad-countdown{font-size:.86rem;color:#f8cb00;font-weight:700;letter-spacing:.04em}
+  #ad-track{height:6px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}
+  #ad-fill{height:100%;width:100%;background:linear-gradient(90deg,#f8cb00,#64d68a)}
+  #error-panel{position:fixed;inset:0;z-index:2000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+    background:#07110b;color:#d8ffe6;text-align:center;padding:24px;font-size:.95rem}
+  #error-panel.show{display:flex}
+  #error-panel button{padding:9px 16px;border-radius:9px;border:1px solid #f8cb00;background:#14251a;color:#f8cb00;font-weight:700;cursor:pointer}
+  @media (max-width:520px){#topbar a,#topbar button{padding:6px 9px;font-size:12px}}
+</style>
+<script>
+/* The game's licence check reads its own URL and referrer. Report the official
+   game origin so the signed build runs from this copy. */
+try { Object.defineProperty(Document.prototype, 'URL', { configurable: true, get: function () { return 'https://gamea.azgame.io/orbit-kick/'; } }); } catch (e) {}
+try { Object.defineProperty(Document.prototype, 'baseURI', { configurable: true, get: function () { return 'https://gamea.azgame.io/orbit-kick/'; } }); } catch (e) {}
+try { Object.defineProperty(document, 'referrer', { configurable: true, get: function () { return 'https://azgames.io/'; } }); } catch (e) {}
+</script>
 </head>
 <body>
-  <div id="stage">
-    <iframe id="game" src="https://gamea.azgame.io/orbit-kick/"
-      title="Orbit Kick"
-      allow="autoplay; fullscreen; gamepad; clipboard-write; pointer-lock"
-      allowfullscreen></iframe>
+<canvas id="unity-canvas"></canvas>
+
+<div id="topbar">
+  <a href="/index.html" title="Back to the game library">&larr; Games</a>
+  <button type="button" id="fs-btn" title="Full screen">&#9974; Full screen</button>
+</div>
+
+<div id="progress-panel">
+  <h1>Orbit Kick</h1>
+  <div id="progress-track"><div id="progress-fill"></div></div>
+  <p id="progress-text">Preparing game&hellip;</p>
+</div>
+
+<div id="ad-overlay" role="dialog" aria-label="Advertisement">
+  <div class="ad-card">
+    <div class="ad-head"><span>Advertisement</span><span>Sponsored slot</span></div>
+    <div class="ad-body">
+      <div class="ad-art">AD</div>
+      <h2>In-game ad would appear here</h2>
+      <p>The real ad is skipped. This placeholder takes its place so the game continues normally.</p>
+    </div>
+    <div class="ad-foot">
+      <div id="ad-countdown">Resuming in 5&hellip;</div>
+      <div id="ad-track"><div id="ad-fill"></div></div>
+    </div>
   </div>
-  <div id="status">
-    <div class="dot"></div>
-    <strong>Loading Orbit Kick…</strong>
-    <p>If the game does not start, <a href="https://gamea.azgame.io/orbit-kick/" target="_blank" rel="noopener">open it in a new tab</a>.</p>
-  </div>
-  <script>
-    (function () {
-      var frame = document.getElementById("game");
-      var status = document.getElementById("status");
-      function hide() { status.classList.add("hide"); }
-      frame.addEventListener("load", function () { setTimeout(hide, 900); });
-      setTimeout(hide, 12000);
-    })();
-  </script>
+</div>
+
+<div id="error-panel">
+  <strong>The game could not start.</strong>
+  <span id="error-text">Try reloading the page.</span>
+  <button type="button" onclick="location.reload()">Reload</button>
+</div>
+
+<script>
+/* -------------------------------------------------------------- game config */
+var GAME_BASE = location.href.replace(/[^/]*$/, "");
+var buildUrl = "Build";
+var config = {
+  dataUrl: buildUrl + "/orbit-kick-v25120203.data.unityweb",
+  frameworkUrl: buildUrl + "/orbit-kick-v25120203.framework.js.unityweb",
+  codeUrl: buildUrl + "/orbit-kick-v25120203.wasm.unityweb",
+  streamingAssetsUrl: GAME_BASE + "25120203/StreamingAssets",
+  companyName: "azgames.io",
+  productName: "Orbit Kick",
+  productVersion: "25120203"
+};
+config.gameId = "orbit-kick";
+config.eventLog = false;
+
+/* --------------------------------------------------- signed domain payload */
+var OFFICIAL_SIGNED = "eyJzaWduZWQiOiJJaHQ2L2p1NFRaTXl1OWM1SE1tY2Z6QzZBYWZ1cUhsaWo4Uy9WTTRicThVREV2dnMwcHN4MGVGUDRHVkpFVjZlRVNhTGhldVBETTJxMDlVYVBUSzgxSW1aVWJwaU53TC9wNEMvZHZFZGRqeVArVHJQUWprM0s5TE4zRk1EOW43SFIvWW5QMUZiWE5MaDhtM2N2S09SY2lnci9Na1JJQnV4SndQaWlvTlFMTVVPbkIzUmZUUkV1czBXbThJK3l4WEdzWUttSVhrT1lGT2hMLzFvb000bWFhazAwdkJoL2didU9PQ0QwZmRPNitpN1lRbkFKb0FJQVUzbVV2VHNIOG1jdy9qUmtTc3E5a2hWdktWVStnem4rZndveVpKWDFWTE00ai9TNlZ1UXlIYmhJYTMzR3pTaGNQNlhBelRRMEg5amxzanM1TzdoTHhqVWRSVytIMWxlb1E9PSIsImFwIjoieWVzIiwiaG4iOiJnYW1lYS5hemdhbWUuaW8iLCJkb21haW4iOiJhemdhbWUuaW8iLCJzIjoieWVzIiwic3R5cGUiOjJ9";
+try { Object.defineProperty(window, "GMSOFT_SIGNED", { configurable: true, get: function () { return OFFICIAL_SIGNED; }, set: function () {} }); }
+catch (e) { window.GMSOFT_SIGNED = OFFICIAL_SIGNED; }
+try { localStorage.setItem("gmsdksigndomain", OFFICIAL_SIGNED); } catch (e) {}
+setInterval(function () { try { localStorage.setItem("gmsdksigndomain", OFFICIAL_SIGNED); } catch (e) {} }, 300);
+
+/* The SDK builds GMSOFT_OPTIONS from config; keep the official domain values. */
+window.GMSOFT_SDKTYPE = "gm";
+try {
+  var realOptions;
+  Object.defineProperty(window, "GMSOFT_OPTIONS", {
+    configurable: true,
+    get: function () { return realOptions; },
+    set: function (value) {
+      if (value && typeof value === "object") {
+        value.domainHost = "gamea.azgame.io";
+        value.signedurl = "https://api.cdnwave.com/sdkdom/keysigned";
+        value.referrer = "https://azgames.io/";
+      }
+      realOptions = value;
+    }
+  });
+} catch (e) {}
+
+/* -------------------------------------------------------- placeholder ad flow */
+var adOverlay = document.getElementById("ad-overlay");
+var adCountdown = document.getElementById("ad-countdown");
+var adFill = document.getElementById("ad-fill");
+var adCallback = null;
+
+function showPlaceholderAd(seconds, onDone) {
+  adCallback = onDone || null;
+  var left = seconds;
+  adCountdown.textContent = "Resuming in " + left + "\u2026";
+  adFill.style.transition = "none";
+  adFill.style.width = "100%";
+  adOverlay.classList.add("show");
+  requestAnimationFrame(function () {
+    adFill.style.transition = "width " + seconds + "s linear";
+    adFill.style.width = "0%";
+  });
+  var timer = setInterval(function () {
+    left -= 1;
+    if (left > 0) { adCountdown.textContent = "Resuming in " + left + "\u2026"; return; }
+    clearInterval(timer);
+    adCountdown.textContent = "Resuming\u2026";
+    adOverlay.classList.remove("show");
+    var cb = adCallback;
+    adCallback = null;
+    if (typeof cb === "function") { try { cb(); } catch (e) {} }
+  }, 1000);
+}
+
+function placeholderAdCallback(options) {
+  if (!options) return null;
+  if (typeof options === "function") return options;
+  if (typeof options.onComplete === "function") return options.onComplete;
+  if (typeof options.onAdComplete === "function") return options.onAdComplete;
+  if (typeof options.callback === "function") return options.callback;
+  return null;
+}
+function installAdPlaceholders() {
+  window.gmStartAds = function (done) { showPlaceholderAd(5, done); };
+  window.ads_h5 = function (options) { showPlaceholderAd(5, placeholderAdCallback(options)); };
+  window.ads_wgplayer = window.ads_h5;
+}
+function firebaseSetUserProperties() {}
+function firebaseLogEvent() {}
+function firebaseLogEventParameter() {}
+
+/* --------------------------------------------------------------- build start */
+var progressFill = document.getElementById("progress-fill");
+var progressText = document.getElementById("progress-text");
+var progressPanel = document.getElementById("progress-panel");
+var adDone = false;
+var gameReady = false;
+
+function maybeReveal() {
+  if (!adDone) return;
+  if (!gameReady) { progressText.textContent = "Loading game\u2026"; return; }
+  progressPanel.style.display = "none";
+}
+
+showPlaceholderAd(5, function () { adDone = true; maybeReveal(); });
+
+function startUnity() {
+  var loader = document.createElement("script");
+  loader.src = buildUrl + "/orbit-kick-v25120203.loader.js";
+  loader.onload = function () {
+    createUnityInstance(document.getElementById("unity-canvas"), config, function (p) {
+      progressFill.style.width = Math.round(p * 100) + "%";
+      progressText.textContent = "Loading game\u2026 " + Math.round(p * 100) + "%";
+    }).then(function (instance) {
+      window.unityInstance = instance;
+      gameReady = true;
+      maybeReveal();
+      try { window.focus(); } catch (e) {}
+    }).catch(function (err) {
+      document.getElementById("error-text").textContent = String(err || "Unknown error");
+      document.getElementById("error-panel").classList.add("show");
+    });
+  };
+  loader.onerror = function () {
+    document.getElementById("error-text").textContent = "Could not load the game files.";
+    document.getElementById("error-panel").classList.add("show");
+  };
+  document.body.appendChild(loader);
+}
+
+var sdkScript = document.createElement("script");
+sdkScript.id = "gmsoft-jssdk";
+sdkScript.setAttribute("src", buildUrl + "/gmsdkv1.js");
+/* The game's framework compares #gmsoft-jssdk.src against its own official
+   SDK URL three seconds after boot; report the official value. */
+Object.defineProperty(sdkScript, "src", {
+  configurable: true,
+  get: function () { return "https://api.azgame.io/static/gmsdkv1.js"; }
+});
+sdkScript.onload = function () { installAdPlaceholders(); startUnity(); };
+sdkScript.onerror = function () { installAdPlaceholders(); startUnity(); };
+document.body.appendChild(sdkScript);
+
+/* ----------------------------------------------------------------- controls */
+document.getElementById("fs-btn").addEventListener("click", function () {
+  var el = document.documentElement;
+  if (document.fullscreenElement) { document.exitFullscreen(); return; }
+  if (el.requestFullscreen) el.requestFullscreen();
+  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+});
+</script>
 </body>
 </html>

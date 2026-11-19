@@ -4,7 +4,9 @@
 
   var directGames = {
     fragen: "https://whatchamacallitexe.github.io/fragen/index.html",
-    "17-and-0": "https://whatchamacallitexe.github.io/17-and-0/index.html"
+    "17-and-0": "https://whatchamacallitexe.github.io/17-and-0/index.html",
+    "ragdoll-playground": "../Games/ragdoll-playground/index.html",
+    "orbit-kick": "../Games/orbit-kick/index.html"
   };
 
   /* ------------------------------------------------ games imported from azgames */
