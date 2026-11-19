@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob:; object-src 'none'; base-uri 'self';">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Ragdoll Playground</title>
 <style>
@@ -185,12 +186,26 @@ function startUnity() {
   document.body.appendChild(loader);
 }
 
-var sdkScript = document.createElement("script");
-sdkScript.id = "gmsoft-jssdk";
-sdkScript.src = buildUrl + "/gmsoftsdk_v5.js";
-sdkScript.onload = function () { installAdPlaceholders(); startUnity(); };
-sdkScript.onerror = function () { installAdPlaceholders(); startUnity(); };
-document.body.appendChild(sdkScript);
+/* The ads SDK is intentionally not loaded. It refuses unknown hosts and blanks
+   the game; the game only needs the flags below, and ad calls go to our
+   placeholder overlay instead of a real network. */
+window.GMSOFT_OPTIONS = {
+  allow_host: "yes",
+  allow_play: "yes",
+  enableAds: false,
+  enable_ads: "no",
+  sdkType: "h5",
+  unlock_timer: -1,
+  timeShowInter: 60,
+  timeShowReward: 60,
+  debug_mode: "no",
+  hostindex: 1
+};
+var sdkStub = document.createElement("script");
+sdkStub.id = "gmsoft-jssdk";
+document.body.appendChild(sdkStub);
+installAdPlaceholders();
+startUnity();
 
 /* ----------------------------------------------------------------- controls */
 document.getElementById("fs-btn").addEventListener("click", function () {
