@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car Destruction King: Mayhem</title>
+<style>
+html,body{margin:0;height:100%;background:#08080b;overflow:hidden;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+#canvas{width:100%;height:100%;display:block;background:#08080b}
+#topbar{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;padding:8px 10px;pointer-events:none}
+#topbar a,#topbar button{pointer-events:auto;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:9px;background:rgba(10,10,16,.78);color:#f2f0ff;border:1px solid rgba(255,255,255,.18);text-decoration:none;font-size:13px;font-weight:700;cursor:pointer}
+#topbar a:hover,#topbar button:hover{border-color:#b98cff;color:#fff}
+#progress-panel{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(circle at 50% 35%,#241436,#0a070f 70%);color:#f4f0ff;text-align:center;padding:24px}
+#progress-panel h1{margin:0;font-size:clamp(1.2rem,3vw,1.8rem);letter-spacing:.04em}
+#progress-track{width:min(420px,80vw);height:9px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
+#progress-fill{height:100%;width:8%;background:linear-gradient(90deg,#7c3aed,#db2777);transition:width .4s ease}
+#progress-text{margin:0;font-size:.85rem;opacity:.8}
+#ad-overlay{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;background:rgba(6,4,10,.94);padding:20px}
+#ad-overlay.show{display:flex}
+.ad-card{width:min(720px,94vw);border:1px solid rgba(185,140,255,.32);border-radius:16px;background:#0d0a14;box-shadow:0 30px 90px rgba(0,0,0,.7);overflow:hidden;text-align:center}
+.ad-head{display:flex;justify-content:space-between;padding:10px 16px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#a79ec4;border-bottom:1px solid rgba(255,255,255,.08)}
+.ad-body{padding:clamp(24px,5vw,52px) 22px;background:radial-gradient(ellipse at 50% 0%,rgba(185,140,255,.10),transparent 60%),repeating-linear-gradient(45deg,rgba(255,255,255,.02) 0 12px,transparent 12px 24px)}
+.ad-body h2{margin:0 0 10px;font-size:clamp(1.15rem,3.4vw,1.7rem);color:#fff}
+.ad-body p{margin:0;color:#bcb4d0;font-size:.95rem}
+.ad-art{display:flex;align-items:center;justify-content:center;margin:0 auto 18px;width:86px;height:86px;border-radius:20px;border:1px solid rgba(185,140,255,.35);background:linear-gradient(145deg,#1b1430,#0a0712);font-size:26px;font-weight:800;letter-spacing:.08em;color:#c9a8ff}
+.ad-foot{padding:14px 18px;border-top:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:9px}
+#ad-countdown{font-size:.86rem;color:#c9a8ff;font-weight:700;letter-spacing:.04em}
+#ad-track{height:6px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}
+#ad-fill{height:100%;width:100%;background:linear-gradient(90deg,#7c3aed,#db2777)}
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+<div id="topbar">
+  <a href="/index.html" title="Back to the game library">&larr; Games</a>
+  <button type="button" id="fs-btn" title="Full screen">&#9974; Full screen</button>
+</div>
+
+<div id="progress-panel">
+  <h1>Car Destruction King: Mayhem</h1>
+  <div id="progress-track"><div id="progress-fill"></div></div>
+  <p id="progress-text">Preparing game&hellip;</p>
+</div>
+
+<div id="ad-overlay" role="dialog" aria-label="Advertisement">
+  <div class="ad-card">
+    <div class="ad-head"><span>Advertisement</span><span>Sponsored slot</span></div>
+    <div class="ad-body">
+      <div class="ad-art">AD</div>
+      <h2>In-game ad would appear here</h2>
+      <p>The real ad is skipped. This placeholder takes its place so the game continues normally.</p>
+    </div>
+    <div class="ad-foot">
+      <div id="ad-countdown">Resuming in 5s</div>
+      <div id="ad-track"><div id="ad-fill"></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var adOverlay = document.getElementById("ad-overlay");
+var adCountdown = document.getElementById("ad-countdown");
+var adFill = document.getElementById("ad-fill");
+var adDone = null;
+
+window.nxShowPlaceholderAd = function (seconds, onDone) {
+  adDone = onDone || null;
+  var left = seconds;
+  adCountdown.textContent = "Resuming in " + left + "s";
+  adFill.style.transition = "none";
+  adFill.style.width = "100%";
+  adOverlay.classList.add("show");
+  requestAnimationFrame(function () {
+    adFill.style.transition = "width " + seconds + "s linear";
+    adFill.style.width = "0%";
+  });
+  var timer = setInterval(function () {
+    left -= 1;
+    if (left > 0) {
+      adCountdown.textContent = "Resuming in " + left + "s";
+      return;
+    }
+    clearInterval(timer);
+    adCountdown.textContent = "Resuming now";
+    adOverlay.classList.remove("show");
+    var cb = adDone;
+    adDone = null;
+    if (typeof cb === "function") { try { cb(); } catch (e) {} }
+  }, 1000);
+};
+
+document.getElementById("fs-btn").addEventListener("click", function () {
+  if (document.fullscreenElement) document.exitFullscreen();
+  else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+});
+
+var progressPanel = document.getElementById("progress-panel");
+var progressFill = document.getElementById("progress-fill");
+var progressText = document.getElementById("progress-text");
+var seen = 8;
+var tick = setInterval(function () {
+  if (window.unityInstance) {
+    clearInterval(tick);
+    progressPanel.style.display = "none";
+    return;
+  }
+  seen = Math.min(90, seen + 8);
+  progressFill.style.width = seen + "%";
+  if (seen > 40) progressText.textContent = "Loading game files...";
+}, 700);
+setTimeout(function () {
+  if (!window.unityInstance) progressText.textContent = "Still loading - the game files are large.";
+}, 20000);
+</script>
+<script src="playgama-bridge.js"></script>
+<script src="playgama-bridge-unity.js"></script>
+</body>
+</html>

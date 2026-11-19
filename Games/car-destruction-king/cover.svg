@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2b1c46"/>
+      <stop offset="55%" stop-color="#1a1230"/>
+      <stop offset="100%" stop-color="#0b0812"/>
+    </linearGradient>
+    <linearGradient id="car" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ff6a3d"/>
+      <stop offset="100%" stop-color="#b21f1f"/>
+    </linearGradient>
+  </defs>
+  <rect width="300" height="300" fill="url(#sky)"/>
+  <circle cx="238" cy="64" r="34" fill="#f8cb00" opacity="0.18"/>
+  <path d="M0 236 L300 206 L300 300 L0 300 Z" fill="#241a38"/>
+  <path d="M0 248 L300 220" stroke="#b98cff" stroke-width="2" opacity="0.35" stroke-dasharray="16 14"/>
+  <g transform="translate(58 138)">
+    <path d="M12 46 L22 24 Q26 14 40 14 L96 14 Q110 14 116 26 L130 46 Z" fill="url(#car)"/>
+    <path d="M40 24 L64 24 L64 40 L32 40 Z" fill="#0f0b18" opacity="0.75"/>
+    <path d="M72 24 L96 24 Q104 24 108 34 L110 40 L72 40 Z" fill="#0f0b18" opacity="0.75"/>
+    <circle cx="36" cy="48" r="13" fill="#0b0812" stroke="#c9a8ff" stroke-width="3"/>
+    <circle cx="106" cy="48" r="13" fill="#0b0812" stroke="#c9a8ff" stroke-width="3"/>
+    <path d="M130 38 L150 30" stroke="#ffd166" stroke-width="4" stroke-linecap="round" opacity="0.85"/>
+  </g>
+  <text x="150" y="86" text-anchor="middle" font-family="system-ui,Segoe UI,sans-serif" font-size="30" font-weight="800" fill="#fdf7ff" letter-spacing="1">CAR</text>
+  <text x="150" y="118" text-anchor="middle" font-family="system-ui,Segoe UI,sans-serif" font-size="26" font-weight="800" fill="#ffb4a2" letter-spacing="1">DESTRUCTION</text>
+  <text x="150" y="266" text-anchor="middle" font-family="system-ui,Segoe UI,sans-serif" font-size="17" font-weight="700" fill="#c9a8ff" letter-spacing="3">MAYHEM</text>
+</svg>
