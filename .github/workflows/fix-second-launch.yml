@@ -1,0 +1,75 @@
+name: Fix second launch
+
+on:
+  push:
+    paths:
+      - .github/workflows/fix-second-launch.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make the game shell survive a cached instant load
+        run: |
+          python3 - <<'PY'
+          import pathlib
+
+          path = pathlib.Path('JS/main.js')
+          text = path.read_text(encoding='utf-8')
+
+          old = '''  function startIframe() {
+    frame.src = GAME_SRC;
+    frame.addEventListener('load', function () {
+      clearTimeout(loadTimer);
+      hideError();
+      finish();
+    });
+  }'''
+
+          new = '''  var frameLoaded = false;
+  function markFrameLoaded() {
+    if (frameLoaded) return;
+    frameLoaded = true;
+    clearTimeout(loadTimer);
+    hideError();
+    finish();
+  }
+
+  function startIframe() {
+    /* Attach the listener before navigating the frame. On a warm cache a game
+       can finish loading before a listener added afterwards, which left the
+       loading overlay up forever when a second game was launched. */
+    frame.addEventListener('load', markFrameLoaded);
+    frame.src = GAME_SRC;
+
+    /* Safety net in case the load event is missed entirely. */
+    var checks = 0;
+    var guard = setInterval(function () {
+      checks++;
+      if (frameLoaded || checks > 60) { clearInterval(guard); return; }
+      try {
+        var doc = frame.contentDocument;
+        if (doc && doc.readyState === 'complete' && doc.location && doc.location.href && doc.location.href !== 'about:blank') {
+          clearInterval(guard);
+          markFrameLoaded();
+        }
+      } catch (e) { clearInterval(guard); }
+    }, 1000);
+  }'''
+
+          assert text.count(old) == 1, 'startIframe anchor missing'
+          text = text.replace(old, new)
+          path.write_text(text, encoding='utf-8')
+          print('patched the game shell')
+          PY
+          git config user.name "plzdownloadfree.exe"
+          git config user.email "whatchamacallit.exe@neirmail.com"
+          git add JS/main.js
+          git commit -m "Keep the game loader from getting stuck on a second launch"
+          git rm -q .github/workflows/fix-second-launch.yml
+          git commit -m "Remove the one-shot second-launch fix workflow"
+          git push origin HEAD:main
