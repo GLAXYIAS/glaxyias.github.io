@@ -201,6 +201,12 @@ window.GMSOFT_OPTIONS = {
   debug_mode: "no",
   hostindex: 1
 };
+/* Keep in-game links from sending players back to the ad-supported host. */
+var nativeWindowOpen = window.open;
+window.open = function (url) {
+  if (url && /azgames?\.io/i.test(String(url))) return null;
+  return nativeWindowOpen.apply(window, arguments);
+};
 var sdkStub = document.createElement("script");
 sdkStub.id = "gmsoft-jssdk";
 document.body.appendChild(sdkStub);
