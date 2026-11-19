@@ -35,6 +35,22 @@
       desc: "Build, box fight and drop into battle royale in a fast browser shooter with 1v1 Clash, Zone Wars and creative mode.",
       image: "../Games/1v1-lol/cover.webp",
       tags: ["Shooter", "Multiplayer", "Action"]
+    },
+    {
+      id: "shell-survivor",
+      title: "Shell Survivor",
+      url: "../Games/shell-survivor/index.html",
+      desc: "Pick an egg hero, dodge ghostly axes and blast through waves of enemies in a fast, unlock-heavy survival shooter.",
+      image: "https://azgames.io/upload/cache/upload/imgs/sheelsurvivor-m180x180.png",
+      tags: ["Shooter", "Survival", "Action"]
+    },
+    {
+      id: "car-destruction-king",
+      title: "Car Destruction King: Mayhem",
+      url: "../Games/car-destruction-king/index.html",
+      desc: "Drive through hammer traps, presses and catapults, slow time for cinematic crashes and chase records across three maps.",
+      image: "../Games/car-destruction-king/cover.svg",
+      tags: ["Driving", "Sandbox", "Action"]
     }
   ];
 
@@ -78,6 +94,8 @@
     "ragdoll-playground",
     "orbit-kick",
     "1v1-lol",
+    "shell-survivor",
+    "car-destruction-king",
   ];
 
   function tagNonHtml() {
