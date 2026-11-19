@@ -9108,6 +9108,188 @@ let _0xData = [
     url: "https://whatchamacallitexe.github.io/pack-x/idle-miner-tycoon/index.html",
     desc: "Play Idle Miner Tycoon online in your browser.",
     popular: false
+  },
+  {
+    id: "build-a-162-0-team",
+    title: "Build A 162 0 Team",
+    url: "https://whatchamacallitexe.github.io/17-and-0/build-a-162-0-team/index.html",
+    desc: "Play Build A 162 0 Team online in your browser.",
+    popular: false
+  },
+  {
+    id: "build-a-82-0-team",
+    title: "Build A 82 0 Team",
+    url: "https://whatchamacallitexe.github.io/17-and-0/build-a-82-0-team/index.html",
+    desc: "Play Build A 82 0 Team online in your browser.",
+    popular: false
+  },
+  {
+    id: "build-the-goat-team",
+    title: "Build The Goat Team",
+    url: "https://whatchamacallitexe.github.io/17-and-0/build-the-goat-team/index.html",
+    desc: "Play Build The Goat Team online in your browser.",
+    popular: false
+  },
+  {
+    id: "geometry-dash",
+    title: "Geometry Dash",
+    url: "https://whatchamacallitexe.github.io/pack-a/geometry-dash/index.html",
+    desc: "Play Geometry Dash online in your browser.",
+    popular: false
+  },
+  {
+    id: "solitaire",
+    title: "Solitaire",
+    url: "https://whatchamacallitexe.github.io/pack-a/solitaire/index.html",
+    desc: "Play Solitaire online in your browser.",
+    popular: false
+  },
+  {
+    id: "swingo",
+    title: "Swingo",
+    url: "https://whatchamacallitexe.github.io/pack-a/swingo/index.html",
+    desc: "Play Swingo online in your browser.",
+    popular: false
+  },
+  {
+    id: "wordle-unlimited",
+    title: "Wordle Unlimited",
+    url: "https://whatchamacallitexe.github.io/pack-a/wordle-unlimited/index.html",
+    desc: "Play Wordle Unlimited online in your browser.",
+    popular: false
+  },
+  {
+    id: "backrooms",
+    title: "Backrooms",
+    url: "https://whatchamacallitexe.github.io/pack-ac/backrooms/index.html",
+    desc: "Play Backrooms online in your browser.",
+    popular: false
+  },
+  {
+    id: "connect-3",
+    title: "Connect 3",
+    url: "https://whatchamacallitexe.github.io/pack-b/connect-3/index.html",
+    desc: "Play Connect 3 online in your browser.",
+    popular: false
+  },
+  {
+    id: "waterworks",
+    title: "Waterworks",
+    url: "https://whatchamacallitexe.github.io/pack-b/waterworks/index.html",
+    desc: "Play Waterworks online in your browser.",
+    popular: false
+  },
+  {
+    id: "eel-slap",
+    title: "Eel Slap",
+    url: "https://whatchamacallitexe.github.io/pack-c/eel-slap/index.html",
+    desc: "Play Eel Slap online in your browser.",
+    popular: false
+  },
+  {
+    id: "hacker-typer",
+    title: "Hacker Typer",
+    url: "https://whatchamacallitexe.github.io/pack-c/hacker-typer/index.html",
+    desc: "Play Hacker Typer online in your browser.",
+    popular: false
+  },
+  {
+    id: "woodventure",
+    title: "Woodventure",
+    url: "https://whatchamacallitexe.github.io/pack-c/woodventure/index.html",
+    desc: "Play Woodventure online in your browser.",
+    popular: false
+  },
+  {
+    id: "blumgi-slime",
+    title: "Blumgi Slime",
+    url: "https://whatchamacallitexe.github.io/pack-d/blumgi-slime/index.html",
+    desc: "Play Blumgi Slime online in your browser.",
+    popular: false
+  },
+  {
+    id: "bottle-flip",
+    title: "Bottle Flip",
+    url: "https://whatchamacallitexe.github.io/pack-e/bottle-flip/index.html",
+    desc: "Play Bottle Flip online in your browser.",
+    popular: false
+  },
+  {
+    id: "mario",
+    title: "Mario",
+    url: "https://whatchamacallitexe.github.io/pack-e/mario/index.html",
+    desc: "Play Mario online in your browser.",
+    popular: false
+  },
+  {
+    id: "papas-pancakeria",
+    title: "Papas Pancakeria",
+    url: "https://whatchamacallitexe.github.io/pack-e/papas-pancakeria/index.html",
+    desc: "Play Papas Pancakeria online in your browser.",
+    popular: false
+  },
+  {
+    id: "guess-the-kitty",
+    title: "Guess The Kitty",
+    url: "https://whatchamacallitexe.github.io/pack-f/guess-the-kitty/index.html",
+    desc: "Play Guess The Kitty online in your browser.",
+    popular: false
+  },
+  {
+    id: "save-the-doge",
+    title: "Save The Doge",
+    url: "https://whatchamacallitexe.github.io/pack-f/save-the-doge/index.html",
+    desc: "Play Save The Doge online in your browser.",
+    popular: false
+  },
+  {
+    id: "get-on-top",
+    title: "Get On Top",
+    url: "https://whatchamacallitexe.github.io/pack-g/get-on-top/index.html",
+    desc: "Play Get On Top online in your browser.",
+    popular: false
+  },
+  {
+    id: "head-soccer",
+    title: "Head Soccer",
+    url: "https://whatchamacallitexe.github.io/pack-g/head-soccer/index.html",
+    desc: "Play Head Soccer online in your browser.",
+    popular: false
+  },
+  {
+    id: "pou",
+    title: "Pou",
+    url: "https://whatchamacallitexe.github.io/pack-h/pou/index.html",
+    desc: "Play Pou online in your browser.",
+    popular: false
+  },
+  {
+    id: "biker-street",
+    title: "Biker Street",
+    url: "https://whatchamacallitexe.github.io/pack-i/biker-street/index.html",
+    desc: "Play Biker Street online in your browser.",
+    popular: false
+  },
+  {
+    id: "stickman-go",
+    title: "Stickman Go",
+    url: "https://whatchamacallitexe.github.io/pack-i/stickman-go/index.html",
+    desc: "Play Stickman Go online in your browser.",
+    popular: false
+  },
+  {
+    id: "apple-shooter",
+    title: "Apple Shooter",
+    url: "https://whatchamacallitexe.github.io/pack-j/apple-shooter/index.html",
+    desc: "Play Apple Shooter online in your browser.",
+    popular: false
+  },
+  {
+    id: "cut-the-rope",
+    title: "Cut The Rope",
+    url: "https://whatchamacallitexe.github.io/pack-n/cut-the-rope/index.html",
+    desc: "Play Cut The Rope online in your browser.",
+    popular: false
   }
 ];
 
