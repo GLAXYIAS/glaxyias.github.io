@@ -1,0 +1,144 @@
+name: Import new game assets
+
+# Temporary helper: the engine payloads for Shell Survivor (64 MB) and Car
+# Destruction King (22 MB) are too large to commit by hand, so this run fetches
+# them once, finishes the page wiring on the checkout, and deletes itself.
+
+on:
+  push:
+    paths:
+      - .github/workflows/import-new-games.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: import-new-games
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the site
+        uses: actions/checkout@v4
+
+      - name: Fetch the Shell Survivor build
+        shell: bash
+        run: |
+          set -euo pipefail
+          SS="https://gdn.azgames.io/game/shell-survivor/26110301/26110301"
+          mkdir -p Games/shell-survivor/Build
+          for f in shell-survivor-v26110301.data shell-survivor-v26110301.wasm shell-survivor-v26110301.framework.js shell-survivor-v26110301.loader.js; do
+            curl -fsSL --retry 3 -o "Games/shell-survivor/Build/$f" "$SS/Build/$f"
+            echo "$f $(wc -c < "Games/shell-survivor/Build/$f")"
+          done
+
+      - name: Fetch the Car Destruction King build
+        shell: bash
+        run: |
+          set -euo pipefail
+          CD="https://playgama.cdn.msnfun.com/9pgbzt0smwg4/v5"
+          mkdir -p Games/car-destruction-king/Build
+          while read -r f; do
+            [ -n "$f" ] || continue
+            curl -fsSL --retry 3 -o "Games/car-destruction-king/Build/$f" "$CD/Build/$f"
+            echo "$f $(wc -c < "Games/car-destruction-king/Build/$f")"
+          done <<'FILES'
+          099b517e9b6cf67bf292b7111926eb11.wasm.unityweb
+          2b4334714f17f94e02ddd7b967a619c7.data.unityweb
+          1a67ed309885df9f97bc9145381fef30.framework.js.unityweb
+          813700ccfaf64a0a3c57e3aa3166490b.loader.js
+          FILES
+          curl -fsSL --retry 3 -o Games/car-destruction-king/playgama-bridge-unity.js "$CD/playgama-bridge-unity.js"
+
+      - name: Add the catalogue cards and local bridge wiring
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib
+
+          def read(path):
+              with open(path, encoding="utf-8", newline="") as handle:
+                  return handle.read()
+
+          def write(path, text):
+              with open(path, "w", encoding="utf-8", newline="") as handle:
+                  handle.write(text)
+
+          def patch(relative, pairs):
+              text = read(relative)
+              for old, new in pairs:
+                  if old not in text:
+                      raise SystemExit("%s: pattern not found: %r" % (relative, old[:70]))
+                  text = text.replace(old, new)
+              write(relative, text)
+              print("patched", relative)
+
+          patch("JS/fragen-17-games-v2.js", [
+              (
+                  '      image: "../Games/1v1-lol/cover.webp",\n'
+                  '      tags: ["Shooter", "Multiplayer", "Action"]\n'
+                  "    }\n"
+                  "  ];",
+                  '      image: "../Games/1v1-lol/cover.webp",\n'
+                  '      tags: ["Shooter", "Multiplayer", "Action"]\n'
+                  "    },\n"
+                  "    {\n"
+                  '      id: "shell-survivor",\n'
+                  '      title: "Shell Survivor",\n'
+                  '      url: "../Games/shell-survivor/index.html",\n'
+                  '      desc: "Pick an egg hero, dodge ghostly axes and blast through waves of enemies in a fast, unlock-heavy survival shooter.",\n'
+                  '      image: "https://azgames.io/upload/cache/upload/imgs/sheelsurvivor-m180x180.png",\n'
+                  '      tags: ["Shooter", "Survival", "Action"]\n'
+                  "    },\n"
+                  "    {\n"
+                  '      id: "car-destruction-king",\n'
+                  '      title: "Car Destruction King: Mayhem",\n'
+                  '      url: "../Games/car-destruction-king/index.html",\n'
+                  '      desc: "Drive through hammer traps, presses and catapults, slow time for cinematic crashes and chase records across three maps.",\n'
+                  '      image: "../Games/car-destruction-king/cover.svg",\n'
+                  '      tags: ["Driving", "Sandbox", "Action"]\n'
+                  "    }\n"
+                  "  ];",
+              ),
+              (
+                  '    "orbit-kick",\n    "1v1-lol",\n  ];',
+                  '    "orbit-kick",\n    "1v1-lol",\n    "shell-survivor",\n    "car-destruction-king",\n  ];',
+              ),
+          ])
+
+          patch("Games/car-destruction-king/playgama-bridge-unity.js", [
+              (
+                  "bridgeScript = document.createElement('script')\r\n"
+                  "bridgeScript.src = 'https://bridge.playgama.com/v1/stable/playgama-bridge.js'\r\n"
+                  "bridgeScript.onload = initializeBridge\r\n"
+                  "bridgeScript.onerror = addLocalBridge",
+                  "bridgeScript = document.createElement('script')\r\n"
+                  "bridgeScript.src = './playgama-bridge.js'\r\n"
+                  "bridgeScript.onload = initializeBridge\r\n"
+                  "bridgeScript.onerror = function () { console.error('Local bridge stub failed to load') }",
+              ),
+              (
+                  "bridgeTimeout = setTimeout(() => {\r\n"
+                  "    console.warn('CDN bridge failed to load within 2 seconds, loading local bridge')\r\n"
+                  "    addLocalBridge()\r\n"
+                  "}, 2000)",
+                  "bridgeTimeout = null",
+              ),
+          ])
+          PY
+
+      - name: Commit and remove the helper
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -q .github/workflows/import-new-games.yml
+          git add Games/shell-survivor Games/car-destruction-king JS/fragen-17-games-v2.js
+          git status --short | head -20
+          git commit -m "Add Shell Survivor and Car Destruction King to the game library"
+          git push
