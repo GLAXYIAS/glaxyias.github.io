@@ -1,0 +1,25 @@
+name: Fix back navigation
+
+on:
+  push:
+    paths:
+      - .github/workflows/fix-back-navigation.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch catalogue back navigation
+        run: |
+          python3 patches/fix-back-navigation.py
+          git config user.name "plzdownloadfree.exe"
+          git config user.email "whatchamacallit.exe@neirmail.com"
+          git add JS/main.js JS/game-about-blank.js
+          git commit -m "Return to the catalogue when going back from a game"
+          git rm -q .github/workflows/fix-back-navigation.yml patches/fix-back-navigation.py
+          git commit -m "Remove the one-shot back navigation fix workflow"
+          git push origin HEAD:main
