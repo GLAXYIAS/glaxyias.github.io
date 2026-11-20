@@ -1,0 +1,106 @@
+"""Make the newly downloaded builds site-ready.
+
+- local ad-free Playgama bridge is copied in by mirror-new-games.sh
+- each game page gets a small "Games" back link
+- the catalogue gets entries and covers for both games
+"""
+import pathlib
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+GAMES = ROOT / 'Games'
+CATALOGUE = ROOT / 'JS' / 'fragen-17-games-v2.js'
+
+BACK = '''<a id="nx-games-back" href="https://glaxyias.github.io/">&larr; Games</a>
+<style>
+#nx-games-back{position:fixed;left:14px;top:14px;z-index:2147483647;font:600 13px/1 system-ui,sans-serif;
+color:#fff;background:rgba(12,12,16,.6);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:8px 13px;
+text-decoration:none;opacity:.35;transition:opacity .2s}
+#nx-games-back:hover{opacity:1;background:rgba(12,12,16,.95)}
+</style>
+'''
+
+COVERS = {
+    'zombie-derby-2': '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Zombie Derby Part II">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a0d08"/><stop offset="1" stop-color="#4a1b0c"/></linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0a33c"/><stop offset="1" stop-color="#8a3d12"/></linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <circle cx="404" cy="96" r="70" fill="#c8401a" opacity=".25"/><circle cx="404" cy="96" r="38" fill="#ff7a2f" opacity=".45"/>
+  <path d="M60 330h300l-26-96H140l-34 40H60z" fill="url(#metal)" stroke="#2a1208" stroke-width="6"/>
+  <rect x="150" y="240" width="120" height="46" rx="6" fill="#f7d9a8" opacity=".9"/>
+  <rect x="300" y="252" width="70" height="16" rx="8" fill="#2b2b2b"/>
+  <circle cx="130" cy="352" r="44" fill="#151515" stroke="#3c3c3c" stroke-width="10"/>
+  <circle cx="330" cy="352" r="44" fill="#151515" stroke="#3c3c3c" stroke-width="10"/>
+  <circle cx="130" cy="352" r="14" fill="#6b6b6b"/><circle cx="330" cy="352" r="14" fill="#6b6b6b"/>
+  <text x="40" y="452" font-family="Impact, 'Arial Black', sans-serif" font-size="58" fill="#ffb347">ZOMBIE</text>
+  <text x="40" y="492" font-family="Impact, 'Arial Black', sans-serif" font-size="40" fill="#f4e3c7" letter-spacing="6">DERBY II</text>
+</svg>
+''',
+    'ragdoll-archers': '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Ragdoll Archers">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#101318"/><stop offset="1" stop-color="#232a33"/></linearGradient></defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <g stroke="#e9eef5" stroke-width="12" stroke-linecap="round" fill="none">
+    <circle cx="220" cy="150" r="26" fill="#e9eef5" stroke="none"/>
+    <path d="M220 180v86M220 202l-52 34M220 202l52 26M220 266l-40 62M220 266l42 62"/>
+    <path d="M300 160c46 40 46 120 0 160" stroke="#f5c451"/>
+  </g>
+  <path d="M168 196l110 62" stroke="#f5c451" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="392" cy="200" r="34" fill="#d64b3f" opacity=".85"/><circle cx="392" cy="200" r="16" fill="#f3dede"/>
+  <text x="40" y="440" font-family="Impact, 'Arial Black', sans-serif" font-size="52" fill="#f5c451">RAGDOLL</text>
+  <text x="40" y="484" font-family="Impact, 'Arial Black', sans-serif" font-size="40" fill="#e9eef5" letter-spacing="7">ARCHERS</text>
+</svg>
+''',
+}
+
+ENTRIES = '''      image: "../Games/car-destruction-king/cover.svg",
+      tags: ["Driving", "Sandbox", "Action"]
+    },
+    {
+      id: "zombie-derby-2",
+      title: "Zombie Derby Part II",
+      url: "../Games/zombie-derby-2/index.html",
+      desc: "Mount a minigun on a rusted monster truck and grind through zombie hordes across dusty arenas.",
+      image: "../Games/zombie-derby-2/cover.svg",
+      tags: ["Driving", "Action", "Survival"]
+    },
+    {
+      id: "ragdoll-archers",
+      title: "Ragdoll Archers",
+      url: "../Games/ragdoll-archers/index.html",
+      desc: "Physics archery with floppy stickmen: solo waves, local PvP and co-op, plus upgrade builds.",
+      image: "../Games/ragdoll-archers/cover.svg",
+      tags: ["Archery", "Physics", "2 Player"]
+    }
+  ];'''
+
+for slug, svg in COVERS.items():
+    (GAMES / slug / 'cover.svg').write_text(svg, encoding='utf-8')
+    index = GAMES / slug / 'index.html'
+    html = index.read_text(encoding='utf-8')
+    if 'nx-games-back' not in html:
+        html = html.replace('</body>', BACK + '</body>', 1)
+    index.write_text(html, encoding='utf-8')
+
+text = CATALOGUE.read_text(encoding='utf-8')
+if 'zombie-derby-2' not in text:
+    anchor = '''      image: "../Games/car-destruction-king/cover.svg",
+      tags: ["Driving", "Sandbox", "Action"]
+    }
+  ];'''
+    if anchor not in text:
+        raise SystemExit('catalogue anchor missing')
+    text = text.replace(anchor, ENTRIES)
+
+if '"zombie-derby-2",' not in text.split('NON_HTML_IDS', 1)[-1].split('];', 1)[0]:
+    ids_anchor = '''    "car-destruction-king",
+  ];'''
+    if ids_anchor not in text:
+        raise SystemExit('id list anchor missing')
+    text = text.replace(ids_anchor, '''    "car-destruction-king",
+    "zombie-derby-2",
+    "ragdoll-archers",
+  ];''')
+
+CATALOGUE.write_text(text, encoding='utf-8')
+print('new games patched')
