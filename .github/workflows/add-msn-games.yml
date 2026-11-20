@@ -1,4 +1,4 @@
-# one-shot import, retry with repo-root paths
+# one-shot import: download the builds, commit them, then remove this workflow
 name: Add Zombie Derby and Ragdoll Archers
 
 on:
@@ -14,16 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Download and patch the games
-        run: |
-          bash tools/mirror-new-games.sh
-          python3 tools/patch-new-games.py
-          node --check JS/fragen-17-games-v2.js
-      - name: Commit
+      - name: Download the two builds
+        run: bash tools/mirror-new-games.sh
+      - name: Commit and self-destruct
         run: |
           git config user.name "plzdownloadfree.exe"
           git config user.email "whatchamacallit.exe@neirmail.com"
-          git add Games/zombie-derby-2 Games/ragdoll-archers JS/fragen-17-games-v2.js
+          git add Games/zombie-derby-2 Games/ragdoll-archers
           git commit -m "Add Zombie Derby Part II and Ragdoll Archers"
           git rm -q .github/workflows/add-msn-games.yml
           git commit -m "Remove the one-shot game import workflow"
