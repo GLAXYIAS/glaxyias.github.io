@@ -1,0 +1,56 @@
+{
+  "name": "Zombie Derby Part II",
+  "short_name": "Zombie Derby Part II",
+  "description": "Zombie Derby Part II is a fast and fun driving game with zombies everywhere. Get in your car, run over the undead, and try to survive as long as you can. Use your fuel wisely - if you run out, the zombies will catch you. Collect upgrades, unlock new cars, and use nitro boosts to jump over hills and smash through big groups of zombies.",
+  "start_url": "index.html",
+  "display": "fullscreen",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "id": "95200316",
+  "launch_handler": {
+      "client_mode": "auto"
+  },
+  "ms_start_compatible": true,
+  "categories": [
+      "games"
+  ],
+  "dir": "auto",
+  "orientation": "landscape",
+  "screenshots": [
+      {
+          "src": "images/image1280.png",
+          "sizes": "1280x720",
+          "type": "image/png",
+          "platform": "wide"
+      },
+      {
+          "src": "images/image720.png",
+          "sizes": "720x1280",
+          "type": "image/png",
+          "platform": "narrow"
+      },
+      {
+          "src": "images/image1920.png",
+          "sizes": "1920x1080",
+          "type": "image/png",
+          "platform": "narrow"
+      }
+  ],
+  "icons": [
+      {
+          "src": "images/icon512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+      },
+      {
+          "src": "images/icon192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+      },
+      {
+          "src": "images/icon1920.png",
+          "sizes": "1920x1080",
+          "type": "image/png"
+      }
+  ]
+}
