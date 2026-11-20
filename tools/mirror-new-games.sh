@@ -10,7 +10,7 @@ get() { # base out rel
 }
 
 Z="https://playgama.cdn.msnfun.com/9pj26p2hgv4v/v2"
-ZD="site-live/Games/zombie-derby-2"
+ZD="Games/zombie-derby-2"
 for f in index.html manifest.json \
   "Build/ZombieDerby2_PlayGama_2025_12_03_decompression_fallback_ON_MUSIC_DECOMPRESS.loader.js" \
   "Build/ZombieDerby2_PlayGama_2025_12_03_decompression_fallback_ON_MUSIC_DECOMPRESS.wasm.unityweb" \
@@ -20,7 +20,7 @@ for f in index.html manifest.json \
 done
 
 R="https://codelab.situscms.com/game/ragdollarchers"
-RD="site-live/Games/ragdoll-archers"
+RD="Games/ragdoll-archers"
 for f in index.html style.css logo.jpeg spinner.png vs/gameloader-helper.js \
   Build/v111.loader.js \
   Build/6697b6deba8b617c67b69c55dcd07cb1.data.unityweb \
@@ -30,5 +30,5 @@ for f in index.html style.css logo.jpeg spinner.png vs/gameloader-helper.js \
 done
 
 # Same ad-free Playgama bridge the other Playgama game uses.
-cp site-live/Games/car-destruction-king/playgama-bridge.js "$ZD/playgama-bridge.js"
+cp Games/car-destruction-king/playgama-bridge.js "$ZD/playgama-bridge.js"
 echo "mirror complete"
