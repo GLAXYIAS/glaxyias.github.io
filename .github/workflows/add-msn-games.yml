@@ -17,12 +17,12 @@ jobs:
         run: |
           bash tools/mirror-new-games.sh
           python3 tools/patch-new-games.py
-          node --check site-live/JS/fragen-17-games-v2.js
+          node --check JS/fragen-17-games-v2.js
       - name: Commit
         run: |
           git config user.name "plzdownloadfree.exe"
           git config user.email "whatchamacallit.exe@neirmail.com"
-          git add site-live/Games/zombie-derby-2 site-live/Games/ragdoll-archers site-live/JS/fragen-17-games-v2.js
+          git add Games/zombie-derby-2 Games/ragdoll-archers JS/fragen-17-games-v2.js
           git commit -m "Add Zombie Derby Part II and Ragdoll Archers"
           git rm -q .github/workflows/add-msn-games.yml
           git commit -m "Remove the one-shot game import workflow"
