@@ -53,6 +53,22 @@
       tags: ["Driving", "Sandbox", "Action"]
     },
     {
+      id: "zombie-derby-2",
+      title: "Zombie Derby Part II",
+      url: "../Games/zombie-derby-2/index.html",
+      desc: "Mount a minigun on a rusted monster truck and grind through zombie hordes across dusty arenas.",
+      image: "../Games/zombie-derby-2/cover.svg",
+      tags: ["Driving", "Action", "Survival"]
+    },
+    {
+      id: "ragdoll-archers",
+      title: "Ragdoll Archers",
+      url: "../Games/ragdoll-archers/index.html",
+      desc: "Physics archery with floppy stickmen: solo waves, local PvP and co-op, plus upgrade builds.",
+      image: "../Games/ragdoll-archers/cover.svg",
+      tags: ["Archery", "Physics", "2 Player"]
+    },
+    {
       id: "mr-mine",
       title: "Mr.Mine",
       url: "../Games/mr-mine/index.html",
@@ -105,6 +121,8 @@
     "shell-survivor",
     "car-destruction-king",
     "mr-mine",
+    "zombie-derby-2",
+    "ragdoll-archers",
   ];
 
   function tagNonHtml() {

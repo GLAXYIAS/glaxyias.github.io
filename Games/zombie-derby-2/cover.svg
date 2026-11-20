@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Zombie Derby Part II">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a0d08"/><stop offset="1" stop-color="#4a1b0c"/></linearGradient>
+<linearGradient id="metal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0a33c"/><stop offset="1" stop-color="#8a3d12"/></linearGradient>
+</defs>
+<rect width="512" height="512" fill="url(#bg)"/>
+<circle cx="404" cy="96" r="70" fill="#c8401a" opacity=".25"/><circle cx="404" cy="96" r="38" fill="#ff7a2f" opacity=".45"/>
+<path d="M60 330h300l-26-96H140l-34 40H60z" fill="url(#metal)" stroke="#2a1208" stroke-width="6"/>
+<rect x="150" y="240" width="120" height="46" rx="6" fill="#f7d9a8" opacity=".9"/>
+<rect x="300" y="252" width="70" height="16" rx="8" fill="#2b2b2b"/>
+<circle cx="130" cy="352" r="44" fill="#151515" stroke="#3c3c3c" stroke-width="10"/>
+<circle cx="330" cy="352" r="44" fill="#151515" stroke="#3c3c3c" stroke-width="10"/>
+<circle cx="130" cy="352" r="14" fill="#6b6b6b"/><circle cx="330" cy="352" r="14" fill="#6b6b6b"/>
+<text x="40" y="452" font-family="Impact, 'Arial Black', sans-serif" font-size="58" fill="#ffb347">ZOMBIE</text>
+<text x="40" y="492" font-family="Impact, 'Arial Black', sans-serif" font-size="40" fill="#f4e3c7" letter-spacing="6">DERBY II</text>
+</svg>

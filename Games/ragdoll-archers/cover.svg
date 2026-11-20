@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Ragdoll Archers">
+<defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#101318"/><stop offset="1" stop-color="#232a33"/></linearGradient></defs>
+<rect width="512" height="512" fill="url(#bg)"/>
+<g stroke="#e9eef5" stroke-width="12" stroke-linecap="round" fill="none">
+<circle cx="220" cy="150" r="26" fill="#e9eef5" stroke="none"/>
+<path d="M220 180v86M220 202l-52 34M220 202l52 26M220 266l-40 62M220 266l42 62"/>
+<path d="M300 160c46 40 46 120 0 160" stroke="#f5c451"/>
+</g>
+<path d="M168 196l110 62" stroke="#f5c451" stroke-width="8" stroke-linecap="round"/>
+<circle cx="392" cy="200" r="34" fill="#d64b3f" opacity=".85"/><circle cx="392" cy="200" r="16" fill="#f3dede"/>
+<text x="40" y="440" font-family="Impact, 'Arial Black', sans-serif" font-size="52" fill="#f5c451">RAGDOLL</text>
+<text x="40" y="484" font-family="Impact, 'Arial Black', sans-serif" font-size="40" fill="#e9eef5" letter-spacing="7">ARCHERS</text>
+</svg>
