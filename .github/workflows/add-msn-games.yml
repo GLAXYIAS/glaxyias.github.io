@@ -1,3 +1,4 @@
+# one-shot import, retry with repo-root paths
 name: Add Zombie Derby and Ragdoll Archers
 
 on:
