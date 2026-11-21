@@ -109,3 +109,31 @@
   window.openProfileModal = openProfileModal;
   window.closeProfileModal = closeProfileModal;
 })();
+
+/**
+ * Game registry patch: Melon Sandbox.
+ *
+ * Added from https://melonsandbox.com (the official web build of Melon
+ * Playground). index.html loads this script with `defer`, so it runs after
+ * JS/main.js has created _0xData and before main.js renders the grid on
+ * DOMContentLoaded. Delete this block to remove the game again.
+ */
+(function () {
+  'use strict';
+
+  if (typeof _0xData === 'undefined' || !Array.isArray(_0xData)) return;
+
+  for (var i = 0; i < _0xData.length; i++) {
+    if (_0xData[i] && _0xData[i].id === 'melon-sandbox') return;
+  }
+
+  _0xData.unshift({
+    id: 'melon-sandbox',
+    title: 'Melon Sandbox',
+    url: 'https://melonsandbox.com/',
+    image: 'https://melonsandbox.com/icon-512.png',
+    desc: 'The official Melon Sandbox web build: drop melons and ragdolls into a physics playground, build contraptions, and blow everything up.',
+    popular: true,
+    tags: ['Sandbox', 'Simulation', 'Casual']
+  });
+})();
