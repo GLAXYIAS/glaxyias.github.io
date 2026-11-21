@@ -300,3 +300,57 @@
     evaluate();
   });
 })();
+
+/* ------------------------------------------- removed (dead) catalogue entries
+   Removed 2026-11-21 after the full catalogue verification: every URL below was
+   loaded in a real browser and stayed blank, and the files it needs are either
+   missing from the repo or the upstream asset it loads now returns 404, so there
+   is nothing to repair. They are dropped from _0xData before the grid renders. */
+(function () {
+  "use strict";
+  if (typeof _0xData === "undefined" || !Array.isArray(_0xData)) return;
+
+  var REMOVED_URLS = {
+    "https://glaxyias.github.io/veck.io/": true,
+    "https://whatchamacallitexe.github.io/fragen/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-a/geometry-dash/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-a/swingo/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-a/wordle-unlimited/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-ad/backyardsoccer/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-ai/elasticface/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-b/connect-3/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-b/waterworks/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-c/get-on-top/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-c/woodventure/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-d/blumgi-slime/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-e/bottle-flip/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-e/mario/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-f/save-the-doge/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-g/head-soccer/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-h/pou/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-i/biker-street/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-i/stickman-go/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-k/sm64land/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-m/ace-combat-2/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-m/ace-combat-3/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-m/achievementunlocked/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-m/adventneon/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-m/akoopasrevenge/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-m/angrybirdsshowdown/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-n/cut-the-rope/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-p/deadestate/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-t/gran-turismo-2/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-x/inclement-emerald/index.html": true,
+    "https://whatchamacallitexe.github.io/pack-z/lego-batman/index.html": true
+  };
+
+  var removed = 0;
+  for (var i = _0xData.length - 1; i >= 0; i--) {
+    var game = _0xData[i];
+    if (game && REMOVED_URLS[String(game.url)]) {
+      _0xData.splice(i, 1);
+      removed++;
+    }
+  }
+  window.__nxRemovedGames = removed;
+})();
