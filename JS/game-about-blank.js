@@ -48,6 +48,7 @@
     var currentPct = null;
     var lastPctAt = started;
     var maxBytes = 0;
+    var lastByteAt = started;
     var pctSamples = [];
     var byteSamples = [];
     var consecutive = 0;
@@ -199,7 +200,7 @@
     }
     function trackBytes(b, t) {
       if (!b || b < 1) return;
-      maxBytes = Math.max(maxBytes, b);
+      if (b > maxBytes) { maxBytes = b; lastByteAt = t; }
       byteSamples.push({ t: t, v: b });
       if (byteSamples.length > 40) byteSamples.shift();
     }
@@ -270,6 +271,12 @@
         if (base > 0.8) return base;
         if (p != null && !stalled) return Math.max(2, p);
         return 2;
+      }
+      /* First ever load: the download just finished, so use how long the
+         bytes took as a conservative estimate for the compile tail. */
+      if (stalled && currentPct != null && currentPct >= 80) {
+        var dl = Math.max(0, (lastByteAt - started) / 1000);
+        return Math.max(3, Math.min(12, dl * 2));
       }
       if (p != null) {
         if (elapsed < 2 && p < 4) return null;
