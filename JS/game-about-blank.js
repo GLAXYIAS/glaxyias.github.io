@@ -372,6 +372,20 @@
     } catch (e) {}
     overlay.classList.remove('hide');
 
+    function saveStats(durMs) {
+      try {
+        ensureKey();
+        if (!statsKey) return;
+        var prev = stats[statsKey] || {};
+        var dur = Math.max(1, durMs);
+        stats[statsKey] = {
+          ms: prev.ms ? Math.round(prev.ms * 0.65 + dur * 0.35) : Math.round(dur),
+          bytes: Math.max(prev.bytes || 0, maxBytes || 0),
+          at: Date.now()
+        };
+        localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+      } catch (e) {}
+    }
     function finishWhenReady(t) {
       if (ready) return;
       ready = true;
@@ -379,27 +393,21 @@
       if (factTimer) { try { popup.clearInterval(factTimer); } catch (e) {} }
       currentPct = 100;
       render();
-      try {
-        ensureKey();
-        if (statsKey) {
-          var prev = stats[statsKey] || {};
-          var dur = Math.max(1, t - started);
-          stats[statsKey] = {
-            ms: prev.ms ? Math.round(prev.ms * 0.65 + dur * 0.35) : Math.round(dur),
-            bytes: Math.max(prev.bytes || 0, maxBytes || 0),
-            at: Date.now()
-          };
-          localStorage.setItem(STATS_KEY, JSON.stringify(stats));
-        }
-      } catch (e) {}
+      /* Modern Unity draws its own splash/advice screen after the loader
+         disappears; keep our overlay a little longer so the first thing the
+         player sees is the actual menu, not another loading screen. */
       var settle = 600;
       try {
         var settleDoc = frame.contentDocument;
-        if (settleDoc && !settleDoc.querySelector('#unity-loading-bar, #unity-progress-bar-full, .progress, .logo')) settle = 2200;
+        if (settleDoc) {
+          if (settleDoc.querySelector('#unity-loading-bar')) settle = 3000;
+          else if (!settleDoc.querySelector('#unity-progress-bar-full, .progress, .logo')) settle = 2200;
+        }
       } catch (e) { settle = 2200; }
       popup.setTimeout(function () {
         overlay.classList.add('hide');
         finished = true;
+        saveStats(nowMs() - started);
         if (pollTimer) { try { popup.clearInterval(pollTimer); } catch (e) {} }
       }, settle);
     }
