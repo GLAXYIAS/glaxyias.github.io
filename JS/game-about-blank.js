@@ -53,6 +53,7 @@
     var byteSamples = [];
     var consecutive = 0;
     var frameLoaded = false;
+    var frameLoadAt = 0;
     var crossSettleStarted = false;
     var sameOrigin = null;
     var statsKey = '';
@@ -166,28 +167,59 @@
       } catch (e) { return 0; }
     }
     function blockingLoader(d, win) {
-      var unityBar = d.querySelector('#unity-loading-bar');
-      if (unityBar && visible(unityBar, win)) return true;
-      var nodes = d.querySelectorAll('[id*="loading" i],[class*="loading" i],[id*="loader" i],[class*="loader" i],[id*="preload" i],[class*="preload" i]');
-      var vw = win.innerWidth || d.documentElement.clientWidth || 0;
-      var vh = win.innerHeight || d.documentElement.clientHeight || 0;
-      for (var i = 0; i < nodes.length; i++) {
-        var el = nodes[i];
-        if (!visible(el, win)) continue;
-        var r = el.getBoundingClientRect();
-        if (vw && vh && r.width >= vw * 0.45 && r.height >= vh * 0.45) return true;
-      }
+      try {
+        var vw = win.innerWidth || d.documentElement.clientWidth || 0;
+        var vh = win.innerHeight || d.documentElement.clientHeight || 0;
+        var unityBar = d.querySelector('#unity-loading-bar');
+        if (unityBar && visible(unityBar, win)) return true;
+
+        /* Unity 4.x templates (Slope and friends) use a .progress bar plus a
+           .logo in the same container, and hide both when loading completes. */
+        var u4 = d.querySelector('.progress');
+        var u4logo = d.querySelector('.logo');
+        if (u4 && u4logo && u4.parentElement === u4logo.parentElement && (visible(u4, win) || visible(u4logo, win))) return true;
+
+        var nodes = d.querySelectorAll('[id*="loading" i],[class*="loading" i],[id*="loader" i],[class*="loader" i],[id*="preload" i],[class*="preload" i],[id*="splash" i],[class*="splash" i]');
+        for (var i = 0; i < nodes.length; i++) {
+          var el = nodes[i];
+          if (!visible(el, win)) continue;
+          var r = el.getBoundingClientRect();
+          if (vw && vh && r.width >= vw * 0.45 && r.height >= vh * 0.45) return true;
+        }
+
+        var bars = d.querySelectorAll('[role="progressbar"]');
+        for (var b = 0; b < bars.length; b++) {
+          if (!visible(bars[b], win)) continue;
+          if (vw && bars[b].getBoundingClientRect().width >= vw * 0.3) return true;
+        }
+
+        /* Custom loaders often expose only a status line (Brotato's #status). */
+        var labels = d.querySelectorAll('[id*="status" i],[class*="status" i],[id*="loading" i],[class*="loading" i],[id*="preload" i],[class*="preload" i],[id*="splash" i],[class*="splash" i]');
+        for (var l = 0; l < labels.length; l++) {
+          var lab = labels[l];
+          if (!visible(lab, win)) continue;
+          var txt = (lab.textContent || '').replace(/\s+/g, ' ').trim();
+          if (txt && txt.length < 120 && /(loading|downloading|preparing|initializing|compiling|please wait|starting up)/i.test(txt) && !/(complete|ready|loaded|finished)/i.test(txt)) {
+            if (vw && lab.getBoundingClientRect().width >= vw * 0.25) return true;
+          }
+        }
+      } catch (e) {}
       return false;
     }
-    function isReady(d) {
+    function isReady(d, t) {
       try {
         if (!d || d.readyState !== 'complete') return false;
         var win = d.defaultView || frame.contentWindow;
         if (!win) return false;
         var canvas = d.querySelector('canvas');
+        if (!canvas && !d.body) return false;
         if (canvas && (!canvas.width || !canvas.height)) return false;
         if (blockingLoader(d, win)) return false;
-        return !!canvas || !!d.body;
+        /* Give plain HTML5 pages a moment after their load event before
+           dropping the overlay, instead of hiding on the first empty body. */
+        var unityish = d.querySelector('#unity-loading-bar, #unity-progress-bar-full, .progress, .logo');
+        if (!unityish && frameLoadAt && t - frameLoadAt < 1200) return false;
+        return true;
       } catch (e) { return false; }
     }
 
@@ -350,12 +382,13 @@
       if (crossSettleStarted) return;
       crossSettleStarted = true;
       ensureKey();
-      var wait = prior && prior.ms ? Math.min(20000, Math.max(1800, prior.ms * 0.9)) : 3000;
+      var wait = prior && prior.ms ? Math.min(20000, Math.max(5000, prior.ms * 0.9)) : 5000;
       popup.setTimeout(function () { finishWhenReady(nowMs()); }, wait);
     }
 
     frame.addEventListener('load', function () {
       frameLoaded = true;
+      frameLoadAt = nowMs();
       var so = computeSameOrigin();
       if (so === false) { phase = 'Starting game…'; startCrossSettle(); }
       else { phase = 'Starting game…'; }
@@ -379,13 +412,16 @@
             if (p != null) trackPct(p, t);
             var b = readBytes();
             if (b > 0) trackBytes(b, t);
-            if (isReady(d)) {
+            if (isReady(d, t)) {
               consecutive++;
               if (consecutive >= 3) finishWhenReady(t);
             } else {
               consecutive = 0;
             }
           }
+        } else if (frameLoaded && t - started > 2500) {
+          /* Same-origin URL but an opaque document (sandbox/CSP). */
+          startCrossSettle();
         }
       }
       render();
