@@ -75,6 +75,17 @@
       desc: "Dig deeper, hire managers, unlock drills and rebuild your mining empire in the long-running idle mining game.",
       image: "../Games/mr-mine/cover.svg",
       tags: ["Idle", "Mining", "Simulation"]
+    },
+    {
+      /* Self-hosted build: GLAXYIAS/melon-sandbox mirrors the official Unity
+         build with a workflow, so this never embeds melonsandbox.com. */
+      id: "melon-sandbox",
+      title: "Melon Sandbox",
+      url: "https://glaxyias.github.io/melon-sandbox/",
+      desc: "The official Melon Sandbox web build: drop melons and ragdolls into a physics playground, build contraptions, and blow everything up.",
+      image: "https://glaxyias.github.io/melon-sandbox/icon-512.png",
+      popular: true,
+      tags: ["Sandbox", "Simulation", "Casual"]
     }
   ];
 
@@ -123,6 +134,7 @@
     "mr-mine",
     "zombie-derby-2",
     "ragdoll-archers",
+    "melon-sandbox",
   ];
 
   function tagNonHtml() {
