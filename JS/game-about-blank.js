@@ -46,7 +46,7 @@
     var finished = false;
     var phase = 'Connecting…';
     var currentPct = null;
-    var lastPct = 0;
+    var lastPctAt = started;
     var maxBytes = 0;
     var pctSamples = [];
     var byteSamples = [];
@@ -108,8 +108,12 @@
     function showFact() {
       if (!factEl) return;
       var text = FACTS[factIdx % FACTS.length];
-      lastFact = text;
-      try { localStorage.setItem('nx_last_fact_v2', text); } catch (e) {}
+      /* Remember the first fact of this launch only, so the next launch
+         always opens on a different one even after several rotations. */
+      if (factIdx === 0) {
+        lastFact = text;
+        try { localStorage.setItem('nx_last_fact_v2', text); } catch (e) {}
+      }
       factEl.style.opacity = '1';
       factEl.innerHTML = '<strong>Fun fact:</strong> ' + text;
       factIdx++;
@@ -188,6 +192,7 @@
 
     function trackPct(p, t) {
       if (p == null) return;
+      if (currentPct == null || p > currentPct + 0.05) lastPctAt = t;
       currentPct = Math.max(currentPct || 0, p);
       pctSamples.push({ t: t, v: currentPct });
       if (pctSamples.length > 80) pctSamples.shift();
@@ -208,41 +213,67 @@
     }
     function etaSeconds(t) {
       if (ready) return 0;
+      var elapsed = (t - started) / 1000;
+      /* The previous completed load for this game is the most honest clock:
+         a cached Unity build can hit 90% in two seconds and then spend
+         several more compiling. Progress is only a fallback while we have
+         no history, or once the previous duration has run out. */
+      var base = prior && prior.ms ? prior.ms / 1000 - elapsed : null;
+      var stalled = currentPct != null && currentPct >= 80 && (t - lastPctAt) > 2000;
+      var p = null;
+
       if (currentPct != null && currentPct > 0.5) {
-        if (currentPct >= 95) return 2;
-        var cutoff = t - 12000, first = null, last = null;
-        for (var i = 0; i < pctSamples.length; i++) {
-          var s = pctSamples[i];
-          if (s.t >= cutoff) { if (!first) first = s; last = s; }
+        if (currentPct >= 95) {
+          p = 2;
+        } else {
+          var cutoff = t - 12000, first = null, last = null;
+          for (var i = 0; i < pctSamples.length; i++) {
+            var s = pctSamples[i];
+            if (s.t >= cutoff) { if (!first) first = s; last = s; }
+          }
+          if (first && last && last.t - first.t > 900 && last.v > first.v + 0.1) {
+            var rate = (last.v - first.v) / ((last.t - first.t) / 1000);
+            if (rate > 0.02) p = Math.max(0.5, (100 - currentPct) / rate);
+          }
+          if (p == null && currentPct > 2) {
+            p = Math.max(0.5, elapsed * (100 - currentPct) / currentPct);
+          }
         }
-        if (first && last && last.t - first.t > 900 && last.v > first.v + 0.1) {
-          var rate = (last.v - first.v) / ((last.t - first.t) / 1000);
-          if (rate > 0.02) return Math.max(0.5, (100 - currentPct) / rate);
-        }
-        if (currentPct > 2) {
-          var elapsed = (t - started) / 1000;
-          return Math.max(0.5, elapsed * (100 - currentPct) / currentPct);
-        }
+        if (stalled) p = null;
       }
-      if (prior && prior.bytes > 1048576 && maxBytes > 0) {
+
+      if (p == null && !stalled && prior && prior.bytes > 1048576 && maxBytes > 0) {
         var total = Math.max(prior.bytes, maxBytes);
         var rem = total - maxBytes;
-        if (rem <= 0) return 1;
-        var bcut = t - 12000, bf = null, bl = null;
-        for (var j = 0; j < byteSamples.length; j++) {
-          var bs = byteSamples[j];
-          if (bs.t >= bcut) { if (!bf) bf = bs; bl = bs; }
+        if (rem > 0) {
+          var bcut = t - 12000, bf = null, bl = null;
+          for (var j = 0; j < byteSamples.length; j++) {
+            var bs = byteSamples[j];
+            if (bs.t >= bcut) { if (!bf) bf = bs; bl = bs; }
+          }
+          if (bf && bl && bl.t - bf.t > 900 && bl.v > bf.v) {
+            var brate = (bl.v - bf.v) / ((bl.t - bf.t) / 1000);
+            if (brate > 2000) p = Math.max(0.5, rem / brate);
+          }
+          if (p == null && elapsed > 2) p = Math.max(0.5, elapsed * rem / maxBytes);
         }
-        if (bf && bl && bl.t - bf.t > 900 && bl.v > bf.v) {
-          var brate = (bl.v - bf.v) / ((bl.t - bf.t) / 1000);
-          if (brate > 2000) return Math.max(0.5, rem / brate);
-        }
-        var el2 = (t - started) / 1000;
-        return Math.max(0.5, el2 * rem / maxBytes);
       }
-      if (prior && prior.ms) {
-        var remain = prior.ms / 1000 - (t - started) / 1000;
-        return Math.max(0.5, remain);
+
+      /* Unity's bar sits near 90% while it compiles. Without a previous
+         duration, reserve a short finishing window instead of claiming 2s. */
+      if (p != null && !stalled && currentPct != null && currentPct >= 80) {
+        var tail = Math.max(3, Math.min(8, ((lastPctAt - started) / 1000) * 0.9));
+        p = Math.max(p, tail);
+      }
+
+      if (base != null) {
+        if (base > 0.8) return base;
+        if (p != null && !stalled) return Math.max(2, p);
+        return 2;
+      }
+      if (p != null) {
+        if (elapsed < 2 && p < 4) return null;
+        return Math.max(0.5, p);
       }
       return null;
     }
