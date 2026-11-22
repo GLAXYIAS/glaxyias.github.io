@@ -141,7 +141,28 @@
     function unityProgress(d) {
       try {
         var bar = d.querySelector('#unity-progress-bar-full');
-        if (!bar) return null;
+        if (!bar) {
+          /* Unity 4.x template: .progress > .full width is the percentage. */
+          var u4full = d.querySelector('.progress .full');
+          if (u4full) {
+            var track4 = u4full.parentElement;
+            var bw4 = u4full.getBoundingClientRect().width;
+            var tw4 = track4 ? track4.getBoundingClientRect().width : 0;
+            if (tw4 > 0) return Math.max(0, Math.min(99.5, (bw4 / tw4) * 100));
+            var w4 = parseFloat(u4full.style.width || '');
+            if (isFinite(w4) && w4 >= 0) return Math.max(0, Math.min(99.5, w4));
+          }
+          /* Custom loaders that print "102.00 / 160.54 MB" (Brotato). */
+          var status = d.querySelector('#status');
+          if (status) {
+            var m = /(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)\s*MB/i.exec(status.textContent || '');
+            if (m) {
+              var loaded = parseFloat(m[1]), total = parseFloat(m[2]);
+              if (total > 0 && isFinite(loaded)) return Math.max(0, Math.min(99.5, loaded / total * 100));
+            }
+          }
+          return null;
+        }
         var w = parseFloat(bar.style.width || '');
         if (!(w >= 0)) {
           var track = bar.parentElement;
@@ -212,14 +233,13 @@
         var win = d.defaultView || frame.contentWindow;
         if (!win) return false;
         var canvas = d.querySelector('canvas');
-        if (!canvas && !d.body) return false;
         if (canvas && (!canvas.width || !canvas.height)) return false;
         if (blockingLoader(d, win)) return false;
         /* Give plain HTML5 pages a moment after their load event before
            dropping the overlay, instead of hiding on the first empty body. */
         var unityish = d.querySelector('#unity-loading-bar, #unity-progress-bar-full, .progress, .logo');
         if (!unityish && frameLoadAt && t - frameLoadAt < 1200) return false;
-        return true;
+        return !!canvas || !!d.body;
       } catch (e) { return false; }
     }
 
@@ -294,7 +314,7 @@
 
       /* Unity's bar sits near 90% while it compiles. Without a previous
          duration, reserve a short finishing window instead of claiming 2s. */
-      if (p != null && !stalled && currentPct != null && currentPct >= 80) {
+      if (p != null && !stalled && currentPct != null && currentPct >= 80 && currentPct < 98) {
         var tail = Math.max(3, Math.min(8, ((lastPctAt - started) / 1000) * 0.9));
         p = Math.max(p, tail);
       }
@@ -372,11 +392,16 @@
           localStorage.setItem(STATS_KEY, JSON.stringify(stats));
         }
       } catch (e) {}
+      var settle = 600;
+      try {
+        var settleDoc = frame.contentDocument;
+        if (settleDoc && !settleDoc.querySelector('#unity-loading-bar, #unity-progress-bar-full, .progress, .logo')) settle = 2200;
+      } catch (e) { settle = 2200; }
       popup.setTimeout(function () {
         overlay.classList.add('hide');
         finished = true;
         if (pollTimer) { try { popup.clearInterval(pollTimer); } catch (e) {} }
-      }, 600);
+      }, settle);
     }
     function startCrossSettle() {
       if (crossSettleStarted) return;
