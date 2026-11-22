@@ -56,6 +56,7 @@
     var frameLoadAt = 0;
     var crossSettleStarted = false;
     var sameOrigin = null;
+    var modernUnity = false;
     var statsKey = '';
     var prior = null;
 
@@ -319,6 +320,17 @@
         p = Math.max(p, tail);
       }
 
+      /* First-ever modern Unity load: the bar hits 90% long before the build
+         finishes compiling. Scale a conservative estimate by how much was
+         downloaded instead of promising 3 seconds and missing by 10+. */
+      if (!prior && modernUnity && currentPct != null && currentPct >= 80) {
+        var dlNow = Math.max(0.5, (lastByteAt - started) / 1000);
+        var mbNow = maxBytes / 1048576;
+        var firstFloor = mbNow > 1 ? Math.min(15, Math.max(5, mbNow * 0.5 + 3)) : Math.min(15, Math.max(6, dlNow * 6));
+        p = Math.max(p || 0, firstFloor);
+        stalled = false;
+      }
+
       if (base != null) {
         if (base > 0.8) return base;
         if (p != null && !stalled) return Math.max(2, p);
@@ -441,6 +453,7 @@
         try { d = frame.contentDocument; } catch (e) { d = null; }
         if (d) {
           if (d.readyState === 'complete') {
+            if (d.querySelector('#unity-loading-bar')) modernUnity = true;
             var p = unityProgress(d);
             if (p != null) trackPct(p, t);
             var b = readBytes();
