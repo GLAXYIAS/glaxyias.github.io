@@ -180,3 +180,13 @@
   border: 2px solid #000;
   border-radius: 999px;
 }
+
+/* The debug Console button is part of the default theme too. */
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #console-toggle-btn {
+  background: #000 !important;
+  background-image: none !important;
+  color: #ff9d2e !important;
+  border: 1px solid #ff8a00 !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
