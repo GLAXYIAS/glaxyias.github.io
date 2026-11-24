@@ -10853,7 +10853,7 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       modal.style.display = 'flex';
 
-      fetch('../Settings/settings.html?v=20261124darker')
+      fetch('../Settings/settings.html?v=20261124darker3', { cache: 'no-store' })
         .then(res => {
           if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
           return res.text();

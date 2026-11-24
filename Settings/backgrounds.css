@@ -200,7 +200,7 @@ body {
   color: var(--nx-orange-soft);
   font-size: .78rem;
 }
-.nx-bg-current .nx-outline-btn { flex: 0 0 auto; }
+.nx-bg-current .nx-outline-btn { flex: 0 0 auto; border: 1px solid #e07a00 !important; }
 
 /* Background gallery popout */
 .nx-bg-modal {

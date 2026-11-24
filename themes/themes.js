@@ -512,7 +512,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('nx-bg-modal')) return;
     var cards = CHOICES.map(function (item) {
       return '<button type="button" class="nx-bg-choice" data-bg-key="' + item.key + '" data-bg-site="' + item.site + '" data-bg-name="' + item.name + '" data-bg-desc="' + item.desc + '" aria-pressed="false" onclick="nxChooseBackground(this)">' +
-        '<img src="/Settings/previews/' + item.key + '.svg" alt="' + item.name + ' dashboard preview" loading="lazy">' +
+        '<img src="/Settings/previews/' + item.key + '.svg" alt="' + item.name + ' dashboard preview">' +
         '<span class="nx-bg-choice-copy"><strong>' + item.name + '</strong><small>' + item.desc + '</small></span>' +
         '<span class="nx-bg-tick" aria-hidden="true">&check;</span>' +
       '</button>';
