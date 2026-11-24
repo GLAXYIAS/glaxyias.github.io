@@ -15,13 +15,7 @@ jobs:
 
       - name: Apply change
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          p = Path('Settings/settings.html')
-          s = p.read_text()
-          s = s.replace('<script src="../themes/themes.js"></script>', '<script src="../themes/themes.js?v=20261124darker4"></script>')
-          p.write_text(s)
-          PY
+          python3 -c 'from pathlib import Path; p=Path("Settings/settings.html"); p.write_text(p.read_text().replace("<script src=\"../themes/themes.js\"></script>", "<script src=\"../themes/themes.js?v=20261124darker4\"></script>"))'
 
       - name: Remove this one-off workflow
         run: rm .github/workflows/nx-bg-fix3.yml
