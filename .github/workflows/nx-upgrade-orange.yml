@@ -1,0 +1,30 @@
+name: Apply upgrade-pack orange palette
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply changes
+        run: python3 .github/scripts/nx-upgrade-orange.py
+
+      - name: Remove this one-off workflow
+        run: |
+          rm .github/workflows/nx-upgrade-orange.yml
+          rm .github/scripts/nx-upgrade-orange.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add JS/upgrade-pack.js index.html .github/workflows/nx-upgrade-orange.yml .github/scripts/nx-upgrade-orange.py
+          git commit -m "Set upgrade-pack default palette to orange and cache-bust it"
+          git push
