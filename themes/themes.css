@@ -24,15 +24,15 @@
 }
 
 
-/* 1. DEFAULT PURPLE THEME */
+/* 1. DEFAULT BLACK & ORANGE THEME */
 :root, [data-theme="default"], body.theme-default {
-  --bg-dashboard: #0b0813;
-  --bg-sidebar: #110d22;
-  --accent-color: #8b00ff;
-  --accent-hover: #a033ff;
-  --border-color: rgba(139, 0, 255, 0.15); 
-  --text-main: #ffffff;
-  --text-muted: #888888;
+  --bg-dashboard: #000000;
+  --bg-sidebar: #080808;
+  --accent-color: #ff8a00;
+  --accent-hover: #ffab40;
+  --border-color: rgba(255, 138, 0, 0.22); 
+  --text-main: #ffb25e;
+  --text-muted: #c98a55;
 }
 
 /* 2. MIDNIGHT (Pitch Black, Grey Borders, White Text) */

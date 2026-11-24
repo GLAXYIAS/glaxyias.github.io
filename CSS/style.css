@@ -1,17 +1,17 @@
 :root {
-  /* Dynamic Variable Fallbacks / Rich Deep Purple Configuration */
-  --accent: #8b00ff;
-  --accent-hover: #a033ff;
-  --bg-gradient: linear-gradient(135deg, #120024, #1a0033);
-  --container-bg: rgba(26, 0, 51, 0.98);
-  --text: #e0e0e0;
+  /* Dynamic Variable Fallbacks / Black & Orange Configuration */
+  --accent: #ff8a00;
+  --accent-hover: #ffab40;
+  --bg-gradient: linear-gradient(135deg, #000000, #0b0703);
+  --container-bg: rgba(10, 10, 10, 0.98);
+  --text: #ffd7a8;
   
   /* Layout Architecture Color Tokens Linked to Theme Customizations */
-  --bg-dashboard: #120024;   /* Deep Midnight Purple */
-  --bg-sidebar: #1a0033;     /* Rich Indigo/Violet */
-  --border-color: #3b1d70;   /* Vibrant Purple Border */
-  --text-main: #e8e0ff;
-  --text-muted: #b39ddb;
+  --bg-dashboard: #000000;   /* Black */
+  --bg-sidebar: #080808;     /* Near Black */
+  --border-color: #3a2208;   /* Dark Orange Border */
+  --text-main: #ffb25e;      /* Orange Text */
+  --text-muted: #c98a55;
 }
 
 /* Base Reset */
@@ -590,7 +590,7 @@ nav {
 .unblocker-card:hover {
   transform: translateY(-8px);
   border-color: var(--accent-color, var(--accent)) !important;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4), 0 0 15px rgba(139, 0, 255, 0.2);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 138, 0, 0.2);
 }
 
 .unblocker-card h4 {
@@ -1272,7 +1272,7 @@ nav {
   position: fixed;
   bottom: 15px;
   left: 15px;
-  background: #8b00ff;
+  background: #ff8a00;
   color: #fff;
   border: none;
   padding: 8px 14px;
@@ -1281,7 +1281,7 @@ nav {
   font-weight: bold;
   cursor: pointer;
   z-index: 99999;
-  box-shadow: 0 4px 12px rgba(139, 0, 255, 0.4);
+  box-shadow: 0 4px 12px rgba(255, 138, 0, 0.4);
 }
 
 #site-console {
@@ -1291,7 +1291,7 @@ nav {
   width: min(90vw, 500px);
   height: min(40vh, 300px);
   background: #0d0d13;
-  border: 1px solid #8b00ff;
+  border: 1px solid #ff8a00;
   border-radius: 8px;
   z-index: 99999;
   display: flex;
@@ -1307,8 +1307,8 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(139, 0, 255, 0.3);
-  color: #a033ff;
+  border-bottom: 1px solid rgba(255, 138, 0, 0.3);
+  color: #ffab40;
   font-weight: bold;
 }
 
@@ -1337,14 +1337,14 @@ nav {
 .console-entry.log { color: #e0e0e0; }
 .console-entry.warn { color: #f59e0b; }
 .console-entry.error { color: #ef4444; }
-.console-entry.input { color: #a033ff; font-weight: bold; }
+.console-entry.input { color: #ffab40; font-weight: bold; }
 
 #console-input-container {
   display: flex;
   align-items: center;
   padding: 6px 10px;
   background: #12091c;
-  border-top: 1px solid rgba(139, 0, 255, 0.3);
+  border-top: 1px solid rgba(255, 138, 0, 0.3);
   gap: 8px;
 }
 
@@ -1386,7 +1386,7 @@ nav {
   gap: 12px;
   padding: 0 10px 0 18px;
   background: #0b0810;
-  border-bottom: 1px solid rgba(139, 0, 255, 0.28);
+  border-bottom: 1px solid rgba(255, 138, 0, 0.28);
 }
 
 .profile-modal-title {
@@ -1408,16 +1408,16 @@ nav {
   font-size: 20px;
   line-height: 1;
   color: #fff;
-  background: rgba(139, 0, 255, 0.12);
-  border: 1px solid rgba(139, 0, 255, 0.4);
+  background: rgba(255, 138, 0, 0.12);
+  border: 1px solid rgba(255, 138, 0, 0.4);
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
 }
 
 .profile-modal-close:hover {
-  background: rgba(139, 0, 255, 0.32);
-  border-color: #8b00ff;
+  background: rgba(255, 138, 0, 0.32);
+  border-color: #ff8a00;
 }
 
 .profile-modal-close:focus-visible {

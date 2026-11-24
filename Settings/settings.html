@@ -9,29 +9,29 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="../Games/GameSaveData/auto-save.js"></script>
 </head>
-<body style="background: #0b0512; color: white; padding: 40px 20px; font-family: sans-serif;">
+<body style="background: #000000; color: #ffb25e; padding: 40px 20px; font-family: sans-serif;">
 
-  <div class="settings-standalone-container" style="max-width: 800px; margin: 0 auto; background: rgba(18, 9, 28, 0.95); border: 1px solid #8b00ff; padding: 30px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);">
+  <div class="settings-standalone-container" style="max-width: 800px; margin: 0 auto; background: rgba(10, 10, 10, 0.97); border: 1px solid #ff8a00; padding: 30px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);">
     
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
       <div>
         <h1 class="glow" style="margin: 0; font-size: 2.2rem; letter-spacing: 1px; color: #fff;">Settings</h1>
         <p class="subtitle" style="margin: 5px 0 0; color: #aaa; font-size: 0.95rem;">Personalize your Null_X dashboard</p>
       </div>
-      <a href="../index.html" style="text-decoration: none; background: rgba(255,255,255,0.06); border: 1px solid rgba(139, 0, 255, 0.4); color: white; padding: 10px 18px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; transition: background 0.2s;" onmouseover="this.style.background='rgba(139, 0, 255, 0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+      <a href="../index.html" style="text-decoration: none; background: rgba(255,255,255,0.06); border: 1px solid rgba(255, 138, 0, 0.4); color: #ffb25e; padding: 10px 18px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255, 138, 0, 0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
         <i class="fas fa-arrow-left"></i> Return Home
       </a>
     </div>
 
-    <hr class="settings-divider" style="border: 0; height: 1px; background: linear-gradient(to right, #8b00ff, transparent); margin: 20px 0 30px 0;">
+    <hr class="settings-divider" style="border: 0; height: 1px; background: linear-gradient(to right, #ff8a00, transparent); margin: 20px 0 30px 0;">
 
     <div class="setting-section" style="margin-bottom: 35px;">
-      <h3 style="color: #a033ff; margin-bottom: 12px; font-size: 1.2rem;"><i class="fas fa-palette" style="margin-right: 8px;"></i>Appearance</h3>
+      <h3 style="color: #ffab40; margin-bottom: 12px; font-size: 1.2rem;"><i class="fas fa-palette" style="margin-right: 8px;"></i>Appearance</h3>
       <p class="setting-label" style="color: #ccc; font-size: 0.9rem; margin-bottom: 12px;">Select Theme:</p>
       <div class="theme-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px;">
         <div class="theme-card" data-theme="default" style="cursor: pointer;">
-          <div class="preview purple-preview"></div>
-          <span>Default Purple</span>
+          <div class="preview" style="background: #080808; border-color: #ff8a00;"></div>
+          <span>Default Orange</span>
         </div>
         <div class="theme-card" data-theme="midnight" style="cursor: pointer;">
           <div class="preview midnight-preview"></div>
@@ -220,10 +220,10 @@
     </div>
 
     <div class="setting-section" style="margin-bottom: 35px;">
-      <h3 style="color: #a033ff; margin-bottom: 12px; font-size: 1.2rem;"><i class="fas fa-crosshairs" style="margin-right: 8px;"></i>Custom Crosshair</h3>
+      <h3 style="color: #ffab40; margin-bottom: 12px; font-size: 1.2rem;"><i class="fas fa-crosshairs" style="margin-right: 8px;"></i>Custom Crosshair</h3>
       <p class="setting-label" style="color: #ccc; font-size: 0.9rem; margin-bottom: 12px;">Choose your on-screen crosshair style. Saved to this browser.</p>
       <label for="crosshair-style-select" class="setting-label" style="display: block; color: #ccc; font-size: 0.95rem; margin-bottom: 8px;">Crosshair Style:</label>
-      <select id="crosshair-style-select" data-crosshair-select class="settings-input" style="width: 100%; max-width: 350px; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(139,0,255,0.3); color: white; border-radius: 6px;">
+      <select id="crosshair-style-select" data-crosshair-select class="settings-input" style="width: 100%; max-width: 350px; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,138,0,0.3); color: white; border-radius: 6px;">
         <option value="cyan-hud">Cyan HUD (Original)</option>
         <option value="red-reticle">Red Reticle</option>
         <option value="none">None (System Cursor)</option>
@@ -231,7 +231,7 @@
     </div>
 
     <div class="setting-section" style="margin-bottom: 35px;">
-      <h3 style="color: #a033ff; margin-bottom: 12px; font-size: 1.2rem;"><i class="fas fa-power-off" style="margin-right: 8px;"></i>Startup Environment</h3>
+      <h3 style="color: #ffab40; margin-bottom: 12px; font-size: 1.2rem;"><i class="fas fa-power-off" style="margin-right: 8px;"></i>Startup Environment</h3>
       <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
         <input type="checkbox" id="toggle-study-cloak" style="cursor: pointer; width: 18px; height: 18px;">
         <label for="toggle-study-cloak" class="setting-label" style="margin: 0; cursor: pointer; font-size: 0.95rem; color: #ccc;">
@@ -241,7 +241,7 @@
     </div>
 
     <div class="setting-section" style="margin-bottom: 35px;">
-      <h3 style="color: #a033ff; margin-bottom: 12px; font-size: 1.2rem;"><i class="fas fa-window-restore" style="margin-right: 8px;"></i>Game Display</h3>
+      <h3 style="color: #ffab40; margin-bottom: 12px; font-size: 1.2rem;"><i class="fas fa-window-restore" style="margin-right: 8px;"></i>Game Display</h3>
       <div style="display: flex; align-items: flex-start; gap: 10px; margin-top: 10px;">
         <input type="checkbox" id="toggle-use-iframe" style="cursor: pointer; width: 18px; height: 18px; margin-top: 2px;" checked>
         <label for="toggle-use-iframe" class="setting-label" style="margin: 0; cursor: pointer; font-size: 0.95rem; color: #ccc; line-height: 1.4;">
@@ -256,9 +256,9 @@
     </div>
 
     <div class="setting-section" style="margin-bottom: 35px;">
-      <h3 style="color: #a033ff; margin-bottom: 12px; font-size: 1.2rem;"><i class="fas fa-mask" style="margin-right: 8px;"></i>Privacy</h3>
+      <h3 style="color: #ffab40; margin-bottom: 12px; font-size: 1.2rem;"><i class="fas fa-mask" style="margin-right: 8px;"></i>Privacy</h3>
       <label for="cloakSelector" class="setting-label" style="display: block; color: #ccc; font-size: 0.95rem; margin-bottom: 8px;">Tab Cloak Target Frame:</label>
-      <select id="cloakSelector" class="settings-input" style="width: 100%; max-width: 350px; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(139,0,255,0.3); color: white; border-radius: 6px;">
+      <select id="cloakSelector" class="settings-input" style="width: 100%; max-width: 350px; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,138,0,0.3); color: white; border-radius: 6px;">
         <option value="none">None (Default)</option>
         <option value="Google Classroom">Google Classroom</option>
         <option value="Google Drive">Google Drive</option>
@@ -282,7 +282,7 @@
     </div>
 
     <div class="setting-section" style="margin-bottom: 35px;">
-      <h3 style="color: #a033ff; margin-bottom: 12px; font-size: 1.2rem;"><i class="fas fa-rocket" style="margin-right: 8px;"></i>Auto-Launch</h3>
+      <h3 style="color: #ffab40; margin-bottom: 12px; font-size: 1.2rem;"><i class="fas fa-rocket" style="margin-right: 8px;"></i>Auto-Launch</h3>
       <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
         <input type="checkbox" id="toggle-auto-launch" style="cursor: pointer; width: 18px; height: 18px;">
         <label for="toggle-auto-launch" class="setting-label" style="margin: 0; cursor: pointer; font-size: 0.95rem; color: #ccc;">
@@ -291,7 +291,7 @@
       </div>
       <div id="auto-launch-options" class="hidden" style="margin-top: 15px;">
         <p class="setting-label" style="color: #ccc; font-size: 0.9rem; margin-bottom: 6px;">Launch Type Target:</p>
-        <select id="auto-launch-environment" class="settings-input" style="width: 100%; max-width: 350px; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(139,0,255,0.3); color: white; border-radius: 6px;">
+        <select id="auto-launch-environment" class="settings-input" style="width: 100%; max-width: 350px; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,138,0,0.3); color: white; border-radius: 6px;">
           <option value="about:blank">about:blank</option>
           <option value="blob">blob URL</option>
         </select>
@@ -299,21 +299,21 @@
     </div>
 
     <div class="setting-section" style="margin-bottom: 10px;">
-      <h3 style="color: #a033ff; margin-bottom: 12px; font-size: 1.2rem;"><i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>Panic Override System</h3>
+      <h3 style="color: #ffab40; margin-bottom: 12px; font-size: 1.2rem;"><i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>Panic Override System</h3>
       <div class="panic-inputs" style="display: flex; flex-direction: column; gap: 12px; max-width: 450px;">
         <div>
           <p class="setting-label" style="color: #ccc; font-size: 0.9rem; margin: 0 0 6px 0;">Custom Shortcut Key Binding:</p>
-          <input type="text" id="panicShortcut" placeholder="Click and press a key..." readonly style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(139,0,255,0.3); color: #00ff66; border-radius: 6px; font-family: monospace;">
+          <input type="text" id="panicShortcut" placeholder="Click and press a key..." readonly style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,138,0,0.3); color: #00ff66; border-radius: 6px; font-family: monospace;">
         </div>
         
         <div>
           <p class="setting-label" style="color: #ccc; font-size: 0.9rem; margin: 0 0 6px 0;">Emergency Redirect URL:</p>
-          <input type="text" id="panicLink" placeholder="https://classroom.google.com" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(139,0,255,0.3); color: white; border-radius: 6px;">
+          <input type="text" id="panicLink" placeholder="https://classroom.google.com" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,138,0,0.3); color: white; border-radius: 6px;">
         </div>
 
         <div>
           <p class="setting-label" style="color: #ccc; font-size: 0.9rem; margin: 0 0 6px 0;">Panic Decoy Filter Screen (Alt + B):</p>
-          <select id="decoySelect" class="settings-input" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(139,0,255,0.3); color: white; border-radius: 6px; cursor: pointer;">
+          <select id="decoySelect" class="settings-input" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,138,0,0.3); color: white; border-radius: 6px; cursor: pointer;">
   <option value="goguardian">GoGuardian Admin</option>
   <option value="securly">Securly Web Filter</option>
   <option value="lightspeed">Lightspeed Systems Relay</option>
@@ -337,7 +337,7 @@
 </select>
 </div>
         
-        <button id="savePanic" class="save-btn" style="padding: 12px; background: #8b00ff; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 5px;" onmouseover="this.style.background='#a033ff'" onmouseout="this.style.background='#8b00ff'">
+        <button id="savePanic" class="save-btn" style="padding: 12px; background: #ff8a00; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 5px;" onmouseover="this.style.background='#ffab40'" onmouseout="this.style.background='#ff8a00'">
           Save Panic Settings
         </button>
       </div>

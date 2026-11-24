@@ -5,11 +5,11 @@
    ========================================================================== */
 
 :root {
-  --nxup-accent: var(--accent, #8b00ff);
+  --nxup-accent: var(--accent, #ff8a00);
   --nxup-panel: rgba(18, 9, 28, 0.96);
-  --nxup-line: rgba(139, 0, 255, 0.35);
-  --nxup-text: #f2ecff;
-  --nxup-muted: #a99bc4;
+  --nxup-line: rgba(255, 138, 0, 0.35);
+  --nxup-text: #ffe3c4;
+  --nxup-muted: #c88f5a;
   --nxup-radius: 12px;
 }
 
@@ -34,14 +34,14 @@
 #nxup-level-chip:hover,
 #nxup-level-chip:focus-visible {
   border-color: var(--nxup-accent);
-  background: rgba(139, 0, 255, 0.16);
+  background: rgba(255, 138, 0, 0.16);
   outline: none;
 }
 
 #nxup-level-chip .nxup-chip-level {
   font-weight: 800;
   letter-spacing: 0.06em;
-  color: #d8b4fe;
+  color: #ffcf9a;
 }
 
 #nxup-level-chip .nxup-chip-bar {
@@ -58,7 +58,7 @@
   height: 100%;
   width: 0;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--nxup-accent), #e9d5ff);
+  background: linear-gradient(90deg, var(--nxup-accent), #ffd9b0);
   transition: width 0.35s ease;
 }
 
@@ -97,7 +97,7 @@
 .nxup-dock-btn:focus-visible {
   transform: translateY(-2px);
   border-color: var(--nxup-accent);
-  background: rgba(139, 0, 255, 0.22);
+  background: rgba(255, 138, 0, 0.22);
   outline: none;
 }
 
@@ -214,7 +214,7 @@
   padding: 12px 12px 6px;
   border: 1px solid var(--nxup-line);
   border-radius: 14px;
-  background: linear-gradient(180deg, rgba(139, 0, 255, 0.08), rgba(0, 0, 0, 0.12));
+  background: linear-gradient(180deg, rgba(255, 138, 0, 0.08), rgba(0, 0, 0, 0.12));
 }
 
 #nxup-rail.nxup-visible {
@@ -241,8 +241,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #2a1a40, #12091c);
-  color: #d8b4fe;
+  background: linear-gradient(135deg, #2a1a40, #0a0a0a);
+  color: #ffcf9a;
   font-family: system-ui, sans-serif;
   font-size: 13px;
   font-weight: 800;
@@ -269,7 +269,7 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #d8b4fe;
+  color: #ffcf9a;
 }
 
 .nxup-daily-text strong {
@@ -286,7 +286,7 @@
   padding: 7px 14px;
   border-radius: 999px;
   border: 1px solid var(--nxup-accent);
-  background: rgba(139, 0, 255, 0.22);
+  background: rgba(255, 138, 0, 0.22);
   color: #fff;
   font-family: inherit;
   font-size: 12px;
@@ -320,7 +320,7 @@
 }
 
 .nxup-rail-title i {
-  color: #d8b4fe;
+  color: #ffcf9a;
   font-size: 0.9rem;
 }
 
@@ -393,8 +393,8 @@
   font-family: system-ui, sans-serif;
   font-size: 20px;
   font-weight: 800;
-  color: #d8b4fe;
-  background: linear-gradient(135deg, #2a1a40, #12091c);
+  color: #ffcf9a;
+  background: linear-gradient(135deg, #2a1a40, #0a0a0a);
 }
 
 .nxup-rail-item span {
@@ -440,10 +440,10 @@
   overflow: hidden;
   border: 1px solid var(--nxup-accent);
   border-radius: 16px;
-  background: #12091c;
+  background: #0a0a0a;
   color: var(--nxup-text);
   font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-  box-shadow: 0 0 70px rgba(139, 0, 255, 0.28);
+  box-shadow: 0 0 70px rgba(255, 138, 0, 0.28);
 }
 
 .nxup-head {
@@ -501,7 +501,7 @@
 
 .nxup-tab.nxup-active {
   border-color: var(--nxup-accent);
-  background: rgba(139, 0, 255, 0.24);
+  background: rgba(255, 138, 0, 0.24);
   color: #fff;
 }
 
@@ -521,7 +521,7 @@
   padding: 14px;
   border-radius: 14px;
   border: 1px solid var(--nxup-line);
-  background: linear-gradient(135deg, rgba(139, 0, 255, 0.18), rgba(0, 0, 0, 0.1));
+  background: linear-gradient(135deg, rgba(255, 138, 0, 0.18), rgba(0, 0, 0, 0.1));
   margin-bottom: 14px;
 }
 
@@ -615,7 +615,7 @@
   font-size: 0.82rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #d8b4fe;
+  color: #ffcf9a;
 }
 
 .nxup-bars {
@@ -680,8 +680,8 @@
 .nxup-ach.nxup-unlocked {
   opacity: 1;
   border-color: var(--nxup-accent);
-  background: rgba(139, 0, 255, 0.13);
-  box-shadow: 0 0 18px rgba(139, 0, 255, 0.14);
+  background: rgba(255, 138, 0, 0.13);
+  box-shadow: 0 0 18px rgba(255, 138, 0, 0.14);
 }
 
 .nxup-ach-icon {
@@ -749,7 +749,7 @@
 
 .nxup-theme.nxup-active {
   border-color: var(--nxup-accent);
-  background: rgba(139, 0, 255, 0.16);
+  background: rgba(255, 138, 0, 0.16);
 }
 
 .nxup-swatch {
@@ -815,7 +815,7 @@
 }
 
 .nxup-result.nxup-sel {
-  background: rgba(139, 0, 255, 0.2);
+  background: rgba(255, 138, 0, 0.2);
   border-left-color: var(--nxup-accent);
 }
 
@@ -835,7 +835,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(139, 0, 255, 0.18);
+  background: rgba(255, 138, 0, 0.18);
   flex-shrink: 0;
   font-size: 15px;
 }
@@ -863,8 +863,8 @@
   font-size: 9px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #d8b4fe;
-  border: 1px solid rgba(139, 0, 255, 0.4);
+  color: #ffcf9a;
+  border: 1px solid rgba(255, 138, 0, 0.4);
   border-radius: 999px;
   padding: 2px 6px;
   flex-shrink: 0;

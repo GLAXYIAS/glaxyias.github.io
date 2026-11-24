@@ -1630,6 +1630,15 @@ window.initializeChatEngine = async function() {
                 freshConversations[activePmHandle] = pmConversations[activePmHandle];
             }
 
+            // If the PM thread is on screen, its new messages are already being
+            // read. Clear the badge immediately; markConversationRead below
+            // persists that state to the API.
+            const pmView = document.getElementById('pms-view');
+            const pmThreadVisible = pmView && pmView.style.display !== 'none';
+            if (pmThreadVisible && activePmHandle && freshConversations[activePmHandle]) {
+                freshConversations[activePmHandle].unread = 0;
+            }
+
             pmConversations = freshConversations;
 
             renderPmConversationList();
@@ -1637,6 +1646,9 @@ window.initializeChatEngine = async function() {
 
             if (activePmHandle && pmConversations[activePmHandle]) {
                 renderPmThread(activePmHandle);
+                // The open thread is being read right now. Persist that even when
+                // a new message arrives during the 4s polling refresh.
+                markConversationRead(activePmHandle);
             }
         } catch (err) {
             console.error("Failed to fetch private conversations:", err);
@@ -1714,20 +1726,31 @@ window.initializeChatEngine = async function() {
 
     async function markConversationRead(otherHandle) {
         const convo = pmConversations[otherHandle];
-        if (!convo || convo.unread === 0) return;
+        if (!convo) return;
         try {
-            const unread = (convo.messages || []).filter(m => !m.is_read && m.sender_username !== myUsernameGlobal && m.sender_handle !== myHandleGlobal);
+            const isUnread = (m) => !(m.is_read === true || m.is_read === 1 || m.is_read === '1');
+            const unread = (convo.messages || []).filter(m => {
+                if (!isUnread(m)) return false;
+                const su = String(m.sender_username || '').toLowerCase().trim();
+                const sh = String(m.sender_handle || '').toLowerCase().trim();
+                const me = String(myUsernameGlobal || '').toLowerCase().trim();
+                const mh = String(myHandleGlobal || '').toLowerCase().trim();
+                return !((su && me && su === me) || (sh && mh && sh === mh));
+            });
             await Promise.all(unread.map(async (m) => {
                 const id = m.id || m.ID;
                 if (!id) return;
-                await fetch(`${TURSO_API_BASE}/private-messages`, {
+                const res = await fetch(`${TURSO_API_BASE}/private-messages`, {
                     method: 'PATCH',
                     headers: TURSO_HEADERS,
-                    body: JSON.stringify({ id })
+                    body: JSON.stringify({ id, is_read: 1 })
                 });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                m.is_read = 1;
             }));
             convo.unread = 0;
             updatePmUnreadBadge();
+            renderPmConversationList();
         } catch (e) { console.error("Failed marking conversation read:", e); }
     }
 
