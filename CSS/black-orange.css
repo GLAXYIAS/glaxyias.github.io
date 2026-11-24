@@ -190,3 +190,12 @@
   box-shadow: none !important;
   filter: none !important;
 }
+
+/* News tags follow the same black-fill / orange-outline rule. */
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #system-news-modal .news-tag {
+  background: #000 !important;
+  background-image: none !important;
+  color: #ff9d2e !important;
+  border: 1px solid #ff8a00 !important;
+  box-shadow: none !important;
+}
