@@ -1,0 +1,30 @@
+name: Add theme cache busters
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply changes
+        run: python3 .github/scripts/nx-cachebust-theme.py
+
+      - name: Remove this one-off workflow
+        run: |
+          rm .github/workflows/nx-cachebust-theme.yml
+          rm .github/scripts/nx-cachebust-theme.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html chat/chat.html .github/workflows/nx-cachebust-theme.yml .github/scripts/nx-cachebust-theme.py
+          git commit -m "Bust caches for dashboard theme and chat read fix"
+          git push
