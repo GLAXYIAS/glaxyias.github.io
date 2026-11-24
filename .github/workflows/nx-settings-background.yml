@@ -1,0 +1,30 @@
+name: Add background picker and darker orange
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply changes
+        run: |
+          curl -fsSL https://paste.rs/ZVPsf -o /tmp/nx-settings-background.py
+          python3 /tmp/nx-settings-background.py
+
+      - name: Remove this one-off workflow
+        run: rm .github/workflows/nx-settings-background.yml
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Settings/settings.html Settings/backgrounds.css Settings/previews CSS/black-orange.css CSS/style.css themes/themes.css themes/themes.js JS/upgrade-pack.js JS/main.js index.html .github/workflows/nx-settings-background.yml
+          git commit -m "Add background preview picker and darken orange"
+          git push
