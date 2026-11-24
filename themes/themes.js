@@ -542,9 +542,9 @@ document.addEventListener('DOMContentLoaded', () => {
     var nameEl = document.getElementById('nxbgCurrentName');
     var descEl = document.getElementById('nxbgCurrentDesc');
     var imageEl = document.getElementById('nxbgCurrentPreview');
-    if (nameEl) nameEl.textContent = name;
-    if (descEl) descEl.textContent = desc;
-    if (imageEl && image) imageEl.src = image.src;
+    if (nameEl && nameEl.textContent !== name) nameEl.textContent = name;
+    if (descEl && descEl.textContent !== desc) descEl.textContent = desc;
+    if (imageEl && image && imageEl.getAttribute('src') !== image.getAttribute('src')) imageEl.src = image.src;
     var choices = document.querySelectorAll('.nx-bg-choice');
     for (var i = 0; i < choices.length; i++) {
       var active = choices[i] === choice;
@@ -621,7 +621,9 @@ document.addEventListener('DOMContentLoaded', () => {
   else setTimeout(initWhenReady, 0);
   try {
     var observer = new MutationObserver(function () {
-      if (document.querySelector('.nx-bg-current')) window.nxInitBackgroundPicker(document);
+      if (!document.querySelector('.nx-bg-current')) return;
+      observer.disconnect();
+      window.nxInitBackgroundPicker(document);
     });
     observer.observe(document.body, { childList: true, subtree: true });
   } catch (e) {}

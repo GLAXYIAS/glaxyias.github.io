@@ -213,6 +213,15 @@
   color: #f59e0b !important;
 }
 
+/* Active navigation is an outlined black pill: never orange fill on orange text. */
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nav-item.active {
+  background: #000 !important;
+  background-image: none !important;
+  color: #f0922a !important;
+  border: 1px solid #e07a00 !important;
+  box-shadow: none !important;
+}
+
 /* The academic cover page is a white document: its text must stay black. */
 :is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #educational-cloak,
 :is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #educational-cloak * {
