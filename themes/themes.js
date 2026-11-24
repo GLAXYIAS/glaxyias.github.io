@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sec.innerHTML =
           '<h2 style="margin-top:0;color:#fff;font-family:sans-serif;">Calculator</h2>' +
           '<iframe src="calculator/index.html" title="Calculator" ' +
-          'style="width:100%;height:calc(100vh - 160px);min-height:520px;border:1px solid rgba(139,0,255,0.35);' +
+          'style="width:100%;height:calc(100vh - 160px);min-height:520px;border:1px solid rgba(255,138,0,0.35);' +
           'border-radius:8px;background:#000;"></iframe>';
       }
     };
@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
   align-items: center;
   justify-content: center;
   padding: 16px;
-  background: rgba(5, 2, 12, 0.82);
+  background: rgba(0, 0, 0, 0.84);
   backdrop-filter: blur(8px);
   box-sizing: border-box;
 }
@@ -270,10 +270,10 @@ document.addEventListener('DOMContentLoaded', () => {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background: #12091c;
-  border: 1px solid #8b00ff;
+  background: #0a0a0a;
+  border: 1px solid #ff8a00;
   border-radius: 14px;
-  box-shadow: 0 0 40px rgba(139, 0, 255, 0.35);
+  box-shadow: 0 0 40px rgba(255, 138, 0, 0.3);
   color: #fff;
   font-family: system-ui, -apple-system, sans-serif;
 }
@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
-  border-bottom: 1px solid rgba(139, 0, 255, 0.35);
+  border-bottom: 1px solid rgba(255, 138, 0, 0.35);
   flex-shrink: 0;
 }
 #system-news-modal .snm-header h3 { margin: 0; font-size: 1.1rem; color: #fff; }
@@ -305,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 #system-news-modal .news-card {
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(139, 0, 255, 0.25);
+  border: 1px solid rgba(255, 138, 0, 0.25);
   border-radius: 10px;
   padding: 12px 14px;
 }
@@ -315,10 +315,10 @@ document.addEventListener('DOMContentLoaded', () => {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #b056ff;
+  color: #ffab40;
   margin-bottom: 6px;
 }
-#system-news-modal .news-card p { margin: 0 0 8px; color: #d4cce0; font-size: 0.9rem; line-height: 1.45; }
+#system-news-modal .news-card p { margin: 0 0 8px; color: #e6c4a0; font-size: 0.9rem; line-height: 1.45; }
 #system-news-modal .news-date { font-size: 0.75rem; color: #888; }
 
 #system-news-btn {
@@ -328,9 +328,9 @@ document.addEventListener('DOMContentLoaded', () => {
   flex-shrink: 0;
   padding: 9px 14px;
   border-radius: 8px;
-  border: 1px solid rgba(139, 0, 255, 0.45);
-  background: rgba(139, 0, 255, 0.12);
-  color: #fff;
+  border: 1px solid rgba(255, 138, 0, 0.45);
+  background: rgba(255, 138, 0, 0.12);
+  color: #ffb25e;
   font-family: system-ui, -apple-system, sans-serif;
   font-size: 13px;
   font-weight: 600;
@@ -338,11 +338,11 @@ document.addEventListener('DOMContentLoaded', () => {
   transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 #system-news-btn:hover {
-  background: rgba(139, 0, 255, 0.26);
-  border-color: #8b00ff;
-  box-shadow: 0 0 14px rgba(139, 0, 255, 0.35);
+  background: rgba(255, 138, 0, 0.26);
+  border-color: #ff8a00;
+  box-shadow: 0 0 14px rgba(255, 138, 0, 0.35);
 }
-#system-news-btn:focus-visible { outline: 2px solid #b056ff; outline-offset: 2px; }
+#system-news-btn:focus-visible { outline: 2px solid #ffab40; outline-offset: 2px; }
 #system-news-btn .news-dot {
   display: inline-block;
   width: 8px;
