@@ -535,7 +535,7 @@
   /* Themes                                                             */
   /* ------------------------------------------------------------------ */
   var THEMES = {
-    purple: { name: 'Null Orange', accent: '#ff8a00', hover: '#ffab40', bg: '#000000', sidebar: '#000000', border: '#ff8a00', text: '#ff9d2e', muted: '#b86a12' },
+    purple: { name: 'Null Orange', accent: '#e07a00', hover: '#f59e0b', bg: '#000000', sidebar: '#000000', border: '#e07a00', text: '#f0922a', muted: '#b86a12' },
     cyan:   { name: 'Cyber Cyan',  accent: '#00c2ff', hover: '#38d6ff', bg: '#04121c', sidebar: '#062033', border: '#114a63', text: '#e0f6ff', muted: '#93c9dd' },
     crimson:{ name: 'Crimson',     accent: '#ff2d55', hover: '#ff5c7c', bg: '#1a0410', sidebar: '#26061a', border: '#6b1730', text: '#ffe6ec', muted: '#d19aa9' },
     emerald:{ name: 'Emerald',     accent: '#00d97e', hover: '#33e69a', bg: '#04170f', sidebar: '#06241a', border: '#12603f', text: '#e2fff2', muted: '#93ccb0' },

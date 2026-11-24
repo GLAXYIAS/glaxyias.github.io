@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="../themes/themes.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="../Games/GameSaveData/auto-save.js"></script>
+  <link rel="stylesheet" href="/Settings/backgrounds.css?v=20261124darker">
 </head>
 <body style="background: #000000; color: #ffb25e; padding: 40px 20px; font-family: sans-serif;">
 
@@ -26,9 +27,18 @@
     <hr class="settings-divider" style="border: 0; height: 1px; background: linear-gradient(to right, #ff8a00, transparent); margin: 20px 0 30px 0;">
 
     <div class="setting-section" style="margin-bottom: 35px;">
-      <h3 style="color: #ffab40; margin-bottom: 12px; font-size: 1.2rem;"><i class="fas fa-palette" style="margin-right: 8px;"></i>Appearance</h3>
-      <p class="setting-label" style="color: #ccc; font-size: 0.9rem; margin-bottom: 12px;">Select Theme:</p>
-      <div class="theme-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px;">
+      <h3 style="color: #ffab40; margin-bottom: 12px; font-size: 1.2rem;"><i class="fas fa-palette" style="margin-right: 8px;"></i>Background</h3>
+      <p class="setting-label" style="color: #ccc; font-size: 0.9rem; margin-bottom: 12px;">Dashboard background:</p>
+      <div class="nx-bg-current">
+        <img id="nxbgCurrentPreview" src="/Settings/previews/purple.svg" alt="Current dashboard background preview">
+        <div class="nx-bg-current-copy">
+          <span>Current background</span>
+          <strong id="nxbgCurrentName">Null Orange</strong>
+          <small id="nxbgCurrentDesc">Pitch black with darker orange outlines</small>
+        </div>
+        <button type="button" class="nx-outline-btn" onclick="nxOpenBackgroundPicker()">Browse backgrounds</button>
+      </div>
+      <div class="theme-grid" hidden style="display:none !important;">
         <div class="theme-card" data-theme="default" style="cursor: pointer;">
           <div class="preview" style="background: #080808; border-color: #ff8a00;"></div>
           <span>Default Orange</span>

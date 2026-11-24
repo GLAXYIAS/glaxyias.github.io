@@ -1,16 +1,16 @@
 :root {
   /* Dynamic Variable Fallbacks / Black & Orange Configuration */
-  --accent: #ff8a00;
-  --accent-hover: #ffab40;
+  --accent: #e07a00;
+  --accent-hover: #f59e0b;
   --bg-gradient: #000000;
   --container-bg: #000000;
-  --text: #ff9d2e;
+  --text: #f0922a;
   
   /* Layout Architecture Color Tokens Linked to Theme Customizations */
   --bg-dashboard: #000000;   /* Black */
   --bg-sidebar: #000000;     /* Pitch Black */
-  --border-color: #ff8a00;   /* Orange Outline */
-  --text-main: #ff9d2e;      /* Orange Text */
+  --border-color: #e07a00;   /* Orange Outline */
+  --text-main: #f0922a;      /* Orange Text */
   --text-muted: #b86a12;
 }
 
@@ -1272,7 +1272,7 @@ nav {
   position: fixed;
   bottom: 15px;
   left: 15px;
-  background: #ff8a00;
+  background: #e07a00;
   color: #fff;
   border: none;
   padding: 8px 14px;
@@ -1291,7 +1291,7 @@ nav {
   width: min(90vw, 500px);
   height: min(40vh, 300px);
   background: #0d0d13;
-  border: 1px solid #ff8a00;
+  border: 1px solid #e07a00;
   border-radius: 8px;
   z-index: 99999;
   display: flex;
@@ -1308,7 +1308,7 @@ nav {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid rgba(255, 138, 0, 0.3);
-  color: #ffab40;
+  color: #f59e0b;
   font-weight: bold;
 }
 
@@ -1337,7 +1337,7 @@ nav {
 .console-entry.log { color: #e0e0e0; }
 .console-entry.warn { color: #f59e0b; }
 .console-entry.error { color: #ef4444; }
-.console-entry.input { color: #ffab40; font-weight: bold; }
+.console-entry.input { color: #f59e0b; font-weight: bold; }
 
 #console-input-container {
   display: flex;
@@ -1417,7 +1417,7 @@ nav {
 
 .profile-modal-close:hover {
   background: rgba(255, 138, 0, 0.32);
-  border-color: #ff8a00;
+  border-color: #e07a00;
 }
 
 .profile-modal-close:focus-visible {

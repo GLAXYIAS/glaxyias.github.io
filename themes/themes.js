@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
   display: flex;
   flex-direction: column;
   background: #0a0a0a;
-  border: 1px solid #ff8a00;
+  border: 1px solid #e07a00;
   border-radius: 14px;
   box-shadow: 0 0 40px rgba(255, 138, 0, 0.3);
   color: #fff;
@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #ffab40;
+  color: #f59e0b;
   margin-bottom: 6px;
 }
 #system-news-modal .news-card p { margin: 0 0 8px; color: #e6c4a0; font-size: 0.9rem; line-height: 1.45; }
@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
   border-radius: 8px;
   border: 1px solid rgba(255, 138, 0, 0.45);
   background: rgba(255, 138, 0, 0.12);
-  color: #ffb25e;
+  color: #f0922a;
   font-family: system-ui, -apple-system, sans-serif;
   font-size: 13px;
   font-weight: 600;
@@ -339,10 +339,10 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 #system-news-btn:hover {
   background: rgba(255, 138, 0, 0.26);
-  border-color: #ff8a00;
+  border-color: #e07a00;
   box-shadow: 0 0 14px rgba(255, 138, 0, 0.35);
 }
-#system-news-btn:focus-visible { outline: 2px solid #ffab40; outline-offset: 2px; }
+#system-news-btn:focus-visible { outline: 2px solid #f59e0b; outline-offset: 2px; }
 #system-news-btn .news-dot {
   display: inline-block;
   width: 8px;
@@ -472,4 +472,157 @@ document.addEventListener('DOMContentLoaded', () => {
   })();
   s.setAttribute('data-nx-emoji-icons', '1');
   (document.head || document.documentElement).appendChild(s);
+})();
+
+/* Background picker used by the Settings page/modal. */
+(function () {
+  var PALETTES = {
+    purple: { bg: '#000000', sidebar: '#000000', accent: '#e07a00', hover: '#f59e0b', border: '#e07a00', text: '#f0922a', muted: '#b86a12' },
+    cyan:   { bg: '#04121c', sidebar: '#062033', accent: '#00c2ff', hover: '#38d6ff', border: '#114a63', text: '#e0f6ff', muted: '#93c9dd' },
+    crimson:{ bg: '#1a0410', sidebar: '#26061a', accent: '#ff2d55', hover: '#ff5c7c', border: '#6b1730', text: '#ffe6ec', muted: '#d19aa9' },
+    emerald:{ bg: '#04170f', sidebar: '#06241a', accent: '#00d97e', hover: '#33e69a', border: '#12603f', text: '#e2fff2', muted: '#93ccb0' },
+    gold:   { bg: '#161103', sidebar: '#221a05', accent: '#f5b301', hover: '#ffc633', border: '#6b530f', text: '#fff6dc', muted: '#d3bd85' },
+    mono:   { bg: '#0b0b0f', sidebar: '#14141a', accent: '#c9c9d4', hover: '#e6e6ef', border: '#33333d', text: '#f2f2f6', muted: '#a0a0ad' }
+  };
+
+  var CHOICES = [
+    { key: 'purple', site: 'default', name: 'Null Orange', desc: 'Pitch black with darker orange outlines' },
+    { key: 'cyan', site: 'cyan', name: 'Cyber Cyan', desc: 'Deep blue-black with cyan accents' },
+    { key: 'crimson', site: 'crimson', name: 'Crimson', desc: 'Dark red surfaces with crimson accents' },
+    { key: 'emerald', site: 'emerald', name: 'Emerald', desc: 'Forest black with emerald accents' },
+    { key: 'gold', site: 'gold', name: 'Gold', desc: 'Warm black with gold accents' },
+    { key: 'mono', site: 'mono', name: 'Mono Chrome', desc: 'Black and grey with no colour tint' }
+  ];
+
+  function storedTheme() {
+    try {
+      var raw = localStorage.getItem('nxup_theme');
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        if (typeof parsed === 'string' && parsed) return parsed;
+      }
+    } catch (e) {}
+    var selected = '';
+    try { selected = localStorage.getItem('selectedTheme') || ''; } catch (e) {}
+    if (selected === 'default' || !selected) return 'purple';
+    return PALETTES[selected] ? selected : 'purple';
+  }
+
+  function ensureBackgroundPicker() {
+    if (document.getElementById('nx-bg-modal')) return;
+    var cards = CHOICES.map(function (item) {
+      return '<button type="button" class="nx-bg-choice" data-bg-key="' + item.key + '" data-bg-site="' + item.site + '" data-bg-name="' + item.name + '" data-bg-desc="' + item.desc + '" aria-pressed="false" onclick="nxChooseBackground(this)">' +
+        '<img src="/Settings/previews/' + item.key + '.svg" alt="' + item.name + ' dashboard preview" loading="lazy">' +
+        '<span class="nx-bg-choice-copy"><strong>' + item.name + '</strong><small>' + item.desc + '</small></span>' +
+        '<span class="nx-bg-tick" aria-hidden="true">&check;</span>' +
+      '</button>';
+    }).join('');
+    var modal = document.createElement('div');
+    modal.id = 'nx-bg-modal';
+    modal.className = 'nx-bg-modal';
+    modal.setAttribute('aria-hidden', 'true');
+    modal.innerHTML =
+      '<div class="nx-bg-panel" role="dialog" aria-modal="true" aria-labelledby="nx-bg-title">' +
+        '<header class="nx-bg-head"><div><h2 id="nx-bg-title">Choose a background</h2><p>Real previews of the dashboard. Pick one and it applies immediately.</p></div>' +
+        '<button type="button" class="nx-bg-close" aria-label="Close background picker" onclick="nxCloseBackgroundPicker()">&times;</button></header>' +
+        '<div class="nx-bg-grid">' + cards + '</div>' +
+        '<footer class="nx-bg-foot"><span>Your choice is saved for this browser.</span><button type="button" onclick="nxCloseBackgroundPicker()">Done</button></footer>' +
+      '</div>';
+    modal.addEventListener('click', function (event) {
+      if (event.target === modal) window.nxCloseBackgroundPicker();
+    });
+    document.body.appendChild(modal);
+  }
+
+  function syncCurrent(choice) {
+    if (!choice) return;
+    var name = choice.getAttribute('data-bg-name') || 'Background';
+    var desc = choice.getAttribute('data-bg-desc') || '';
+    var image = choice.querySelector('img');
+    var nameEl = document.getElementById('nxbgCurrentName');
+    var descEl = document.getElementById('nxbgCurrentDesc');
+    var imageEl = document.getElementById('nxbgCurrentPreview');
+    if (nameEl) nameEl.textContent = name;
+    if (descEl) descEl.textContent = desc;
+    if (imageEl && image) imageEl.src = image.src;
+    var choices = document.querySelectorAll('.nx-bg-choice');
+    for (var i = 0; i < choices.length; i++) {
+      var active = choices[i] === choice;
+      choices[i].classList.toggle('nx-active', active);
+      choices[i].setAttribute('aria-pressed', active ? 'true' : 'false');
+    }
+  }
+
+  window.nxInitBackgroundPicker = function (scope) {
+    var root = scope || document;
+    if (!root.querySelector('.nx-bg-current')) return;
+    ensureBackgroundPicker();
+    var choices = document.querySelectorAll('.nx-bg-choice');
+    if (!choices.length) return;
+    var key = storedTheme();
+    var selected = document.querySelector('.nx-bg-choice[data-bg-key="' + key + '"]') || choices[0];
+    syncCurrent(selected);
+  };
+
+  window.nxOpenBackgroundPicker = function () {
+    ensureBackgroundPicker();
+    var modal = document.getElementById('nx-bg-modal');
+    if (!modal) return;
+    window.nxInitBackgroundPicker(document);
+    modal.classList.add('nx-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.documentElement.classList.add('nx-bg-open');
+    var close = modal.querySelector('.nx-bg-close');
+    if (close) close.focus();
+  };
+
+  window.nxCloseBackgroundPicker = function () {
+    var modal = document.getElementById('nx-bg-modal');
+    if (!modal) return;
+    modal.classList.remove('nx-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.documentElement.classList.remove('nx-bg-open');
+  };
+
+  window.nxChooseBackground = function (choice) {
+    if (!choice) return;
+    var key = choice.getAttribute('data-bg-key') || 'purple';
+    var site = choice.getAttribute('data-bg-site') || 'default';
+    var palette = PALETTES[key] || PALETTES.purple;
+    try {
+      localStorage.setItem('nxup_theme', JSON.stringify(key));
+      localStorage.setItem('selectedTheme', site);
+      localStorage.setItem('nullx-theme', site);
+      localStorage.setItem('nxos_theme', site);
+    } catch (e) {}
+    if (typeof window.applyTheme === 'function') window.applyTheme(site);
+    var root = document.documentElement;
+    root.setAttribute('data-nxup-theme', key);
+    root.style.setProperty('--bg-dashboard', palette.bg);
+    root.style.setProperty('--bg-sidebar', palette.sidebar);
+    root.style.setProperty('--accent', palette.accent);
+    root.style.setProperty('--accent-color', palette.accent);
+    root.style.setProperty('--accent-hover', palette.hover);
+    root.style.setProperty('--border-color', palette.border);
+    root.style.setProperty('--text-main', palette.text);
+    root.style.setProperty('--text-muted', palette.muted);
+    root.style.setProperty('--bg-gradient', 'linear-gradient(135deg,' + palette.sidebar + ',' + palette.bg + ')');
+    syncCurrent(choice);
+  };
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') window.nxCloseBackgroundPicker();
+  });
+
+  function initWhenReady() {
+    if (document.querySelector('.nx-bg-current')) window.nxInitBackgroundPicker(document);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initWhenReady);
+  else setTimeout(initWhenReady, 0);
+  try {
+    var observer = new MutationObserver(function () {
+      if (document.querySelector('.nx-bg-current')) window.nxInitBackgroundPicker(document);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  } catch (e) {}
 })();

@@ -8,18 +8,18 @@
   --bg-sidebar: #000 !important;
   --container-bg: #000 !important;
   --bg-gradient: #000 !important;
-  --border-color: #ff8a00 !important;
-  --accent: #ff8a00 !important;
-  --accent-color: #ff8a00 !important;
-  --accent-hover: #ffab40 !important;
-  --text-main: #ff9d2e !important;
+  --border-color: #e07a00 !important;
+  --accent: #e07a00 !important;
+  --accent-color: #e07a00 !important;
+  --accent-hover: #f59e0b !important;
+  --text-main: #f0922a !important;
   --text-muted: #b86a12 !important;
   --nxup-bg: #000 !important;
   --nxup-panel: #000 !important;
-  --nxup-line: #ff8a00 !important;
-  --nxup-accent: #ff8a00 !important;
+  --nxup-line: #e07a00 !important;
+  --nxup-accent: #e07a00 !important;
   --nxup-muted: #b86a12 !important;
-  scrollbar-color: #ff8a00 #000;
+  scrollbar-color: #e07a00 #000;
 }
 
 /* Every UI surface is pitch black. Game cover art is content and stays. */
@@ -76,7 +76,7 @@
 :is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .greeting p,
 :is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .game-card h3,
 :is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .game-card p {
-  color: #ff9d2e !important;
+  color: #f0922a !important;
 }
 
 :is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) ::placeholder {
@@ -108,7 +108,7 @@
 :is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-ach,
 :is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-stat,
 :is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-keys {
-  border-color: #ff8a00 !important;
+  border-color: #e07a00 !important;
 }
 
 :is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .hero,
@@ -142,7 +142,7 @@
 :is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-ach.nxup-unlocked {
   background: #000 !important;
   background-image: none !important;
-  color: #ff9d2e !important;
+  color: #f0922a !important;
   box-shadow: none !important;
   filter: none !important;
 }
@@ -176,7 +176,7 @@
   background: #000;
 }
 :is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) ::-webkit-scrollbar-thumb {
-  background: #ff8a00;
+  background: #e07a00;
   border: 2px solid #000;
   border-radius: 999px;
 }
@@ -185,8 +185,8 @@
 :is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #console-toggle-btn {
   background: #000 !important;
   background-image: none !important;
-  color: #ff9d2e !important;
-  border: 1px solid #ff8a00 !important;
+  color: #f0922a !important;
+  border: 1px solid #e07a00 !important;
   box-shadow: none !important;
   filter: none !important;
 }
@@ -195,7 +195,39 @@
 :is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #system-news-modal .news-tag {
   background: #000 !important;
   background-image: none !important;
-  color: #ff9d2e !important;
-  border: 1px solid #ff8a00 !important;
+  color: #f0922a !important;
+  border: 1px solid #e07a00 !important;
   box-shadow: none !important;
+}
+
+/* Buttons stay black with orange text - never orange fill on orange text. */
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) button {
+  background-color: #000 !important;
+  background-image: none !important;
+  color: #f0922a !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) button:hover {
+  background-color: #0b0803 !important;
+  color: #f59e0b !important;
+}
+
+/* The academic cover page is a white document: its text must stay black. */
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #educational-cloak,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #educational-cloak * {
+  color: #000000 !important;
+  text-shadow: none !important;
+}
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #educational-cloak .educational-content-card,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #educational-cloak .educational-header,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #educational-cloak .timer-subtext-sticky {
+  background: #ffffff !important;
+  border-color: #000000 !important;
+}
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #educational-cloak button,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #educational-cloak .cloak-btn {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #000000 !important;
 }

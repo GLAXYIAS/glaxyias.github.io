@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-label="Cyber Cyan dashboard preview">
+  <rect width="960" height="600" fill="#04121c"/>
+  <rect x="0" y="0" width="72" height="600" fill="#062033"/>
+  <rect x="0" y="0" width="72" height="600" fill="none" stroke="#00c2ff" stroke-width="1"/>
+  <rect x="18" y="14" width="36" height="36" rx="7" fill="#04121c" stroke="#00c2ff"/>
+  <text x="36" y="38" text-anchor="middle" fill="#e0f6ff" font-family="system-ui,sans-serif" font-size="17" font-weight="900">Nx</text>
+  <rect x="21" y="118" width="28" height="28" rx="7" fill="#00c2ff" stroke="#00c2ff" stroke-width="1.4" opacity="1"/><rect x="21" y="170" width="28" height="28" rx="7" fill="#04121c" stroke="#00c2ff" stroke-width="1.4" opacity="0.75"/><rect x="21" y="222" width="28" height="28" rx="7" fill="#04121c" stroke="#00c2ff" stroke-width="1.4" opacity="0.75"/><rect x="21" y="274" width="28" height="28" rx="7" fill="#04121c" stroke="#00c2ff" stroke-width="1.4" opacity="0.75"/><rect x="21" y="326" width="28" height="28" rx="7" fill="#04121c" stroke="#00c2ff" stroke-width="1.4" opacity="0.75"/>
+  <text x="90" y="50" fill="#e0f6ff" font-family="system-ui,sans-serif" font-size="22" font-weight="800">Hello, Guest</text>
+  <text x="90" y="70" fill="#93c9dd" font-family="system-ui,sans-serif" font-size="10">Find something fun to play.</text>
+  <rect x="330" y="24" width="170" height="38" rx="10" fill="#04121c" stroke="#00c2ff"/>
+  <circle cx="350" cy="43" r="4" fill="#ff4444"/><text x="364" y="47" fill="#e0f6ff" font-family="system-ui,sans-serif" font-size="10">News</text>
+  <rect x="516" y="24" width="240" height="38" rx="10" fill="#04121c" stroke="#00c2ff"/>
+  <text x="532" y="47" fill="#93c9dd" font-family="system-ui,sans-serif" font-size="10">Search games...</text>
+  <rect x="772" y="16" width="168" height="54" rx="10" fill="#04121c" stroke="#00c2ff"/>
+  <text x="788" y="36" fill="#e0f6ff" font-family="system-ui,sans-serif" font-size="9" font-weight="700">New here? Press Ctrl + K</text>
+  <text x="788" y="51" fill="#93c9dd" font-family="system-ui,sans-serif" font-size="8">Search any game instantly.</text>
+  <rect x="90" y="98" width="850" height="150" rx="14" fill="#04121c" stroke="#00c2ff"/>
+  <text x="112" y="138" fill="#00c2ff" font-family="system-ui,sans-serif" font-size="10" font-weight="700" letter-spacing="1">FEATURED</text>
+  <text x="112" y="181" fill="#e0f6ff" font-family="system-ui,sans-serif" font-size="29" font-weight="800">Stone Grass Mowing Simulator</text>
+  <text x="112" y="207" fill="#93c9dd" font-family="system-ui,sans-serif" font-size="11">Play this featured game online in your browser.</text>
+  <rect x="112" y="221" width="128" height="25" rx="6" fill="#04121c" stroke="#00c2ff"/>
+  <text x="134" y="237" fill="#e0f6ff" font-family="system-ui,sans-serif" font-size="9" font-weight="700">Play Now</text>
+  <rect x="90" y="330" width="245" height="144" rx="8" fill="#04121c" stroke="#00c2ff" stroke-width="1.5"/><rect x="102" y="344" width="221" height="58" rx="5" fill="#062033" stroke="#00c2ff" stroke-width="1.5"/><text x="114" y="369" fill="#e0f6ff" font-family="system-ui,sans-serif" font-size="12" font-weight="700">Stone Grass Mowing Simulat</text><text x="114" y="385" fill="#93c9dd" font-family="system-ui,sans-serif" font-size="8">FEATURED</text><text x="114" y="425" fill="#00c2ff" font-family="system-ui,sans-serif" font-size="10">▶ Play</text><rect x="102" y="442" width="221" height="20" rx="4" fill="#062033" stroke="#00c2ff" stroke-width="1"/><rect x="360" y="330" width="245" height="144" rx="8" fill="#04121c" stroke="#00c2ff" stroke-width="1.5"/><rect x="372" y="344" width="221" height="58" rx="5" fill="#062033" stroke="#00c2ff" stroke-width="1.5"/><text x="384" y="369" fill="#e0f6ff" font-family="system-ui,sans-serif" font-size="12" font-weight="700">Castlevania 3</text><text x="384" y="385" fill="#93c9dd" font-family="system-ui,sans-serif" font-size="8">TODAY&#x27;S PICK</text><text x="384" y="425" fill="#00c2ff" font-family="system-ui,sans-serif" font-size="10">▶ Play</text><rect x="372" y="442" width="221" height="20" rx="4" fill="#062033" stroke="#00c2ff" stroke-width="1"/>
+  <rect x="630" y="286" width="60" height="35" rx="8" fill="#04121c" stroke="#00c2ff"/>
+  <text x="660" y="307" text-anchor="middle" fill="#e0f6ff" font-family="system-ui,sans-serif" font-size="9">⌘K</text>
+  <rect x="630" y="330" width="60" height="35" rx="8" fill="#04121c" stroke="#00c2ff"/>
+  <text x="660" y="352" text-anchor="middle" fill="#e0f6ff" font-family="system-ui,sans-serif" font-size="13">♛</text>
+  <rect x="630" y="374" width="60" height="35" rx="8" fill="#04121c" stroke="#00c2ff"/>
+  <text x="660" y="396" text-anchor="middle" fill="#e0f6ff" font-family="system-ui,sans-serif" font-size="13">☺</text>
+  <rect x="90" y="498" width="850" height="54" rx="14" fill="#04121c" stroke="#00c2ff"/>
+  <text x="515" y="531" text-anchor="middle" fill="#e0f6ff" font-family="system-ui,sans-serif" font-size="13" font-weight="700">Random Game</text>
+  <text x="90" y="580" fill="#93c9dd" font-family="system-ui,sans-serif" font-size="8">Cyber Cyan · background preview</text>
+</svg>

@@ -28,10 +28,10 @@
 :root, [data-theme="default"], body.theme-default {
   --bg-dashboard: #000000;
   --bg-sidebar: #000000;
-  --accent-color: #ff8a00;
-  --accent-hover: #ffab40;
-  --border-color: #ff8a00;
-  --text-main: #ff9d2e;
+  --accent-color: #e07a00;
+  --accent-hover: #f59e0b;
+  --border-color: #e07a00;
+  --text-main: #f0922a;
   --text-muted: #b86a12;
 }
 
