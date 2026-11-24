@@ -1,0 +1,182 @@
+/* ==========================================================
+   DEFAULT THEME: PITCH-BLACK SURFACES, ORANGE TEXT + OUTLINES
+   Applies only to the default theme, so the other theme
+   options keep their own palettes.
+   ========================================================== */
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) {
+  --bg-dashboard: #000 !important;
+  --bg-sidebar: #000 !important;
+  --container-bg: #000 !important;
+  --bg-gradient: #000 !important;
+  --border-color: #ff8a00 !important;
+  --accent: #ff8a00 !important;
+  --accent-color: #ff8a00 !important;
+  --accent-hover: #ffab40 !important;
+  --text-main: #ff9d2e !important;
+  --text-muted: #b86a12 !important;
+  --nxup-bg: #000 !important;
+  --nxup-panel: #000 !important;
+  --nxup-line: #ff8a00 !important;
+  --nxup-accent: #ff8a00 !important;
+  --nxup-muted: #b86a12 !important;
+  scrollbar-color: #ff8a00 #000;
+}
+
+/* Every UI surface is pitch black. Game cover art is content and stays. */
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) body,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .dashboard,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .main-content,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .left-nav,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .top-bar,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .hero,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .container,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .profile-card,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .game-card,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .game-desc-overlay,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .search-bar input,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .secondary-btn,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #nxup-dock,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #nxup-level-chip,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-rail-item,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-daily,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-toast,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-card,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-palette,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-ach,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-stat,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-keys,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #system-news-modal .snm-box,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #system-news-modal .news-card {
+  background-color: #000 !important;
+  background-image: none !important;
+}
+
+/* Orange type everywhere in the default theme. */
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) body,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) h1,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) h2,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) h3,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) h4,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) h5,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) h6,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) p,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) span,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) a,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) label,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) li,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) small,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) strong,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) em,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) b,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) button,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) input,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) select,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) textarea,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .section-title,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .greeting p,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .game-card h3,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .game-card p {
+  color: #ff9d2e !important;
+}
+
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) ::placeholder {
+  color: #b86a12 !important;
+}
+
+/* Boxes keep their shape, but the outline is orange and the fill stays black. */
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .top-bar,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .left-nav,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .hero,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .container,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .profile-card,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .game-card,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .search-bar input,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .secondary-btn,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .play-btn,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .badge,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .quick-action-btn,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .console-toggle-btn,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #system-news-btn,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #nxup-level-chip,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-rail-item,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-daily,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-daily-play,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-dock-btn,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-theme,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-card,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-palette,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-ach,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-stat,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-keys {
+  border-color: #ff8a00 !important;
+}
+
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .hero,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .game-card,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .container,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .search-bar input,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .secondary-btn,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .play-btn,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .badge,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .quick-action-btn,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .console-toggle-btn,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-daily-play,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-theme,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-card,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-palette {
+  border-style: solid !important;
+  border-width: 1px !important;
+}
+
+/* Filled buttons become black buttons with orange text and an orange outline. */
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .play-btn,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .badge,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .quick-action-btn,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .console-toggle-btn,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #system-news-btn,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-daily-play,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-dock-btn,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-theme,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-tab,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-result.nxup-sel,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-ach.nxup-unlocked {
+  background: #000 !important;
+  background-image: none !important;
+  color: #ff9d2e !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+/* No coloured glows or gradients behind the boxes. */
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .hero::after {
+  display: none !important;
+}
+
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .hero,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .game-card,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .container,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #nxup-dock,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #nxup-level-chip,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-toast,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-card,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-palette,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-rail-item,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) .nxup-daily,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #system-news-modal .snm-box,
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) #system-news-modal .news-card {
+  box-shadow: none !important;
+}
+
+/* Plain orange scrollbars instead of the browser's default track. */
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) ::-webkit-scrollbar-track {
+  background: #000;
+}
+:is(html[data-nxup-theme="purple"], html:not([data-nxup-theme])[data-theme="default"]) ::-webkit-scrollbar-thumb {
+  background: #ff8a00;
+  border: 2px solid #000;
+  border-radius: 999px;
+}
