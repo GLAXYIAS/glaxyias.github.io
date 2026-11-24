@@ -27,12 +27,12 @@
 /* 1. DEFAULT BLACK & ORANGE THEME */
 :root, [data-theme="default"], body.theme-default {
   --bg-dashboard: #000000;
-  --bg-sidebar: #080808;
+  --bg-sidebar: #000000;
   --accent-color: #ff8a00;
   --accent-hover: #ffab40;
-  --border-color: rgba(255, 138, 0, 0.22); 
-  --text-main: #ffb25e;
-  --text-muted: #c98a55;
+  --border-color: #ff8a00;
+  --text-main: #ff9d2e;
+  --text-muted: #b86a12;
 }
 
 /* 2. MIDNIGHT (Pitch Black, Grey Borders, White Text) */

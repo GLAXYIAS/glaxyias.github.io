@@ -2,16 +2,16 @@
   /* Dynamic Variable Fallbacks / Black & Orange Configuration */
   --accent: #ff8a00;
   --accent-hover: #ffab40;
-  --bg-gradient: linear-gradient(135deg, #000000, #0b0703);
-  --container-bg: rgba(10, 10, 10, 0.98);
-  --text: #ffd7a8;
+  --bg-gradient: #000000;
+  --container-bg: #000000;
+  --text: #ff9d2e;
   
   /* Layout Architecture Color Tokens Linked to Theme Customizations */
   --bg-dashboard: #000000;   /* Black */
-  --bg-sidebar: #080808;     /* Near Black */
-  --border-color: #3a2208;   /* Dark Orange Border */
-  --text-main: #ffb25e;      /* Orange Text */
-  --text-muted: #c98a55;
+  --bg-sidebar: #000000;     /* Pitch Black */
+  --border-color: #ff8a00;   /* Orange Outline */
+  --text-main: #ff9d2e;      /* Orange Text */
+  --text-muted: #b86a12;
 }
 
 /* Base Reset */
