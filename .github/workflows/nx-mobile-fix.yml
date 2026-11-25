@@ -1,0 +1,54 @@
+name: nx mobile shell fix
+
+on:
+  push:
+    paths:
+      - ".github/workflows/nx-mobile-fix.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Insert single-column shell rule for phones
+        run: |
+          python3 - <<'PY'
+          import sys
+
+          path = "brand new start up screen/index.html"
+          src = open(path, encoding="utf-8").read()
+
+          if ".shell{grid-template-columns:minmax(0,1fr)}" in src:
+              print("already patched")
+              sys.exit(0)
+
+          anchor = "  body{padding-bottom:62px}\n"
+          insert = "\n  .shell{grid-template-columns:minmax(0,1fr)}\n  .main,.aside{grid-column:1}\n"
+
+          if src.count(anchor) != 1:
+              raise SystemExit("anchor count: %d" % src.count(anchor))
+
+          out = src.replace(anchor, anchor + insert, 1)
+
+          style = out.split("<style>", 1)[1].split("</style>", 1)[0]
+          if style.count("{") != style.count("}"):
+              raise SystemExit("unbalanced css braces")
+
+          open(path, "w", encoding="utf-8").write(out)
+          print("patched %s (%d bytes)" % (path, len(out)))
+          PY
+
+      - name: Commit and retire this workflow
+        run: |
+          rm -f .github/workflows/nx-mobile-fix.yml
+          git config user.name "glaxyias"
+          git config user.email "Sparefornow2026@outlook.com"
+          git add "brand new start up screen/index.html"
+          git add -A .github/workflows/nx-mobile-fix.yml
+          git commit -m "startup screen: single-column shell on phones"
+          git push
