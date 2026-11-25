@@ -1,0 +1,56 @@
+name: nx status logo
+
+on:
+  push:
+    paths:
+      - ".github/workflows/nx-status-logo.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Hide the tiny logo in the desktop status bar
+        run: |
+          python3 - <<'PY'
+          import sys
+
+          path = "brand-new-start-up-screen/index.html"
+          src = open(path, encoding="utf-8").read()
+
+          anchor = "@media (prefers-reduced-motion:reduce){"
+          add = """@media (min-width:761px){
+            .status__brand .logo-img--sm{display:none}
+          }
+
+          """
+
+          if ".status__brand .logo-img--sm{display:none}" in src:
+              print("already patched")
+              sys.exit(0)
+          if src.count(anchor) != 1:
+              raise SystemExit("anchor count: %d" % src.count(anchor))
+
+          src = src.replace(anchor, add + anchor, 1)
+
+          style = src.split("<style>", 1)[1].split("</style>", 1)[0]
+          if style.count("{") != style.count("}"):
+              raise SystemExit("unbalanced css braces")
+
+          open(path, "w", encoding="utf-8").write(src)
+          print("patched")
+          PY
+
+      - name: Commit and retire this workflow
+        run: |
+          rm -f .github/workflows/nx-status-logo.yml
+          git config user.name "glaxyias"
+          git config user.email "Sparefornow2026@outlook.com"
+          git add -A
+          git commit -m "startup screen: keep the status bar clean on desktop"
+          git push
