@@ -7,7 +7,7 @@
 :root {
   --nxup-accent: var(--accent, #ff8a00);
   --nxup-panel: rgba(18, 9, 28, 0.96);
-  --nxup-line: rgba(255, 138, 0, 0.35);
+  --nxup-line: color-mix(in srgb, var(--accent-color, #ff8a00) 35%, transparent);
   --nxup-text: #ffe3c4;
   --nxup-muted: #c88f5a;
   --nxup-radius: 12px;
@@ -34,7 +34,7 @@
 #nxup-level-chip:hover,
 #nxup-level-chip:focus-visible {
   border-color: var(--nxup-accent);
-  background: rgba(255, 138, 0, 0.16);
+  background: color-mix(in srgb, var(--accent-color, #ff8a00) 16%, transparent);
   outline: none;
 }
 
@@ -97,7 +97,7 @@
 .nxup-dock-btn:focus-visible {
   transform: translateY(-2px);
   border-color: var(--nxup-accent);
-  background: rgba(255, 138, 0, 0.22);
+  background: color-mix(in srgb, var(--accent-color, #ff8a00) 22%, transparent);
   outline: none;
 }
 
@@ -214,7 +214,7 @@
   padding: 12px 12px 6px;
   border: 1px solid var(--nxup-line);
   border-radius: 14px;
-  background: linear-gradient(180deg, rgba(255, 138, 0, 0.08), rgba(0, 0, 0, 0.12));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent-color, #ff8a00) 8%, transparent), rgba(0, 0, 0, 0.12));
 }
 
 #nxup-rail.nxup-visible {
@@ -286,7 +286,7 @@
   padding: 7px 14px;
   border-radius: 999px;
   border: 1px solid var(--nxup-accent);
-  background: rgba(255, 138, 0, 0.22);
+  background: color-mix(in srgb, var(--accent-color, #ff8a00) 22%, transparent);
   color: #fff;
   font-family: inherit;
   font-size: 12px;
@@ -443,7 +443,7 @@
   background: #0a0a0a;
   color: var(--nxup-text);
   font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-  box-shadow: 0 0 70px rgba(255, 138, 0, 0.28);
+  box-shadow: 0 0 70px color-mix(in srgb, var(--accent-color, #ff8a00) 28%, transparent);
 }
 
 .nxup-head {
@@ -501,7 +501,7 @@
 
 .nxup-tab.nxup-active {
   border-color: var(--nxup-accent);
-  background: rgba(255, 138, 0, 0.24);
+  background: color-mix(in srgb, var(--accent-color, #ff8a00) 24%, transparent);
   color: #fff;
 }
 
@@ -521,7 +521,7 @@
   padding: 14px;
   border-radius: 14px;
   border: 1px solid var(--nxup-line);
-  background: linear-gradient(135deg, rgba(255, 138, 0, 0.18), rgba(0, 0, 0, 0.1));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent-color, #ff8a00) 18%, transparent), rgba(0, 0, 0, 0.1));
   margin-bottom: 14px;
 }
 
@@ -680,8 +680,8 @@
 .nxup-ach.nxup-unlocked {
   opacity: 1;
   border-color: var(--nxup-accent);
-  background: rgba(255, 138, 0, 0.13);
-  box-shadow: 0 0 18px rgba(255, 138, 0, 0.14);
+  background: color-mix(in srgb, var(--accent-color, #ff8a00) 13%, transparent);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--accent-color, #ff8a00) 14%, transparent);
 }
 
 .nxup-ach-icon {
@@ -749,7 +749,7 @@
 
 .nxup-theme.nxup-active {
   border-color: var(--nxup-accent);
-  background: rgba(255, 138, 0, 0.16);
+  background: color-mix(in srgb, var(--accent-color, #ff8a00) 16%, transparent);
 }
 
 .nxup-swatch {
@@ -815,7 +815,7 @@
 }
 
 .nxup-result.nxup-sel {
-  background: rgba(255, 138, 0, 0.2);
+  background: color-mix(in srgb, var(--accent-color, #ff8a00) 20%, transparent);
   border-left-color: var(--nxup-accent);
 }
 
@@ -835,7 +835,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 138, 0, 0.18);
+  background: color-mix(in srgb, var(--accent-color, #ff8a00) 18%, transparent);
   flex-shrink: 0;
   font-size: 15px;
 }
@@ -864,7 +864,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #ffcf9a;
-  border: 1px solid rgba(255, 138, 0, 0.4);
+  border: 1px solid color-mix(in srgb, var(--accent-color, #ff8a00) 40%, transparent);
   border-radius: 999px;
   padding: 2px 6px;
   flex-shrink: 0;

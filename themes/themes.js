@@ -122,6 +122,12 @@ document.addEventListener('DOMContentLoaded', () => {
 (function () {
   if (document.getElementById('nx-site-extras')) return;
   var css = `
+/* The animated palettes are driven from themes.js now; disable the old
+   body-level keyframes so they cannot overwrite the inline variables. */
+body.theme-rgb, body.theme-matrix, body.theme-neon, body.theme-surge,
+body.theme-void, body.theme-aether, body.theme-inferno, body.theme-cryo,
+body.theme-techno { animation: none !important; }
+
 /* ==========================================================
    SETTINGS CATALOG THEMES (previously missing their CSS)
    ========================================================== */
@@ -272,10 +278,10 @@ document.addEventListener('DOMContentLoaded', () => {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background: #0a0a0a;
-  border: 1px solid #e07a00;
+  background: var(--bg-sidebar, #0a0a0a);
+  border: 1px solid var(--accent-color, #e07a00);
   border-radius: 14px;
-  box-shadow: 0 0 40px rgba(255, 138, 0, 0.3);
+  box-shadow: 0 0 40px color-mix(in srgb, var(--accent-color, #e07a00) 30%, transparent);
   color: #fff;
   font-family: system-ui, -apple-system, sans-serif;
 }
@@ -284,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
-  border-bottom: 1px solid rgba(255, 138, 0, 0.35);
+  border-bottom: 1px solid var(--border-color, rgba(255, 138, 0, 0.35));
   flex-shrink: 0;
 }
 #system-news-modal .snm-header h3 { margin: 0; font-size: 1.1rem; color: #fff; }
@@ -307,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 #system-news-modal .news-card {
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 138, 0, 0.25);
+  border: 1px solid var(--border-color, rgba(255, 138, 0, 0.25));
   border-radius: 10px;
   padding: 12px 14px;
 }
@@ -317,10 +323,10 @@ document.addEventListener('DOMContentLoaded', () => {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #f59e0b;
+  color: var(--accent-color, #f59e0b);
   margin-bottom: 6px;
 }
-#system-news-modal .news-card p { margin: 0 0 8px; color: #e6c4a0; font-size: 0.9rem; line-height: 1.45; }
+#system-news-modal .news-card p { margin: 0 0 8px; color: var(--text-muted, #e6c4a0); font-size: 0.9rem; line-height: 1.45; }
 #system-news-modal .news-date { font-size: 0.75rem; color: #888; }
 
 #system-news-btn {
@@ -330,9 +336,9 @@ document.addEventListener('DOMContentLoaded', () => {
   flex-shrink: 0;
   padding: 9px 14px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 138, 0, 0.45);
-  background: rgba(255, 138, 0, 0.12);
-  color: #f0922a;
+  border: 1px solid color-mix(in srgb, var(--accent-color, #e07a00) 45%, transparent);
+  background: color-mix(in srgb, var(--accent-color, #e07a00) 12%, transparent);
+  color: var(--accent-color, #f0922a);
   font-family: system-ui, -apple-system, sans-serif;
   font-size: 13px;
   font-weight: 600;
@@ -340,11 +346,11 @@ document.addEventListener('DOMContentLoaded', () => {
   transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 #system-news-btn:hover {
-  background: rgba(255, 138, 0, 0.26);
-  border-color: #e07a00;
-  box-shadow: 0 0 14px rgba(255, 138, 0, 0.35);
+  background: color-mix(in srgb, var(--accent-color, #e07a00) 26%, transparent);
+  border-color: var(--accent-color, #e07a00);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--accent-color, #e07a00) 35%, transparent);
 }
-#system-news-btn:focus-visible { outline: 2px solid #f59e0b; outline-offset: 2px; }
+#system-news-btn:focus-visible { outline: 2px solid var(--accent-hover, #f59e0b); outline-offset: 2px; }
 #system-news-btn .news-dot {
   display: inline-block;
   width: 8px;
@@ -553,6 +559,165 @@ document.addEventListener('DOMContentLoaded', () => {
   var THEME_BY_KEY = {};
   CHOICES.forEach(function (item) { THEME_BY_KEY[item.key] = item; });
 
+  /* ------------------------------------------------------------------
+     Animated backgrounds. themes.css used to animate the palette custom
+     properties on <html>/<body>, but applyThemeKey writes those properties
+     inline with !important, which freezes the animation. Drive the same
+     colours from requestAnimationFrame so RGB, Matrix, Neon, Surge, Void,
+     Aether, Inferno, Cryo and Techno keep moving.
+     ------------------------------------------------------------------ */
+  var THEME_ANIMATIONS = {
+    rgb: { duration: 12000, linear: true, frames: [
+      { at: 0.00, accent: '#ff0000', hover: '#ff5555' },
+      { at: 0.17, accent: '#ff8800', hover: '#ffa333' },
+      { at: 0.33, accent: '#ffff00', hover: '#ffff55' },
+      { at: 0.50, accent: '#00ff00', hover: '#55ff55' },
+      { at: 0.67, accent: '#00ffff', hover: '#55ffff' },
+      { at: 0.83, accent: '#0000ff', hover: '#5555ff' },
+      { at: 1.00, accent: '#ff0000', hover: '#ff5555' }
+    ] },
+    matrix: { duration: 4000, frames: [
+      { at: 0.00, text: '#00ff00' },
+      { at: 0.50, text: '#33ff33' },
+      { at: 1.00, text: '#00ff00' }
+    ] },
+    neon: { duration: 3000, frames: [
+      { at: 0.00, border: 'rgba(0, 255, 239, 0.4)' },
+      { at: 0.50, border: 'rgba(0, 255, 239, 0.9)' },
+      { at: 1.00, border: 'rgba(0, 255, 239, 0.4)' }
+    ] },
+    surge: { duration: 3000, frames: [
+      { at: 0.00, accent: '#00aaff', hover: '#33cfff' },
+      { at: 0.50, accent: '#0088ff', hover: '#55d4ff' },
+      { at: 1.00, accent: '#00aaff', hover: '#33cfff' }
+    ] },
+    void: { duration: 5000, linear: true, frames: [
+      { at: 0.00, accent: '#5500ff' },
+      { at: 0.25, accent: '#330088' },
+      { at: 0.50, accent: '#110033' },
+      { at: 0.75, accent: '#330088' },
+      { at: 1.00, accent: '#5500ff' }
+    ] },
+    aether: { duration: 6000, frames: [
+      { at: 0.00, accent: '#66ffe0' },
+      { at: 0.50, accent: '#99ffea' },
+      { at: 1.00, accent: '#66ffe0' }
+    ] },
+    inferno: { duration: 1800, frames: [
+      { at: 0.00, accent: '#ff3300' },
+      { at: 0.40, accent: '#ff5500' },
+      { at: 0.60, accent: '#ff2200' },
+      { at: 1.00, accent: '#ff3300' }
+    ] },
+    cryo: { duration: 3500, frames: [
+      { at: 0.00, accent: '#00eaff' },
+      { at: 0.50, accent: '#66f7ff' },
+      { at: 1.00, accent: '#00eaff' }
+    ] },
+    techno: { duration: 4000, linear: true, frames: [
+      { at: 0.00, accent: '#00ff88' },
+      { at: 0.33, accent: '#00ffaa' },
+      { at: 0.66, accent: '#00ffcc' },
+      { at: 1.00, accent: '#00ff88' }
+    ] }
+  };
+  var themeAnimKey = null;
+  var themeAnimFrame = 0;
+
+  function parseNxColor(value) {
+    var s = String(value || '').trim();
+    var m;
+    if (s.charAt(0) === '#') {
+      if (s.length === 4) {
+        s = '#' + s.charAt(1) + s.charAt(1) + s.charAt(2) + s.charAt(2) + s.charAt(3) + s.charAt(3);
+      }
+      m = /^#([0-9a-f]{6})$/i.exec(s);
+      if (!m) return null;
+      var n = parseInt(m[1], 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255, 1];
+    }
+    m = /^rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+))?\s*\)$/i.exec(s);
+    if (!m) return null;
+    return [parseFloat(m[1]), parseFloat(m[2]), parseFloat(m[3]), m[4] === undefined ? 1 : parseFloat(m[4])];
+  }
+
+  function mixNxColor(a, b, t) {
+    var ca = parseNxColor(a);
+    var cb = parseNxColor(b);
+    if (!ca || !cb) return t < 0.5 ? a : b;
+    var r = Math.round(ca[0] + (cb[0] - ca[0]) * t);
+    var g = Math.round(ca[1] + (cb[1] - ca[1]) * t);
+    var bl = Math.round(ca[2] + (cb[2] - ca[2]) * t);
+    var al = Math.round((ca[3] + (cb[3] - ca[3]) * t) * 1000) / 1000;
+    if (al >= 1) {
+      var hex = ((1 << 24) + (r << 16) + (g << 8) + bl).toString(16).slice(1);
+      return '#' + hex;
+    }
+    return 'rgba(' + r + ', ' + g + ', ' + bl + ', ' + al + ')';
+  }
+
+  function animationFrameValues(def, progress) {
+    var frames = def.frames;
+    var prev = frames[0];
+    var next = frames[frames.length - 1];
+    for (var i = 1; i < frames.length; i++) {
+      if (progress <= frames[i].at) { next = frames[i]; break; }
+      prev = frames[i];
+    }
+    var span = next.at - prev.at;
+    var t = span > 0 ? (progress - prev.at) / span : 0;
+    if (!def.linear) t = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    var out = {};
+    ['accent', 'hover', 'border', 'text'].forEach(function (prop) {
+      if (prev[prop] === undefined && next[prop] === undefined) return;
+      var from = prev[prop] !== undefined ? prev[prop] : next[prop];
+      var to = next[prop] !== undefined ? next[prop] : prev[prop];
+      out[prop] = mixNxColor(from, to, t);
+    });
+    return out;
+  }
+
+  function stopThemeAnimation() {
+    themeAnimKey = null;
+    if (themeAnimFrame) {
+      try { cancelAnimationFrame(themeAnimFrame); } catch (e) {}
+      themeAnimFrame = 0;
+    }
+  }
+
+  function startThemeAnimation(key) {
+    stopThemeAnimation();
+    var def = THEME_ANIMATIONS[key];
+    if (!def) return;
+    var reduced = false;
+    try {
+      reduced = !!window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    } catch (e) {}
+    if (reduced) return;
+    themeAnimKey = key;
+    var root = document.documentElement;
+    var start = (window.performance && performance.now) ? performance.now() : Date.now();
+    function tick(now) {
+      if (themeAnimKey !== key) return;
+      var elapsed = now - start;
+      var progress = (((elapsed % def.duration) + def.duration) % def.duration) / def.duration;
+      var values = animationFrameValues(def, progress);
+      if (values.accent) {
+        root.style.setProperty('--accent', values.accent, 'important');
+        root.style.setProperty('--accent-color', values.accent, 'important');
+        root.style.setProperty('--nxup-accent', values.accent, 'important');
+      }
+      if (values.hover) root.style.setProperty('--accent-hover', values.hover, 'important');
+      if (values.border) {
+        root.style.setProperty('--border-color', values.border, 'important');
+        root.style.setProperty('--nxup-line', values.border, 'important');
+      }
+      if (values.text) root.style.setProperty('--text-main', values.text, 'important');
+      themeAnimFrame = requestAnimationFrame(tick);
+    }
+    themeAnimFrame = requestAnimationFrame(tick);
+  }
+
   function canonicalKey(value) {
     if (!value) return 'purple';
     if (value === 'default') return 'purple';
@@ -676,6 +841,9 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.style.setProperty('background-color', p.bg, 'important');
       document.body.style.setProperty('background-image', 'none', 'important');
     } catch (e) {}
+
+    /* Keep the animated palettes moving on top of the inline !important vars. */
+    startThemeAnimation(key);
 
     if (opts.persist !== false) {
       try {

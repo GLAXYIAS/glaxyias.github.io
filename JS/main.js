@@ -2,6 +2,7 @@
 // DYNAMIC CORE SYSTEMS & GAMES REGISTER DATA
 // ==========================================
 let _0xData = [
+  { id: "stickman-battle", title: "Stickman Battle", url: "https://poki.com/en/g/stickman-battle", image: "../Games/_covers/actual/stickman-battle.png", desc: "Fast-paced stickman fighting. Play solo, take on a friend locally, or battle online players.", popular: true, noIframe: true, playerModes: ["single", "multiplayer"], tags: ["Fighting", "Action", "Multiplayer"] },
   { id: "b_ap", title: "Brotato All Pain No Gain", url: "../Games/brotatoAPNG/Brotato.html", image: "../Games/_covers/actual/b_ap.jpg", desc: "The newest version of Brotato with the All Pain No Gain update.", popular: true , tags: ["Roguelike", "Shooter", "Action"] },
   { id: "undead_corridor", title: "Undead Corridor", url: "../Games/undead-corridor/index.html", desc: "Fight your way through zombie-filled corridors in this intense survival shooter. Use a variety of weapons, take down the undead, and see how long you can survive.", popular: true , image: "../Games/_covers/actual/undead_corridor.jpg" , tags: ["Horror", "Shooter"] },
   { id: "blood", title: "BloodVox", url: "../Games/bloodvox/index.html", desc: "Custom game", popular: true , image: "../Games/_covers/actual/blood.jpg" , tags: ["Horror", "Shooter"] },
@@ -9589,6 +9590,8 @@ function launchGame(gameId) {
   try {
     useIframe = localStorage.getItem("nx_use_iframe_v2") === "true";
   } catch (e) {}
+  /* Some sites refuse to be framed (Poki does), so always open them directly. */
+  if (game.noIframe) useIframe = false;
   if (!useIframe) {
     window.location.assign(gameSrc);
     return;
@@ -10716,7 +10719,8 @@ function showAllGamesView() {
   if (favGrid) favGrid.style.setProperty('display', 'none', 'important');
   if (gameGrid) {
     gameGrid.style.display = 'grid';
-    renderLibraryGrid(_0xData);
+    if (nxPlayerMode !== 'all') applyLibraryFilters({ keepLibrary: true });
+    else renderLibraryGrid(_0xData);
   }
 }
 
@@ -11965,6 +11969,34 @@ function getGameDevice(game) {
   return GAME_DEVICE_OVERRIDES[game.id] || "Unknown";
 }
 
+/* Player-mode filter. Games with an explicit playerModes array keep both
+   modes when they support both (for example Stickman Battle). */
+let nxPlayerMode = "all";
+
+function getGameModes(game) {
+  if (Array.isArray(game.playerModes) && game.playerModes.length) {
+    return game.playerModes.map(function (mode) { return String(mode).toLowerCase(); });
+  }
+  const tags = getGameTags(game).map(function (tag) { return String(tag).toLowerCase(); });
+  if (tags.indexOf("multiplayer") !== -1) return ["multiplayer"];
+  const text = (String(game.title || "") + " " + String(game.desc || "")).toLowerCase();
+  if (/\b(multiplayer|battle royale|pvp|1v1|2 player|two player|co-op|coop)\b/.test(text)) {
+    return ["multiplayer"];
+  }
+  return ["single"];
+}
+
+function syncPlayerFilterUI() {
+  const chips = document.querySelectorAll("#gameFilterBar [data-player-filter]");
+  for (let i = 0; i < chips.length; i++) {
+    const on = chips[i].getAttribute("data-player-filter") === nxPlayerMode;
+    chips[i].classList.toggle("active", on);
+    chips[i].setAttribute("aria-pressed", on ? "true" : "false");
+  }
+  const select = document.getElementById("nx-filter-players");
+  if (select) select.value = nxPlayerMode === "all" ? "" : nxPlayerMode;
+}
+
 function nxRecentIds() {
   try {
     const parsed = JSON.parse(localStorage.getItem("nx_recent_games") || "[]");
@@ -11974,11 +12006,13 @@ function nxRecentIds() {
   }
 }
 
-function applyLibraryFilters() {
+function applyLibraryFilters(options) {
+  const keepLibrary = !!(options && options.keepLibrary);
   const searchEl = document.getElementById("searchBar");
   const genreEl = document.getElementById("nx-filter-genre");
   const tagEl = document.getElementById("nx-filter-tag");
   const deviceEl = document.getElementById("nx-filter-device");
+  const playersEl = document.getElementById("nx-filter-players");
   const recentEl = document.getElementById("nx-filter-recent");
   const countEl = document.getElementById("nx-filter-count");
 
@@ -11986,10 +12020,12 @@ function applyLibraryFilters() {
   const genre = genreEl ? genreEl.value : "";
   const tag = tagEl ? tagEl.value : "";
   const device = deviceEl ? deviceEl.value : "";
+  if (playersEl) nxPlayerMode = playersEl.value || "all";
+  const players = nxPlayerMode;
   const recentOnly = !!recentEl && recentEl.getAttribute("aria-pressed") === "true";
-  const active = !!term || !!genre || !!tag || !!device || recentOnly;
+  const active = !!term || !!genre || !!tag || !!device || recentOnly || players !== "all";
 
-  if (!active) {
+  if (!active && !keepLibrary) {
     if (countEl) countEl.textContent = "";
     showHomeView();
     return;
@@ -12017,7 +12053,9 @@ function applyLibraryFilters() {
   if (genre) list = list.filter(g => getGameGenre(g) === genre);
   if (tag) list = list.filter(g => getGameTags(g).includes(tag));
   if (device) list = list.filter(g => getGameDevice(g) === device);
+  if (players !== "all") list = list.filter(g => getGameModes(g).includes(players));
 
+  syncPlayerFilterUI();
   renderLibraryGrid(list);
   if (countEl) countEl.textContent = list.length + (list.length === 1 ? " game" : " games");
 }
@@ -12041,10 +12079,10 @@ function nxBootUx() {
   style.id = "nx-ux-style";
   style.textContent = `
 #nx-filter-bar { display: none; flex-wrap: wrap; gap: 8px; align-items: center; margin: 12px 0; font-family: system-ui, sans-serif; }
-#nx-filter-bar select, #nx-filter-bar button { background: #14141a; color: #e5e5e5; border: 1px solid #3a3a48; border-radius: 8px; padding: 7px 10px; font-size: 13px; cursor: pointer; min-height: 36px; }
-#nx-filter-bar button[aria-pressed="true"] { border-color: #8b00ff; background: rgba(139,0,255,0.3); color: #fff; }
-#nx-filter-count { color: #9a9aa8; font-size: 12px; margin-left: auto; }
-.game-card:focus-visible, #nx-filter-bar select:focus-visible, #nx-filter-bar button:focus-visible, #searchBar:focus-visible { outline: 3px solid #d8b4fe; outline-offset: 2px; }
+#nx-filter-bar select, #nx-filter-bar button { background: var(--bg-sidebar, #14141a); color: var(--text-main, #e5e5e5); border: 1px solid var(--border-color, #3a3a48); border-radius: 8px; padding: 7px 10px; font-size: 13px; cursor: pointer; min-height: 36px; }
+#nx-filter-bar button[aria-pressed="true"] { border-color: var(--accent-color, #8b00ff); background: color-mix(in srgb, var(--accent-color, #8b00ff) 30%, transparent); color: var(--text-main, #fff); }
+#nx-filter-count { color: var(--text-muted, #9a9aa8); font-size: 12px; margin-left: auto; }
+.game-card:focus-visible, #nx-filter-bar select:focus-visible, #nx-filter-bar button:focus-visible, #searchBar:focus-visible { outline: 3px solid var(--accent-hover, #d8b4fe); outline-offset: 2px; }
 @media (max-width: 600px) {
   #nx-filter-bar select, #nx-filter-bar button { flex: 1 1 42%; font-size: 14px; }
   #nx-filter-count { width: 100%; margin-left: 0; text-align: center; }
@@ -12062,6 +12100,7 @@ function nxBootUx() {
   bar.setAttribute("role", "toolbar");
   bar.setAttribute("aria-label", "Game filters");
   bar.innerHTML =
+    '<select id="nx-filter-players" aria-label="Filter by players"><option value="">Any players</option><option value="single">1 Player</option><option value="multiplayer">Multiplayer</option></select>' +
     '<select id="nx-filter-genre" aria-label="Filter by genre"><option value="">All genres</option></select>' +
     '<select id="nx-filter-tag" aria-label="Filter by tag"><option value="">All tags</option></select>' +
     '<select id="nx-filter-device" aria-label="Filter by device"><option value="">Any device</option>' +
@@ -12074,6 +12113,7 @@ function nxBootUx() {
   const genreSel = bar.querySelector("#nx-filter-genre");
   const tagSel = bar.querySelector("#nx-filter-tag");
   const deviceSel = bar.querySelector("#nx-filter-device");
+  const playersSel = bar.querySelector("#nx-filter-players");
   const recentBtn = bar.querySelector("#nx-filter-recent");
   const genres = Array.from(new Set(_0xData.map(g => getGameGenre(g)))).sort();
   genres.forEach(function (name) {
@@ -12100,6 +12140,11 @@ function nxBootUx() {
   genreSel.addEventListener("change", applyLibraryFilters);
   tagSel.addEventListener("change", applyLibraryFilters);
   deviceSel.addEventListener("change", applyLibraryFilters);
+  playersSel.addEventListener("change", function () {
+    nxPlayerMode = playersSel.value || "all";
+    syncPlayerFilterUI();
+    applyLibraryFilters({ keepLibrary: true });
+  });
   recentBtn.addEventListener("click", function () {
     const on = recentBtn.getAttribute("aria-pressed") !== "true";
     recentBtn.setAttribute("aria-pressed", on ? "true" : "false");
@@ -12110,11 +12155,14 @@ function nxBootUx() {
     genreSel.value = "";
     tagSel.value = "";
     deviceSel.value = "";
+    nxPlayerMode = "all";
+    syncPlayerFilterUI();
     recentBtn.setAttribute("aria-pressed", "false");
     applyLibraryFilters();
   });
 
   gridEl.parentElement.insertBefore(bar, gridEl);
+  syncPlayerFilterUI();
 
   // Show the filter bar only while the library grid is visible
   const syncBar = function () {
@@ -12128,4 +12176,32 @@ if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", nxBootUx);
 } else {
   nxBootUx();
+}
+
+function nxBootPlayerFilterChips() {
+  const bar = document.getElementById("gameFilterBar");
+  if (!bar || bar.getAttribute("data-nx-player-ready") === "1") return;
+  bar.setAttribute("data-nx-player-ready", "1");
+  bar.addEventListener("click", function (event) {
+    const btn = event.target.closest("[data-player-filter]");
+    if (!btn) return;
+    nxPlayerMode = btn.getAttribute("data-player-filter") || "all";
+    syncPlayerFilterUI();
+    const heroEl = document.getElementById("heroSection");
+    if (heroEl) heroEl.style.display = "none";
+    const randomEl = document.querySelector(".random-section");
+    if (randomEl) randomEl.style.display = "none";
+    const favEl = document.getElementById("favoritesGrid");
+    if (favEl) favEl.style.display = "none";
+    const gridEl = document.getElementById("gameGrid");
+    if (gridEl) gridEl.style.display = "grid";
+    updateNavActiveState("nav-games");
+    applyLibraryFilters({ keepLibrary: true });
+  });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", nxBootPlayerFilterChips);
+} else {
+  nxBootPlayerFilterChips();
 }

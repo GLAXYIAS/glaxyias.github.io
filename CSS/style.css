@@ -590,7 +590,7 @@ nav {
 .unblocker-card:hover {
   transform: translateY(-8px);
   border-color: var(--accent-color, var(--accent)) !important;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 138, 0, 0.2);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4), 0 0 15px color-mix(in srgb, var(--accent-color, #e07a00) 20%, transparent);
 }
 
 .unblocker-card h4 {
@@ -1272,8 +1272,8 @@ nav {
   position: fixed;
   bottom: 15px;
   left: 15px;
-  background: #e07a00;
-  color: #fff;
+  background: var(--accent-color, #e07a00);
+  color: #0a0a0a;
   border: none;
   padding: 8px 14px;
   border-radius: 20px;
@@ -1281,7 +1281,7 @@ nav {
   font-weight: bold;
   cursor: pointer;
   z-index: 99999;
-  box-shadow: 0 4px 12px rgba(255, 138, 0, 0.4);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--accent-color, #e07a00) 40%, transparent);
 }
 
 #site-console {
@@ -1290,8 +1290,8 @@ nav {
   left: 15px;
   width: min(90vw, 500px);
   height: min(40vh, 300px);
-  background: #0d0d13;
-  border: 1px solid #e07a00;
+  background: var(--bg-dashboard, #0d0d13);
+  border: 1px solid var(--accent-color, #e07a00);
   border-radius: 8px;
   z-index: 99999;
   display: flex;
@@ -1302,13 +1302,13 @@ nav {
 }
 
 #console-header {
-  background: #180e29;
+  background: var(--bg-sidebar, #180e29);
   padding: 8px 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(255, 138, 0, 0.3);
-  color: #f59e0b;
+  border-bottom: 1px solid var(--border-color, rgba(255, 138, 0, 0.3));
+  color: var(--accent-color, #f59e0b);
   font-weight: bold;
 }
 
@@ -1335,16 +1335,16 @@ nav {
 }
 
 .console-entry.log { color: #e0e0e0; }
-.console-entry.warn { color: #f59e0b; }
+.console-entry.warn { color: var(--accent-color, #f59e0b); }
 .console-entry.error { color: #ef4444; }
-.console-entry.input { color: #f59e0b; font-weight: bold; }
+.console-entry.input { color: var(--accent-color, #f59e0b); font-weight: bold; }
 
 #console-input-container {
   display: flex;
   align-items: center;
   padding: 6px 10px;
-  background: #12091c;
-  border-top: 1px solid rgba(255, 138, 0, 0.3);
+  background: var(--bg-sidebar, #12091c);
+  border-top: 1px solid var(--border-color, rgba(255, 138, 0, 0.3));
   gap: 8px;
 }
 
@@ -1386,7 +1386,7 @@ nav {
   gap: 12px;
   padding: 0 10px 0 18px;
   background: #0b0810;
-  border-bottom: 1px solid rgba(255, 138, 0, 0.28);
+  border-bottom: 1px solid var(--border-color, rgba(255, 138, 0, 0.28));
 }
 
 .profile-modal-title {
@@ -1408,16 +1408,16 @@ nav {
   font-size: 20px;
   line-height: 1;
   color: #fff;
-  background: rgba(255, 138, 0, 0.12);
-  border: 1px solid rgba(255, 138, 0, 0.4);
+  background: color-mix(in srgb, var(--accent-color, #e07a00) 12%, transparent);
+  border: 1px solid var(--border-color, rgba(255, 138, 0, 0.4));
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
 }
 
 .profile-modal-close:hover {
-  background: rgba(255, 138, 0, 0.32);
-  border-color: #e07a00;
+  background: color-mix(in srgb, var(--accent-color, #e07a00) 32%, transparent);
+  border-color: var(--accent-color, #e07a00);
 }
 
 .profile-modal-close:focus-visible {
@@ -1467,3 +1467,51 @@ body.profile-modal-open { overflow: hidden; }
 }
 
 #console-close-btn .nx-ico { display: block; }
+
+
+/* Player-mode filter chips (one player / multiplayer) */
+.game-filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 18px;
+}
+
+.filter-label {
+  color: var(--text-muted, #b86a12);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  margin-right: 2px;
+}
+
+.game-filter-btn {
+  padding: 6px 13px;
+  border: 1px solid var(--border-color, #e07a00);
+  border-radius: 999px;
+  background: var(--bg-sidebar, #000);
+  color: var(--text-main, #f0922a);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.game-filter-btn:hover {
+  border-color: var(--accent-hover, #f59e0b);
+}
+
+.game-filter-btn.active {
+  background: var(--accent-color, #e07a00);
+  border-color: var(--accent-color, #e07a00);
+  color: #0a0a0a;
+}
+
+.game-filter-btn:focus-visible {
+  outline: 2px solid var(--accent-hover, #f59e0b);
+  outline-offset: 2px;
+}
