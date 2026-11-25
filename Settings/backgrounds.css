@@ -263,7 +263,7 @@ html.nx-bg-open, html.nx-bg-open body { overflow: hidden !important; }
   display: block !important;
   width: 100%;
   padding: 0 !important;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid var(--nx-orange) !important;
   border-radius: 10px !important;
   background: #000 !important;
@@ -276,6 +276,7 @@ html.nx-bg-open, html.nx-bg-open body { overflow: hidden !important; }
   width: 100%;
   aspect-ratio: 16 / 10;
   object-fit: cover;
+  border-radius: 9px 9px 0 0;
   border-bottom: 1px solid var(--nx-orange);
   background: #050505;
 }
