@@ -1,0 +1,110 @@
+name: direct launch patch
+
+on:
+  push:
+    paths:
+      - '.github/workflows/direct-launch.yml'
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Patch launch defaults
+        run: |
+          python3 - <<'PY'
+          import sys
+
+          def patch(path, pairs):
+              with open(path, encoding="utf-8", newline="") as f:
+                  s = f.read()
+              for old, new in pairs:
+                  n = s.count(old)
+                  if n != 1:
+                      sys.exit("FAILED %s: %d matches for %r" % (path, n, old[:90]))
+                  s = s.replace(old, new)
+              with open(path, "w", encoding="utf-8", newline="") as f:
+                  f.write(s)
+              print("patched", path)
+
+          patch("JS/main.js", [
+              (
+                  '  // Settings: allow disabling iframes (some Unity/WebGL games break in iframes)\n'
+                  '  var useIframe = true;\n'
+                  '  try {\n'
+                  '    useIframe = localStorage.getItem("nx_use_iframe") !== "false";\n'
+                  '  } catch (e) {}\n',
+                  '  // Games open as normal pages by default. Forcing every title, Unity/WebGL\n'
+                  '  // builds included, through the player iframe is what left some of them\n'
+                  '  // black, so the in-page player is now opt-in from Settings.\n'
+                  '  var useIframe = false;\n'
+                  '  try {\n'
+                  '    useIframe = localStorage.getItem("nx_use_iframe") === "true";\n'
+                  '  } catch (e) {}\n'
+              ),
+              (
+                  "              // default ON unless explicitly disabled\n"
+                  "              iframeToggle.checked = localStorage.getItem('nx_use_iframe') !== 'false';\n",
+                  "              // default OFF: games launch straight from the card, no iframe\n"
+                  "              iframeToggle.checked = localStorage.getItem('nx_use_iframe') === 'true';\n"
+              ),
+          ])
+
+          patch("Settings/settings.html", [
+              (
+                  '<input type="checkbox" id="toggle-use-iframe" style="cursor: pointer; width: 18px; height: 18px; margin-top: 2px;" checked>',
+                  '<input type="checkbox" id="toggle-use-iframe" style="cursor: pointer; width: 18px; height: 18px; margin-top: 2px;">'
+              ),
+              (
+                  '          Launch games inside an iframe (recommended)\n',
+                  '          Launch games inside the iframe player (off by default)\n'
+              ),
+              (
+                  '        <strong style="color:#ff6b6b;">Warning:</strong> Some games (especially Unity / WebGL) <strong>do not work inside iframes</strong>.\n'
+                  '        If a game stays black or never loads, turn this setting <strong>off</strong> so it opens as a normal page instead.\n'
+                  '        Cloaking / about:blank shell only works when iframes are enabled.\n',
+                  '        <strong style="color:#ff6b6b;">Default:</strong> games open as normal pages, which is what every engine\n'
+                  '        (Unity / WebGL included) needs. Turn the player on only if you want the in-page loading screen and the\n'
+                  '        back button — a few games stay black inside it. Cloaking / about:blank shell only works when the player is enabled.\n'
+              ),
+          ])
+
+          patch("Settings/standalone-settings.js", [
+              (
+                  "    checkbox.checked = read('nx_use_iframe', 'true') !== 'false';\n",
+                  "    checkbox.checked = read('nx_use_iframe', 'false') === 'true';\n"
+              ),
+          ])
+          PY
+
+      - name: Commit and remove this workflow
+        run: |
+          git config user.name "glaxyias-site-bot"
+          git config user.email "site-bot@users.noreply.github.com"
+          git rm -q .github/workflows/direct-launch.yml
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+            exit 1
+          fi
+          git commit -m "fix: launch games as normal pages instead of forcing the iframe player"
+          git push origin HEAD:main
+
+      - name: Ask Pages to deploy the new commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl -sS -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/static.yml/dispatches" \
+            -d '{"ref":"main"}' \
+            -w "\nHTTP %{http_code}\n"
