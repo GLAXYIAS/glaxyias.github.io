@@ -153,6 +153,7 @@
   }
 
   function watchBarVisibility(bar) {
+    if (bar.closest(".filters-modal")) return;
     var grid = document.getElementById("gameGrid");
     if (!grid) return;
     var sync = function () {

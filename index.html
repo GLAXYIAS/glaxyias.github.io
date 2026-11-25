@@ -121,6 +121,7 @@
   <title>Null X</title>
   <link rel="icon" type="image/png" href="https://glaxyias.github.io/imgs/Screenshot%202026-01-27%208.17.07%20PM.png">
   <link rel="stylesheet" href="CSS/style.css?v=20261125themes3">
+  <link rel="stylesheet" href="CSS/filters-modal.css?v=20261125filters1">
   <link rel="stylesheet" href="CSS/upgrade-pack.css?v=20261125themes3">
   <link rel="stylesheet" href="themes/themes.css?v=20261124darker3">
   <link rel="stylesheet" href="CSS/black-orange.css?v=20261124darker3">
@@ -629,11 +630,11 @@
       </header>
 
       <!-- GAME FILTER BUTTONS -->
-      <div class="game-filters-container" id="gameFilterBar" role="group" aria-label="Filter games by players">
-        <span class="filter-label">Filter:</span>
-        <button type="button" class="game-filter-btn active" data-player-filter="all" aria-pressed="true">All games</button>
-        <button type="button" class="game-filter-btn" data-player-filter="single" aria-pressed="false">1 Player</button>
-        <button type="button" class="game-filter-btn" data-player-filter="multiplayer" aria-pressed="false">Multiplayer</button>
+      <div class="game-filters-container" id="gameFilterBar" role="group" aria-label="Game filters">
+        <button type="button" class="filters-trigger" id="filtersTrigger" aria-haspopup="dialog" aria-controls="filtersModal" aria-expanded="false">
+          <span>Filters</span>
+          <span class="filters-badge" id="filtersBadge" hidden>0</span>
+        </button>
       </div>
 
       <section class="hero" id="heroSection" style="position: relative;">
@@ -961,8 +962,9 @@
   
   <script src="debug.js"></script>
 
-    <script src="JS/main.js?v=20261125local1"></script>
-    <script src="JS/fragen-17-games-v2.js?v=20261117b"></script>
+    <script src="JS/main.js?v=20261125filters1"></script>
+    <script src="JS/fragen-17-games-v2.js?v=20261125filters1"></script>
+    <script src="JS/filters-modal.js?v=20261125filters1"></script>
   <script src="JS/nx-icons.js?v=1" defer></script>
   <script src="JS/nx-lock-hook.js?v=3" defer></script>
   <script src="JS/upgrade-pack.js?v=20261125unified1" defer></script>

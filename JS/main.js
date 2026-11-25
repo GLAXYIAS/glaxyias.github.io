@@ -12024,8 +12024,9 @@ function applyLibraryFilters(options) {
   const players = nxPlayerMode;
   const recentOnly = !!recentEl && recentEl.getAttribute("aria-pressed") === "true";
   const active = !!term || !!genre || !!tag || !!device || recentOnly || players !== "all";
+  const filtersModalOpen = !!document.querySelector(".filters-modal:not([hidden])");
 
-  if (!active && !keepLibrary) {
+  if (!active && !keepLibrary && !filtersModalOpen) {
     if (countEl) countEl.textContent = "";
     showHomeView();
     return;
@@ -12166,6 +12167,7 @@ function nxBootUx() {
 
   // Show the filter bar only while the library grid is visible
   const syncBar = function () {
+    if (bar.closest(".filters-modal")) { bar.style.setProperty("display", "flex", "important"); return; }
     bar.style.display = gridEl.style.display === "grid" ? "flex" : "none";
   };
   new MutationObserver(syncBar).observe(gridEl, { attributes: true, attributeFilter: ["style"] });
