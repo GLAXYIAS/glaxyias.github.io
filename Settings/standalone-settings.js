@@ -35,7 +35,7 @@
   function initIframe() {
     var checkbox = byId('toggle-use-iframe');
     if (!checkbox) return;
-    checkbox.checked = read('nx_use_iframe', 'true') !== 'false';
+    checkbox.checked = read('nx_use_iframe', 'false') === 'true';
     checkbox.addEventListener('change', function () {
       write('nx_use_iframe', checkbox.checked ? 'true' : 'false');
     });

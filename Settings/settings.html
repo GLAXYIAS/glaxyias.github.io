@@ -253,15 +253,15 @@
     <div class="setting-section" style="margin-bottom: 35px;">
       <h3 style="color: #ffab40; margin-bottom: 12px; font-size: 1.2rem;"><i class="fas fa-window-restore" style="margin-right: 8px;"></i>Game Display</h3>
       <div style="display: flex; align-items: flex-start; gap: 10px; margin-top: 10px;">
-        <input type="checkbox" id="toggle-use-iframe" style="cursor: pointer; width: 18px; height: 18px; margin-top: 2px;" checked>
+        <input type="checkbox" id="toggle-use-iframe" style="cursor: pointer; width: 18px; height: 18px; margin-top: 2px;">
         <label for="toggle-use-iframe" class="setting-label" style="margin: 0; cursor: pointer; font-size: 0.95rem; color: #ccc; line-height: 1.4;">
-          Launch games inside an iframe (recommended)
+          Launch games inside the iframe player (off by default)
         </label>
       </div>
       <div style="margin-top: 12px; padding: 12px 14px; background: rgba(255, 68, 68, 0.08); border: 1px solid rgba(255, 68, 68, 0.35); border-radius: 8px; color: #ffb4b4; font-size: 0.82rem; line-height: 1.45;">
-        <strong style="color:#ff6b6b;">Warning:</strong> Some games (especially Unity / WebGL) <strong>do not work inside iframes</strong>.
-        If a game stays black or never loads, turn this setting <strong>off</strong> so it opens as a normal page instead.
-        Cloaking / about:blank shell only works when iframes are enabled.
+        <strong style="color:#ff6b6b;">Default:</strong> games open as normal pages, which is what every engine
+        (Unity / WebGL included) needs. Turn the player on only if you want the in-page loading screen and the
+        back button — a few games stay black inside it. Cloaking / about:blank shell only works when the player is enabled.
       </div>
     </div>
 

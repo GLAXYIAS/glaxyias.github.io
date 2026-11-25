@@ -9582,10 +9582,12 @@ function launchGame(gameId) {
     localStorage.setItem("nx_recent_games", JSON.stringify(next));
   } catch (e) {}
 
-  // Settings: allow disabling iframes (some Unity/WebGL games break in iframes)
-  var useIframe = true;
+  // Games open as normal pages by default. Forcing every title, Unity/WebGL
+  // builds included, through the player iframe is what left some of them
+  // black, so the in-page player is now opt-in from Settings.
+  var useIframe = false;
   try {
-    useIframe = localStorage.getItem("nx_use_iframe") !== "false";
+    useIframe = localStorage.getItem("nx_use_iframe") === "true";
   } catch (e) {}
   if (!useIframe) {
     window.location.assign(gameSrc);
@@ -10894,8 +10896,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const iframeToggle = document.getElementById('toggle-use-iframe');
             if (iframeToggle) {
-              // default ON unless explicitly disabled
-              iframeToggle.checked = localStorage.getItem('nx_use_iframe') !== 'false';
+              // default OFF: games launch straight from the card, no iframe
+              iframeToggle.checked = localStorage.getItem('nx_use_iframe') === 'true';
               iframeToggle.onchange = (e) => {
                 localStorage.setItem('nx_use_iframe', e.target.checked ? 'true' : 'false');
               };
