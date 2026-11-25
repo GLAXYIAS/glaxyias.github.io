@@ -35,9 +35,9 @@
   function initIframe() {
     var checkbox = byId('toggle-use-iframe');
     if (!checkbox) return;
-    checkbox.checked = read('nx_use_iframe', 'false') === 'true';
+    checkbox.checked = read('nx_use_iframe_v2', 'false') === 'true';
     checkbox.addEventListener('change', function () {
-      write('nx_use_iframe', checkbox.checked ? 'true' : 'false');
+      write('nx_use_iframe_v2', checkbox.checked ? 'true' : 'false');
     });
   }
 
