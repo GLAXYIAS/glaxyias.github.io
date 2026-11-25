@@ -476,6 +476,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* Background picker used by the Settings page/modal. */
 (function () {
+  var FEATURED = [
+    { key: 'purple', site: 'default', name: 'Null Orange', desc: 'Pitch black with darker orange outlines', preview: '/Settings/previews/purple.svg' },
+    { key: 'cyan', site: 'cyan', name: 'Cyber Cyan', desc: 'Deep blue-black with cyan accents', preview: '/Settings/previews/cyan.svg' },
+    { key: 'crimson', site: 'crimson', name: 'Crimson', desc: 'Dark red surfaces with crimson accents', preview: '/Settings/previews/crimson.svg' },
+    { key: 'emerald', site: 'emerald', name: 'Emerald', desc: 'Forest black with emerald accents', preview: '/Settings/previews/emerald.svg' },
+    { key: 'gold', site: 'gold', name: 'Gold', desc: 'Warm black with gold accents', preview: '/Settings/previews/gold.svg' },
+    { key: 'mono', site: 'mono', name: 'Mono Chrome', desc: 'Black and grey with no colour tint', preview: '/Settings/previews/mono.svg' }
+  ];
+
   var PALETTES = {
     purple: { bg: '#000000', sidebar: '#000000', accent: '#e07a00', hover: '#f59e0b', border: '#e07a00', text: '#f0922a', muted: '#b86a12' },
     cyan:   { bg: '#04121c', sidebar: '#062033', accent: '#00c2ff', hover: '#38d6ff', border: '#114a63', text: '#e0f6ff', muted: '#93c9dd' },
@@ -485,14 +494,88 @@ document.addEventListener('DOMContentLoaded', () => {
     mono:   { bg: '#0b0b0f', sidebar: '#14141a', accent: '#c9c9d4', hover: '#e6e6ef', border: '#33333d', text: '#f2f2f6', muted: '#a0a0ad' }
   };
 
-  var CHOICES = [
-    { key: 'purple', site: 'default', name: 'Null Orange', desc: 'Pitch black with darker orange outlines' },
-    { key: 'cyan', site: 'cyan', name: 'Cyber Cyan', desc: 'Deep blue-black with cyan accents' },
-    { key: 'crimson', site: 'crimson', name: 'Crimson', desc: 'Dark red surfaces with crimson accents' },
-    { key: 'emerald', site: 'emerald', name: 'Emerald', desc: 'Forest black with emerald accents' },
-    { key: 'gold', site: 'gold', name: 'Gold', desc: 'Warm black with gold accents' },
-    { key: 'mono', site: 'mono', name: 'Mono Chrome', desc: 'Black and grey with no colour tint' }
+  /* Every classic background that used to sit on the Settings page, restored.
+     [key, name, description, page bg, sidebar bg, accent, hover, border, text, muted] */
+  var CLASSIC = [
+    ['midnight', 'Midnight', 'Pitch black with grey borders and white text', '#000000,#0a0a0a,#444444,#666666,#333333,#ffffff,#aaaaaa'],
+    ['vampire', 'Vampire Red', 'Dark red surfaces with a blood-red accent', '#0d0202,#160505,#ff0000,#ff3333,#5a1010,#ffffff,#aa8888'],
+    ['ocean', 'Ocean Deep', 'Deep blue-black with an ocean-blue accent', '#020b14,#051425,#0088ff,#33a2ff,#123a5c,#e6f3ff,#739ec6'],
+    ['forest', 'Forest Druid', 'Forest-black with a druid-green accent', '#030c05,#08170b,#00cc44,#22ff66,#124a26,#ebf7ed,#7da683'],
+    ['cyberpunk', 'Cyberpunk 2077', 'Neon yellow and cyan on a purple-black page', '#1c0024,#001219,#fcee0a,#ffff55,#00f0ff,#00f0ff,#fcee0a'],
+    ['toxic', 'Toxic Waste', 'Swamp black with a toxic acid-green accent', '#0f1402,#192104,#a3ff00,#b8ff33,#334d00,#f0ffdb,#8b9973'],
+    ['solar', 'Solar Flare', 'Blackened orange with a solar flare accent', '#140700,#240d02,#ff5500,#ff7733,#5c2000,#fff0e6,#c49980'],
+    ['ice', 'Ice Blizzard', 'Frosty blue-black with a bright ice accent', '#0f191c,#17272c,#00f3ff,#66f7ff,#1e5f66,#e6fdff,#8ca3a6'],
+    ['arcade', '80s Arcade', 'Retro purple with hot pink and cyan neon', '#120421,#21022b,#ff007f,#ff3399,#390099,#00ffff,#9e0059'],
+    ['bubblegum', 'Bubblegum', 'Pastel bubblegum pinks on a dark plum page', '#261c21,#3d2b34,#ffb7b2,#ffc6ff,#ffc6ff,#fff0f5,#b5839c'],
+    ['desert', 'Desert Strike', 'Sand-black with a desert gold accent', '#14120c,#211e14,#d4af37,#e5c158,#4a422d,#f5f2eb,#8f866e'],
+    ['royal', 'Royal Luxury', 'Dark violet with royal gold trim', '#0f0314,#1b0a24,#ffd700,#fff066,#4d4100,#ffffff,#b386cc'],
+    ['ghost', 'Ghostly', 'Slate black with a ghostly grey-blue accent', '#11161a,#1d242a,#708090,#93a3b1,#2a3138,#f0f4f8,#546573'],
+    ['espresso', 'Cocoa Espresso', 'Cocoa-black with a warm espresso accent', '#0f0b08,#1c140f,#875c36,#a67649,#3b2a1e,#fcf8f5,#9c8473'],
+    ['copper', 'Chrono Copper', 'Dark bronze with a chrono-copper accent', '#140d0a,#241610,#b87333,#cd7f32,#4d2f23,#faebd7,#947161'],
+    ['eclipse', 'Crimson Eclipse', 'Near-black with a crimson eclipse accent', '#050508,#101017,#800020,#990026,#33141c,#f5e6e8,#7a6366'],
+    ['cotton', 'Cotton Candy', 'Navy-black with a soft cotton-candy accent', '#121a24,#1b2836,#84dcc6,#ffa6c9,#ffa6c9,#ffffff,#a5b3c2'],
+    ['moonlight', 'Moonlight', 'Midnight blue with a moonlit steel accent', '#080a0f,#101420,#7b92b5,#9cb2d6,#2a3445,#f0f4fa,#616f85'],
+    ['amber', 'Amber Steampunk', 'Steampunk black with an amber glow', '#120d06,#1f160b,#ffbf00,#ffd04d,#402d14,#fff7e6,#948269'],
+    ['rgb', 'Fading RGB', 'Pitch black with a cycling rainbow accent', '#030303,#0f0f0f,#ff0000,#ff5555,#222222,#ffffff,#777777'],
+    ['matrix', 'Matrix Rain', 'Black with digital green rain text', '#000000,#050a05,#00ff00,#55ff55,#003300,#00ff00,#004400'],
+    ['neon', 'Neon Pulse', 'Black with pulsing neon cyan and pink', '#020005,#090314,#00ffef,#ff007f,#00ffef,#ffffff,#625073'],
+    ['cosmic', 'Cosmic Void', 'Void black with a cosmic violet accent', '#05010a,#0b0414,#7f00ff,#b266ff,#34115c,#e6d7ff,#8c6fa8'],
+    ['magma', 'Magma Core', 'Charcoal black with a molten magma accent', '#1a0a00,#260f02,#ff3b00,#ff6a33,#5c1a00,#ffe6d9,#b38a7a'],
+    ['glacial', 'Glacial Shard', 'Frozen black with a glacial blue accent', '#0a1116,#122028,#7fe9ff,#b3f4ff,#1f4d5c,#e9fcff,#9bb3b8'],
+    ['titanium', 'Industrial Titanium', 'Industrial black with titanium silver', '#0c0c0e,#161618,#c0c0c0,#e0e0e0,#3a3a3a,#f5f5f5,#8c8c8c'],
+    ['aurora', 'Aurora Sky', 'Night-black with an aurora green accent', '#050a12,#0c1520,#00ffa6,#66ffcc,#0d4d3d,#eafff7,#7fb3a3'],
+    ['starforge', 'Starforge', 'Deep-space black with a hot pink accent', '#0a0014,#140024,#ff00c8,#ff4dd9,#4d1145,#f7e6ff,#a66fb3'],
+    ['lab', 'Laboratory Sterile', 'Clinical black with a sterile blue-white accent', '#0d0f12,#181b20,#c8e6ff,#e1f3ff,#39434d,#f5faff,#9aa6b3'],
+    ['dragon', 'Dragon Scale', 'Dark scale black with dragon red', '#0b0f08,#141c10,#cc0000,#ff3333,#4d1a1a,#f7e6e6,#a67a7a'],
+    ['storm', 'Stormfront', 'Storm-cloud black with a lightning blue accent', '#0a0d12,#141820,#7fb2ff,#a6caff,#2a3d5c,#eaf1ff,#8c9bb3'],
+    ['chrome', 'Chrome Mirror', 'Mirror black with polished chrome', '#0c0c0c,#1a1a1a,#d9d9d9,#ffffff,#3d3d3d,#f2f2f2,#a6a6a6'],
+    ['surge', 'Electric Surge', 'Electric black with a pulsing blue surge', '#02040a,#060b14,#00aaff,#33cfff,#0d334d,#e6f7ff,#7fa3c2'],
+    ['void', 'Void Ripple', 'Void black with a rippling violet accent', '#050007,#0a0010,#5500ff,#7f33ff,#2b0d5c,#f0e6ff,#8c6fa8'],
+    ['aether', 'Aether Flow', 'Dark teal-black with an aether glow', '#0a0f12,#101820,#66ffe0,#b3fff2,#1f4d47,#eafff7,#9bb3b8'],
+    ['inferno', 'Inferno Breath', 'Charred black with a flickering inferno accent', '#140600,#240a02,#ff3300,#ff7733,#5c1a00,#ffe6d9,#b38a7a'],
+    ['cryo', 'Cryo Pulse', 'Frozen blue-black with a cryo pulse', '#0b1418,#132228,#00eaff,#99faff,#0d4d5c,#e6fdff,#8ca3a6'],
+    ['techno', 'Technomorph', 'Circuit black with a sweeping green accent', '#040d08,#0a1a11,#00ff88,#55ffcc,#0d4d2a,#e6fff5,#7fb3a3']
   ];
+
+  var CHOICES = FEATURED.slice();
+
+  CLASSIC.forEach(function (row) {
+    var c = row[3].split(',');
+    PALETTES[row[0]] = {
+      bg: c[0], sidebar: c[1], accent: c[2], hover: c[3],
+      border: c[4], text: c[5], muted: c[6]
+    };
+    CHOICES.push({ key: row[0], site: row[0], name: row[1], desc: row[2] });
+  });
+
+  function previewFor(item) {
+    if (item.preview) return item.preview;
+    var p = PALETTES[item.key] || PALETTES.purple;
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200">' +
+      '<rect width="320" height="200" fill="' + p.bg + '"/>' +
+      '<rect x="14" y="16" width="54" height="168" rx="6" fill="' + p.sidebar + '" stroke="' + p.border + '"/>' +
+      '<rect x="80" y="16" width="226" height="26" rx="6" fill="' + p.sidebar + '" stroke="' + p.border + '"/>' +
+      '<rect x="80" y="54" width="108" height="62" rx="6" fill="' + p.sidebar + '" stroke="' + p.border + '"/>' +
+      '<rect x="198" y="54" width="108" height="62" rx="6" fill="' + p.sidebar + '" stroke="' + p.border + '"/>' +
+      '<rect x="80" y="130" width="226" height="10" rx="5" fill="' + p.border + '"/>' +
+      '<rect x="80" y="150" width="168" height="10" rx="5" fill="' + p.muted + '"/>' +
+      '<circle cx="41" cy="40" r="9" fill="' + p.accent + '"/>' +
+      '<rect x="25" y="62" width="32" height="6" rx="3" fill="' + p.accent + '"/>' +
+      '<rect x="25" y="77" width="24" height="6" rx="3" fill="' + p.muted + '"/>' +
+      '<rect x="80" y="186" width="90" height="6" rx="3" fill="' + p.accent + '"/>' +
+      '</svg>';
+    return 'data:image/svg+xml,' + encodeURIComponent(svg);
+  }
+
+  function buildCards() {
+    return CHOICES.map(function (item) {
+      return '<button type="button" class="nx-bg-choice" data-bg-key="' + item.key + '" data-bg-site="' + item.site + '" data-bg-name="' + item.name + '" data-bg-desc="' + item.desc + '" aria-pressed="false" onclick="nxChooseBackground(this)">' +
+        '<img src="' + previewFor(item) + '" alt="' + item.name + ' background preview" loading="lazy">' +
+        '<span class="nx-bg-choice-copy"><strong>' + item.name + '</strong><small>' + item.desc + '</small></span>' +
+        '<span class="nx-bg-tick" aria-hidden="true">&check;</span>' +
+      '</button>';
+    }).join('');
+  }
 
   function storedTheme() {
     try {
@@ -509,23 +592,24 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function ensureBackgroundPicker() {
-    if (document.getElementById('nx-bg-modal')) return;
-    var cards = CHOICES.map(function (item) {
-      return '<button type="button" class="nx-bg-choice" data-bg-key="' + item.key + '" data-bg-site="' + item.site + '" data-bg-name="' + item.name + '" data-bg-desc="' + item.desc + '" aria-pressed="false" onclick="nxChooseBackground(this)">' +
-        '<img src="/Settings/previews/' + item.key + '.svg" alt="' + item.name + ' dashboard preview">' +
-        '<span class="nx-bg-choice-copy"><strong>' + item.name + '</strong><small>' + item.desc + '</small></span>' +
-        '<span class="nx-bg-tick" aria-hidden="true">&check;</span>' +
-      '</button>';
-    }).join('');
+    var existing = document.getElementById('nx-bg-modal');
+    if (existing) {
+      var grid = existing.querySelector('.nx-bg-grid');
+      if (grid && grid.getAttribute('data-count') !== String(CHOICES.length)) {
+        grid.innerHTML = buildCards();
+        grid.setAttribute('data-count', String(CHOICES.length));
+      }
+      return;
+    }
     var modal = document.createElement('div');
     modal.id = 'nx-bg-modal';
     modal.className = 'nx-bg-modal';
     modal.setAttribute('aria-hidden', 'true');
     modal.innerHTML =
       '<div class="nx-bg-panel" role="dialog" aria-modal="true" aria-labelledby="nx-bg-title">' +
-        '<header class="nx-bg-head"><div><h2 id="nx-bg-title">Choose a background</h2><p>Real previews of the dashboard. Pick one and it applies immediately.</p></div>' +
+        '<header class="nx-bg-head"><div><h2 id="nx-bg-title">Choose a background</h2><p>All ' + CHOICES.length + ' dashboard backgrounds, including every classic one. Pick one and it applies immediately.</p></div>' +
         '<button type="button" class="nx-bg-close" aria-label="Close background picker" onclick="nxCloseBackgroundPicker()">&times;</button></header>' +
-        '<div class="nx-bg-grid">' + cards + '</div>' +
+        '<div class="nx-bg-grid" data-count="' + CHOICES.length + '">' + buildCards() + '</div>' +
         '<footer class="nx-bg-foot"><span>Your choice is saved for this browser.</span><button type="button" onclick="nxCloseBackgroundPicker()">Done</button></footer>' +
       '</div>';
     modal.addEventListener('click', function (event) {
@@ -542,9 +626,9 @@ document.addEventListener('DOMContentLoaded', () => {
     var nameEl = document.getElementById('nxbgCurrentName');
     var descEl = document.getElementById('nxbgCurrentDesc');
     var imageEl = document.getElementById('nxbgCurrentPreview');
-    if (nameEl && nameEl.textContent !== name) nameEl.textContent = name;
-    if (descEl && descEl.textContent !== desc) descEl.textContent = desc;
-    if (imageEl && image && imageEl.getAttribute('src') !== image.getAttribute('src')) imageEl.src = image.src;
+    if (nameEl) nameEl.textContent = name;
+    if (descEl) descEl.textContent = desc;
+    if (imageEl && image) imageEl.src = image.src;
     var choices = document.querySelectorAll('.nx-bg-choice');
     for (var i = 0; i < choices.length; i++) {
       var active = choices[i] === choice;
@@ -621,9 +705,7 @@ document.addEventListener('DOMContentLoaded', () => {
   else setTimeout(initWhenReady, 0);
   try {
     var observer = new MutationObserver(function () {
-      if (!document.querySelector('.nx-bg-current')) return;
-      observer.disconnect();
-      window.nxInitBackgroundPicker(document);
+      if (document.querySelector('.nx-bg-current')) window.nxInitBackgroundPicker(document);
     });
     observer.observe(document.body, { childList: true, subtree: true });
   } catch (e) {}
