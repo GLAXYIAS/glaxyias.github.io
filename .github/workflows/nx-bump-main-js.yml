@@ -1,0 +1,34 @@
+name: Bump main.js cache
+on:
+  push:
+    paths:
+      - '.github/workflows/nx-bump-main-js.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bump cache key and self-delete
+        run: |
+          sed -i 's/20261125players1/20261125players2/' index.html
+          grep -n 'main.js?v=' index.html
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Bust main.js cache for the expanded game library"
+          git rm .github/workflows/nx-bump-main-js.yml
+          git commit -m "Remove one-shot cache bump workflow"
+          git push
+      - name: Trigger Pages deploy
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl -fsS -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/GLAXYIAS/glaxyias.github.io/actions/workflows/static.yml/dispatches \
+            -d '{"ref":"main"}'
