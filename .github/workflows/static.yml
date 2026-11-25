@@ -20,7 +20,7 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url || steps.deployment_retry.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -43,6 +43,18 @@ jobs:
         with:
           path: '.'
 
+      # deploy-pages occasionally asks for the artifact list before GitHub has
+      # indexed the upload from the step above and fails with "No artifacts named
+      # github-pages". Let it settle, and retry once before failing the run.
+      - name: Wait for the uploaded artifact to settle
+        run: sleep 20
+
       - name: Deploy to GitHub Pages
         id: deployment
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+
+      - name: Deploy to GitHub Pages (retry)
+        if: steps.deployment.outcome == 'failure'
+        id: deployment_retry
         uses: actions/deploy-pages@v4
