@@ -698,14 +698,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (event.key === 'Escape') window.nxCloseBackgroundPicker();
   });
 
+  var initialized = false;
   function initWhenReady() {
-    if (document.querySelector('.nx-bg-current')) window.nxInitBackgroundPicker(document);
+    if (initialized) return;
+    if (!document.querySelector('.nx-bg-current')) return;
+    initialized = true;
+    window.nxInitBackgroundPicker(document);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initWhenReady);
   else setTimeout(initWhenReady, 0);
   try {
     var observer = new MutationObserver(function () {
-      if (document.querySelector('.nx-bg-current')) window.nxInitBackgroundPicker(document);
+      if (!initialized) initWhenReady();
     });
     observer.observe(document.body, { childList: true, subtree: true });
   } catch (e) {}
