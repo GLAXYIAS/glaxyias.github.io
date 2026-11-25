@@ -1,0 +1,17 @@
+{
+  "source": "https://ecb23f7f-98a2-4c92-b33e-d1b7ac2c1c68.gdn.poki.com/83880136-eb17-4e23-8bed-bac44a1f0344",
+  "downloaded_utc": "2026-11-25T21:55:53Z",
+  "bundles": {
+    "internal": "52d36",
+    "efffect": "e3cbe",
+    "mainScenes": "e439a",
+    "Map": "819ed",
+    "prefabs": "f5de7",
+    "res": "aa0dd",
+    "resources": "e6f5f",
+    "UI": "a7d39",
+    "main": "fa0e5"
+  },
+  "files": 76,
+  "bytes": 3454532
+}

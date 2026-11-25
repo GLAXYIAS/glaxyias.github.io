@@ -2,7 +2,7 @@
 // DYNAMIC CORE SYSTEMS & GAMES REGISTER DATA
 // ==========================================
 let _0xData = [
-  { id: "stickman-battle", title: "Stickman Battle", url: "https://poki.com/en/g/stickman-battle", image: "../Games/_covers/actual/stickman-battle.png", desc: "Fast-paced stickman fighting. Play solo, take on a friend locally, or battle online players.", popular: true, noIframe: true, playerModes: ["single", "multiplayer"], tags: ["Fighting", "Action", "Multiplayer"] },
+  { id: "stickman-battle", title: "Stickman Battle", url: "../Games/stickman-battle/index.html", image: "../Games/_covers/actual/stickman-battle.png", desc: "Fast-paced stickman fighting. Play solo, take on a friend locally, or battle online players.", popular: true, playerModes: ["single", "multiplayer"], tags: ["Fighting", "Action", "Multiplayer"] },
   { id: "b_ap", title: "Brotato All Pain No Gain", url: "../Games/brotatoAPNG/Brotato.html", image: "../Games/_covers/actual/b_ap.jpg", desc: "The newest version of Brotato with the All Pain No Gain update.", popular: true , tags: ["Roguelike", "Shooter", "Action"] },
   { id: "undead_corridor", title: "Undead Corridor", url: "../Games/undead-corridor/index.html", desc: "Fight your way through zombie-filled corridors in this intense survival shooter. Use a variety of weapons, take down the undead, and see how long you can survive.", popular: true , image: "../Games/_covers/actual/undead_corridor.jpg" , tags: ["Horror", "Shooter"] },
   { id: "blood", title: "BloodVox", url: "../Games/bloodvox/index.html", desc: "Custom game", popular: true , image: "../Games/_covers/actual/blood.jpg" , tags: ["Horror", "Shooter"] },
