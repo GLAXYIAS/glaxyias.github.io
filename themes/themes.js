@@ -25,22 +25,24 @@ window.applyTheme = function(themeName) {
 
   nxScopeDebugStyles();
 
-  // Remove previous theme-* classes
+  // The background picker below owns the full 44-theme catalog. Let it apply
+  // the palette (including the dashboard CSS variables) so every theme choice
+  // is visible everywhere instead of only being written to localStorage.
+  if (window.NXThemes && typeof window.NXThemes.apply === 'function') {
+    window.NXThemes.apply(name, { persist: true });
+    return;
+  }
+
+  // Fallback used only before the picker script has evaluated.
   const classesToRemove = Array.from(document.body.classList).filter(cls =>
     cls.startsWith('theme-')
   );
   classesToRemove.forEach(cls => document.body.classList.remove(cls));
-
-  // Apply class for themes.css selectors that use body.theme-*
   if (name && name !== 'default') {
     document.body.classList.add('theme-' + name);
   }
-
-  // Apply data-theme for themes.css selectors that use [data-theme="..."]
   document.documentElement.setAttribute('data-theme', name);
   document.body.setAttribute('data-theme', name);
-
-  // Keep all historical storage keys in sync so settings/debug/newsettings agree
   localStorage.setItem('nullx-theme', name);
   localStorage.setItem('selectedTheme', name);
   localStorage.setItem('nxos_theme', name);
@@ -548,6 +550,151 @@ document.addEventListener('DOMContentLoaded', () => {
     CHOICES.push({ key: row[0], site: row[0], name: row[1], desc: row[2] });
   });
 
+  var THEME_BY_KEY = {};
+  CHOICES.forEach(function (item) { THEME_BY_KEY[item.key] = item; });
+
+  function canonicalKey(value) {
+    if (!value) return 'purple';
+    if (value === 'default') return 'purple';
+    return THEME_BY_KEY[value] ? value : 'purple';
+  }
+
+  /* One saved choice, read by the Settings picker and the dashboard. */
+  function storedTheme() {
+    var fromPicker = null;
+    try {
+      var raw = localStorage.getItem('nxup_theme');
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        if (typeof parsed === 'string' && THEME_BY_KEY[parsed]) fromPicker = parsed;
+      }
+    } catch (e) {}
+    var fromSite = null;
+    try {
+      var selected = localStorage.getItem('selectedTheme') || '';
+      if (selected && selected !== 'default' && THEME_BY_KEY[selected]) fromSite = selected;
+    } catch (e) {}
+    /* Older builds could leave nxup_theme at the orange default while the
+       Settings picker had already saved a real background. Prefer whichever
+       choice is not the default. */
+    if (fromPicker && fromPicker !== 'purple') return fromPicker;
+    if (fromSite) return fromSite;
+    return fromPicker || 'purple';
+  }
+
+  function ensurePickerStyles() {
+    if (document.getElementById('nx-bg-modal-css')) return;
+    if (document.querySelector('link[href*="backgrounds.css"]')) return;
+    var style = document.createElement('style');
+    style.id = 'nx-bg-modal-css';
+    style.textContent =
+      '.nx-bg-modal{display:none;position:fixed;inset:0;z-index:2147483600;padding:20px;align-items:center;justify-content:center;background:rgba(0,0,0,.84);backdrop-filter:blur(8px);box-sizing:border-box}' +
+      '.nx-bg-modal.nx-open{display:flex}html.nx-bg-open,html.nx-bg-open body{overflow:hidden!important}' +
+      '.nx-bg-panel{width:min(980px,100%);max-height:min(88vh,780px);display:flex;flex-direction:column;overflow:hidden;border:1px solid #e07a00;border-radius:16px;background:#000;color:#f0922a;box-shadow:none}' +
+      '.nx-bg-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:18px 20px 14px;border-bottom:1px solid #e07a00}' +
+      '.nx-bg-head h2{margin:0;color:#f0922a;font-size:1.16rem}.nx-bg-head p{margin:5px 0 0;color:#b86a12;font-size:.8rem;line-height:1.45}' +
+      '.nx-bg-close{flex:0 0 auto;width:34px!important;height:34px;padding:0!important;font-size:1.3rem!important;line-height:1!important;border:1px solid #e07a00!important;border-radius:8px!important;background:#000!important;color:#f0922a!important;cursor:pointer}' +
+      '.nx-bg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:14px;padding:18px 20px 20px;overflow-y:auto}' +
+      '.nx-bg-choice{position:relative;display:block!important;width:100%;padding:0!important;overflow:visible;border:1px solid #e07a00!important;border-radius:10px!important;background:#000!important;color:#f0922a!important;text-align:left!important;cursor:pointer;font:inherit}' +
+      '.nx-bg-choice img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:9px 9px 0 0;border-bottom:1px solid #e07a00;background:#050505}' +
+      '.nx-bg-choice-copy{display:block;padding:10px 12px 11px}.nx-bg-choice-copy strong{display:block;color:#f0922a;font-size:.9rem;line-height:1.25}' +
+      '.nx-bg-choice-copy small{display:block;margin-top:3px;color:#b86a12;font-size:.72rem;line-height:1.35}' +
+      '.nx-bg-tick{position:absolute;top:9px;right:9px;display:none;width:22px;height:22px;align-items:center;justify-content:center;border:1px solid #e07a00;border-radius:50%;background:#000;color:#f0922a;font-size:.75rem;font-weight:900}' +
+      '.nx-bg-choice.nx-active{border-color:#f59e0b!important}.nx-bg-choice.nx-active .nx-bg-tick{display:inline-flex}' +
+      '.nx-bg-choice:hover{border-color:#f59e0b!important}.nx-bg-choice:hover img{opacity:.92}' +
+      '.nx-bg-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;border-top:1px solid #e07a00;color:#b86a12;font-size:.78rem}' +
+      '.nx-bg-foot button{flex:0 0 auto;border:1px solid #e07a00!important;border-radius:8px!important;background:#000!important;color:#f0922a!important;padding:8px 14px;cursor:pointer;font:inherit}' +
+      '@media(max-width:620px){.nx-bg-grid{grid-template-columns:1fr;padding:14px 16px 16px}.nx-bg-head,.nx-bg-foot{padding-left:16px;padding-right:16px}.nx-bg-foot{flex-direction:column;align-items:stretch}}';
+    (document.head || document.documentElement).appendChild(style);
+  }
+
+  function syncActive(key) {
+    var item = THEME_BY_KEY[key] || THEME_BY_KEY.purple;
+    var nameEl = document.getElementById('nxbgCurrentName');
+    var descEl = document.getElementById('nxbgCurrentDesc');
+    var imageEl = document.getElementById('nxbgCurrentPreview');
+    if (nameEl) nameEl.textContent = item.name;
+    if (descEl) descEl.textContent = item.desc;
+    var choices = document.querySelectorAll('.nx-bg-choice');
+    for (var i = 0; i < choices.length; i++) {
+      var active = choices[i].getAttribute('data-bg-key') === key;
+      choices[i].classList.toggle('nx-active', active);
+      choices[i].setAttribute('aria-pressed', active ? 'true' : 'false');
+      if (active && imageEl) {
+        var img = choices[i].querySelector('img');
+        if (img) imageEl.src = img.src;
+      }
+    }
+  }
+
+  /* Apply a theme for real: inline !important wins over CSS/black-orange.css,
+     which used to force the dashboard back to orange on every load. */
+  function applyThemeKey(key, opts) {
+    opts = opts || {};
+    key = canonicalKey(key);
+    var item = THEME_BY_KEY[key] || THEME_BY_KEY.purple;
+    var p = PALETTES[key] || PALETTES.purple;
+    var site = key === 'purple' ? 'default' : key;
+    var root = document.documentElement;
+
+    root.setAttribute('data-theme', site);
+    root.setAttribute('data-nxup-theme', key);
+    root.setAttribute('data-nx-theme', key);
+
+    try {
+      var classes = [];
+      for (var c = 0; c < document.body.classList.length; c++) {
+        var cls = document.body.classList[c];
+        if (cls.indexOf('theme-') !== 0) classes.push(cls);
+      }
+      document.body.className = classes.join(' ');
+      if (site !== 'default') document.body.classList.add('theme-' + site);
+      document.body.setAttribute('data-theme', site);
+    } catch (e) {}
+
+    var vars = {
+      '--bg-dashboard': p.bg,
+      '--bg-sidebar': p.sidebar,
+      '--container-bg': p.sidebar,
+      '--bg-gradient': 'linear-gradient(135deg,' + p.sidebar + ',' + p.bg + ')',
+      '--accent': p.accent,
+      '--accent-color': p.accent,
+      '--accent-hover': p.hover,
+      '--border-color': p.border,
+      '--text-main': p.text,
+      '--text-muted': p.muted,
+      '--nxup-bg': p.bg,
+      '--nxup-panel': p.sidebar,
+      '--nxup-line': p.border,
+      '--nxup-accent': p.accent,
+      '--nxup-muted': p.muted
+    };
+    Object.keys(vars).forEach(function (name) {
+      root.style.setProperty(name, vars[name], 'important');
+    });
+    try {
+      document.body.style.setProperty('background-color', p.bg, 'important');
+      document.body.style.setProperty('background-image', 'none', 'important');
+    } catch (e) {}
+
+    if (opts.persist !== false) {
+      try {
+        localStorage.setItem('nxup_theme', JSON.stringify(key));
+        localStorage.setItem('selectedTheme', site);
+        localStorage.setItem('nullx-theme', site);
+        localStorage.setItem('nxos_theme', site);
+      } catch (e) {}
+    }
+
+    syncActive(key);
+    try {
+      window.dispatchEvent(new CustomEvent('nx-theme-change', {
+        detail: { key: key, name: item.name, palette: p }
+      }));
+    } catch (e) {}
+    return key;
+  }
+
   function previewFor(item) {
     if (item.preview) return item.preview;
     var p = PALETTES[item.key] || PALETTES.purple;
@@ -577,22 +724,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
   }
 
-  function storedTheme() {
-    var selected = '';
-    try { selected = localStorage.getItem('selectedTheme') || ''; } catch (e) {}
-    if (selected === 'default' || !selected) return 'purple';
-    if (PALETTES[selected]) return selected;
-    try {
-      var raw = localStorage.getItem('nxup_theme');
-      if (raw) {
-        var parsed = JSON.parse(raw);
-        if (typeof parsed === 'string' && parsed && PALETTES[parsed]) return parsed;
-      }
-    } catch (e) {}
-    return 'purple';
-  }
 
   function ensureBackgroundPicker() {
+    ensurePickerStyles();
     var existing = document.getElementById('nx-bg-modal');
     if (existing) {
       var grid = existing.querySelector('.nx-bg-grid');
@@ -639,8 +773,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   window.nxInitBackgroundPicker = function (scope) {
-    var root = scope || document;
-    if (!root.querySelector('.nx-bg-current')) return;
     ensureBackgroundPicker();
     var choices = document.querySelectorAll('.nx-bg-choice');
     if (!choices.length) return;
@@ -671,29 +803,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.nxChooseBackground = function (choice) {
     if (!choice) return;
-    var key = choice.getAttribute('data-bg-key') || 'purple';
-    var site = choice.getAttribute('data-bg-site') || 'default';
-    var palette = PALETTES[key] || PALETTES.purple;
-    try {
-      localStorage.setItem('nxup_theme', JSON.stringify(key));
-      localStorage.setItem('selectedTheme', site);
-      localStorage.setItem('nullx-theme', site);
-      localStorage.setItem('nxos_theme', site);
-    } catch (e) {}
-    if (typeof window.applyTheme === 'function') window.applyTheme(site);
-    var root = document.documentElement;
-    root.setAttribute('data-nxup-theme', key);
-    root.style.setProperty('--bg-dashboard', palette.bg);
-    root.style.setProperty('--bg-sidebar', palette.sidebar);
-    root.style.setProperty('--accent', palette.accent);
-    root.style.setProperty('--accent-color', palette.accent);
-    root.style.setProperty('--accent-hover', palette.hover);
-    root.style.setProperty('--border-color', palette.border);
-    root.style.setProperty('--text-main', palette.text);
-    root.style.setProperty('--text-muted', palette.muted);
-    root.style.setProperty('--bg-gradient', 'linear-gradient(135deg,' + palette.sidebar + ',' + palette.bg + ')');
-    syncCurrent(choice);
+    var key = canonicalKey(choice.getAttribute('data-bg-key'));
+    /* The dashboard upgrade pack awards the theme XP/toast; on Settings we
+       apply the same shared choice directly. */
+    if (window.NXUpgrade && typeof window.NXUpgrade.applyTheme === 'function') {
+      window.NXUpgrade.applyTheme(key);
+    } else {
+      applyThemeKey(key);
+    }
   };
+
+  window.NXThemes = {
+    version: '2.0.0',
+    list: CHOICES,
+    palettes: PALETTES,
+    current: storedTheme,
+    get: function (key) { return THEME_BY_KEY[canonicalKey(key)]; },
+    apply: applyThemeKey,
+    choose: function (key) { return applyThemeKey(canonicalKey(key)); },
+    openPicker: function () { window.nxOpenBackgroundPicker(); }
+  };
+
+  /* Restore the saved background immediately, before the first paint. */
+  try { applyThemeKey(storedTheme(), { persist: true }); } catch (e) {}
 
   document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape') window.nxCloseBackgroundPicker();
@@ -705,6 +837,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!document.querySelector('.nx-bg-current')) return;
     initialized = true;
     window.nxInitBackgroundPicker(document);
+    syncActive(storedTheme());
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initWhenReady);
   else setTimeout(initWhenReady, 0);

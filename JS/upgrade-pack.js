@@ -429,6 +429,18 @@
     updateLevelChip();
   }
 
+  function openThemePicker() {
+    if (typeof window.nxOpenBackgroundPicker === 'function') {
+      window.nxOpenBackgroundPicker();
+      return;
+    }
+    if (window.NXThemes && typeof window.NXThemes.openPicker === 'function') {
+      window.NXThemes.openPicker();
+      return;
+    }
+    openDashboard('overview');
+  }
+
   function buildDock() {
     if (document.getElementById('nxup-dock')) return;
 
@@ -464,10 +476,10 @@
     themeBtn.type = 'button';
     themeBtn.className = 'nxup-dock-btn';
     themeBtn.id = 'nxup-open-themes';
-    themeBtn.title = 'Change colour theme';
-    themeBtn.setAttribute('aria-label', 'Change colour theme');
+    themeBtn.title = 'Change background';
+    themeBtn.setAttribute('aria-label', 'Change background');
     themeBtn.innerHTML = svgIcon('palette', 18);
-    themeBtn.addEventListener('click', function () { openDashboard('themes'); });
+    themeBtn.addEventListener('click', function () { openThemePicker(); });
 
     var topBtn = document.createElement('button');
     topBtn.type = 'button';
@@ -534,45 +546,25 @@
   /* ------------------------------------------------------------------ */
   /* Themes                                                             */
   /* ------------------------------------------------------------------ */
-  var THEMES = {
-    purple: { name: 'Null Orange', accent: '#e07a00', hover: '#f59e0b', bg: '#000000', sidebar: '#000000', border: '#e07a00', text: '#f0922a', muted: '#b86a12' },
-    cyan:   { name: 'Cyber Cyan',  accent: '#00c2ff', hover: '#38d6ff', bg: '#04121c', sidebar: '#062033', border: '#114a63', text: '#e0f6ff', muted: '#93c9dd' },
-    crimson:{ name: 'Crimson',     accent: '#ff2d55', hover: '#ff5c7c', bg: '#1a0410', sidebar: '#26061a', border: '#6b1730', text: '#ffe6ec', muted: '#d19aa9' },
-    emerald:{ name: 'Emerald',     accent: '#00d97e', hover: '#33e69a', bg: '#04170f', sidebar: '#06241a', border: '#12603f', text: '#e2fff2', muted: '#93ccb0' },
-    gold:   { name: 'Gold',        accent: '#f5b301', hover: '#ffc633', bg: '#161103', sidebar: '#221a05', border: '#6b530f', text: '#fff6dc', muted: '#d3bd85' },
-    mono:   { name: 'Mono Chrome', accent: '#c9c9d4', hover: '#e6e6ef', bg: '#0b0b0f', sidebar: '#14141a', border: '#33333d', text: '#f2f2f6', muted: '#a0a0ad' }
-  };
-
+  /* The catalog and saved choice live in themes/themes.js (NXThemes) so
+     the Settings picker and the dashboard can never drift apart again. */
   function applyTheme(id, opts) {
     opts = opts || {};
-    var theme = THEMES[id] || THEMES.purple;
-    var root = document.documentElement;
-    var style = root.style;
+    var key = id || 'purple';
 
-    style.setProperty('--accent', theme.accent);
-    style.setProperty('--accent-hover', theme.hover);
-    style.setProperty('--bg-dashboard', theme.bg);
-    style.setProperty('--bg-sidebar', theme.sidebar);
-    style.setProperty('--border-color', theme.border);
-    style.setProperty('--text-main', theme.text);
-    style.setProperty('--text-muted', theme.muted);
-    style.setProperty('--bg-gradient', 'linear-gradient(135deg,' + theme.sidebar + ',' + theme.bg + ')');
-
-    try { root.setAttribute('data-nxup-theme', id in THEMES ? id : 'purple'); } catch (e) {}
-
-    state.theme = (id in THEMES) ? id : 'purple';
-    write(KEY.theme, state.theme);
-
-    var buttons = document.querySelectorAll('.nxup-theme');
-    for (var i = 0; i < buttons.length; i++) {
-      buttons[i].classList.toggle('nxup-active', buttons[i].getAttribute('data-theme') === state.theme);
+    if (window.NXThemes && typeof window.NXThemes.apply === 'function') {
+      key = window.NXThemes.apply(id, { persist: !opts.silent });
     }
 
+    state.theme = key;
+    write(KEY.theme, key);
+
     if (!opts.silent) {
+      var theme = window.NXThemes && window.NXThemes.get ? window.NXThemes.get(key) : null;
       state.stats.themeChanged = true;
       saveStats();
       addXp(10);
-      toast('palette', 'Theme changed: ' + theme.name, 'Saved for next time', '+10 XP');
+      toast('palette', 'Theme changed: ' + (theme ? theme.name : key), 'Saved for next time', '+10 XP');
       checkAchievements();
     }
   }
@@ -1019,11 +1011,9 @@
         '<div class="nxup-tabs" role="tablist" aria-label="Progress sections">' +
           '<button type="button" class="nxup-tab nxup-active" data-tab="overview" role="tab">Overview</button>' +
           '<button type="button" class="nxup-tab" data-tab="achievements" role="tab">Achievements</button>' +
-          '<button type="button" class="nxup-tab" data-tab="themes" role="tab">Themes</button>' +
         '</div>' +
         '<div class="nxup-body nxup-active" data-panel="overview"></div>' +
         '<div class="nxup-body" data-panel="achievements"></div>' +
-        '<div class="nxup-body" data-panel="themes"></div>' +
       '</div>');
 
     dashEl.querySelector('.nxup-close').addEventListener('click', function () { closeDialog(dashEl); });
@@ -1057,6 +1047,7 @@
   }
 
   function openDashboard(tab) {
+    if (tab === 'themes') { openThemePicker(); return; }
     if (!dashEl) buildDashboard();
     if (!dashEl) return;
     showDashTab(tab || dashTab || 'overview');
@@ -1163,28 +1154,6 @@
         '<div class="nxup-ach-grid">' + cards + '</div>';
     }
 
-    var themePanel = dashEl.querySelector('[data-panel="themes"]');
-    if (themePanel && !themePanel.dataset.built) {
-      themePanel.dataset.built = '1';
-      themePanel.innerHTML =
-        '<p class="nxup-muted" style="margin-bottom:10px">Pick a colour for the site. It is saved in this browser.</p>' +
-        '<div class="nxup-themes">' +
-          Object.keys(THEMES).map(function (id) {
-            var t = THEMES[id];
-            return '<button type="button" class="nxup-theme' + (state.theme === id ? ' nxup-active' : '') + '" data-theme="' + id + '">' +
-              '<span class="nxup-swatch" style="background:' + t.accent + '"></span>' + esc(t.name) +
-            '</button>';
-          }).join('') +
-        '</div>' +
-        '<p class="nxup-hint">Most of the site changes colour right away. Some inside-game screens and the built-in game player keep their own colours.</p>';
-
-      var themeButtons = themePanel.querySelectorAll('.nxup-theme');
-      for (var i = 0; i < themeButtons.length; i++) {
-        themeButtons[i].addEventListener('click', function () {
-          applyTheme(this.getAttribute('data-theme'));
-        });
-      }
-    }
   }
 
   /* ------------------------------------------------------------------ */
@@ -1306,7 +1275,7 @@
       { type: 'action', icon: 'casino', title: 'Random game', sub: 'Play something unexpected', run: function () { randomGame(); } },
       { type: 'action', icon: 'insights', title: 'Open my stats', sub: 'Games played, time played, favourites', run: function () { openDashboard('overview'); } },
       { type: 'action', icon: 'emoji_events', title: 'Open achievements', sub: 'See what you have unlocked', run: function () { openDashboard('achievements'); } },
-      { type: 'action', icon: 'palette', title: 'Change colour theme', sub: 'Purple, cyan, crimson, emerald, gold, mono', run: function () { openDashboard('themes'); } },
+      { type: 'action', icon: 'palette', title: 'Change background', sub: 'All classic and preset backgrounds in one place', run: function () { openThemePicker(); } },
       { type: 'action', icon: 'keyboard', title: 'Keyboard shortcuts', sub: 'Every shortcut in one place', run: function () { openShortcuts(); } },
       { type: 'action', icon: 'star', title: 'Go to favorites', sub: 'Your starred games', run: function () { var b = document.getElementById('nav-favorites'); if (b) b.click(); } },
       { type: 'action', icon: 'videogame_asset', title: 'Browse all games', sub: 'Open the full library', run: function () { var b = document.getElementById('nav-games'); if (b) b.click(); } }
@@ -1531,8 +1500,8 @@
     ensureStyles();
     refreshGames();
 
-    // 1. Restore saved theme before anything is painted twice.
-    applyTheme(state.theme, { silent: true });
+    // 1. Restore the shared background choice before anything is painted twice.
+    applyTheme(window.NXThemes ? window.NXThemes.current() : state.theme, { silent: true });
 
     // 2. Credit the last play session, then daily streak + favorites.
     try { creditPlayTime(); } catch (e) {}
