@@ -563,8 +563,9 @@ body.theme-techno { animation: none !important; }
      Animated backgrounds. themes.css used to animate the palette custom
      properties on <html>/<body>, but applyThemeKey writes those properties
      inline with !important, which freezes the animation. Drive the same
-     colours from requestAnimationFrame so RGB, Matrix, Neon, Surge, Void,
-     Aether, Inferno, Cryo and Techno keep moving.
+     colours from a timer so RGB, Matrix, Neon, Surge, Void, Aether,
+     Inferno, Cryo and Techno keep moving even after a background tab
+     throttles requestAnimationFrame.
      ------------------------------------------------------------------ */
   var THEME_ANIMATIONS = {
     rgb: { duration: 12000, linear: true, frames: [
@@ -622,7 +623,7 @@ body.theme-techno { animation: none !important; }
     ] }
   };
   var themeAnimKey = null;
-  var themeAnimFrame = 0;
+  var themeAnimTimer = 0;
 
   function parseNxColor(value) {
     var s = String(value || '').trim();
@@ -679,9 +680,9 @@ body.theme-techno { animation: none !important; }
 
   function stopThemeAnimation() {
     themeAnimKey = null;
-    if (themeAnimFrame) {
-      try { cancelAnimationFrame(themeAnimFrame); } catch (e) {}
-      themeAnimFrame = 0;
+    if (themeAnimTimer) {
+      clearInterval(themeAnimTimer);
+      themeAnimTimer = 0;
     }
   }
 
@@ -697,8 +698,9 @@ body.theme-techno { animation: none !important; }
     themeAnimKey = key;
     var root = document.documentElement;
     var start = (window.performance && performance.now) ? performance.now() : Date.now();
-    function tick(now) {
+    function tick() {
       if (themeAnimKey !== key) return;
+      var now = (window.performance && performance.now) ? performance.now() : Date.now();
       var elapsed = now - start;
       var progress = (((elapsed % def.duration) + def.duration) % def.duration) / def.duration;
       var values = animationFrameValues(def, progress);
@@ -713,9 +715,9 @@ body.theme-techno { animation: none !important; }
         root.style.setProperty('--nxup-line', values.border, 'important');
       }
       if (values.text) root.style.setProperty('--text-main', values.text, 'important');
-      themeAnimFrame = requestAnimationFrame(tick);
     }
-    themeAnimFrame = requestAnimationFrame(tick);
+    tick();
+    themeAnimTimer = setInterval(tick, 50);
   }
 
   function canonicalKey(value) {
