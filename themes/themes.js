@@ -578,17 +578,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function storedTheme() {
+    var selected = '';
+    try { selected = localStorage.getItem('selectedTheme') || ''; } catch (e) {}
+    if (selected === 'default' || !selected) return 'purple';
+    if (PALETTES[selected]) return selected;
     try {
       var raw = localStorage.getItem('nxup_theme');
       if (raw) {
         var parsed = JSON.parse(raw);
-        if (typeof parsed === 'string' && parsed) return parsed;
+        if (typeof parsed === 'string' && parsed && PALETTES[parsed]) return parsed;
       }
     } catch (e) {}
-    var selected = '';
-    try { selected = localStorage.getItem('selectedTheme') || ''; } catch (e) {}
-    if (selected === 'default' || !selected) return 'purple';
-    return PALETTES[selected] ? selected : 'purple';
+    return 'purple';
   }
 
   function ensureBackgroundPicker() {
