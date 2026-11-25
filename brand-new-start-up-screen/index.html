@@ -266,6 +266,11 @@ svg{display:block}
   transition:border-color .2s var(--ease),background .2s var(--ease);
 }
 .rail__brand:hover{border-color:rgba(224,122,0,.6);background:rgba(224,122,0,.06)}
+.rail__brand{overflow:hidden}
+
+.logo-img{display:block;object-fit:cover;object-position:50% 50%;background:#f5f1e9}
+.logo-img--sm{width:20px;height:20px;border-radius:2px;flex:none}
+.logo-img--lg{width:100%;height:100%}
 
 .rail__group{display:flex;flex-direction:column;width:100%}
 .rail__foot{display:flex;flex-direction:column;width:100%;margin-top:auto;padding-top:8px}
@@ -1573,7 +1578,7 @@ svg{display:block}
 
 <header class="status">
   <div class="status__brand">
-    <svg class="mark" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><rect x="1" y="1" width="18" height="18"/><path d="M4.4 15.6 15.6 4.4M4.4 4.4l11.2 11.2"/></svg>
+    <img class="logo-img logo-img--sm" src="../imgs/Screenshot%202026-01-27%208.17.07%20PM.png" alt="" width="20" height="20">
     Null <b>X</b>
     <span>Arcade OS</span>
   </div>
@@ -1593,7 +1598,7 @@ svg{display:block}
 
   <nav class="rail" aria-label="Primary">
     <a class="rail__brand" href="#top" aria-label="Null X — back to top">
-      <svg class="mark" width="22" height="22" viewBox="0 0 20 20" aria-hidden="true"><rect x="1" y="1" width="18" height="18"/><path d="M4.4 15.6 15.6 4.4M4.4 4.4l11.2 11.2"/></svg>
+      <img class="logo-img logo-img--lg" src="../imgs/Screenshot%202026-01-27%208.17.07%20PM.png" alt="Null X" width="44" height="44">
     </a>
 
     <div class="rail__group">
@@ -1779,7 +1784,7 @@ svg{display:block}
 
     <footer class="foot">
       <div class="foot__brand">
-        <svg class="mark" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><rect x="1" y="1" width="18" height="18"/><path d="M4.4 15.6 15.6 4.4M4.4 4.4l11.2 11.2"/></svg>
+        <img class="logo-img logo-img--sm" src="../imgs/Screenshot%202026-01-27%208.17.07%20PM.png" alt="" width="20" height="20">
         <div>
           <b>Null X</b>
           <p>A browser arcade, kept running by Glaxyias. Games belong to the people who made them.</p>
