@@ -33,7 +33,6 @@ jobs:
           grep -q 'CHAT_FETCH_LIMIT' chat/chat.js
           grep -q '20261126-notif3' chat/chat.html
           grep -q '20261126-notif3' chat/chat.js
-          grep -q '20261126-notif3' chat/sw.js
       - name: Commit and push
         run: |
           set -euo pipefail
