@@ -100,6 +100,7 @@ const NOTIF_ICON = 'https://glaxyias.github.io/imgs/download.jpeg';
 
 const VAPID_PUBLIC_KEY = 'BIwwvnF9JUMYs-q5qeCj8CHrXqtwBOjcC0WtvWtDMu_XniMQOlFIq-09hZmdnYCvQS7fnjC0dhC-em9UNrd3WWw';
 const PUSH_SUB_KEY = 'nullchat_push_subscription';
+const PUSH_SYNC_KEY = 'nullchat_push_sync';
 
 function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -110,10 +111,32 @@ function urlBase64ToUint8Array(base64String) {
     return outputArray;
 }
 
+function savePushUsername(username) {
+    return new Promise((resolve) => {
+        try {
+            const req = indexedDB.open('nullchat-push', 1);
+            req.onupgradeneeded = () => {
+                const db = req.result;
+                if (!db.objectStoreNames.contains('meta')) db.createObjectStore('meta');
+            };
+            req.onsuccess = () => {
+                const db = req.result;
+                try {
+                    const tx = db.transaction('meta', 'readwrite');
+                    tx.objectStore('meta').put(username || '', 'username');
+                    tx.oncomplete = () => { db.close(); resolve(true); };
+                    tx.onerror = () => { db.close(); resolve(false); };
+                } catch (e) { db.close(); resolve(false); }
+            };
+            req.onerror = () => resolve(false);
+        } catch (e) { resolve(false); }
+    });
+}
+
 async function ensureServiceWorker() {
     if (!('serviceWorker' in navigator)) return null;
     try {
-        const reg = await navigator.serviceWorker.register('./sw.js?v=20261126-notif', { scope: './' });
+        const reg = await navigator.serviceWorker.register('./sw.js?v=20261126-push2', { scope: './' });
         await navigator.serviceWorker.ready;
         return reg;
     } catch (e) {
@@ -143,27 +166,51 @@ async function subscribePush() {
         console.warn('Push not supported');
         return null;
     }
+    if (typeof Notification !== 'undefined' && Notification.permission !== 'granted') {
+        console.warn('Push subscribe skipped: notification permission not granted');
+        return null;
+    }
     const reg = await ensureServiceWorker();
     if (!reg) return null;
     try {
         let sub = await reg.pushManager.getSubscription();
+        const expectedKey = new Uint8Array(urlBase64ToUint8Array(VAPID_PUBLIC_KEY));
+        if (sub && sub.options && sub.options.applicationServerKey) {
+            const actualKey = new Uint8Array(sub.options.applicationServerKey);
+            const sameKey = actualKey.length === expectedKey.length
+                && actualKey.every((value, index) => value === expectedKey[index]);
+            if (!sameKey) {
+                try { await sub.unsubscribe(); } catch (e) {}
+                sub = null;
+            }
+        }
         if (!sub) {
             sub = await reg.pushManager.subscribe({
                 userVisibleOnly: true,
-                applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+                applicationServerKey: expectedKey
             });
         }
         const json = sub.toJSON();
+        const username = localStorage.getItem('chatUser') || '';
         localStorage.setItem(PUSH_SUB_KEY, JSON.stringify(json));
+        await savePushUsername(username);
         // Best-effort: store on API so server can push when tab is closed
         try {
-            const username = localStorage.getItem('chatUser') || '';
-            await fetch((typeof TURSO_API_BASE !== 'undefined' ? TURSO_API_BASE : 'https://apithingy.jlsniperelite4.workers.dev') + '/push-subscriptions', {
+            const res = await fetch((typeof TURSO_API_BASE !== 'undefined' ? TURSO_API_BASE : 'https://apithingy.jlsniperelite4.workers.dev') + '/push-subscriptions', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, subscription: json, created_at: new Date().toISOString() })
             });
-        } catch (e) { /* endpoint may not exist yet */ }
+            if (!res.ok) {
+                localStorage.setItem(PUSH_SYNC_KEY, 'error');
+                console.warn('Push subscription was not saved by the server:', res.status);
+            } else {
+                localStorage.setItem(PUSH_SYNC_KEY, 'ok');
+            }
+        } catch (e) {
+            localStorage.setItem(PUSH_SYNC_KEY, 'error');
+            console.warn('Push subscription save failed:', e);
+        }
         return sub;
     } catch (e) {
         console.warn('Push subscribe failed', e);
@@ -292,6 +339,37 @@ if ('serviceWorker' in navigator) {
 }
 
 
+let pushStatusCheck = 0;
+async function refreshPushStatus() {
+    const el = document.getElementById('notif-push-status');
+    if (!el) return;
+    if (typeof Notification === 'undefined') {
+        el.textContent = 'Closed-tab push: not supported in this browser';
+        return;
+    }
+    if (Notification.permission !== 'granted') {
+        el.textContent = 'Closed-tab push: allow browser notifications first';
+        return;
+    }
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+        el.textContent = 'Closed-tab push: not supported in this browser';
+        return;
+    }
+    const check = ++pushStatusCheck;
+    try {
+        const reg = await navigator.serviceWorker.getRegistration('./');
+        const sub = reg ? await reg.pushManager.getSubscription() : null;
+        if (check !== pushStatusCheck) return;
+        const sync = localStorage.getItem(PUSH_SYNC_KEY);
+        el.textContent = sub
+            ? 'Closed-tab push: subscribed' + (sync === 'error' ? ' — server sync failed, try the test button' : '')
+            : 'Closed-tab push: not subscribed yet — click “Test closed-tab push”';
+    } catch (e) {
+        if (check !== pushStatusCheck) return;
+        el.textContent = 'Closed-tab push: could not check subscription';
+    }
+}
+
 function syncNotifSettingsUI() {
     const g = document.getElementById('toggle-notif-general');
     const p = document.getElementById('toggle-notif-pms');
@@ -315,6 +393,7 @@ function syncNotifSettingsUI() {
             status.style.color = 'var(--text-muted)';
         }
     }
+    refreshPushStatus();
 }
 
 function promptEnableNotifications() {
@@ -1134,6 +1213,49 @@ function initSettingsPanelBindings() {
             if (!ok) alert('Could not show a notification. Check your browser site settings for this site.');
         });
     }
+    const notifPushTestBtn = document.getElementById('notif-push-test-btn');
+    if (notifPushTestBtn) {
+        notifPushTestBtn.addEventListener('click', async () => {
+            if (typeof Notification === 'undefined') {
+                alert('Notifications are not supported in this browser.');
+                return;
+            }
+            if (Notification.permission !== 'granted') {
+                try {
+                    const result = await Notification.requestPermission();
+                    if (result !== 'granted') {
+                        localStorage.setItem(NOTIF_PREF_KEY, result === 'denied' ? 'denied' : 'later');
+                        syncNotifSettingsUI();
+                        alert('Allow browser notifications first, then try the closed-tab test again.');
+                        return;
+                    }
+                    localStorage.setItem(NOTIF_PREF_KEY, 'granted');
+                    notificationsReady = true;
+                    if (localStorage.getItem(NOTIF_GENERAL_KEY) === null) setNotifGeneral(true);
+                    if (localStorage.getItem(NOTIF_PMS_KEY) === null) setNotifPms(true);
+                } catch (e) {
+                    syncNotifSettingsUI();
+                    return;
+                }
+            }
+            const sub = await subscribePush();
+            if (!sub) {
+                alert('Could not create a push subscription. Check that notifications are allowed for this site, then try again.');
+                return;
+            }
+            const username = localStorage.getItem('chatUser') || '';
+            if (!username) {
+                alert('Log in again before testing closed-tab notifications.');
+                return;
+            }
+            const win = window.open('./push-test.html?username=' + encodeURIComponent(username), '_blank');
+            if (!win) {
+                alert('Your browser blocked the test tab. Allow pop-ups for this site and try again.');
+                return;
+            }
+            syncNotifSettingsUI();
+        });
+    }
     syncNotifSettingsUI();
 }
 
@@ -1393,7 +1515,7 @@ window.initializeChatEngine = async function() {
     if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
         localStorage.setItem(NOTIF_PREF_KEY, 'granted');
         notificationsReady = true;
-        ensureServiceWorker().then(() => subscribePush()).catch(() => {});
+        ensureServiceWorker().then(() => subscribePush()).then(() => refreshPushStatus()).catch(() => {});
     }
 
     if (chatPollingInterval) clearInterval(chatPollingInterval);

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Closed-tab push test — NULL X</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin:0; min-height:100vh; display:grid; place-items:center; background:#0b0b0f; color:#e8e8ef; font:15px/1.5 system-ui, -apple-system, Segoe UI, sans-serif; }
+  main { width:min(520px, calc(100% - 32px)); padding:28px; border:1px solid #2a2a35; border-radius:16px; background:#121218; box-shadow:0 18px 60px rgba(0,0,0,.35); }
+  h1 { margin:0 0 8px; font-size:20px; }
+  p { margin:10px 0; color:#b9b9c6; }
+  .count { color:#fff; font-weight:700; font-size:26px; }
+  #status { margin-top:16px; padding:12px; border-radius:10px; background:#1b1b24; color:#d8d8e2; }
+  a { color:#9bb4ff; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Closed-tab push test</h1>
+  <p>Close the <strong>chat tab</strong> now. This tab will ask the server to send a push in <span class="count" id="count">15</span> seconds.</p>
+  <p>Keep this test tab open until it finishes. The notification should appear even though the chat tab is closed.</p>
+  <div id="status">Preparing…</div>
+  <p><a href="./chat.html">Back to chat</a></p>
+</main>
+<script>
+  const params = new URLSearchParams(location.search);
+  const username = params.get('username') || '';
+  const status = document.getElementById('status');
+  const count = document.getElementById('count');
+  let left = 15;
+  if (!username) {
+    status.textContent = 'No username was provided. Open this test from chat settings.';
+  } else {
+    const timer = setInterval(() => {
+      left -= 1;
+      count.textContent = String(left);
+      if (left <= 0) {
+        clearInterval(timer);
+        send();
+      }
+    }, 1000);
+  }
+  async function send() {
+    status.textContent = 'Sending test push…';
+    try {
+      const res = await fetch('https://apithingy.jlsniperelite4.workers.dev/push-test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username,
+          title: 'NULL Chat closed-tab test',
+          body: 'If you can see this, closed-tab notifications are working.',
+          url: './chat.html',
+          tag: 'closed-tab-test-' + Date.now()
+        })
+      });
+      const data = await res.json().catch(() => ({}));
+      const sent = Number(data.sent || 0);
+      status.textContent = sent > 0
+        ? `Push sent to ${sent} subscription${sent === 1 ? '' : 's'}. It should appear now.`
+        : 'The server did not find a push subscription for this account. Go back to chat, allow notifications, then try again.';
+    } catch (e) {
+      status.textContent = 'Could not reach the push server: ' + (e && e.message ? e.message : e);
+    }
+  }
+</script>
+</body>
+</html>
