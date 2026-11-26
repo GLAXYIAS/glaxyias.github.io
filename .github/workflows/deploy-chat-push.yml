@@ -1,0 +1,43 @@
+name: Deploy closed-tab chat push
+on:
+  push:
+    paths:
+      - '.github/workflows/deploy-chat-push.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: deploy-chat-push
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply patch
+        run: |
+          set -euo pipefail
+          test "$(sha256sum chat/chat.js | cut -d' ' -f1)" = "5338ee36f795b2a51ddc35a931620cd4ad5f15adbf95fbb632cf822a50dbbdde"
+          test "$(sha256sum chat/chat.html | cut -d' ' -f1)" = "2341508e5abb54a57d98cd8b4dd10f95b6be8307f086b01b336691c06ef38a80"
+          test "$(sha256sum chat/sw.js | cut -d' ' -f1)" = "6ef45693d5fb33ec46b568c8fb505a8786f037297f681718f271c87ba14d06a7"
+          test ! -e chat/push-test.html
+          git apply --check .github/chat-push/change.patch
+          git apply .github/chat-push/change.patch
+          git status --short
+      - name: Commit changes
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add chat/chat.js chat/chat.html chat/sw.js chat/push-test.html
+          git commit -m "Fix closed-tab chat push delivery"
+          git push
+      - name: Remove one-shot files
+        run: |
+          set -euo pipefail
+          git pull --rebase
+          git rm .github/workflows/deploy-chat-push.yml .github/chat-push/change.patch
+          git commit -m "Remove closed-tab push deploy workflow"
+          git push

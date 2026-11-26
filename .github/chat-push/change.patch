@@ -1,0 +1,433 @@
+diff --git a/chat/chat.html b/chat/chat.html
+index 730142b..a8ec230 100644
+--- a/chat/chat.html
++++ b/chat/chat.html
+@@ -257,6 +257,9 @@
+                     </div>
+                     <button type="button" id="notif-enable-browser-btn" class="settings-btn-secondary" style="margin-top:14px;">Allow browser notifications</button>
+                     <button type="button" id="notif-test-btn" class="settings-btn-secondary" style="margin-top:10px;">Send test notification</button>
++                    <button type="button" id="notif-push-test-btn" class="settings-btn-secondary" style="margin-top:10px;">Test closed-tab push</button>
++                    <p id="notif-push-status" class="settings-hint" style="margin-top:8px;">Closed-tab push: checking…</p>
++                    <p class="settings-hint" style="margin-top:4px;">The closed-tab test opens a separate tab; close this chat tab during its countdown.</p>
+                 </div>
+ 
+                 <div class="settings-card">
+@@ -473,7 +476,7 @@
+ <!-- Load proxy before other scripts so API calls use it -->
+ <script src="https://cdn.jsdelivr.net/gh/glaeesas/badwordfilter@main/badword.js"></script>
+ <script src="avatar-safe.js"></script>
+-<script src="chat.js?v=20261126-notif"></script>
++<script src="chat.js?v=20261126-push2"></script>
+ <script src="lightbox.js"></script>
+ <script src="chat-actions.js?v=1"></script>
+ <script>
+diff --git a/chat/chat.js b/chat/chat.js
+index 544e73d..3e36845 100644
+--- a/chat/chat.js
++++ b/chat/chat.js
+@@ -100,6 +100,7 @@ const NOTIF_ICON = 'https://glaxyias.github.io/imgs/download.jpeg';
+ 
+ const VAPID_PUBLIC_KEY = 'BIwwvnF9JUMYs-q5qeCj8CHrXqtwBOjcC0WtvWtDMu_XniMQOlFIq-09hZmdnYCvQS7fnjC0dhC-em9UNrd3WWw';
+ const PUSH_SUB_KEY = 'nullchat_push_subscription';
++const PUSH_SYNC_KEY = 'nullchat_push_sync';
+ 
+ function urlBase64ToUint8Array(base64String) {
+     const padding = '='.repeat((4 - base64String.length % 4) % 4);
+@@ -110,10 +111,32 @@ function urlBase64ToUint8Array(base64String) {
+     return outputArray;
+ }
+ 
++function savePushUsername(username) {
++    return new Promise((resolve) => {
++        try {
++            const req = indexedDB.open('nullchat-push', 1);
++            req.onupgradeneeded = () => {
++                const db = req.result;
++                if (!db.objectStoreNames.contains('meta')) db.createObjectStore('meta');
++            };
++            req.onsuccess = () => {
++                const db = req.result;
++                try {
++                    const tx = db.transaction('meta', 'readwrite');
++                    tx.objectStore('meta').put(username || '', 'username');
++                    tx.oncomplete = () => { db.close(); resolve(true); };
++                    tx.onerror = () => { db.close(); resolve(false); };
++                } catch (e) { db.close(); resolve(false); }
++            };
++            req.onerror = () => resolve(false);
++        } catch (e) { resolve(false); }
++    });
++}
++
+ async function ensureServiceWorker() {
+     if (!('serviceWorker' in navigator)) return null;
+     try {
+-        const reg = await navigator.serviceWorker.register('./sw.js?v=20261126-notif', { scope: './' });
++        const reg = await navigator.serviceWorker.register('./sw.js?v=20261126-push2', { scope: './' });
+         await navigator.serviceWorker.ready;
+         return reg;
+     } catch (e) {
+@@ -143,27 +166,51 @@ async function subscribePush() {
+         console.warn('Push not supported');
+         return null;
+     }
++    if (typeof Notification !== 'undefined' && Notification.permission !== 'granted') {
++        console.warn('Push subscribe skipped: notification permission not granted');
++        return null;
++    }
+     const reg = await ensureServiceWorker();
+     if (!reg) return null;
+     try {
+         let sub = await reg.pushManager.getSubscription();
++        const expectedKey = new Uint8Array(urlBase64ToUint8Array(VAPID_PUBLIC_KEY));
++        if (sub && sub.options && sub.options.applicationServerKey) {
++            const actualKey = new Uint8Array(sub.options.applicationServerKey);
++            const sameKey = actualKey.length === expectedKey.length
++                && actualKey.every((value, index) => value === expectedKey[index]);
++            if (!sameKey) {
++                try { await sub.unsubscribe(); } catch (e) {}
++                sub = null;
++            }
++        }
+         if (!sub) {
+             sub = await reg.pushManager.subscribe({
+                 userVisibleOnly: true,
+-                applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
++                applicationServerKey: expectedKey
+             });
+         }
+         const json = sub.toJSON();
++        const username = localStorage.getItem('chatUser') || '';
+         localStorage.setItem(PUSH_SUB_KEY, JSON.stringify(json));
++        await savePushUsername(username);
+         // Best-effort: store on API so server can push when tab is closed
+         try {
+-            const username = localStorage.getItem('chatUser') || '';
+-            await fetch((typeof TURSO_API_BASE !== 'undefined' ? TURSO_API_BASE : 'https://apithingy.jlsniperelite4.workers.dev') + '/push-subscriptions', {
++            const res = await fetch((typeof TURSO_API_BASE !== 'undefined' ? TURSO_API_BASE : 'https://apithingy.jlsniperelite4.workers.dev') + '/push-subscriptions', {
+                 method: 'POST',
+                 headers: { 'Content-Type': 'application/json' },
+                 body: JSON.stringify({ username, subscription: json, created_at: new Date().toISOString() })
+             });
+-        } catch (e) { /* endpoint may not exist yet */ }
++            if (!res.ok) {
++                localStorage.setItem(PUSH_SYNC_KEY, 'error');
++                console.warn('Push subscription was not saved by the server:', res.status);
++            } else {
++                localStorage.setItem(PUSH_SYNC_KEY, 'ok');
++            }
++        } catch (e) {
++            localStorage.setItem(PUSH_SYNC_KEY, 'error');
++            console.warn('Push subscription save failed:', e);
++        }
+         return sub;
+     } catch (e) {
+         console.warn('Push subscribe failed', e);
+@@ -292,6 +339,37 @@ if ('serviceWorker' in navigator) {
+ }
+ 
+ 
++let pushStatusCheck = 0;
++async function refreshPushStatus() {
++    const el = document.getElementById('notif-push-status');
++    if (!el) return;
++    if (typeof Notification === 'undefined') {
++        el.textContent = 'Closed-tab push: not supported in this browser';
++        return;
++    }
++    if (Notification.permission !== 'granted') {
++        el.textContent = 'Closed-tab push: allow browser notifications first';
++        return;
++    }
++    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
++        el.textContent = 'Closed-tab push: not supported in this browser';
++        return;
++    }
++    const check = ++pushStatusCheck;
++    try {
++        const reg = await navigator.serviceWorker.getRegistration('./');
++        const sub = reg ? await reg.pushManager.getSubscription() : null;
++        if (check !== pushStatusCheck) return;
++        const sync = localStorage.getItem(PUSH_SYNC_KEY);
++        el.textContent = sub
++            ? 'Closed-tab push: subscribed' + (sync === 'error' ? ' — server sync failed, try the test button' : '')
++            : 'Closed-tab push: not subscribed yet — click “Test closed-tab push”';
++    } catch (e) {
++        if (check !== pushStatusCheck) return;
++        el.textContent = 'Closed-tab push: could not check subscription';
++    }
++}
++
+ function syncNotifSettingsUI() {
+     const g = document.getElementById('toggle-notif-general');
+     const p = document.getElementById('toggle-notif-pms');
+@@ -315,6 +393,7 @@ function syncNotifSettingsUI() {
+             status.style.color = 'var(--text-muted)';
+         }
+     }
++    refreshPushStatus();
+ }
+ 
+ function promptEnableNotifications() {
+@@ -1134,6 +1213,49 @@ function initSettingsPanelBindings() {
+             if (!ok) alert('Could not show a notification. Check your browser site settings for this site.');
+         });
+     }
++    const notifPushTestBtn = document.getElementById('notif-push-test-btn');
++    if (notifPushTestBtn) {
++        notifPushTestBtn.addEventListener('click', async () => {
++            if (typeof Notification === 'undefined') {
++                alert('Notifications are not supported in this browser.');
++                return;
++            }
++            if (Notification.permission !== 'granted') {
++                try {
++                    const result = await Notification.requestPermission();
++                    if (result !== 'granted') {
++                        localStorage.setItem(NOTIF_PREF_KEY, result === 'denied' ? 'denied' : 'later');
++                        syncNotifSettingsUI();
++                        alert('Allow browser notifications first, then try the closed-tab test again.');
++                        return;
++                    }
++                    localStorage.setItem(NOTIF_PREF_KEY, 'granted');
++                    notificationsReady = true;
++                    if (localStorage.getItem(NOTIF_GENERAL_KEY) === null) setNotifGeneral(true);
++                    if (localStorage.getItem(NOTIF_PMS_KEY) === null) setNotifPms(true);
++                } catch (e) {
++                    syncNotifSettingsUI();
++                    return;
++                }
++            }
++            const sub = await subscribePush();
++            if (!sub) {
++                alert('Could not create a push subscription. Check that notifications are allowed for this site, then try again.');
++                return;
++            }
++            const username = localStorage.getItem('chatUser') || '';
++            if (!username) {
++                alert('Log in again before testing closed-tab notifications.');
++                return;
++            }
++            const win = window.open('./push-test.html?username=' + encodeURIComponent(username), '_blank');
++            if (!win) {
++                alert('Your browser blocked the test tab. Allow pop-ups for this site and try again.');
++                return;
++            }
++            syncNotifSettingsUI();
++        });
++    }
+     syncNotifSettingsUI();
+ }
+ 
+@@ -1393,7 +1515,7 @@ window.initializeChatEngine = async function() {
+     if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+         localStorage.setItem(NOTIF_PREF_KEY, 'granted');
+         notificationsReady = true;
+-        ensureServiceWorker().then(() => subscribePush()).catch(() => {});
++        ensureServiceWorker().then(() => subscribePush()).then(() => refreshPushStatus()).catch(() => {});
+     }
+ 
+     if (chatPollingInterval) clearInterval(chatPollingInterval);
+diff --git a/chat/push-test.html b/chat/push-test.html
+new file mode 100644
+index 0000000..07f6116
+--- /dev/null
++++ b/chat/push-test.html
+@@ -0,0 +1,69 @@
++<!doctype html>
++<html lang="en">
++<head>
++<meta charset="utf-8">
++<meta name="viewport" content="width=device-width, initial-scale=1">
++<title>Closed-tab push test — NULL X</title>
++<style>
++  :root { color-scheme: dark; }
++  body { margin:0; min-height:100vh; display:grid; place-items:center; background:#0b0b0f; color:#e8e8ef; font:15px/1.5 system-ui, -apple-system, Segoe UI, sans-serif; }
++  main { width:min(520px, calc(100% - 32px)); padding:28px; border:1px solid #2a2a35; border-radius:16px; background:#121218; box-shadow:0 18px 60px rgba(0,0,0,.35); }
++  h1 { margin:0 0 8px; font-size:20px; }
++  p { margin:10px 0; color:#b9b9c6; }
++  .count { color:#fff; font-weight:700; font-size:26px; }
++  #status { margin-top:16px; padding:12px; border-radius:10px; background:#1b1b24; color:#d8d8e2; }
++  a { color:#9bb4ff; }
++</style>
++</head>
++<body>
++<main>
++  <h1>Closed-tab push test</h1>
++  <p>Close the <strong>chat tab</strong> now. This tab will ask the server to send a push in <span class="count" id="count">15</span> seconds.</p>
++  <p>Keep this test tab open until it finishes. The notification should appear even though the chat tab is closed.</p>
++  <div id="status">Preparing…</div>
++  <p><a href="./chat.html">Back to chat</a></p>
++</main>
++<script>
++  const params = new URLSearchParams(location.search);
++  const username = params.get('username') || '';
++  const status = document.getElementById('status');
++  const count = document.getElementById('count');
++  let left = 15;
++  if (!username) {
++    status.textContent = 'No username was provided. Open this test from chat settings.';
++  } else {
++    const timer = setInterval(() => {
++      left -= 1;
++      count.textContent = String(left);
++      if (left <= 0) {
++        clearInterval(timer);
++        send();
++      }
++    }, 1000);
++  }
++  async function send() {
++    status.textContent = 'Sending test push…';
++    try {
++      const res = await fetch('https://apithingy.jlsniperelite4.workers.dev/push-test', {
++        method: 'POST',
++        headers: { 'Content-Type': 'application/json' },
++        body: JSON.stringify({
++          username,
++          title: 'NULL Chat closed-tab test',
++          body: 'If you can see this, closed-tab notifications are working.',
++          url: './chat.html',
++          tag: 'closed-tab-test-' + Date.now()
++        })
++      });
++      const data = await res.json().catch(() => ({}));
++      const sent = Number(data.sent || 0);
++      status.textContent = sent > 0
++        ? `Push sent to ${sent} subscription${sent === 1 ? '' : 's'}. It should appear now.`
++        : 'The server did not find a push subscription for this account. Go back to chat, allow notifications, then try again.';
++    } catch (e) {
++      status.textContent = 'Could not reach the push server: ' + (e && e.message ? e.message : e);
++    }
++  }
++</script>
++</body>
++</html>
+diff --git a/chat/sw.js b/chat/sw.js
+index 8fb2afd..e9fd3ba 100644
+--- a/chat/sw.js
++++ b/chat/sw.js
+@@ -1,4 +1,7 @@
+ /* Null X chat service worker — enables notifications when the tab is closed */
++const VAPID_PUBLIC_KEY = 'BIwwvnF9JUMYs-q5qeCj8CHrXqtwBOjcC0WtvWtDMu_XniMQOlFIq-09hZmdnYCvQS7fnjC0dhC-em9UNrd3WWw';
++const PUSH_API = 'https://apithingy.jlsniperelite4.workers.dev';
++
+ self.addEventListener('install', (event) => {
+   self.skipWaiting();
+ });
+@@ -7,27 +10,81 @@ self.addEventListener('activate', (event) => {
+   event.waitUntil(self.clients.claim());
+ });
+ 
++function urlBase64ToUint8Array(base64String) {
++  const padding = '='.repeat((4 - base64String.length % 4) % 4);
++  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
++  const rawData = atob(base64);
++  const outputArray = new Uint8Array(rawData.length);
++  for (let i = 0; i < rawData.length; ++i) outputArray[i] = rawData.charCodeAt(i);
++  return outputArray;
++}
++
++function readPushUsername() {
++  return new Promise((resolve) => {
++    try {
++      const req = indexedDB.open('nullchat-push', 1);
++      req.onupgradeneeded = () => {
++        const db = req.result;
++        if (!db.objectStoreNames.contains('meta')) db.createObjectStore('meta');
++      };
++      req.onsuccess = () => {
++        const db = req.result;
++        try {
++          const tx = db.transaction('meta', 'readonly');
++          const get = tx.objectStore('meta').get('username');
++          get.onsuccess = () => { db.close(); resolve(get.result || ''); };
++          get.onerror = () => { db.close(); resolve(''); };
++        } catch (e) { db.close(); resolve(''); }
++      };
++      req.onerror = () => resolve('');
++    } catch (e) { resolve(''); }
++  });
++}
++
++self.addEventListener('pushsubscriptionchange', (event) => {
++  event.waitUntil((async () => {
++    try {
++      const sub = event.newSubscription || await self.registration.pushManager.subscribe({
++        userVisibleOnly: true,
++        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
++      });
++      const username = await readPushUsername();
++      await fetch(PUSH_API + '/push-subscriptions', {
++        method: 'POST',
++        headers: { 'Content-Type': 'application/json' },
++        body: JSON.stringify({ username, subscription: sub.toJSON(), created_at: new Date().toISOString() })
++      });
++    } catch (e) {
++      // The page repairs the subscription the next time it is opened.
++    }
++  })());
++});
++
+ self.addEventListener('push', (event) => {
+   let data = { title: 'Null X Chat', body: 'New message', tag: 'nullchat', url: './chat.html' };
+   try {
+     if (event.data) {
+       const parsed = event.data.json();
+-      data = Object.assign(data, parsed);
++      if (parsed && typeof parsed === 'object') data = Object.assign(data, parsed);
++      else if (typeof parsed === 'string') data.body = parsed;
+     }
+   } catch (e) {
+     try {
+       data.body = event.data ? event.data.text() : data.body;
+     } catch (e2) {}
+   }
+-  event.waitUntil(
+-    self.registration.showNotification(data.title || 'Null X Chat', {
+-      body: data.body || '',
+-      icon: data.icon || 'https://glaxyias.github.io/imgs/download.jpeg',
+-      tag: data.tag || 'nullchat',
+-      renotify: true,
+-      data: { url: data.url || './chat.html' }
+-    })
+-  );
++  const tag = data.tag || 'nullchat';
++  const shown = self.registration.showNotification(data.title || 'Null X Chat', {
++    body: data.body || '',
++    icon: data.icon || 'https://glaxyias.github.io/imgs/download.jpeg',
++    badge: data.badge || 'https://glaxyias.github.io/imgs/download.jpeg',
++    tag,
++    renotify: true,
++    data: { url: data.url || './chat.html', tag }
++  });
++  event.waitUntil(shown && shown.catch ? shown.catch((e) => {
++    console.warn('showNotification failed', e);
++  }) : shown);
+ });
+ 
+ self.addEventListener('notificationclick', (event) => {
+@@ -35,11 +92,10 @@ self.addEventListener('notificationclick', (event) => {
+   const url = (event.notification.data && event.notification.data.url) || './chat.html';
+   event.waitUntil(
+     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
+-      for (const c of clients) {
+-        if (c.url.indexOf('/chat') !== -1 && 'focus' in c) {
+-          c.postMessage({ type: 'notification-click', tag: event.notification.tag });
+-          return c.focus();
+-        }
++      const chatClient = clients.find((c) => c.url.indexOf('/chat') !== -1 && c.url.indexOf('push-test.html') === -1);
++      if (chatClient && 'focus' in chatClient) {
++        chatClient.postMessage({ type: 'notification-click', tag: event.notification.tag });
++        return chatClient.focus();
+       }
+       if (self.clients.openWindow) return self.clients.openWindow(url);
+     })
+@@ -53,6 +109,7 @@ self.addEventListener('message', (event) => {
+       self.registration.showNotification(msg.title || 'Null X Chat', {
+         body: msg.body || '',
+         icon: msg.icon || 'https://glaxyias.github.io/imgs/download.jpeg',
++        badge: msg.badge || 'https://glaxyias.github.io/imgs/download.jpeg',
+         tag: msg.tag || 'nullchat',
+         renotify: true,
+         data: { url: msg.url || './chat.html', tag: msg.tag || 'nullchat' }
