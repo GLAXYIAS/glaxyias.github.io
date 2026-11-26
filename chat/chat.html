@@ -250,11 +250,33 @@
                     </div>
                     <div class="settings-toggle-row" style="margin-top:10px;">
                         <label class="switch">
+                            <input type="checkbox" id="toggle-notif-mentions">
+                            <span class="slider"></span>
+                        </label>
+                        <span>@ mentions</span>
+                    </div>
+                    <div class="settings-toggle-row" style="margin-top:10px;">
+                        <label class="switch">
                             <input type="checkbox" id="toggle-notif-pms">
                             <span class="slider"></span>
                         </label>
                         <span>Private messages</span>
                     </div>
+                    <div class="settings-toggle-row" style="margin-top:10px;">
+                        <label class="switch">
+                            <input type="checkbox" id="toggle-notif-announcements">
+                            <span class="slider"></span>
+                        </label>
+                        <span>Admin announcements</span>
+                    </div>
+                    <div class="settings-toggle-row" style="margin-top:10px;">
+                        <label class="switch">
+                            <input type="checkbox" id="toggle-notif-moderation">
+                            <span class="slider"></span>
+                        </label>
+                        <span>Bans &amp; warnings</span>
+                    </div>
+                    <p class="settings-hint" style="margin-top:10px;">Mentions get their own alert even if general chat is off. Account warnings/bans are checked while the chat tab is open.</p>
                     <button type="button" id="notif-enable-browser-btn" class="settings-btn-secondary" style="margin-top:14px;">Allow browser notifications</button>
                     <button type="button" id="notif-test-btn" class="settings-btn-secondary" style="margin-top:10px;">Send test notification</button>
                     <button type="button" id="notif-push-test-btn" class="settings-btn-secondary" style="margin-top:10px;">Test closed-tab push</button>
@@ -476,7 +498,7 @@
 <!-- Load proxy before other scripts so API calls use it -->
 <script src="https://cdn.jsdelivr.net/gh/glaeesas/badwordfilter@main/badword.js"></script>
 <script src="avatar-safe.js"></script>
-<script src="chat.js?v=20261126-push2"></script>
+<script src="chat.js?v=20261126-notif3"></script>
 <script src="lightbox.js"></script>
 <script src="chat-actions.js?v=1"></script>
 <script>

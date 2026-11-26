@@ -96,6 +96,14 @@ let lastMessageTime = 0;
 const NOTIF_PREF_KEY = 'nullchat_notifications';       // browser permission: granted|denied|later
 const NOTIF_GENERAL_KEY = 'nullchat_notif_general';     // '1' | '0'
 const NOTIF_PMS_KEY = 'nullchat_notif_pms';             // '1' | '0'
+const NOTIF_MENTIONS_KEY = 'nullchat_notif_mentions';   // @me in general chat
+const NOTIF_ANNOUNCEMENTS_KEY = 'nullchat_notif_announcements';
+const NOTIF_MODERATION_KEY = 'nullchat_notif_moderation';
+const MOD_SIGNATURE_KEY = 'nullchat_mod_signature';
+// The messages API returns oldest-first and ignores offset/order, so a
+// limit=200 request permanently hides messages after row 200. Pull a wide
+// window and render only the newest page.
+const CHAT_FETCH_LIMIT = 1000;
 const NOTIF_ICON = 'https://glaxyias.github.io/imgs/download.jpeg';
 
 const VAPID_PUBLIC_KEY = 'BIwwvnF9JUMYs-q5qeCj8CHrXqtwBOjcC0WtvWtDMu_XniMQOlFIq-09hZmdnYCvQS7fnjC0dhC-em9UNrd3WWw';
@@ -136,7 +144,7 @@ function savePushUsername(username) {
 async function ensureServiceWorker() {
     if (!('serviceWorker' in navigator)) return null;
     try {
-        const reg = await navigator.serviceWorker.register('./sw.js?v=20261126-push2', { scope: './' });
+        const reg = await navigator.serviceWorker.register('./sw.js?v=20261126-notif3', { scope: './' });
         await navigator.serviceWorker.ready;
         return reg;
     } catch (e) {
@@ -194,6 +202,7 @@ async function subscribePush() {
         const username = localStorage.getItem('chatUser') || '';
         localStorage.setItem(PUSH_SUB_KEY, JSON.stringify(json));
         await savePushUsername(username);
+        await savePushPrefs();
         // Best-effort: store on API so server can push when tab is closed
         try {
             const res = await fetch((typeof TURSO_API_BASE !== 'undefined' ? TURSO_API_BASE : 'https://apithingy.jlsniperelite4.workers.dev') + '/push-subscriptions', {
@@ -239,21 +248,80 @@ let knownMessageIds = new Set();
 let knownPmIds = new Set();
 let notificationsReady = false;
 
-function getNotifGeneral() {
-    const v = localStorage.getItem(NOTIF_GENERAL_KEY);
-    if (v === null) return true; // default on once permission granted
+function readNotifFlag(key) {
+    const v = localStorage.getItem(key);
+    if (v === null) return true; // default on once permission is granted
     return v === '1' || v === 'true';
 }
-function getNotifPms() {
-    const v = localStorage.getItem(NOTIF_PMS_KEY);
-    if (v === null) return true;
-    return v === '1' || v === 'true';
+function writeNotifFlag(key, on) {
+    localStorage.setItem(key, on ? '1' : '0');
 }
-function setNotifGeneral(on) {
-    localStorage.setItem(NOTIF_GENERAL_KEY, on ? '1' : '0');
+function getNotifGeneral() { return readNotifFlag(NOTIF_GENERAL_KEY); }
+function getNotifPms() { return readNotifFlag(NOTIF_PMS_KEY); }
+function getNotifMentions() { return readNotifFlag(NOTIF_MENTIONS_KEY); }
+function getNotifAnnouncements() { return readNotifFlag(NOTIF_ANNOUNCEMENTS_KEY); }
+function getNotifModeration() { return readNotifFlag(NOTIF_MODERATION_KEY); }
+function setNotifGeneral(on) { writeNotifFlag(NOTIF_GENERAL_KEY, on); }
+function setNotifPms(on) { writeNotifFlag(NOTIF_PMS_KEY, on); }
+function setNotifMentions(on) { writeNotifFlag(NOTIF_MENTIONS_KEY, on); }
+function setNotifAnnouncements(on) { writeNotifFlag(NOTIF_ANNOUNCEMENTS_KEY, on); }
+function setNotifModeration(on) { writeNotifFlag(NOTIF_MODERATION_KEY, on); }
+
+function getNotifPrefs() {
+    return {
+        general: getNotifGeneral(),
+        pms: getNotifPms(),
+        mentions: getNotifMentions(),
+        announcements: getNotifAnnouncements(),
+        moderation: getNotifModeration()
+    };
 }
-function setNotifPms(on) {
-    localStorage.setItem(NOTIF_PMS_KEY, on ? '1' : '0');
+
+// The service worker cannot read localStorage. Mirror the choices into the
+// same IndexedDB database it already uses for the username so closed-tab
+// pushes can be filtered with the same settings.
+function savePushPrefs() {
+    return new Promise((resolve) => {
+        try {
+            const req = indexedDB.open('nullchat-push', 1);
+            req.onupgradeneeded = () => {
+                const db = req.result;
+                if (!db.objectStoreNames.contains('meta')) db.createObjectStore('meta');
+            };
+            req.onsuccess = () => {
+                const db = req.result;
+                try {
+                    const tx = db.transaction('meta', 'readwrite');
+                    tx.objectStore('meta').put(getNotifPrefs(), 'prefs');
+                    tx.oncomplete = () => { db.close(); resolve(true); };
+                    tx.onerror = () => { db.close(); resolve(false); };
+                } catch (e) { db.close(); resolve(false); }
+            };
+            req.onerror = () => resolve(false);
+        } catch (e) { resolve(false); }
+    });
+}
+
+function notificationCategory(tag, options = {}) {
+    if (options && options.category) return options.category;
+    const t = String(tag || '');
+    if (t.startsWith('pm-')) return 'pm';
+    if (t.startsWith('mention-')) return 'mention';
+    if (t.startsWith('announcement-')) return 'announcement';
+    if (t.startsWith('moderation-') || t.startsWith('mod-')) return 'moderation';
+    if (t.startsWith('general-')) return 'general';
+    return 'other';
+}
+
+function notifCategoryEnabled(category) {
+    switch (category) {
+        case 'pm': return getNotifPms();
+        case 'general': return getNotifGeneral();
+        case 'mention': return getNotifMentions();
+        case 'announcement': return getNotifAnnouncements();
+        case 'moderation': return getNotifModeration();
+        default: return true;
+    }
 }
 
 function browserNotifGranted() {
@@ -271,10 +339,10 @@ function notificationsEnabled() {
 
 async function showChatNotification(title, body, tag, options = {}) {
     if (!browserNotifGranted()) return false;
-    const isPm = String(tag || '').startsWith('pm-');
-    const isGeneral = String(tag || '').startsWith('general-');
-    if (isPm && !getNotifPms()) return false;
-    if (isGeneral && !getNotifGeneral()) return false;
+    const category = notificationCategory(tag, options);
+    if (!notifCategoryEnabled(category)) return false;
+    const isPm = category === 'pm';
+    const isGeneral = category === 'general' || category === 'mention' || category === 'announcement';
     if (!options.force) {
         const pmsView = document.getElementById('pms-view');
         const onPms = !!(pmsView && pmsView.style.display !== 'none' && pmsView.offsetParent !== null);
@@ -283,7 +351,9 @@ async function showChatNotification(title, body, tag, options = {}) {
         if (!document.hidden && document.hasFocus()) {
             if (isPm && onPms) return false;
             if (isGeneral && onGeneral) return false;
-            if (!isPm && !isGeneral) return false;
+            // Moderation alerts are account-level and intentionally show even
+            // while the user is looking at the chat.
+            if (category === 'other') return false;
         }
     }
     const opts = {
@@ -321,6 +391,75 @@ async function showChatNotification(title, body, tag, options = {}) {
     } catch (e) {
         console.warn('Notification failed:', e);
         return false;
+    }
+}
+
+function escapeRegExp(value) {
+    return String(value == null ? '' : value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function stripReplyMarker(content) {
+    return String(content == null ? '' : content).replace(/^\[\[REPLY:[^\]]*\]\]\s*/, '');
+}
+
+function isAnnouncementMessage(content, username) {
+    const text = stripBubbleMarkers(content);
+    return /^\s*\[ANNOUNCEMENT\]/i.test(text) || /^\s*📢/.test(String(username || ''));
+}
+
+function isMentionOfMe(content) {
+    const text = stripReplyMarker(stripBubbleMarkers(content));
+    const names = [myUsernameGlobal, myHandleGlobal].filter(Boolean);
+    return names.some((name) => {
+        const clean = String(name).replace(/^@/, '').trim();
+        if (!clean) return false;
+        return new RegExp('(^|[^\\w])@' + escapeRegExp(clean) + '(?![\\w])', 'i').test(text);
+    });
+}
+
+function moderationSignature(profile) {
+    return JSON.stringify({
+        type: String(profile.last_action_type || '').toLowerCase(),
+        reason: String(profile.last_action_reason || ''),
+        category: String(profile.last_action_category || ''),
+        banned: isBannedFlag(profile.is_banned),
+        temp: String(profile.temp_ban_until || ''),
+        warned: isBannedFlag(profile.warned)
+    });
+}
+
+function showModerationNotification(profile) {
+    const type = String(profile.last_action_type || '').toLowerCase();
+    const reason = String(profile.last_action_reason || '').trim();
+    const warned = isBannedFlag(profile.warned);
+    const temp = String(profile.temp_ban_until || '');
+    const banned = isBannedFlag(profile.is_banned);
+    let title = '';
+    if (type === 'warn' || warned) title = 'Warning from an admin';
+    else if (type === 'temp_ban' || temp) title = 'Temporary ban on your account';
+    else if (type === 'ban' || banned) title = 'Your account was banned';
+    else if (type === 'unban') title = 'Your account was unbanned';
+    if (!title) return;
+    const body = reason || (type === 'unban' ? 'You can use chat again.' : 'Open chat for details.');
+    showChatNotification(title, body, 'moderation-' + type + '-' + Date.now(), { category: 'moderation', force: true });
+}
+
+function checkModerationAlerts(profile) {
+    if (!profile || !getNotifModeration()) return;
+    const sig = moderationSignature(profile);
+    const previous = localStorage.getItem(MOD_SIGNATURE_KEY);
+    if (previous === null) {
+        localStorage.setItem(MOD_SIGNATURE_KEY, sig);
+        // A warning that is already on the account is worth surfacing once;
+        // permanent/temp bans are handled by the login check with a redirect.
+        if (String(profile.last_action_type || '').toLowerCase() === 'warn' && isBannedFlag(profile.warned)) {
+            showModerationNotification(profile);
+        }
+        return;
+    }
+    if (previous !== sig) {
+        localStorage.setItem(MOD_SIGNATURE_KEY, sig);
+        showModerationNotification(profile);
     }
 }
 
@@ -371,11 +510,17 @@ async function refreshPushStatus() {
 }
 
 function syncNotifSettingsUI() {
-    const g = document.getElementById('toggle-notif-general');
-    const p = document.getElementById('toggle-notif-pms');
     const status = document.getElementById('notif-permission-status');
-    if (g) g.checked = getNotifGeneral();
-    if (p) p.checked = getNotifPms();
+    [
+        ['toggle-notif-general', getNotifGeneral()],
+        ['toggle-notif-mentions', getNotifMentions()],
+        ['toggle-notif-pms', getNotifPms()],
+        ['toggle-notif-announcements', getNotifAnnouncements()],
+        ['toggle-notif-moderation', getNotifModeration()]
+    ].forEach(([id, checked]) => {
+        const el = document.getElementById(id);
+        if (el) el.checked = checked;
+    });
     if (status) {
         if (typeof Notification === 'undefined') {
             status.textContent = 'Not supported in this browser';
@@ -393,6 +538,7 @@ function syncNotifSettingsUI() {
             status.style.color = 'var(--text-muted)';
         }
     }
+    savePushPrefs();
     refreshPushStatus();
 }
 
@@ -426,15 +572,27 @@ function promptEnableNotifications() {
       <div class="notif-prompt-card">
         <div class="notif-prompt-icon">🔔</div>
         <h2>Enable chat notifications?</h2>
-        <p>Get notified for <strong>general</strong> chat and/or <strong>PMs</strong>. You can change this anytime in <strong># settings</strong>.</p>
+        <p>Choose what you want alerts for: <strong>general chat</strong>, <strong>@ mentions</strong>, <strong>PMs</strong>, <strong>admin announcements</strong>, and <strong>account warnings/bans</strong>. You can change this anytime in <strong># settings</strong>.</p>
         <div class="notif-prompt-choices" style="text-align:left;margin:16px 0;display:flex;flex-direction:column;gap:10px;">
           <label style="display:flex;align-items:center;gap:10px;cursor:pointer;color:#ddd;font-size:14px;">
             <input type="checkbox" id="notif-modal-general" checked style="width:16px;height:16px;">
             General chat messages
           </label>
           <label style="display:flex;align-items:center;gap:10px;cursor:pointer;color:#ddd;font-size:14px;">
+            <input type="checkbox" id="notif-modal-mentions" checked style="width:16px;height:16px;">
+            @ mentions
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;color:#ddd;font-size:14px;">
             <input type="checkbox" id="notif-modal-pms" checked style="width:16px;height:16px;">
             Private messages
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;color:#ddd;font-size:14px;">
+            <input type="checkbox" id="notif-modal-announcements" checked style="width:16px;height:16px;">
+            Admin announcements
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;color:#ddd;font-size:14px;">
+            <input type="checkbox" id="notif-modal-moderation" checked style="width:16px;height:16px;">
+            Bans &amp; warnings
           </label>
         </div>
         <div class="notif-prompt-actions">
@@ -448,20 +606,26 @@ function promptEnableNotifications() {
 
     document.getElementById('notif-allow-btn').onclick = async () => {
         const wantGeneral = !!(document.getElementById('notif-modal-general') || {}).checked;
+        const wantMentions = !!(document.getElementById('notif-modal-mentions') || {}).checked;
         const wantPms = !!(document.getElementById('notif-modal-pms') || {}).checked;
+        const wantAnnouncements = !!(document.getElementById('notif-modal-announcements') || {}).checked;
+        const wantModeration = !!(document.getElementById('notif-modal-moderation') || {}).checked;
         try {
             const result = await Notification.requestPermission();
             if (result === 'granted') {
                 localStorage.setItem(NOTIF_PREF_KEY, 'granted');
                 notificationsReady = true;
                 setNotifGeneral(wantGeneral);
+                setNotifMentions(wantMentions);
                 setNotifPms(wantPms);
+                setNotifAnnouncements(wantAnnouncements);
+                setNotifModeration(wantModeration);
                 syncNotifSettingsUI();
                 modal.remove();
                 await subscribePush();
                 showChatNotification(
                     'Notifications enabled',
-                    [wantGeneral && 'General', wantPms && 'PMs'].filter(Boolean).join(' + ') || 'None selected — turn on in Settings',
+                    [wantGeneral && 'General', wantMentions && 'Mentions', wantPms && 'PMs', wantAnnouncements && 'Announcements', wantModeration && 'Warnings/bans'].filter(Boolean).join(' + ') || 'None selected — turn on in Settings',
                     'nullchat-setup',
                     { force: true }
                 );
@@ -481,7 +645,11 @@ function promptEnableNotifications() {
     document.getElementById('notif-never-btn').onclick = () => {
         localStorage.setItem(NOTIF_PREF_KEY, 'denied');
         setNotifGeneral(false);
+        setNotifMentions(false);
         setNotifPms(false);
+        setNotifAnnouncements(false);
+        setNotifModeration(false);
+        syncNotifSettingsUI();
         modal.remove();
     };
 }
@@ -1100,56 +1268,48 @@ function initSettingsPanelBindings() {
         opt.addEventListener('click', () => applyBubbleStyle(opt.getAttribute('data-style')));
     });
 
-    // Notification channel toggles
-    const notifGeneral = document.getElementById('toggle-notif-general');
-    const notifPms = document.getElementById('toggle-notif-pms');
+    // Notification channel toggles. Every channel uses the same permission
+    // gate; turning one off never asks for permission.
     const notifEnableBtn = document.getElementById('notif-enable-browser-btn');
-    if (notifGeneral) {
-        notifGeneral.checked = getNotifGeneral();
-        notifGeneral.addEventListener('change', async () => {
-            if (notifGeneral.checked && !browserNotifGranted()) {
+    const notifChannels = [
+        ['toggle-notif-general', getNotifGeneral, setNotifGeneral],
+        ['toggle-notif-mentions', getNotifMentions, setNotifMentions],
+        ['toggle-notif-pms', getNotifPms, setNotifPms],
+        ['toggle-notif-announcements', getNotifAnnouncements, setNotifAnnouncements],
+        ['toggle-notif-moderation', getNotifModeration, setNotifModeration]
+    ];
+    notifChannels.forEach(([id, getValue, setValue]) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.checked = getValue();
+        el.addEventListener('change', async () => {
+            if (el.checked && typeof Notification === 'undefined') {
+                el.checked = false;
+                alert('Notifications are not supported in this browser.');
+                syncNotifSettingsUI();
+                return;
+            }
+            if (el.checked && !browserNotifGranted()) {
                 try {
                     const result = await Notification.requestPermission();
-                    if (result === 'granted') {
-                        localStorage.setItem(NOTIF_PREF_KEY, 'granted');
-                        notificationsReady = true;
-                    } else {
-                        notifGeneral.checked = false;
+                    if (result !== 'granted') {
+                        el.checked = false;
                         alert('Browser blocked notifications. Allow them in site settings to use this.');
                         syncNotifSettingsUI();
                         return;
                     }
+                    localStorage.setItem(NOTIF_PREF_KEY, 'granted');
+                    notificationsReady = true;
                 } catch (e) {
-                    notifGeneral.checked = false;
+                    el.checked = false;
+                    syncNotifSettingsUI();
+                    return;
                 }
             }
-            setNotifGeneral(notifGeneral.checked);
+            setValue(el.checked);
             syncNotifSettingsUI();
         });
-    }
-    if (notifPms) {
-        notifPms.checked = getNotifPms();
-        notifPms.addEventListener('change', async () => {
-            if (notifPms.checked && !browserNotifGranted()) {
-                try {
-                    const result = await Notification.requestPermission();
-                    if (result === 'granted') {
-                        localStorage.setItem(NOTIF_PREF_KEY, 'granted');
-                        notificationsReady = true;
-                    } else {
-                        notifPms.checked = false;
-                        alert('Browser blocked notifications. Allow them in site settings to use this.');
-                        syncNotifSettingsUI();
-                        return;
-                    }
-                } catch (e) {
-                    notifPms.checked = false;
-                }
-            }
-            setNotifPms(notifPms.checked);
-            syncNotifSettingsUI();
-        });
-    }
+    });
     if (notifEnableBtn) {
         notifEnableBtn.addEventListener('click', async () => {
             if (typeof Notification === 'undefined') {
@@ -1165,7 +1325,7 @@ function initSettingsPanelBindings() {
                     if (localStorage.getItem(NOTIF_PMS_KEY) === null) setNotifPms(true);
                     syncNotifSettingsUI();
                     await subscribePush();
-                    showChatNotification('Notifications enabled', 'You can toggle General / PMs below.', 'nullchat-setup', { force: true });
+                    showChatNotification('Notifications enabled', 'Choose General, Mentions, PMs, Announcements, and Warnings/bans below.', 'nullchat-setup', { force: true });
                 } else {
                     localStorage.setItem(NOTIF_PREF_KEY, 'denied');
                     alert('Permission denied. You may need to allow notifications in your browser site settings.');
@@ -1220,39 +1380,45 @@ function initSettingsPanelBindings() {
                 alert('Notifications are not supported in this browser.');
                 return;
             }
+            const username = localStorage.getItem('chatUser') || '';
+            if (!username) {
+                alert('Log in again before testing closed-tab notifications.');
+                return;
+            }
+            // Open the test tab before the awaits below. Browsers can drop the
+            // user gesture after a permission prompt or network call.
+            const testUrl = new URL('./push-test.html?username=' + encodeURIComponent(username), location.href).href;
+            const win = window.open('', '_blank');
+            if (!win) {
+                alert('Your browser blocked the test tab. Allow pop-ups for this site and try again.');
+                return;
+            }
+            const closeWin = () => { try { win.close(); } catch (e) {} };
             if (Notification.permission !== 'granted') {
                 try {
                     const result = await Notification.requestPermission();
                     if (result !== 'granted') {
                         localStorage.setItem(NOTIF_PREF_KEY, result === 'denied' ? 'denied' : 'later');
                         syncNotifSettingsUI();
+                        closeWin();
                         alert('Allow browser notifications first, then try the closed-tab test again.');
                         return;
                     }
                     localStorage.setItem(NOTIF_PREF_KEY, 'granted');
                     notificationsReady = true;
-                    if (localStorage.getItem(NOTIF_GENERAL_KEY) === null) setNotifGeneral(true);
-                    if (localStorage.getItem(NOTIF_PMS_KEY) === null) setNotifPms(true);
                 } catch (e) {
                     syncNotifSettingsUI();
+                    closeWin();
                     return;
                 }
             }
             const sub = await subscribePush();
             if (!sub) {
+                closeWin();
                 alert('Could not create a push subscription. Check that notifications are allowed for this site, then try again.');
                 return;
             }
-            const username = localStorage.getItem('chatUser') || '';
-            if (!username) {
-                alert('Log in again before testing closed-tab notifications.');
-                return;
-            }
-            const win = window.open('./push-test.html?username=' + encodeURIComponent(username), '_blank');
-            if (!win) {
-                alert('Your browser blocked the test tab. Allow pop-ups for this site and try again.');
-                return;
-            }
+            win.location.href = testUrl;
             syncNotifSettingsUI();
         });
     }
@@ -1594,6 +1760,8 @@ window.initializeChatEngine = async function() {
                         return;
                     }
                 }
+
+                checkModerationAlerts(profile);
                 
                 const systemFooterAvatar = document.getElementById('current-user-avatar');
                 if (systemFooterAvatar) systemFooterAvatar.src = profile.pfp_url || DEFAULT_PFP;
@@ -2331,16 +2499,22 @@ window.initializeChatEngine = async function() {
             return;
         }
         try {
-            const mRes = await fetch(`${TURSO_API_BASE}/messages?limit=200`, { 
+            const mRes = await fetch(`${TURSO_API_BASE}/messages?limit=${CHAT_FETCH_LIMIT}`, { 
                 headers: TURSO_HEADERS
             });
             const rRes = await fetch(`${TURSO_API_BASE}/user-roles`, { 
                 headers: TURSO_HEADERS
             });
             const messagesRaw = await mRes.json();
-            const messages = Array.isArray(messagesRaw) ? messagesRaw : (messagesRaw && messagesRaw.messages) ? messagesRaw.messages : [];
+            const allMessages = Array.isArray(messagesRaw) ? messagesRaw : (messagesRaw && messagesRaw.messages) ? messagesRaw.messages : [];
+            // API is oldest-first and ignores offset/order, so keep the newest
+            // slice for rendering and alerts while seeding known ids from the
+            // full fetched window.
+            const messages = allMessages.slice(-200);
             const rolesRaw = await rRes.json();
-            const roles = Array.isArray(rolesRaw) ? rolesRaw : (rolesRaw ? [rolesRaw] : []);
+            const roles = Array.isArray(rolesRaw) ? rolesRaw : (rolesRaw && Array.isArray(rolesRaw.roles) ? rolesRaw.roles : (rolesRaw ? [rolesRaw] : []));
+            const myProfile = roles.find(r => r && r.username && r.username.trim().toLowerCase() === myUsernameGlobal.trim().toLowerCase());
+            checkModerationAlerts(myProfile);
 
             // Calculate a hash of current messages to avoid re-rendering if nothing changed
             const currentHash = JSON.stringify(messages.map(m => m.id));
@@ -2354,22 +2528,39 @@ window.initializeChatEngine = async function() {
                     if (knownMessageIds.has(msg.id)) return;
                     const fromMe = msg.username && msg.username.trim().toLowerCase() === myUsernameGlobal.trim().toLowerCase();
                     if (!fromMe && msg.content !== "Message Was Deleted By Owner") {
-                        const preview = stripBubbleMarkers(msg.content)
-                            .replace(/^\[\[REPLY:[^\]]*\]\]\s*/, '') // reply quote marker
+                        const announcement = isAnnouncementMessage(msg.content, msg.username);
+                        const mentioned = !announcement && isMentionOfMe(msg.content);
+                        const cleanContent = stripReplyMarker(stripBubbleMarkers(msg.content));
+                        const preview = cleanContent
+                            .replace(/^\s*\[ANNOUNCEMENT\]\s*/i, '')
                             .replace(/^\[\[IMG\]\].*/, '[Image]')
                             .slice(0, 120);
-                        showChatNotification(msg.username || 'Someone', preview || 'New message in general chat', 'general-' + msg.id);
+                        let category = announcement ? 'announcement' : (mentioned ? 'mention' : 'general');
+                        let title = announcement
+                            ? '📢 Announcement'
+                            : (mentioned ? (msg.username || 'Someone') + ' mentioned you' : (msg.username || 'Someone'));
+                        // A normal general alert still covers a mention when the
+                        // mention-specific channel is off.
+                        if (mentioned && !getNotifMentions() && getNotifGeneral()) {
+                            category = 'general';
+                            title = msg.username || 'Someone';
+                        }
+                        const fallbackBody = announcement
+                            ? 'New announcement'
+                            : (mentioned ? 'You were mentioned in general chat' : 'New message in general chat');
+                        showChatNotification(title, preview || fallbackBody, category + '-' + msg.id, { category });
                     }
                 });
             }
-            // Seed / update known ids
-            messages.forEach(msg => { if (msg && msg.id) knownMessageIds.add(msg.id); });
+            // Seed / update known ids from the full fetch so messages moving
+            // into the newest 200 later are not treated as brand-new.
+            allMessages.forEach(msg => { if (msg && msg.id) knownMessageIds.add(msg.id); });
 
             lastFetchedMessagesHash = currentHash;
 
             const activeHeaderSpan = document.getElementById('room-status-indicator');
             if (activeHeaderSpan && roles) {
-                const selfCheck = roles.find(r => r.username === user);
+                const selfCheck = roles.find(r => r && r.username && r.username.trim().toLowerCase() === user.trim().toLowerCase());
                 if (selfCheck) {
                     activeHeaderSpan.textContent = "ONLINE";
                     activeHeaderSpan.style.color = "#22c55e";

@@ -2,6 +2,14 @@
 const VAPID_PUBLIC_KEY = 'BIwwvnF9JUMYs-q5qeCj8CHrXqtwBOjcC0WtvWtDMu_XniMQOlFIq-09hZmdnYCvQS7fnjC0dhC-em9UNrd3WWw';
 const PUSH_API = 'https://apithingy.jlsniperelite4.workers.dev';
 
+const DEFAULT_PREFS = {
+  general: true,
+  pms: true,
+  mentions: true,
+  announcements: true,
+  moderation: true
+};
+
 self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
@@ -19,7 +27,7 @@ function urlBase64ToUint8Array(base64String) {
   return outputArray;
 }
 
-function readPushUsername() {
+function readPushMeta(key, fallback) {
   return new Promise((resolve) => {
     try {
       const req = indexedDB.open('nullchat-push', 1);
@@ -31,13 +39,96 @@ function readPushUsername() {
         const db = req.result;
         try {
           const tx = db.transaction('meta', 'readonly');
-          const get = tx.objectStore('meta').get('username');
-          get.onsuccess = () => { db.close(); resolve(get.result || ''); };
-          get.onerror = () => { db.close(); resolve(''); };
-        } catch (e) { db.close(); resolve(''); }
+          const get = tx.objectStore('meta').get(key);
+          get.onsuccess = () => {
+            db.close();
+            resolve(get.result === undefined ? fallback : get.result);
+          };
+          get.onerror = () => { db.close(); resolve(fallback); };
+        } catch (e) { db.close(); resolve(fallback); }
       };
-      req.onerror = () => resolve('');
-    } catch (e) { resolve(''); }
+      req.onerror = () => resolve(fallback);
+    } catch (e) { resolve(fallback); }
+  });
+}
+
+function readPushUsername() {
+  return readPushMeta('username', '');
+}
+
+function readPushPrefs() {
+  return readPushMeta('prefs', DEFAULT_PREFS).then((value) => (
+    Object.assign({}, DEFAULT_PREFS, value && typeof value === 'object' ? value : {})
+  ));
+}
+
+function escapeRegExp(value) {
+  return String(value == null ? '' : value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function isMentioned(text, username) {
+  const raw = String(username || '').trim();
+  if (!raw) return false;
+  const names = [raw, raw.replace(/\s+/g, '_')];
+  return names.some((name) => {
+    const clean = name.replace(/^@/, '').trim();
+    if (!clean) return false;
+    return new RegExp('(^|[^\\w])@' + escapeRegExp(clean) + '(?![\\w])', 'i').test(String(text || ''));
+  });
+}
+
+function classifyPush(data, username) {
+  const tag = String(data.tag || '');
+  const title = String(data.title || '');
+  const body = String(data.body || '');
+  const declared = String(data.category || '').toLowerCase();
+
+  if (/^closed-tab-test-|^nullchat-test|^test-/i.test(tag) || /test notification/i.test(body)) return 'test';
+
+  const isAnnouncement = () => (
+    /announcement|📢/i.test(title)
+    || /^\s*\[ANNOUNCEMENT\]/i.test(body)
+  );
+
+  if (declared === 'general') {
+    if (isAnnouncement()) return 'announcement';
+    if (isMentioned(body, username)) return 'mention';
+    return 'general';
+  }
+  if (declared === 'pm' || declared === 'mention' || declared === 'announcement' || declared === 'moderation') {
+    return declared;
+  }
+
+  if (/^pm-|^private-/i.test(tag) || /(^|[^a-z])pm([^a-z]|$)|private message|pm from/i.test(title)) return 'pm';
+  if (/^mention-/i.test(tag)) return 'mention';
+  if (/^announcement-/i.test(tag) || isAnnouncement()) return 'announcement';
+  if (/^moderation-|^mod-/i.test(tag) || /\bwarning\b|your account (was )?(banned|unbanned)|temporary ban/i.test(title)) return 'moderation';
+  if (username && isMentioned(body, username)) return 'mention';
+  return 'general';
+}
+
+function shouldShowPush(category, prefs) {
+  if (category === 'test') return true;
+  if (category === 'pm') return prefs.pms !== false;
+  if (category === 'mention') return prefs.mentions !== false || prefs.general !== false;
+  if (category === 'announcement') return prefs.announcements !== false;
+  if (category === 'moderation') return prefs.moderation !== false;
+  return prefs.general !== false;
+}
+
+function showPushNotification(data, category) {
+  const tag = data.tag || (category === 'pm' ? 'pm' : 'nullchat');
+  const title = data.title || (category === 'mention' ? 'You were mentioned' : 'Null X Chat');
+  const icon = data.icon || 'https://glaxyias.github.io/imgs/download.jpeg';
+  return self.registration.showNotification(title, {
+    body: data.body || '',
+    icon,
+    badge: data.badge || icon,
+    tag,
+    renotify: true,
+    data: { url: data.url || './chat.html', tag, category }
+  }).catch((e) => {
+    console.warn('showNotification failed', e);
   });
 }
 
@@ -61,30 +152,25 @@ self.addEventListener('pushsubscriptionchange', (event) => {
 });
 
 self.addEventListener('push', (event) => {
-  let data = { title: 'Null X Chat', body: 'New message', tag: 'nullchat', url: './chat.html' };
-  try {
-    if (event.data) {
-      const parsed = event.data.json();
-      if (parsed && typeof parsed === 'object') data = Object.assign(data, parsed);
-      else if (typeof parsed === 'string') data.body = parsed;
-    }
-  } catch (e) {
+  event.waitUntil((async () => {
+    let data = { title: 'Null X Chat', body: 'New message', tag: 'nullchat', url: './chat.html' };
     try {
-      data.body = event.data ? event.data.text() : data.body;
-    } catch (e2) {}
-  }
-  const tag = data.tag || 'nullchat';
-  const shown = self.registration.showNotification(data.title || 'Null X Chat', {
-    body: data.body || '',
-    icon: data.icon || 'https://glaxyias.github.io/imgs/download.jpeg',
-    badge: data.badge || 'https://glaxyias.github.io/imgs/download.jpeg',
-    tag,
-    renotify: true,
-    data: { url: data.url || './chat.html', tag }
-  });
-  event.waitUntil(shown && shown.catch ? shown.catch((e) => {
-    console.warn('showNotification failed', e);
-  }) : shown);
+      if (event.data) {
+        const parsed = event.data.json();
+        if (parsed && typeof parsed === 'object') data = Object.assign(data, parsed);
+        else if (typeof parsed === 'string') data.body = parsed;
+      }
+    } catch (e) {
+      try {
+        data.body = event.data ? event.data.text() : data.body;
+      } catch (e2) {}
+    }
+
+    const [username, prefs] = await Promise.all([readPushUsername(), readPushPrefs()]);
+    const category = classifyPush(data, username);
+    if (!shouldShowPush(category, prefs)) return;
+    await showPushNotification(data, category);
+  })());
 });
 
 self.addEventListener('notificationclick', (event) => {
