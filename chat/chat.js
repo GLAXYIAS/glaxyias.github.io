@@ -96,6 +96,7 @@ let lastMessageTime = 0;
 const NOTIF_PREF_KEY = 'nullchat_notifications';       // browser permission: granted|denied|later
 const NOTIF_GENERAL_KEY = 'nullchat_notif_general';     // '1' | '0'
 const NOTIF_PMS_KEY = 'nullchat_notif_pms';             // '1' | '0'
+const NOTIF_ICON = 'https://glaxyias.github.io/imgs/download.jpeg';
 
 const VAPID_PUBLIC_KEY = 'BIwwvnF9JUMYs-q5qeCj8CHrXqtwBOjcC0WtvWtDMu_XniMQOlFIq-09hZmdnYCvQS7fnjC0dhC-em9UNrd3WWw';
 const PUSH_SUB_KEY = 'nullchat_push_subscription';
@@ -112,11 +113,27 @@ function urlBase64ToUint8Array(base64String) {
 async function ensureServiceWorker() {
     if (!('serviceWorker' in navigator)) return null;
     try {
-        const reg = await navigator.serviceWorker.register('./sw.js', { scope: './' });
+        const reg = await navigator.serviceWorker.register('./sw.js?v=20261126-notif', { scope: './' });
         await navigator.serviceWorker.ready;
         return reg;
     } catch (e) {
         console.warn('SW register failed', e);
+        return null;
+    }
+}
+
+async function getNotificationRegistration() {
+    if (!('serviceWorker' in navigator)) return null;
+    try {
+        const existing = await navigator.serviceWorker.getRegistration('./');
+        if (existing) return existing;
+    } catch (e) {}
+    try {
+        return await Promise.race([
+            navigator.serviceWorker.ready,
+            new Promise((resolve) => setTimeout(() => resolve(null), 2500))
+        ]);
+    } catch (e) {
         return null;
     }
 }
@@ -193,48 +210,56 @@ function setNotifPms(on) {
 }
 
 function browserNotifGranted() {
+    // The browser's real permission is the source of truth. The localStorage
+    // flag only decides whether we show the in-page prompt; treating it as a
+    // second permission gate used to leave notifications off forever after
+    // someone allowed the site in their browser settings.
     return typeof Notification !== 'undefined'
-        && Notification.permission === 'granted'
-        && localStorage.getItem(NOTIF_PREF_KEY) === 'granted';
+        && Notification.permission === 'granted';
 }
 
 function notificationsEnabled() {
     return browserNotifGranted();
 }
 
-function showChatNotification(title, body, tag) {
-    if (!browserNotifGranted()) return;
+async function showChatNotification(title, body, tag, options = {}) {
+    if (!browserNotifGranted()) return false;
     const isPm = String(tag || '').startsWith('pm-');
     const isGeneral = String(tag || '').startsWith('general-');
-    if (isPm && !getNotifPms()) return;
-    if (isGeneral && !getNotifGeneral()) return;
-    try {
+    if (isPm && !getNotifPms()) return false;
+    if (isGeneral && !getNotifGeneral()) return false;
+    if (!options.force) {
         const pmsView = document.getElementById('pms-view');
         const onPms = !!(pmsView && pmsView.style.display !== 'none' && pmsView.offsetParent !== null);
         const chatView = document.getElementById('chat-view');
         const onGeneral = !!(chatView && chatView.style.display !== 'none');
         if (!document.hidden && document.hasFocus()) {
-            if (isPm && onPms) return;
-            if (isGeneral && onGeneral) return;
-            if (!isPm && !isGeneral) return;
+            if (isPm && onPms) return false;
+            if (isGeneral && onGeneral) return false;
+            if (!isPm && !isGeneral) return false;
         }
-        // Prefer service worker so notifications work more reliably in background
-        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-            navigator.serviceWorker.controller.postMessage({
-                type: 'show-notification',
-                title: title,
-                body: body || '',
-                tag: tag || 'nullchat',
-                url: './chat.html'
-            });
-            return;
+    }
+    const opts = {
+        body: body || '',
+        icon: NOTIF_ICON,
+        badge: NOTIF_ICON,
+        tag: tag || 'nullchat',
+        renotify: true,
+        data: { url: './chat.html', tag: tag || 'nullchat' }
+    };
+    // showNotification on the registration works on desktop and Android
+    // without relying on the page being controlled yet.
+    try {
+        const reg = await getNotificationRegistration();
+        if (reg && typeof reg.showNotification === 'function') {
+            await reg.showNotification(title, opts);
+            return true;
         }
-        const n = new Notification(title, {
-            body: body || '',
-            icon: 'https://glaxyias.github.io/imgs/download.jpeg',
-            tag: tag || 'nullchat',
-            renotify: true
-        });
+    } catch (e) {
+        console.warn('Service worker notification failed:', e);
+    }
+    try {
+        const n = new Notification(title, opts);
         n.onclick = () => {
             try { window.focus(); } catch (e) {}
             if (isPm && typeof window.switchTab === 'function') {
@@ -245,9 +270,25 @@ function showChatNotification(title, body, tag) {
             n.close();
         };
         setTimeout(() => { try { n.close(); } catch (e) {} }, 10000);
+        return true;
     } catch (e) {
         console.warn('Notification failed:', e);
+        return false;
     }
+}
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', (event) => {
+        const msg = event.data || {};
+        if (msg.type !== 'notification-click') return;
+        const tag = String(msg.tag || '');
+        if (typeof window.switchTab !== 'function') return;
+        if (tag.indexOf('pm-') === 0) {
+            window.switchTab('pms');
+        } else {
+            window.switchTab('general');
+        }
+    });
 }
 
 
@@ -260,22 +301,23 @@ function syncNotifSettingsUI() {
     if (status) {
         if (typeof Notification === 'undefined') {
             status.textContent = 'Not supported in this browser';
-        } else if (Notification.permission === 'granted' && localStorage.getItem(NOTIF_PREF_KEY) === 'granted') {
+            status.style.color = 'var(--text-muted)';
+        } else if (Notification.permission === 'granted') {
+            if (localStorage.getItem(NOTIF_PREF_KEY) !== 'granted') localStorage.setItem(NOTIF_PREF_KEY, 'granted');
             status.textContent = 'Browser permission: allowed';
             status.style.color = '#22c55e';
-        } else if (Notification.permission === 'denied' || localStorage.getItem(NOTIF_PREF_KEY) === 'denied') {
-            status.textContent = 'Browser permission: blocked — enable in browser site settings';
+        } else if (Notification.permission === 'denied') {
+            localStorage.setItem(NOTIF_PREF_KEY, 'denied');
+            status.textContent = 'Browser permission: blocked — enable notifications for this site in your browser settings';
             status.style.color = '#ff6666';
         } else {
-            status.textContent = 'Browser permission: not set yet';
+            status.textContent = 'Browser permission: not granted yet — flip a toggle below or click Allow browser notifications';
             status.style.color = 'var(--text-muted)';
         }
     }
 }
 
 function promptEnableNotifications() {
-    const pref = localStorage.getItem(NOTIF_PREF_KEY);
-    if (pref === 'granted' || pref === 'denied') return;
     if (typeof Notification === 'undefined') return;
 
     if (Notification.permission === 'granted') {
@@ -290,6 +332,11 @@ function promptEnableNotifications() {
         localStorage.setItem(NOTIF_PREF_KEY, 'denied');
         return;
     }
+
+    // Only the in-page prompt is suppressed here; permission itself stays
+    // recoverable from the settings toggles and button.
+    const pref = localStorage.getItem(NOTIF_PREF_KEY);
+    if (pref === 'granted' || pref === 'denied') return;
 
     if (document.getElementById('notif-prompt-modal')) return;
 
@@ -336,7 +383,8 @@ function promptEnableNotifications() {
                 showChatNotification(
                     'Notifications enabled',
                     [wantGeneral && 'General', wantPms && 'PMs'].filter(Boolean).join(' + ') || 'None selected — turn on in Settings',
-                    'nullchat-setup'
+                    'nullchat-setup',
+                    { force: true }
                 );
             } else {
                 localStorage.setItem(NOTIF_PREF_KEY, result === 'denied' ? 'denied' : 'later');
@@ -1038,7 +1086,7 @@ function initSettingsPanelBindings() {
                     if (localStorage.getItem(NOTIF_PMS_KEY) === null) setNotifPms(true);
                     syncNotifSettingsUI();
                     await subscribePush();
-                    showChatNotification('Notifications enabled', 'You can toggle General / PMs below.', 'nullchat-setup');
+                    showChatNotification('Notifications enabled', 'You can toggle General / PMs below.', 'nullchat-setup', { force: true });
                 } else {
                     localStorage.setItem(NOTIF_PREF_KEY, 'denied');
                     alert('Permission denied. You may need to allow notifications in your browser site settings.');
@@ -1047,6 +1095,43 @@ function initSettingsPanelBindings() {
             } catch (e) {
                 console.warn(e);
             }
+        });
+    }
+    const notifTestBtn = document.getElementById('notif-test-btn');
+    if (notifTestBtn) {
+        notifTestBtn.addEventListener('click', async () => {
+            if (typeof Notification === 'undefined') {
+                alert('Notifications are not supported in this browser.');
+                return;
+            }
+            if (Notification.permission !== 'granted') {
+                try {
+                    const result = await Notification.requestPermission();
+                    if (result !== 'granted') {
+                        localStorage.setItem(NOTIF_PREF_KEY, result === 'denied' ? 'denied' : 'later');
+                        syncNotifSettingsUI();
+                        alert('Notifications are not allowed yet. Allow them in your browser site settings, then try again.');
+                        return;
+                    }
+                    localStorage.setItem(NOTIF_PREF_KEY, 'granted');
+                    notificationsReady = true;
+                    if (localStorage.getItem(NOTIF_GENERAL_KEY) === null) setNotifGeneral(true);
+                    if (localStorage.getItem(NOTIF_PMS_KEY) === null) setNotifPms(true);
+                    await ensureServiceWorker();
+                    subscribePush().catch(() => {});
+                    syncNotifSettingsUI();
+                } catch (e) {
+                    syncNotifSettingsUI();
+                    return;
+                }
+            }
+            const ok = await showChatNotification(
+                'NULL Chat',
+                'Test notification — chat alerts are working.',
+                'nullchat-test',
+                { force: true }
+            );
+            if (!ok) alert('Could not show a notification. Check your browser site settings for this site.');
         });
     }
     syncNotifSettingsUI();
@@ -1305,7 +1390,8 @@ window.initializeChatEngine = async function() {
 
     myUsernameGlobal = user;
     myHandleGlobal = usernameToHandle(user);
-    if (localStorage.getItem(NOTIF_PREF_KEY) === 'granted' && typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+    if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+        localStorage.setItem(NOTIF_PREF_KEY, 'granted');
         notificationsReady = true;
         ensureServiceWorker().then(() => subscribePush()).catch(() => {});
     }

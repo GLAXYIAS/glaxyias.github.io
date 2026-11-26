@@ -22,7 +22,7 @@ self.addEventListener('push', (event) => {
   event.waitUntil(
     self.registration.showNotification(data.title || 'Null X Chat', {
       body: data.body || '',
-      icon: data.icon || 'https://null-x-team.github.io/imgs/download.jpeg',
+      icon: data.icon || 'https://glaxyias.github.io/imgs/download.jpeg',
       tag: data.tag || 'nullchat',
       renotify: true,
       data: { url: data.url || './chat.html' }
@@ -52,10 +52,10 @@ self.addEventListener('message', (event) => {
     event.waitUntil(
       self.registration.showNotification(msg.title || 'Null X Chat', {
         body: msg.body || '',
-        icon: msg.icon || 'https://null-x-team.github.io/imgs/download.jpeg',
+        icon: msg.icon || 'https://glaxyias.github.io/imgs/download.jpeg',
         tag: msg.tag || 'nullchat',
         renotify: true,
-        data: { url: msg.url || './chat.html' }
+        data: { url: msg.url || './chat.html', tag: msg.tag || 'nullchat' }
       })
     );
   }
