@@ -1,17 +1,18 @@
-// BAN/guard.js — account + network ban checks via the Cloudflare worker
+// BAN/guard.js — account + network ban display via the Cloudflare worker.
+//
+// Network (IP) enforcement now lives entirely in the worker:
+//   * the worker reads CF-Connecting-IP, hashes it with a server-side salt and
+//     keeps the strike/block rows in the database;
+//   * sign-in and sign-up are rejected server-side with 403 for blocked networks;
+//   * this file only ASKS the worker what the current network's state is and
+//     renders the lockout overlay. It never reads, hashes or stores an IP and it
+//     never writes ban state.
 (function () {
   'use strict';
 
   var API_BASE = 'https://apithingy.jlsniperelite4.workers.dev';
   var HEADERS = { 'Content-Type': 'application/json' };
   var SYSTEM_PREFIX = '__nx_';
-  var MAP_PREFIX = SYSTEM_PREFIX + 'ipmap_';
-  var COUNT_PREFIX = SYSTEM_PREFIX + 'ipcount_';
-  var BLOCK_PREFIX = SYSTEM_PREFIX + 'ipblock_';
-  var IP_SALT = 'nullx-network-ban-v1';
-  var IP_CACHE_KEY = 'nx_ip_cached_v1';
-  var IP_BAN_LIMIT = 3; // strictly more than three bans blocks the IP
-  var ipPromise = null;
 
   function currentUsername() {
     try {
@@ -91,191 +92,49 @@
     document.body.appendChild(overlay);
   }
 
-  async function sha256Hex(text) {
-    var data = new TextEncoder().encode(text);
-    var hash = await crypto.subtle.digest('SHA-256', data);
-    return Array.prototype.map.call(new Uint8Array(hash), function (b) {
-      return b.toString(16).padStart(2, '0');
-    }).join('');
-  }
-
-  function getIp() {
-    if (ipPromise) return ipPromise;
-    try {
-      var cached = sessionStorage.getItem(IP_CACHE_KEY);
-      if (cached) {
-        ipPromise = Promise.resolve(cached);
-        return ipPromise;
-      }
-    } catch (e) {}
-
-    function lookup(url) {
-      return fetch(url, { cache: 'no-store' }).then(function (res) {
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.json();
-      }).then(function (data) {
-        if (!data || !data.ip) throw new Error('No IP returned');
-        return data.ip;
-      });
-    }
-
-    ipPromise = lookup('https://api.ipify.org?format=json')
-      .catch(function () { return lookup('https://api64.ipify.org?format=json'); })
-      .then(function (ip) {
-        try { sessionStorage.setItem(IP_CACHE_KEY, ip); } catch (e) {}
-        return ip;
-      })
-      .catch(function (err) {
-        ipPromise = null;
-        throw err;
-      });
-    return ipPromise;
-  }
-
-  async function ipHash() {
-    var ip = await getIp();
-    return sha256Hex(IP_SALT + '|' + ip);
-  }
-
-  function normalizeUsername(name) {
-    return String(name == null ? '' : name).replace(/^@+/, '').trim().toLowerCase();
-  }
-
-  async function userKey(username) {
-    return sha256Hex('user|' + normalizeUsername(username));
-  }
-
-  function nextId() {
-    return Date.now() * 1000 + Math.floor(Math.random() * 1000);
-  }
-
-  async function roleGet(username) {
-    var res = await fetch(
-      API_BASE + '/user-roles?username=' + encodeURIComponent(username),
-      { method: 'GET', headers: HEADERS, cache: 'no-store' }
-    );
-    if (res.status === 404) return null;
-    if (!res.ok) throw new Error('Role lookup HTTP ' + res.status);
-    var data = await res.json().catch(function () { return null; });
-    return unwrapRole(data);
-  }
-
-  function rolePatch(username, fields) {
-    var body = { username: username };
-    Object.keys(fields || {}).forEach(function (key) { body[key] = fields[key]; });
-    return fetch(
-      API_BASE + '/user-roles?username=' + encodeURIComponent(username),
-      { method: 'PATCH', headers: HEADERS, body: JSON.stringify(body) }
-    );
-  }
-
-  function rolePost(username, fields) {
-    var body = {
-      id: nextId(),
-      username: username,
-      role_tag: 'User',
-      is_admin: 0,
-      is_banned: 0
-    };
-    Object.keys(fields || {}).forEach(function (key) { body[key] = fields[key]; });
-    return fetch(API_BASE + '/user-roles', {
-      method: 'POST',
-      headers: HEADERS,
-      body: JSON.stringify(body)
-    });
-  }
-
-  async function upsertRole(username, fields) {
-    var existing = await roleGet(username);
-    if (existing) return rolePatch(username, fields);
-
-    var created = await rolePost(username, fields);
-    if (created.ok) return created;
-
-    // A concurrent request may have created it between our GET and POST.
-    var again = await roleGet(username);
-    if (again) return rolePatch(username, fields);
-    return created;
-  }
-
-  async function remember(username) {
-    if (!username) return null;
-    var hash = await ipHash();
-    var key = MAP_PREFIX + await userKey(username);
-    var existing = await roleGet(key);
-    if (existing && String(existing.last_action_reason || '').trim() === 'ip:' + hash) {
-      return hash;
-    }
-    var res = await upsertRole(key, {
-      role_tag: 'SYSTEM',
-      last_action_reason: 'ip:' + hash
-    });
-    if (!res.ok) throw new Error('IP record failed HTTP ' + res.status);
-    return hash;
-  }
-
+  // Ask the worker about this request's network. The worker derives the IP from
+  // the Cloudflare connection, so nothing here can be spoofed or cleared.
   async function check() {
-    var hash = await ipHash();
-    var block = await roleGet(BLOCK_PREFIX + hash);
-    if (block && isBannedFlag(block.is_banned)) {
+    try {
+      var res = await fetch(API_BASE + '/network-status', {
+        method: 'GET',
+        headers: HEADERS,
+        cache: 'no-store'
+      });
+      if (!res.ok) return { blocked: false, strikes: 0, reason: null, unavailable: true };
+      var data = await res.json().catch(function () { return null; });
+      if (!data) return { blocked: false, strikes: 0, reason: null, unavailable: true };
       return {
-        blocked: true,
-        hash: hash,
-        reason: block.last_action_reason || 'Multiple accounts from this IP address were banned.'
+        blocked: data.blocked === true,
+        strikes: typeof data.strikes === 'number' ? data.strikes : 0,
+        reason: data.reason || null
       };
+    } catch (err) {
+      // Server-side enforcement is still in place; only the display check failed.
+      console.warn('[Security System] network status unavailable:', err && err.message ? err.message : err);
+      return { blocked: false, strikes: 0, reason: null, unavailable: true };
     }
-    return { blocked: false, hash: hash };
   }
 
-  async function recordBan(username) {
-    if (!username) return { counted: false, reason: 'missing-username' };
+  // Kept for callers that used to record the IP: the worker now records the
+  // network on sign-up, sign-in and chat activity by itself.
+  function remember() {
+    return Promise.resolve(null);
+  }
 
-    var map = await roleGet(MAP_PREFIX + await userKey(username));
-    var reason = map ? String(map.last_action_reason || '') : '';
-    var match = reason.match(/(?:^|\s)ip:([a-f0-9]{64})/i);
-    if (!match) return { counted: false, reason: 'no-ip-record' };
-
-    var hash = match[1].toLowerCase();
-    var countKey = COUNT_PREFIX + hash;
-    var countRow = await roleGet(countKey);
-    var count = 0;
-    if (countRow) {
-      var countMatch = String(countRow.last_action_reason || '').match(/count=(\d+)/);
-      count = countMatch ? parseInt(countMatch[1], 10) : 0;
-    }
-    count += 1;
-
-    var countRes = await upsertRole(countKey, {
-      role_tag: 'SYSTEM',
-      last_action_reason: 'count=' + count
-    });
-    if (!countRes.ok) throw new Error('IP ban count failed HTTP ' + countRes.status);
-
-    var blocked = count > IP_BAN_LIMIT;
-    if (blocked) {
-      var blockRes = await upsertRole(BLOCK_PREFIX + hash, {
-        role_tag: 'SYSTEM',
-        is_banned: 1,
-        last_action_reason:
-          'Multiple accounts from this IP were banned (' + count +
-          ' bans). Sign-in and new account creation are disabled from this network.'
-      });
-      if (!blockRes.ok) throw new Error('IP block failed HTTP ' + blockRes.status);
-    }
-
-    return { counted: true, hash: hash, count: count, blocked: blocked };
+  // Kept for callers that used to increment the ban count: the worker counts
+  // permanent bans when the ban is applied.
+  function recordBan() {
+    return Promise.resolve({ counted: false, reason: 'handled-server-side' });
   }
 
   window.nxIpGuard = {
     check: check,
     remember: remember,
     recordBan: recordBan,
-    getIp: getIp,
-    ipHash: ipHash,
     currentUsername: currentUsername,
     isBannedFlag: isBannedFlag,
-    systemPrefix: SYSTEM_PREFIX,
-    banLimit: IP_BAN_LIMIT
+    systemPrefix: SYSTEM_PREFIX
   };
 
   // Existing account ban check (unchanged behavior).
@@ -333,17 +192,9 @@
 
   function autoRunNetworkGuard() {
     if (!document.getElementById('welcome-text') && !document.getElementById('chat-messages')) return;
-    var username = currentUsername();
-    if (!username || username === 'Guest') return;
 
     check().then(function (result) {
-      if (result.blocked) {
-        applyNetworkLockout(result.reason);
-        return;
-      }
-      return remember(username).catch(function (err) {
-        console.warn('[Security System] IP record skipped:', err && err.message ? err.message : err);
-      });
+      if (result.blocked) applyNetworkLockout(result.reason);
     }).catch(function (err) {
       console.warn('[Security System] network check skipped:', err && err.message ? err.message : err);
     });
