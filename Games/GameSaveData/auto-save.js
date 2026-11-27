@@ -231,21 +231,106 @@ if (document.readyState === 'loading') {
 }
 
 /**
- * Auto-save interval (optional)
- * Automatically saves game data every 5 minutes
+ * Auto-save.
+ *
+ * This used to be an opt-in function that nothing called, so "auto-save" never
+ * ran once. It is now started automatically on every page that loads this file:
+ *
+ *   - every 5 minutes while the tab is open (games run in an iframe, so the
+ *     parent page stays alive while you play)
+ *   - when the tab is hidden or the page is being closed, but only if something
+ *     changed since the last successful save
+ *   - never with an empty payload, and never for guests
+ *
+ * Writing on the way out is safe now: the worker refuses empty payloads and
+ * merges partial ones, so a half-populated browser cannot shrink the cloud save.
  */
-window.enableAutoSaveInterval = function() {
-  setInterval(() => {
-    const username = nxCurrentUser();
-    if (username && username !== 'Guest') {
-      window.cloudSave(null, false);
-      console.log('Auto-save triggered at', new Date().toLocaleTimeString());
-    }
-  }, 5 * 60 * 1000); // Every 5 minutes
-};
+var NX_AUTOSAVE_INTERVAL_MS = 5 * 60 * 1000;
+var nxAutoSaveState = { timer: null, inFlight: false, lastFingerprint: '', lastSavedAt: 0 };
 
-// No beforeunload write. The old beacon collected only "game_save_*" keys and
-// POSTed an empty object on every navigation, overwriting the real save. Use
-// the Save button (or enableAutoSaveInterval) to write to the cloud.
+function nxSavesFingerprint() {
+  var saves = nxCollectSaves();
+  var keys = Object.keys(saves).sort();
+  var size = 0;
+  for (var i = 0; i < keys.length; i++) {
+    var value = saves[keys[i]];
+    size += keys[i].length + (typeof value === 'string' ? value.length : 0);
+  }
+  return keys.length + ':' + size;
+}
+
+function nxAutoSaveEligible() {
+  var user = nxCurrentUser();
+  return !!user && user !== 'Guest';
+}
+
+function nxAutoSaveNow(reason) {
+  if (!nxAutoSaveEligible()) return Promise.resolve({ skipped: 'signed-out' });
+  if (nxAutoSaveState.inFlight) return Promise.resolve({ skipped: 'in-flight' });
+
+  var fingerprint = nxSavesFingerprint();
+  if (fingerprint === '0:0') return Promise.resolve({ skipped: 'nothing-to-save' });
+  if (reason !== 'manual' && fingerprint === nxAutoSaveState.lastFingerprint) {
+    return Promise.resolve({ skipped: 'unchanged' });
+  }
+  if (typeof window.cloudSave !== 'function') return Promise.resolve({ skipped: 'no-cloud-save' });
+
+  nxAutoSaveState.inFlight = true;
+  return Promise.resolve(window.cloudSave(null, false))
+    .then(function (result) {
+      var ok = result && (result.success === true || result.ok === true);
+      if (ok) {
+        nxAutoSaveState.lastFingerprint = fingerprint;
+        nxAutoSaveState.lastSavedAt = Date.now();
+        console.log('[auto-save] saved (' + reason + ') at', new Date().toLocaleTimeString());
+      } else {
+        console.warn('[auto-save] not saved (' + reason + ')', result);
+      }
+      return result;
+    })
+    .catch(function (err) {
+      console.warn('[auto-save] failed (' + reason + ')', err && err.message ? err.message : err);
+      return { success: false, error: err && err.message };
+    })
+    .then(function (result) {
+      nxAutoSaveState.inFlight = false;
+      return result;
+    });
+}
+
+function nxStartAutoSave() {
+  if (nxAutoSaveState.timer) return NX_AUTOSAVE_INTERVAL_MS;
+  if (!nxAutoSaveEligible()) return NX_AUTOSAVE_INTERVAL_MS;
+
+  nxAutoSaveState.lastFingerprint = nxSavesFingerprint();
+  nxAutoSaveState.timer = setInterval(function () {
+    nxAutoSaveNow('interval');
+  }, NX_AUTOSAVE_INTERVAL_MS);
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') nxAutoSaveNow('hidden');
+  });
+  window.addEventListener('pagehide', function () {
+    nxAutoSaveNow('pagehide');
+  });
+
+  console.log('[auto-save] enabled, every ' + (NX_AUTOSAVE_INTERVAL_MS / 60000) + ' minutes');
+  return NX_AUTOSAVE_INTERVAL_MS;
+}
+
+window.enableAutoSaveInterval = function (ms) {
+  if (typeof ms === 'number' && ms >= 30000) NX_AUTOSAVE_INTERVAL_MS = ms;
+  return nxStartAutoSave();
+};
+window.nxAutoSaveNow = nxAutoSaveNow;
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', nxStartAutoSave);
+} else {
+  nxStartAutoSave();
+}
+
+// No beforeunload beacon. The old one collected only "game_save_*" keys and
+// POSTed an empty object on every navigation, which is what overwrote real saves.
 
 console.log('Auto-save system initialized. Using Cloudflare Worker proxy.');
