@@ -1,6 +1,17 @@
 <script src="/JS/adblock.js"></script>
+<style>
+  .ub-grid{display:flex;gap:15px;flex-wrap:wrap;margin-top:15px;}
+  .ub-card{background:rgba(255,255,255,0.05);padding:18px;border-radius:8px;width:180px;cursor:pointer;transition:background .2s ease;border:1px solid rgba(255,255,255,0.06);}
+  .ub-card:hover{background:rgba(255,255,255,0.09);}
+  .ub-card h4{color:#fff;margin:0 0 8px 0;font-size:16px;font-weight:600;}
+  .ub-card p{color:#9aa0a6;margin:0 0 10px 0;font-size:12px;line-height:1.4;}
+  .ub-card span{color:#8b00ff;font-weight:bold;font-size:13px;}
+  .ub-h{color:#fff;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;font-size:18px;font-weight:500;margin-top:32px;}
+  .ub-sub{color:#888;margin:10px 0 0 0;font-size:13px;line-height:1.5;}
+  .ub-note{color:#6f6f76;margin:28px 0 0 0;font-size:12px;line-height:1.6;max-width:720px;}
+</style>
 <div class="unblockers-container" style="padding: 20px; font-family: sans-serif;">
-  <h2 style="color: #fff; margin-top: 0; font-size: 24px; font-weight: 600;">Unbl0ck3rs & Pr0xe</h2>
+  <h2 style="color: #fff; margin-top: 0; font-size: 24px; font-weight: 600;">Unbl0ck3rs &amp; Pr0xe</h2>
   <p style="color: #ccc; margin-bottom: 20px; font-size: 14px;">Access alternative links and deployment environments.</p>
   
   <h3 style="color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; font-size: 18px; font-weight: 500;">Available Environments</h3>
@@ -23,4 +34,61 @@
     </div>
 
   </div>
+
+  <h3 class="ub-h">Ultra Lowkey Proxies</h3>
+  <p class="ub-sub">Quiet domains and disguised tabs &mdash; these stay reachable longest, so try them first. Each one opens in a new tab.</p>
+
+  <div class="ub-grid">
+    <div class="ub-card" onclick="window.open('https://velara.cc','_blank','noopener,noreferrer')">
+      <h4>Velara</h4><p>Full IXL disguise &mdash; tab, page and all</p><span>velara.cc</span>
+    </div>
+    <div class="ub-card" onclick="window.open('https://frogiesarcade.win','_blank','noopener,noreferrer')">
+      <h4>Frogie's Arcade</h4><p>IXL-style tab plus a game cloud</p><span>frogiesarcade.win</span>
+    </div>
+    <div class="ub-card" onclick="window.open('https://frogiesarcade.com','_blank','noopener,noreferrer')">
+      <h4>Frogie's Arcade II</h4><p>Same build, backup domain</p><span>frogiesarcade.com</span>
+    </div>
+    <div class="ub-card" onclick="window.open('https://full.boxathome.net','_blank','noopener,noreferrer')">
+      <h4>Box @ Home</h4><p>Mirror, reads as IXL in the tab</p><span>full.boxathome.net</span>
+    </div>
+    <div class="ub-card" onclick="window.open('https://truffled.lol','_blank','noopener,noreferrer')">
+      <h4>Truffled</h4><p>Looks like a study hall, proxies underneath</p><span>truffled.lol</span>
+    </div>
+    <div class="ub-card" onclick="window.open('https://gn-math.dev','_blank','noopener,noreferrer')">
+      <h4>GN-Math</h4><p>Math-branded games with a browser tab</p><span>gn-math.dev</span>
+    </div>
+    <div class="ub-card" onclick="window.open('https://nowgg.fun','_blank','noopener,noreferrer')">
+      <h4>NowGG</h4><p>Cloud games, no proxy needed</p><span>nowgg.fun</span>
+    </div>
+    <div class="ub-card" onclick="window.open('https://anura.pro','_blank','noopener,noreferrer')">
+      <h4>AnuraOS</h4><p>Web desktop with a proxy built in</p><span>anura.pro</span>
+    </div>
+  </div>
+
+  <h3 class="ub-h">Extra Proxy Engines</h3>
+  <p class="ub-sub">Heavier open-source proxies for when a lowkey link gets blocked. Better site compatibility, louder names.</p>
+
+  <div class="ub-grid">
+    <div class="ub-card" onclick="window.open('https://invisiproxy.com','_blank','noopener,noreferrer')">
+      <h4>InvisiProxy</h4><p>Holy Unblocker LTS</p><span>invisiproxy.com</span>
+    </div>
+    <div class="ub-card" onclick="window.open('https://kazwire.com','_blank','noopener,noreferrer')">
+      <h4>Kazwire</h4><p>Scramjet + Ultraviolet</p><span>kazwire.com</span>
+    </div>
+    <div class="ub-card" onclick="window.open('https://terbium.app','_blank','noopener,noreferrer')">
+      <h4>Terbium</h4><p>Ultraviolet-based</p><span>terbium.app</span>
+    </div>
+    <div class="ub-card" onclick="window.open('https://tinf0il.tech','_blank','noopener,noreferrer')">
+      <h4>Tinf0il</h4><p>Lightweight browser proxy</p><span>tinf0il.tech</span>
+    </div>
+    <div class="ub-card" onclick="window.open('https://browser.rammerhead.org','_blank','noopener,noreferrer')">
+      <h4>Rammerhead</h4><p>Official demo, session based</p><span>browser.rammerhead.org</span>
+    </div>
+    <div class="ub-card" onclick="window.open('https://croxyproxy.com','_blank','noopener,noreferrer')">
+      <h4>CroxyProxy</h4><p>Plain web proxy, always up</p><span>croxyproxy.com</span>
+    </div>
+  </div>
+
+  <p class="ub-note">Public proxies can see the traffic they carry &mdash; never sign in to anything sensitive through one. Links rot fast; if a card does not load, try the next.</p>
+
 </div>
