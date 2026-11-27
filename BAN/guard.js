@@ -171,6 +171,46 @@
     return Promise.resolve({ counted: false, reason: 'handled-server-side' });
   }
 
+  // Warning notices. The profile page's own warning check lives in an inline
+  // script that is missing on some page variants, so warnings never reached
+  // the user. The guard already fetches the role; surface it here too.
+  function applyWarningNotice(role) {
+    if (!role || document.getElementById('nx-warning-notice')) return;
+    var warned = role.warned === true || role.warned === 1 ||
+      String(role.warned).toLowerCase() === 'true' || String(role.warned) === '1' ||
+      Number(role.warning_count) > 0;
+    if (!warned) return;
+    var overlay = document.createElement('div');
+    overlay.id = 'nx-warning-notice';
+    overlay.className = 'nxos-ban-overlay';
+    overlay.innerHTML =
+      '<div class="nxos-ban-box">' +
+      '<div class="nxos-ban-title">WARNING</div>' +
+      '<p class="nxos-ban-msg">An admin has warned this account.</p>' +
+      '<div class="nxos-ban-reason-container">' +
+      '<span class="nxos-ban-reason-label">Reason:</span>' +
+      '<p class="nxos-ban-reason-text">' +
+      escapeHtml(role.last_action_reason || 'Violation of community guidelines.') +
+      '</p></div>' +
+      '<button id="nx-warning-ack" style="margin-top:18px;padding:12px 22px;border:0;border-radius:10px;background:#f59e0b;color:#111;font-weight:700;cursor:pointer;">I understand</button>' +
+      '</div>';
+    document.body.appendChild(overlay);
+    var btn = document.getElementById('nx-warning-ack');
+    if (!btn) return;
+    btn.addEventListener('click', async function () {
+      btn.disabled = true;
+      btn.textContent = 'Dismissing...';
+      try {
+        await fetch(API_BASE + '/user-roles?username=' + encodeURIComponent(role.username), {
+          method: 'PATCH',
+          headers: HEADERS,
+          body: JSON.stringify({ id: role.id, warning_count: 0, last_action_type: null })
+        });
+      } catch (e) {}
+      overlay.remove();
+    });
+  }
+
   window.nxIpGuard = {
     check: check,
     remember: remember,
@@ -227,6 +267,8 @@
             '</span>';
         }
         applySystemLockout(banReason);
+      } else {
+        applyWarningNotice(userStatus);
       }
     } catch (err) {
       console.error('[Security System] Execution exception:', err);
