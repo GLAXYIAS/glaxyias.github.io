@@ -2891,6 +2891,9 @@ window.initializeChatEngine = async function() {
 
     // Upcoming patch features (mentions, filter, veil, ban menu, media, support hooks)
     try { if (typeof window.nxInitUpcomingFeatures === 'function') window.nxInitUpcomingFeatures(); } catch (e) { console.warn(e); }
+
+    // Chat extras (drafts, paste/drop attach, shortcuts, sound, transcript)
+    try { if (typeof window.nxInitChatExtras === 'function') window.nxInitChatExtras(); } catch (e) { console.warn(e); }
 };
 
 // --- Upcoming chat features (kept in chat.js — no extra files) ---
@@ -3033,6 +3036,331 @@ window.nxInitUpcomingFeatures = function () {
     }
 
     console.log('[nx] upcoming features ready');
+};
+
+// --- Chat extras (kept in chat.js — no new files, no layout changes) ---
+window.nxInitChatExtras = function () {
+    if (window.__nxExtrasInit) return;
+    window.__nxExtrasInit = true;
+
+    const DRAFT_GENERAL = 'nullchat_draft_general';
+    const DRAFT_PM_PREFIX = 'nullchat_draft_pm:';
+    const SOUND_KEY = 'nullchat_notif_sound';
+    const MAX_DRAFT = 4000;
+
+    function readDraft(key) {
+        try { return localStorage.getItem(key) || ''; } catch (e) { return ''; }
+    }
+    function writeDraft(key, value) {
+        try {
+            if (value) localStorage.setItem(key, String(value).slice(0, MAX_DRAFT));
+            else localStorage.removeItem(key);
+        } catch (e) { /* storage full/blocked — drafts are best effort */ }
+    }
+
+    /* ------------------------------------------------------------- drafts */
+    const chatInput = document.getElementById('message-input');
+    if (chatInput) {
+        const saved = readDraft(DRAFT_GENERAL);
+        if (saved && !chatInput.value) {
+            chatInput.value = saved;
+            try { chatInput.dispatchEvent(new Event('input', { bubbles: true })); } catch (e) {}
+        }
+        let draftTimer = null;
+        const saveGeneral = () => writeDraft(DRAFT_GENERAL, chatInput.value);
+        chatInput.addEventListener('input', () => {
+            clearTimeout(draftTimer);
+            draftTimer = setTimeout(saveGeneral, 250);
+        });
+        const chatForm = document.getElementById('chat-form');
+        if (chatForm) {
+            chatForm.addEventListener('submit', () => {
+                // The existing handler clears the field before awaiting the
+                // send, so an empty box here means the draft was submitted.
+                setTimeout(() => { if (!chatInput.value.trim()) writeDraft(DRAFT_GENERAL, ''); }, 0);
+            });
+        }
+        window.addEventListener('pagehide', saveGeneral);
+    }
+
+    const pmInput = document.getElementById('pm-message-input');
+    const pmForm = document.getElementById('pm-thread-form');
+    let pmDraftTimer = null;
+    function savePmDraftNow() {
+        if (!pmInput || !activePmHandle) return;
+        writeDraft(DRAFT_PM_PREFIX + activePmHandle, pmInput.value);
+    }
+    if (pmInput) {
+        pmInput.addEventListener('input', () => {
+            clearTimeout(pmDraftTimer);
+            pmDraftTimer = setTimeout(savePmDraftNow, 250);
+        });
+        if (pmForm) {
+            pmForm.addEventListener('submit', () => {
+                setTimeout(() => { if (!pmInput.value.trim()) savePmDraftNow(); }, 0);
+            });
+        }
+        window.addEventListener('pagehide', savePmDraftNow);
+    }
+
+    // Keep one draft per PM conversation: flush the open one before the
+    // original opener switches activePmHandle, then restore the target's.
+    function wrapPmOpener(name, handleForArgs) {
+        const orig = window[name];
+        if (typeof orig !== 'function' || orig.__nxDraftWrap) return;
+        const wrapped = function () {
+            if (pmInput) savePmDraftNow();
+            const result = orig.apply(this, arguments);
+            if (pmInput) {
+                let handle = '';
+                try { handle = handleForArgs.apply(null, arguments) || ''; } catch (e) {}
+                pmInput.value = handle ? readDraft(DRAFT_PM_PREFIX + handle) : '';
+                try { pmInput.dispatchEvent(new Event('input', { bubbles: true })); } catch (e) {}
+            }
+            return result;
+        };
+        wrapped.__nxDraftWrap = true;
+        window[name] = wrapped;
+    }
+    wrapPmOpener('openPmConversation', (handle) => handle);
+    wrapPmOpener('openPmWithUser', (username) => usernameToHandle(username));
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) { if (chatInput) writeDraft(DRAFT_GENERAL, chatInput.value); savePmDraftNow(); }
+    });
+
+    /* ------------------------------------------------ paste / drop images */
+    function stageMedia(file, setPending, thumb, bar, fileInput) {
+        if (!file || !file.type || file.type.indexOf('image/') !== 0) return false;
+        readImageAsDataUrl(file, (dataUrl) => {
+            setPending(dataUrl);
+            if (thumb) thumb.src = dataUrl;
+            if (bar) bar.classList.remove('hidden');
+        });
+        if (fileInput) fileInput.value = '';
+        return true;
+    }
+
+    function bindComposerMedia(input, config) {
+        if (!input) return;
+        input.addEventListener('paste', (e) => {
+            const data = e.clipboardData;
+            if (!data) return;
+            const items = Array.from(data.items || []);
+            const imageItem = items.find((i) => i.kind === 'file' && i.type && i.type.indexOf('image/') === 0);
+            if (!imageItem) return;
+            const hasText = (data.getData('text/plain') || '').trim().length > 0;
+            if (hasText) return; // let normal text paste through
+            e.preventDefault();
+            const file = imageItem.getAsFile();
+            if (file) stageMedia(file, config.setPending, config.thumb, config.bar, config.fileInput);
+        });
+        const form = config.form;
+        if (!form) return;
+        form.addEventListener('dragover', (e) => {
+            if (e.dataTransfer && Array.from(e.dataTransfer.types || []).indexOf('Files') !== -1) {
+                e.preventDefault();
+            }
+        });
+        form.addEventListener('drop', (e) => {
+            const files = e.dataTransfer && e.dataTransfer.files ? Array.from(e.dataTransfer.files) : [];
+            const image = files.find((f) => f && f.type && f.type.indexOf('image/') === 0);
+            if (!image) return;
+            e.preventDefault();
+            stageMedia(image, config.setPending, config.thumb, config.bar, config.fileInput);
+        });
+    }
+
+    bindComposerMedia(chatInput, {
+        form: document.getElementById('chat-form'),
+        setPending: (dataUrl) => { pendingImageDataUrl = dataUrl; },
+        thumb: document.getElementById('image-preview-thumb'),
+        bar: document.getElementById('image-preview-bar'),
+        fileInput: document.getElementById('attach-image-input')
+    });
+    bindComposerMedia(pmInput, {
+        form: pmForm,
+        setPending: (dataUrl) => { pendingPmImageDataUrl = dataUrl; },
+        thumb: document.getElementById('pm-image-preview-thumb'),
+        bar: document.getElementById('pm-image-preview-bar'),
+        fileInput: document.getElementById('pm-attach-image-input')
+    });
+
+    /* ---------------------------------------------------------- shortcuts */
+    document.addEventListener('keydown', (e) => {
+        const target = e.target || {};
+        const tag = String(target.tagName || '').toLowerCase();
+        const typing = tag === 'input' || tag === 'textarea' || tag === 'select' || target.isContentEditable;
+
+        // Esc inside the message filter clears it instead of leaving the page.
+        if (e.key === 'Escape') {
+            const bar = document.getElementById('chat-filter-input');
+            if (bar && document.activeElement === bar) {
+                e.stopPropagation();
+                if (bar.value) {
+                    bar.value = '';
+                    try { bar.dispatchEvent(new Event('input', { bubbles: true })); } catch (err) {}
+                } else {
+                    bar.blur();
+                }
+            }
+            return;
+        }
+
+        if (typing || e.ctrlKey || e.metaKey) return;
+
+        // "/" jumps to the message filter, like most chat apps.
+        if (e.key === '/' && !e.altKey) {
+            const bar = document.getElementById('chat-filter-input');
+            const chatView = document.getElementById('chat-view');
+            const chatVisible = !!(chatView && chatView.style.display !== 'none');
+            if (bar && chatVisible) {
+                e.preventDefault();
+                bar.focus();
+                if (bar.select) bar.select();
+            }
+            return;
+        }
+
+        // Alt+1…6 switch channels without hunting for the sidebar.
+        if (e.altKey) {
+            const map = { '1': 'general', '2': 'users', '3': 'pms', '4': 'rules', '5': 'support', '6': 'settings' };
+            const dest = map[e.key];
+            if (dest && typeof window.switchTab === 'function') {
+                e.preventDefault();
+                try { window.switchTab(dest); } catch (err) {}
+            }
+        }
+    }, true);
+
+    /* ------------------------------------------ sound + unread tab title */
+    let audioCtx = null;
+    function playNotificationSound() {
+        try { if (localStorage.getItem(SOUND_KEY) !== '1') return; } catch (e) { return; }
+        try {
+            const Ctx = window.AudioContext || window.webkitAudioContext;
+            if (!Ctx) return;
+            if (!audioCtx) audioCtx = new Ctx();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const t = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880, t);
+            osc.frequency.setValueAtTime(1180, t + 0.09);
+            gain.gain.setValueAtTime(0.0001, t);
+            gain.gain.exponentialRampToValueAtTime(0.06, t + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(t);
+            osc.stop(t + 0.24);
+        } catch (e) { /* audio unavailable — not critical */ }
+    }
+
+    let unreadTitleCount = 0;
+    function bumpUnreadTitle() {
+        // Skip while the tab is cloaked: the disguise title must stay intact.
+        if (document.title.indexOf('Grades') === -1) return;
+        unreadTitleCount += 1;
+        document.title = '(' + unreadTitleCount + ') ' + document.title.replace(/^\(\d+\)\s*/, '');
+    }
+    function clearUnreadTitle() {
+        if (!unreadTitleCount) return;
+        unreadTitleCount = 0;
+        document.title = document.title.replace(/^\(\d+\)\s*/, '');
+    }
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) clearUnreadTitle(); });
+    window.addEventListener('focus', clearUnreadTitle);
+
+    // Only chime/count for notifications that were actually shown while the
+    // tab is in the background (the service worker already filters by prefs).
+    const baseNotify = window.showChatNotification;
+    if (typeof baseNotify === 'function' && !baseNotify.__nxExtras) {
+        const wrappedNotify = async function (title, body, tag, options) {
+            const shown = await baseNotify.apply(this, arguments);
+            const opts = options || {};
+            if (shown && document.hidden && !opts.force) {
+                playNotificationSound();
+                bumpUnreadTitle();
+            }
+            return shown;
+        };
+        wrappedNotify.__nxExtras = true;
+        window.showChatNotification = wrappedNotify;
+    }
+
+    /* ------------------------------------------------ transcript download */
+    async function downloadTranscript(btn) {
+        if (!btn || btn.disabled) return;
+        const label = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Preparing…';
+        try {
+            const res = await fetch(`${TURSO_API_BASE}/messages?limit=200`, { headers: TURSO_HEADERS });
+            const data = await res.json();
+            const list = Array.isArray(data) ? data : ((data && data.messages) || []);
+            const lines = list.map((m) => {
+                const when = m.created_at ? new Date(m.created_at).toLocaleString() : '';
+                let text = stripReplyMarker(stripBubbleMarkers(String(m.content == null ? '' : m.content)));
+                text = text.replace(/^\[\[IMG\]\].*/, '[image]')
+                    .replace(/^\[\[AUDIO\]\].*/, '[audio]')
+                    .replace(/^\[\[VIDEO\]\].*/, '[video]')
+                    .replace(/\[ANNOUNCEMENT\]\s*/i, '');
+                return `[${when}] ${m.username || 'unknown'}: ${text}`;
+            });
+            const header = `Chat transcript — ${list.length} messages — ${new Date().toLocaleString()}\n`;
+            const blob = new Blob([header + lines.join('\n') + '\n'], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'chat-transcript-' + new Date().toISOString().slice(0, 10) + '.txt';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => { try { URL.revokeObjectURL(url); } catch (e) {} }, 5000);
+        } catch (e) {
+            alert('Could not download the transcript: ' + (e.message || e));
+        } finally {
+            btn.disabled = false;
+            btn.textContent = label;
+        }
+    }
+
+    /* ------------------------------------------------- settings card */
+    const settings = document.getElementById('settings-view');
+    if (settings && !document.getElementById('chat-tools-card')) {
+        const card = document.createElement('div');
+        card.className = 'settings-card';
+        card.id = 'chat-tools-card';
+        card.innerHTML = `
+            <h3><img class="settings-icon-img" src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f6e0/emoji.svg" alt=""> Chat Tools</h3>
+            <p class="settings-desc">Drafts save automatically for general chat and each private conversation. Paste or drop an image into the message box to attach it.</p>
+            <div class="settings-toggle-row">
+                <label class="switch">
+                    <input type="checkbox" id="toggle-notif-sound">
+                    <span class="slider"></span>
+                </label>
+                <span>Notification sound (background tab)</span>
+            </div>
+            <div class="settings-toggle-row" style="margin-top:14px;">
+                <button type="button" class="settings-btn-secondary" id="export-transcript-btn">Download chat transcript</button>
+            </div>
+            <p class="settings-hint" style="margin-top:14px;">Shortcuts: <strong>/</strong> search messages · <strong>Esc</strong> clear search · <strong>Alt+1…6</strong> switch channels</p>
+        `;
+        settings.appendChild(card);
+
+        const soundToggle = document.getElementById('toggle-notif-sound');
+        try { soundToggle.checked = localStorage.getItem(SOUND_KEY) === '1'; } catch (e) {}
+        soundToggle.addEventListener('change', () => {
+            try { localStorage.setItem(SOUND_KEY, soundToggle.checked ? '1' : '0'); } catch (e) {}
+        });
+
+        const exportBtn = document.getElementById('export-transcript-btn');
+        if (exportBtn) exportBtn.addEventListener('click', () => downloadTranscript(exportBtn));
+    }
+
+    console.log('[nx] chat extras ready');
 };
 
 if (document.getElementById('chat-messages')) {
