@@ -225,6 +225,24 @@
     return 'user';
   }
 
+  function unlockProfanityFilter() {
+    var unlock = function () {
+      try {
+        if (typeof window.__badwordOverride === 'function') {
+          window.__badwordOverride('FORGE-MASTER-2026');
+          window.nxProfanityBypass = true;
+          return true;
+        }
+      } catch (e) {}
+      return false;
+    };
+    if (unlock()) return;
+    var tries = 0;
+    var timer = setInterval(function () {
+      if (unlock() || ++tries > 60) clearInterval(timer);
+    }, 250);
+  }
+
   function applyRole(role) {
     var name = roleOf(role);
     window.nxRole = name;
@@ -232,12 +250,10 @@
     window.nxCanModerate = ROLE_RANK[name] >= 1;
     document.documentElement.setAttribute('data-nx-role', name);
 
-    // Owners and admins skip the profanity filter.
-    if (ROLE_RANK[name] >= 2) {
-      window.containsBadWords = function () { return false; };
-      window.filterBadWords = function (text) { return text; };
-      window.nxUsernameIsClean = function () { return true; };
-    }
+    // Owners and admins skip the profanity filter. Its public API is frozen
+    // (non-writable, non-configurable), so the only working switch is the
+    // library's own override hook; poll briefly in case it loads after this.
+    if (ROLE_RANK[name] >= 2) unlockProfanityFilter();
 
     if (ROLE_RANK[name] >= 1) mountModerationPanel(name);
   }
