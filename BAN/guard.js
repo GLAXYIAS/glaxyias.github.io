@@ -211,6 +211,142 @@
     });
   }
 
+  // --- Roles -------------------------------------------------------------
+  // owner : everything, bans apply immediately
+  // admin : everything except bans (owner approval required)
+  // dev   : may request bans/warnings and read PMs
+  var ROLE_RANK = { user: 0, dev: 1, admin: 2, owner: 3 };
+
+  function roleOf(role) {
+    var tag = String((role && role.role_tag) || '').trim().toLowerCase();
+    if (tag === 'owner') return 'owner';
+    if (tag === 'dev' || tag === 'developer') return 'dev';
+    if (tag === 'admin' || tag === 'staff' || tag === 'moderator' || tag === 'mod' || isBannedFlag(role && role.is_admin)) return 'admin';
+    return 'user';
+  }
+
+  function applyRole(role) {
+    var name = roleOf(role);
+    window.nxRole = name;
+    window.nxIsAdmin = ROLE_RANK[name] >= 2;
+    window.nxCanModerate = ROLE_RANK[name] >= 1;
+    document.documentElement.setAttribute('data-nx-role', name);
+
+    // Owners and admins skip the profanity filter.
+    if (ROLE_RANK[name] >= 2) {
+      window.containsBadWords = function () { return false; };
+      window.filterBadWords = function (text) { return text; };
+      window.nxUsernameIsClean = function () { return true; };
+    }
+
+    if (ROLE_RANK[name] >= 1) mountModerationPanel(name);
+  }
+
+  function mountModerationPanel(role) {
+    if (document.getElementById('nx-mod-fab')) return;
+    var fab = document.createElement('button');
+    fab.id = 'nx-mod-fab';
+    fab.type = 'button';
+    fab.textContent = 'Moderation';
+    fab.style.cssText = 'position:fixed;left:16px;bottom:16px;z-index:2147482000;padding:10px 16px;border-radius:999px;border:1px solid #f59e0b;background:#161616;color:#f59e0b;font-weight:700;font-family:system-ui,sans-serif;cursor:pointer;';
+    document.body.appendChild(fab);
+
+    var panel = null;
+
+    async function api(path, opts) {
+      var res = await fetch(API_BASE + path, Object.assign({
+        headers: { 'Content-Type': 'application/json' }
+      }, opts || {}));
+      var data = await res.json().catch(function () { return {}; });
+      return { ok: res.ok, status: res.status, data: data };
+    }
+
+    function renderRequests(list) {
+      if (!list.length) return '<div style="color:#888;font-size:13px;padding:10px 0;">No pending requests.</div>';
+      return list.map(function (r) {
+        var canApprove = String(r.action) !== 'ban' || role === 'owner';
+        return '<div style="border-top:1px solid #333;padding:10px 0;">' +
+          '<div style="color:#f59e0b;font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.4px;">' +
+          escapeHtml(r.action) + ' &middot; ' + escapeHtml(r.target) + '</div>' +
+          '<div style="color:#ddd;font-size:13px;margin:4px 0;">' + escapeHtml(r.reason || 'No reason given') + '</div>' +
+          '<div style="color:#888;font-size:11px;margin-bottom:8px;">by ' + escapeHtml(r.requested_by || '?') +
+          ' &middot; ' + escapeHtml(String(r.created_at || '').slice(0, 16).replace('T', ' ')) + '</div>' +
+          '<button data-approve="' + escapeHtml(r.id) + '"' + (canApprove ? '' : ' disabled') +
+          ' style="padding:6px 12px;border-radius:8px;border:0;background:' + (canApprove ? '#16a34a' : '#333') +
+          ';color:#fff;font-weight:600;cursor:pointer;margin-right:6px;">Approve</button>' +
+          '<button data-deny="' + escapeHtml(r.id) + '" style="padding:6px 12px;border-radius:8px;border:0;background:#7f1d1d;color:#fff;font-weight:600;cursor:pointer;">Deny</button>' +
+          '</div>';
+      }).join('');
+    }
+
+    async function load() {
+      if (!panel) return;
+      var listEl = panel.querySelector('#nx-mod-list');
+      var out = await api('/moderation-requests?status=pending');
+      if (!out.ok) {
+        listEl.innerHTML = '<div style="color:#f87171;font-size:13px;">' + escapeHtml(out.data.message || out.data.error || 'Failed to load') + '</div>';
+        return;
+      }
+      var list = out.data.requests || [];
+      listEl.innerHTML = renderRequests(list);
+      fab.textContent = list.length ? 'Moderation (' + list.length + ')' : 'Moderation';
+    }
+
+    function open() {
+      if (panel) { panel.remove(); panel = null; return; }
+      panel = document.createElement('div');
+      panel.id = 'nx-mod-panel';
+      panel.style.cssText = 'position:fixed;left:16px;bottom:64px;z-index:2147482000;width:340px;max-height:72vh;overflow:auto;background:#111;border:1px solid #f59e0b;border-radius:14px;padding:16px;color:#fff;font-family:system-ui,sans-serif;box-shadow:0 10px 40px rgba(0,0,0,.6);';
+      panel.innerHTML =
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+        '<strong style="color:#f59e0b;font-size:14px;">Moderation &middot; ' + escapeHtml(role) + '</strong>' +
+        '<button id="nx-mod-close" style="background:none;border:0;color:#888;font-size:20px;cursor:pointer;">&times;</button></div>' +
+        '<div id="nx-mod-list" style="font-size:13px;">Loading&hellip;</div>' +
+        '<div style="margin-top:14px;border-top:1px solid #333;padding-top:12px;">' +
+        '<div style="color:#aaa;font-size:12px;margin-bottom:6px;">Request a ban or warning</div>' +
+        '<select id="nx-mod-action" style="width:100%;margin-bottom:6px;padding:8px;border-radius:8px;background:#1b1b1b;color:#fff;border:1px solid #333;">' +
+        '<option value="warn">Warn</option><option value="ban">Ban</option></select>' +
+        '<input id="nx-mod-target" placeholder="Exact username" style="width:100%;box-sizing:border-box;margin-bottom:6px;padding:8px;border-radius:8px;background:#1b1b1b;color:#fff;border:1px solid #333;">' +
+        '<input id="nx-mod-reason" placeholder="Reason" style="width:100%;box-sizing:border-box;margin-bottom:8px;padding:8px;border-radius:8px;background:#1b1b1b;color:#fff;border:1px solid #333;">' +
+        '<button id="nx-mod-submit" style="width:100%;padding:9px;border-radius:8px;border:0;background:#f59e0b;color:#111;font-weight:700;cursor:pointer;">Send request</button>' +
+        '<div id="nx-mod-msg" style="font-size:12px;color:#888;margin-top:8px;"></div></div>';
+      document.body.appendChild(panel);
+      panel.querySelector('#nx-mod-close').onclick = function () { panel.remove(); panel = null; };
+      panel.querySelector('#nx-mod-list').addEventListener('click', async function (ev) {
+        var t = ev.target;
+        if (!t || !t.getAttribute) return;
+        var approve = t.getAttribute('data-approve');
+        var deny = t.getAttribute('data-deny');
+        if (!approve && !deny) return;
+        t.disabled = true;
+        var out = await api('/moderation-requests/decision', {
+          method: 'POST',
+          body: JSON.stringify({ id: Number(approve || deny), decision: approve ? 'approve' : 'deny' })
+        });
+        if (!out.ok) {
+          alert(out.data.message || out.data.error || 'Failed');
+          t.disabled = false;
+        }
+        load();
+      });
+      panel.querySelector('#nx-mod-submit').onclick = async function () {
+        var msg = panel.querySelector('#nx-mod-msg');
+        var payload = {
+          action: panel.querySelector('#nx-mod-action').value,
+          target: panel.querySelector('#nx-mod-target').value.trim(),
+          reason: panel.querySelector('#nx-mod-reason').value.trim()
+        };
+        if (!payload.target) { msg.textContent = 'Enter a username.'; return; }
+        var out = await api('/moderation-requests', { method: 'POST', body: JSON.stringify(payload) });
+        msg.textContent = out.ok ? (out.data.message || 'Request sent.') : (out.data.message || out.data.error || 'Failed');
+        if (out.ok) load();
+      };
+      load();
+    }
+
+    fab.onclick = open;
+  }
+
   window.nxIpGuard = {
     check: check,
     remember: remember,
@@ -270,6 +406,7 @@
       } else {
         applyWarningNotice(userStatus);
       }
+      applyRole(userStatus);
     } catch (err) {
       console.error('[Security System] Execution exception:', err);
     }
