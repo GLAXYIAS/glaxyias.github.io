@@ -40,7 +40,6 @@
     return nativeFetch.call(this, input, init);
   };
 })();
-
 // BAN/guard.js — account + network ban display via the Cloudflare worker.
 //
 // Network (IP) enforcement now lives entirely in the worker:
@@ -171,6 +170,7 @@
     return Promise.resolve({ counted: false, reason: 'handled-server-side' });
   }
 
+
   // Warning notices. The profile page's own warning check lives in an inline
   // script that is missing on some page variants, so warnings never reached
   // the user. The guard already fetches the role; surface it here too.
@@ -210,6 +210,7 @@
       overlay.remove();
     });
   }
+
 
   // --- Roles -------------------------------------------------------------
   // owner : everything, bans apply immediately
@@ -255,19 +256,112 @@
     // library's own override hook; poll briefly in case it loads after this.
     if (ROLE_RANK[name] >= 2) unlockProfanityFilter();
 
-    if (ROLE_RANK[name] >= 1) mountModerationPanel(name);
+    if (ROLE_RANK[name] >= 1) mountAdminModeration(name);
   }
 
-  function mountModerationPanel(role) {
-    if (document.getElementById('nx-mod-fab')) return;
-    var fab = document.createElement('button');
-    fab.id = 'nx-mod-fab';
-    fab.type = 'button';
-    fab.textContent = 'Moderation';
-    fab.style.cssText = 'position:fixed;left:16px;bottom:16px;z-index:2147482000;padding:10px 16px;border-radius:999px;border:1px solid #f59e0b;background:#161616;color:#f59e0b;font-weight:700;font-family:system-ui,sans-serif;cursor:pointer;';
-    document.body.appendChild(fab);
+  // --- Moderation lives inside the chat admin panel ----------------------
+  // There is no floating button: the queue and the request form are rendered
+  // into #admin-panel-view, and what a user sees there depends on their role.
+  //   owner : approve or deny anything, bans included
+  //   admin : approve warnings, deny anything; ban rows await the owner
+  //   dev   : submit requests and watch their status; no decision controls
+  function mountAdminModeration(role) {
+    var view = document.getElementById('admin-panel-view');
+    if (!view) {
+      var tries = 0;
+      var timer = setInterval(function () {
+        if (document.getElementById('admin-panel-view') || ++tries > 40) {
+          clearInterval(timer);
+          mountAdminModeration(role);
+        }
+      }, 250);
+      return;
+    }
+    if (document.getElementById('nx-mod-section')) return;
 
-    var panel = null;
+    var isDev = role === 'dev';
+    var isAdmin = role === 'admin';
+    var isOwner = role === 'owner';
+
+    if (isDev) {
+      var adminTab = document.getElementById('admin-tab');
+      if (adminTab) {
+        adminTab.style.display = 'block';
+        adminTab.textContent = '# moderation';
+      }
+      var grid = view.querySelector('.admin-grid');
+      if (grid) grid.style.display = 'none';
+      var stats = document.getElementById('admin-stats-row');
+      if (stats) stats.style.display = 'none';
+      var heading = view.querySelector('h1');
+      if (heading) {
+        heading.textContent = 'Moderation';
+        heading.style.color = '#f59e0b';
+      }
+      mountDevPmLog();
+    }
+
+    function helpText() {
+      if (isOwner) return 'Owner: approve or deny any request. Your own bans apply immediately.';
+      if (isAdmin) return 'Admin: approve warnings and deny requests. A ban has to be approved by the owner.';
+      return 'Dev: request a warning or a ban and follow its status. An admin or owner reviews every request.';
+    }
+
+    function rowActions(r) {
+      if (isDev) {
+        return '<div style="color:#888;font-size:11px;">Waiting for an admin or owner to review this.</div>';
+      }
+      var isBan = String(r.action) === 'ban';
+      var approve = '';
+      if (isBan && !isOwner) {
+        approve = '<span style="display:inline-block;padding:6px 12px;border-radius:8px;background:#262626;color:#777;font-weight:600;margin-right:6px;">Owner approval required</span>';
+      } else {
+        approve = '<button data-approve="' + escapeHtml(r.id) + '" style="padding:6px 12px;border-radius:8px;border:0;background:#16a34a;color:#fff;font-weight:600;cursor:pointer;margin-right:6px;">Approve</button>';
+      }
+      return approve +
+        '<button data-deny="' + escapeHtml(r.id) + '" style="padding:6px 12px;border-radius:8px;border:0;background:#7f1d1d;color:#fff;font-weight:600;cursor:pointer;">Deny</button>';
+    }
+
+    function renderList(list) {
+      var titleEl = box.querySelector('#nx-mod-title');
+      titleEl.textContent = list.length ? 'Pending moderation requests (' + list.length + ')' : 'Pending moderation requests';
+      var listEl = box.querySelector('#nx-mod-list');
+      if (!list.length) {
+        listEl.innerHTML = '<div style="color:#888;font-size:13px;padding:6px 0;">Nothing waiting for review.</div>';
+        return;
+      }
+      listEl.innerHTML = list.map(function (r) {
+        return '<div style="border-top:1px solid #2a2a2a;padding:10px 0;">' +
+          '<div style="color:#f59e0b;font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.4px;">' +
+          escapeHtml(r.action) + ' &middot; ' + escapeHtml(r.target) + '</div>' +
+          '<div style="color:#ddd;font-size:13px;margin:4px 0;">' + escapeHtml(r.reason || 'No reason given') + '</div>' +
+          '<div style="color:#888;font-size:11px;margin-bottom:8px;">by ' + escapeHtml(r.requested_by || '?') +
+          ' &middot; ' + escapeHtml(String(r.created_at || '').slice(0, 16).replace('T', ' ')) + '</div>' +
+          rowActions(r) +
+          '</div>';
+      }).join('');
+    }
+
+    var box = document.createElement('div');
+    box.id = 'nx-mod-section';
+    box.style.cssText = 'margin:0 0 24px;padding:18px;border:1px solid #2f2f2f;border-radius:10px;background:rgba(0,0,0,.25);';
+    box.innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:4px;">' +
+      '<h3 id="nx-mod-title" style="margin:0;color:#f59e0b;font-size:15px;">Pending moderation requests</h3>' +
+      '<span style="color:#888;font-size:11px;text-transform:uppercase;letter-spacing:.4px;">' + escapeHtml(role) + '</span></div>' +
+      '<p style="margin:0 0 10px;color:#9ca3af;font-size:12px;">' + escapeHtml(helpText()) + '</p>' +
+      '<div id="nx-mod-list" style="font-size:13px;">Loading&hellip;</div>' +
+      (isDev
+        ? '<div style="margin-top:16px;border-top:1px solid #2a2a2a;padding-top:12px;">' +
+          '<div style="color:#aaa;font-size:12px;margin-bottom:6px;">Request a ban or warning</div>' +
+          '<select id="nx-mod-action" style="width:100%;margin-bottom:6px;padding:8px;border-radius:8px;background:#1b1b1b;color:#fff;border:1px solid #333;">' +
+          '<option value="warn">Warn</option><option value="ban">Ban</option></select>' +
+          '<input id="nx-mod-target" placeholder="Exact username" style="width:100%;box-sizing:border-box;margin-bottom:6px;padding:8px;border-radius:8px;background:#1b1b1b;color:#fff;border:1px solid #333;">' +
+          '<input id="nx-mod-reason" placeholder="Reason" style="width:100%;box-sizing:border-box;margin-bottom:8px;padding:8px;border-radius:8px;background:#1b1b1b;color:#fff;border:1px solid #333;">' +
+          '<button id="nx-mod-submit" style="width:100%;padding:9px;border-radius:8px;border:0;background:#f59e0b;color:#111;font-weight:700;cursor:pointer;">Send request</button>' +
+          '<div id="nx-mod-msg" style="font-size:12px;color:#888;margin-top:8px;"></div></div>'
+        : '');
+    view.insertBefore(box, view.querySelector('.admin-grid') || view.children[1] || null);
 
     async function api(path, opts) {
       var res = await fetch(API_BASE + path, Object.assign({
@@ -277,90 +371,102 @@
       return { ok: res.ok, status: res.status, data: data };
     }
 
-    function renderRequests(list) {
-      if (!list.length) return '<div style="color:#888;font-size:13px;padding:10px 0;">No pending requests.</div>';
-      return list.map(function (r) {
-        var canApprove = String(r.action) !== 'ban' || role === 'owner';
-        return '<div style="border-top:1px solid #333;padding:10px 0;">' +
-          '<div style="color:#f59e0b;font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.4px;">' +
-          escapeHtml(r.action) + ' &middot; ' + escapeHtml(r.target) + '</div>' +
-          '<div style="color:#ddd;font-size:13px;margin:4px 0;">' + escapeHtml(r.reason || 'No reason given') + '</div>' +
-          '<div style="color:#888;font-size:11px;margin-bottom:8px;">by ' + escapeHtml(r.requested_by || '?') +
-          ' &middot; ' + escapeHtml(String(r.created_at || '').slice(0, 16).replace('T', ' ')) + '</div>' +
-          '<button data-approve="' + escapeHtml(r.id) + '"' + (canApprove ? '' : ' disabled') +
-          ' style="padding:6px 12px;border-radius:8px;border:0;background:' + (canApprove ? '#16a34a' : '#333') +
-          ';color:#fff;font-weight:600;cursor:pointer;margin-right:6px;">Approve</button>' +
-          '<button data-deny="' + escapeHtml(r.id) + '" style="padding:6px 12px;border-radius:8px;border:0;background:#7f1d1d;color:#fff;font-weight:600;cursor:pointer;">Deny</button>' +
-          '</div>';
-      }).join('');
-    }
-
     async function load() {
-      if (!panel) return;
-      var listEl = panel.querySelector('#nx-mod-list');
+      var listEl = box.querySelector('#nx-mod-list');
+      if (!listEl) return;
       var out = await api('/moderation-requests?status=pending');
       if (!out.ok) {
-        listEl.innerHTML = '<div style="color:#f87171;font-size:13px;">' + escapeHtml(out.data.message || out.data.error || 'Failed to load') + '</div>';
+        listEl.innerHTML = '<div style="color:#f87171;font-size:13px;">' +
+          escapeHtml(out.data.message || out.data.error || 'Failed to load') + '</div>';
         return;
       }
-      var list = out.data.requests || [];
-      listEl.innerHTML = renderRequests(list);
-      fab.textContent = list.length ? 'Moderation (' + list.length + ')' : 'Moderation';
+      renderList(out.data.requests || []);
     }
 
-    function open() {
-      if (panel) { panel.remove(); panel = null; return; }
-      panel = document.createElement('div');
-      panel.id = 'nx-mod-panel';
-      panel.style.cssText = 'position:fixed;left:16px;bottom:64px;z-index:2147482000;width:340px;max-height:72vh;overflow:auto;background:#111;border:1px solid #f59e0b;border-radius:14px;padding:16px;color:#fff;font-family:system-ui,sans-serif;box-shadow:0 10px 40px rgba(0,0,0,.6);';
-      panel.innerHTML =
-        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
-        '<strong style="color:#f59e0b;font-size:14px;">Moderation &middot; ' + escapeHtml(role) + '</strong>' +
-        '<button id="nx-mod-close" style="background:none;border:0;color:#888;font-size:20px;cursor:pointer;">&times;</button></div>' +
-        '<div id="nx-mod-list" style="font-size:13px;">Loading&hellip;</div>' +
-        '<div style="margin-top:14px;border-top:1px solid #333;padding-top:12px;">' +
-        '<div style="color:#aaa;font-size:12px;margin-bottom:6px;">Request a ban or warning</div>' +
-        '<select id="nx-mod-action" style="width:100%;margin-bottom:6px;padding:8px;border-radius:8px;background:#1b1b1b;color:#fff;border:1px solid #333;">' +
-        '<option value="warn">Warn</option><option value="ban">Ban</option></select>' +
-        '<input id="nx-mod-target" placeholder="Exact username" style="width:100%;box-sizing:border-box;margin-bottom:6px;padding:8px;border-radius:8px;background:#1b1b1b;color:#fff;border:1px solid #333;">' +
-        '<input id="nx-mod-reason" placeholder="Reason" style="width:100%;box-sizing:border-box;margin-bottom:8px;padding:8px;border-radius:8px;background:#1b1b1b;color:#fff;border:1px solid #333;">' +
-        '<button id="nx-mod-submit" style="width:100%;padding:9px;border-radius:8px;border:0;background:#f59e0b;color:#111;font-weight:700;cursor:pointer;">Send request</button>' +
-        '<div id="nx-mod-msg" style="font-size:12px;color:#888;margin-top:8px;"></div></div>';
-      document.body.appendChild(panel);
-      panel.querySelector('#nx-mod-close').onclick = function () { panel.remove(); panel = null; };
-      panel.querySelector('#nx-mod-list').addEventListener('click', async function (ev) {
-        var t = ev.target;
-        if (!t || !t.getAttribute) return;
-        var approve = t.getAttribute('data-approve');
-        var deny = t.getAttribute('data-deny');
-        if (!approve && !deny) return;
-        t.disabled = true;
-        var out = await api('/moderation-requests/decision', {
-          method: 'POST',
-          body: JSON.stringify({ id: Number(approve || deny), decision: approve ? 'approve' : 'deny' })
-        });
-        if (!out.ok) {
-          alert(out.data.message || out.data.error || 'Failed');
-          t.disabled = false;
-        }
-        load();
+    box.querySelector('#nx-mod-list').addEventListener('click', async function (ev) {
+      var t = ev.target;
+      if (!t || !t.getAttribute) return;
+      var approve = t.getAttribute('data-approve');
+      var deny = t.getAttribute('data-deny');
+      if (!approve && !deny) return;
+      t.disabled = true;
+      var out = await api('/moderation-requests/decision', {
+        method: 'POST',
+        body: JSON.stringify({ id: Number(approve || deny), decision: approve ? 'approve' : 'deny' })
       });
-      panel.querySelector('#nx-mod-submit').onclick = async function () {
-        var msg = panel.querySelector('#nx-mod-msg');
+      var msg = box.querySelector('#nx-mod-msg');
+      if (!out.ok) {
+        if (msg) msg.textContent = out.data.message || out.data.error || 'Failed';
+        else alert(out.data.message || out.data.error || 'Failed');
+        t.disabled = false;
+      }
+      load();
+    });
+
+    var submit = box.querySelector('#nx-mod-submit');
+    if (submit) {
+      submit.onclick = async function () {
+        var msg = box.querySelector('#nx-mod-msg');
         var payload = {
-          action: panel.querySelector('#nx-mod-action').value,
-          target: panel.querySelector('#nx-mod-target').value.trim(),
-          reason: panel.querySelector('#nx-mod-reason').value.trim()
+          action: box.querySelector('#nx-mod-action').value,
+          target: box.querySelector('#nx-mod-target').value.trim(),
+          reason: box.querySelector('#nx-mod-reason').value.trim()
         };
         if (!payload.target) { msg.textContent = 'Enter a username.'; return; }
         var out = await api('/moderation-requests', { method: 'POST', body: JSON.stringify(payload) });
         msg.textContent = out.ok ? (out.data.message || 'Request sent.') : (out.data.message || out.data.error || 'Failed');
         if (out.ok) load();
       };
-      load();
     }
 
-    fab.onclick = open;
+    load();
+    setInterval(function () {
+      if (view.style.display !== 'none' && document.body.contains(box)) load();
+    }, 20000);
+  }
+
+  // Devs can read every PM thread (the worker allows dev+), but the chat's own
+  // PM log is admin-gated, so fill it here when the dev opens the pm-log tab.
+  function mountDevPmLog() {
+    var tab = document.getElementById('pm-tab');
+    if (tab) {
+      tab.style.display = 'block';
+      tab.textContent = '# pm-log';
+    }
+    var view = document.getElementById('private-messages-view');
+    var container = document.getElementById('admin-pm-container');
+    if (!view || !container) return;
+
+    var loaded = false;
+    var render = async function () {
+      if (loaded) return;
+      loaded = true;
+      try {
+        var res = await fetch(API_BASE + '/private-messages', { headers: { 'Content-Type': 'application/json' } });
+        var data = await res.json().catch(function () { return null; });
+        var list = data && (data.messages || data) || [];
+        if (!Array.isArray(list)) list = [];
+        if (!list.length) {
+          container.innerHTML = '<p style="color:var(--text-muted);text-align:center;">No private messages found.</p>';
+          return;
+        }
+        list.sort(function (a, b) { return new Date(b.created_at) - new Date(a.created_at); });
+        container.innerHTML = list.map(function (m) {
+          return '<div style="background:rgba(0,0,0,.25);border:1px solid #2a2a2a;border-radius:8px;padding:10px;font-size:13px;">' +
+            '<div style="color:#888;font-size:11px;margin-bottom:4px;">' +
+            escapeHtml(m.sender_username) + ' &rarr; ' + escapeHtml(m.recipient_username) +
+            ' &middot; ' + escapeHtml(String(m.created_at || '').slice(0, 16).replace('T', ' ')) + '</div>' +
+            '<div style="color:#ddd;white-space:pre-wrap;">' + escapeHtml(m.content) + '</div></div>';
+        }).join('');
+      } catch (err) {
+        container.innerHTML = '<p style="color:#f87171;text-align:center;">Could not load private messages.</p>';
+      }
+    };
+
+    var observer = new MutationObserver(function () {
+      if (view.style.display !== 'none') render();
+    });
+    observer.observe(view, { attributes: true, attributeFilter: ['style'] });
   }
 
   window.nxIpGuard = {
