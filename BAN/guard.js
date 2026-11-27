@@ -478,12 +478,20 @@
   // --- Live update watcher -------------------------------------------------
   // GitHub Pages caches files for ten minutes, so a plain reload can keep
   // serving the old build. Poll this page's own assets (ETag / last-modified)
-  // and, when one changes, announce it and replace the document with a fresh
-  // copy whose script and stylesheet URLs are cache-busted.
+  // and, when one changes, announce it and reopen the page on a fresh URL so
+  // the new build is loaded.
   var UPDATE_REFRESH_SECONDS = 30;
   var UPDATE_POLL_MS = 60000;
   var updateBaseline = null;
   var updateNotified = null;
+  var updateApplying = false;
+  // Navigating away leaves this window's timers alive, so every document gets
+  // its own generation token and stale watchers stop themselves.
+  var updateGen = {};
+  window.__nxUpdateGen = updateGen;
+  function updateAlive() {
+    return window.__nxUpdateGen === updateGen;
+  }
 
   function pageAssets() {
     var list = [];
@@ -508,11 +516,6 @@
       add(nodes[i].getAttribute('src') || nodes[i].getAttribute('href'));
     }
     return list;
-  }
-
-  function withBuild(url, build) {
-    if (!url || /^(data:|blob:|javascript:|https?:)?\/\//i.test(url)) return url;
-    return url + (url.indexOf('?') === -1 ? '?' : '&') + 'nxv=' + build;
   }
 
   async function pageFingerprint() {
@@ -553,6 +556,10 @@
 
     var left = UPDATE_REFRESH_SECONDS;
     var timer = setInterval(function () {
+      if (!updateAlive()) {
+        clearInterval(timer);
+        return;
+      }
       left -= 1;
       var count = document.getElementById('nx-update-count');
       if (count) count.textContent = String(Math.max(left, 0));
@@ -564,31 +571,19 @@
   }
 
   async function applyUpdate(build) {
+    if (!updateAlive() || updateApplying) return;
+    updateApplying = true;
     var popup = document.getElementById('nx-update-popup');
     if (popup) popup.remove();
-    var target = location.pathname + '?nxv=' + build;
-    try {
-      var res = await fetch(target, { cache: 'no-store' });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      var html = await res.text();
-      html = html.replace(/(<script\b[^>]*\bsrc=["'])([^"']+)(["'])/gi, function (all, open, url, close) {
-        return open + withBuild(url, build) + close;
-      }).replace(/<link\b[^>]*>/gi, function (tag) {
-        if (!/rel=["']?stylesheet/i.test(tag)) return tag;
-        return tag.replace(/(href=["'])([^"']+)(["'])/i, function (all, open, url, close) {
-          return open + withBuild(url, build) + close;
-        });
-      });
-      document.open();
-      document.write(html);
-      document.close();
-    } catch (err) {
-      location.replace(target);
-    }
+    // Navigate to a fresh page URL instead of reloading or rewriting the DOM:
+    // the HTML is re-fetched, and the site's own ?v= asset versions then load
+    // the new bundle. The query also keeps normal DOMContentLoaded startup
+    // intact, so main.js / chat.js initialise exactly as on a normal visit.
+    location.replace(location.pathname + '?v=' + build);
   }
 
   async function checkForUpdates() {
-    if (!document.body) return null;
+    if (!updateAlive() || !document.body) return null;
     var fingerprint = await pageFingerprint();
     if (!fingerprint) return null;
     var build = hashOf(fingerprint);
@@ -610,7 +605,13 @@
 
   function startUpdateWatch() {
     setTimeout(checkForUpdates, 1200);
-    setInterval(checkForUpdates, UPDATE_POLL_MS);
+    var poll = setInterval(function () {
+      if (!updateAlive()) {
+        clearInterval(poll);
+        return;
+      }
+      checkForUpdates();
+    }, UPDATE_POLL_MS);
   }
 
   if (document.readyState === 'loading') {
