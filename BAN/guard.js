@@ -475,6 +475,150 @@
     observer.observe(view, { attributes: true, attributeFilter: ['style'] });
   }
 
+  // --- Live update watcher -------------------------------------------------
+  // GitHub Pages caches files for ten minutes, so a plain reload can keep
+  // serving the old build. Poll this page's own assets (ETag / last-modified)
+  // and, when one changes, announce it and replace the document with a fresh
+  // copy whose script and stylesheet URLs are cache-busted.
+  var UPDATE_REFRESH_SECONDS = 30;
+  var UPDATE_POLL_MS = 60000;
+  var updateBaseline = null;
+  var updateNotified = null;
+
+  function pageAssets() {
+    var list = [];
+    var seen = {};
+    var add = function (raw) {
+      if (!raw || /^(data:|blob:|javascript:)/i.test(raw)) return;
+      var abs;
+      try {
+        abs = new URL(raw, location.href);
+      } catch (e) {
+        return;
+      }
+      if (abs.origin !== location.origin) return;
+      var path = abs.pathname + abs.search;
+      if (seen[path]) return;
+      seen[path] = 1;
+      list.push(path);
+    };
+    add(location.pathname);
+    var nodes = document.querySelectorAll('script[src], link[rel="stylesheet"][href]');
+    for (var i = 0; i < nodes.length; i++) {
+      add(nodes[i].getAttribute('src') || nodes[i].getAttribute('href'));
+    }
+    return list;
+  }
+
+  function withBuild(url, build) {
+    if (!url || /^(data:|blob:|javascript:|https?:)?\/\//i.test(url)) return url;
+    return url + (url.indexOf('?') === -1 ? '?' : '&') + 'nxv=' + build;
+  }
+
+  async function pageFingerprint() {
+    var urls = pageAssets();
+    var parts = [];
+    for (var i = 0; i < urls.length; i++) {
+      try {
+        var res = await fetch(urls[i], { method: 'HEAD', cache: 'no-store' });
+        parts.push(urls[i] + '|' + (res.headers.get('etag') || '') + '|' +
+          (res.headers.get('last-modified') || '') + '|' + (res.headers.get('content-length') || ''));
+      } catch (err) {
+        return null;
+      }
+    }
+    return parts.join('\n');
+  }
+
+  function hashOf(text) {
+    var h = 5381;
+    for (var i = 0; i < text.length; i++) h = ((h << 5) + h + text.charCodeAt(i)) | 0;
+    return (h >>> 0).toString(36);
+  }
+
+  function showUpdatePopup(build) {
+    if (document.getElementById('nx-update-popup')) return;
+    var legacy = document.getElementById('nxos-update-popup');
+    if (legacy) legacy.remove();
+    var popup = document.createElement('div');
+    popup.id = 'nx-update-popup';
+    popup.style.cssText = 'position:fixed;right:20px;bottom:20px;z-index:2147483100;max-width:340px;padding:16px 18px;border:1px solid #8b00ff;border-radius:10px;background:#0d0d13;color:#fff;font-family:monospace;box-shadow:0 0 25px rgba(139,0,255,.45);';
+    popup.innerHTML =
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">' +
+      '<span style="width:8px;height:8px;border-radius:50%;background:#27c93f;display:inline-block;"></span>' +
+      '<strong style="color:#8b00ff;letter-spacing:.5px;font-size:13px;">UPDATE DETECTED</strong></div>' +
+      '<div style="color:#bbb;font-size:12px;line-height:1.55;">Automatically refreshing to show the latest version in ' +
+      '<span id="nx-update-count" style="color:#fff;font-weight:700;">' + UPDATE_REFRESH_SECONDS + '</span> seconds.</div>';
+    document.body.appendChild(popup);
+
+    var left = UPDATE_REFRESH_SECONDS;
+    var timer = setInterval(function () {
+      left -= 1;
+      var count = document.getElementById('nx-update-count');
+      if (count) count.textContent = String(Math.max(left, 0));
+      if (left <= 0) {
+        clearInterval(timer);
+        applyUpdate(build);
+      }
+    }, 1000);
+  }
+
+  async function applyUpdate(build) {
+    var popup = document.getElementById('nx-update-popup');
+    if (popup) popup.remove();
+    var target = location.pathname + '?nxv=' + build;
+    try {
+      var res = await fetch(target, { cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      var html = await res.text();
+      html = html.replace(/(<script\b[^>]*\bsrc=["'])([^"']+)(["'])/gi, function (all, open, url, close) {
+        return open + withBuild(url, build) + close;
+      }).replace(/<link\b[^>]*>/gi, function (tag) {
+        if (!/rel=["']?stylesheet/i.test(tag)) return tag;
+        return tag.replace(/(href=["'])([^"']+)(["'])/i, function (all, open, url, close) {
+          return open + withBuild(url, build) + close;
+        });
+      });
+      document.open();
+      document.write(html);
+      document.close();
+    } catch (err) {
+      location.replace(target);
+    }
+  }
+
+  async function checkForUpdates() {
+    if (!document.body) return null;
+    var fingerprint = await pageFingerprint();
+    if (!fingerprint) return null;
+    var build = hashOf(fingerprint);
+    if (updateBaseline === null) {
+      updateBaseline = build;
+      return build;
+    }
+    if (build === updateBaseline || build === updateNotified) return build;
+    updateNotified = build;
+    showUpdatePopup(build);
+    return build;
+  }
+
+  window.nxUpdateWatch = {
+    check: checkForUpdates,
+    refresh: applyUpdate,
+    assets: pageAssets
+  };
+
+  function startUpdateWatch() {
+    setTimeout(checkForUpdates, 1200);
+    setInterval(checkForUpdates, UPDATE_POLL_MS);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startUpdateWatch);
+  } else {
+    startUpdateWatch();
+  }
+
   window.nxIpGuard = {
     check: check,
     remember: remember,
