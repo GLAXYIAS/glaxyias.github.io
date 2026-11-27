@@ -322,6 +322,12 @@
         '<button data-deny="' + escapeHtml(r.id) + '" style="padding:6px 12px;border-radius:8px;border:0;background:#7f1d1d;color:#fff;font-weight:600;cursor:pointer;">Deny</button>';
     }
 
+    function reasonText(r) {
+      var v = r && r.reason;
+      if (typeof v === 'string' && v.trim()) return v.trim();
+      return 'No reason given';
+    }
+
     function renderList(list) {
       var titleEl = box.querySelector('#nx-mod-title');
       titleEl.textContent = list.length ? 'Pending moderation requests (' + list.length + ')' : 'Pending moderation requests';
@@ -334,7 +340,7 @@
         return '<div style="border-top:1px solid #2a2a2a;padding:10px 0;">' +
           '<div style="color:#f59e0b;font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.4px;">' +
           escapeHtml(r.action) + ' &middot; ' + escapeHtml(r.target) + '</div>' +
-          '<div style="color:#ddd;font-size:13px;margin:4px 0;">' + escapeHtml(r.reason || 'No reason given') + '</div>' +
+          '<div style="color:#ddd;font-size:13px;margin:4px 0;">' + escapeHtml(reasonText(r)) + '</div>' +
           '<div style="color:#888;font-size:11px;margin-bottom:8px;">by ' + escapeHtml(r.requested_by || '?') +
           ' &middot; ' + escapeHtml(String(r.created_at || '').slice(0, 16).replace('T', ' ')) + '</div>' +
           rowActions(r) +
