@@ -144,7 +144,7 @@ function savePushUsername(username) {
 async function ensureServiceWorker() {
     if (!('serviceWorker' in navigator)) return null;
     try {
-        const reg = await navigator.serviceWorker.register('./sw.js?v=20261126-notif3', { scope: './' });
+        const reg = await navigator.serviceWorker.register('./sw.js?v=20261127-pushmsg1', { scope: './' });
         await navigator.serviceWorker.ready;
         return reg;
     } catch (e) {
@@ -2713,11 +2713,31 @@ window.initializeChatEngine = async function() {
     }
 
     async function sendPlainMessage(content, styleName) {
-        await fetch(`${TURSO_API_BASE}/messages`, {
+        const res = await fetch(`${TURSO_API_BASE}/messages`, {
             method: 'POST',
             headers: TURSO_HEADERS,
             body: JSON.stringify({ username: user, content: encodeBubbleStyle(content, styleName) })
         });
+        if (!res.ok) return;
+
+        // The message API stores the row but does not send a closed-tab push.
+        // Broadcast one from the sending client so subscribed devices get a
+        // real notification. The service worker applies channel preferences
+        // and suppresses it on a device that already has chat visible.
+        const preview = stripReplyMarker(stripBubbleMarkers(content))
+            .replace(/^\[\[IMG\]\].*/, '[Image]')
+            .slice(0, 120);
+        fetch(`${TURSO_API_BASE}/push-test`, {
+            method: 'POST',
+            headers: TURSO_HEADERS,
+            body: JSON.stringify({
+                title: user,
+                body: preview || 'New message in general chat',
+                url: './chat.html',
+                tag: 'general-' + Date.now()
+            }),
+            keepalive: true
+        }).catch(() => {});
     }
 
     const chatForm = document.getElementById('chat-form');

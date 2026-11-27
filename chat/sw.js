@@ -116,6 +116,19 @@ function shouldShowPush(category, prefs) {
   return prefs.general !== false;
 }
 
+async function hasVisibleChatClient() {
+  try {
+    const clientList = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    return clientList.some((c) => (
+      c.url.indexOf('/chat') !== -1
+      && c.url.indexOf('push-test.html') === -1
+      && c.visibilityState === 'visible'
+    ));
+  } catch (e) {
+    return false;
+  }
+}
+
 function showPushNotification(data, category) {
   const tag = data.tag || (category === 'pm' ? 'pm' : 'nullchat');
   const title = data.title || (category === 'mention' ? 'You were mentioned' : 'Null X Chat');
@@ -169,6 +182,10 @@ self.addEventListener('push', (event) => {
     const [username, prefs] = await Promise.all([readPushUsername(), readPushPrefs()]);
     const category = classifyPush(data, username);
     if (!shouldShowPush(category, prefs)) return;
+    // If this device already has the chat visible, the page itself handles
+    // alerts. This also stops senders from being notified about their own
+    // message. Test pushes deliberately bypass this check.
+    if (category !== 'test' && await hasVisibleChatClient()) return;
     await showPushNotification(data, category);
   })());
 });
