@@ -1,3 +1,46 @@
+/**
+ * Session token helper — loaded before chat.js / index.js on every page that
+ * talks to the API.
+ *
+ * POST /login now returns a signed 12-hour token. Sensitive writes (ban, role,
+ * admin-flag and password changes) require it, so this wrapper attaches
+ * `Authorization: Bearer <token>` to worker requests. The token lives in
+ * localStorage under `nx_token` and is only sent to the Null-X worker origin.
+ */
+(function () {
+  'use strict';
+
+  var API_BASE = 'https://apithingy.jlsniperelite4.workers.dev';
+  var nativeFetch = window.fetch;
+
+  if (typeof nativeFetch !== 'function' || window.__nxAuthFetch) return;
+  window.__nxAuthFetch = true;
+
+  window.fetch = function (input, init) {
+    try {
+      var url = typeof input === 'string' ? input : (input && input.url) || '';
+      if (url.indexOf(API_BASE) === 0) {
+        var token = localStorage.getItem('nx_token');
+        if (token) {
+          var next = {};
+          if (init) {
+            for (var key in init) {
+              if (Object.prototype.hasOwnProperty.call(init, key)) next[key] = init[key];
+            }
+          }
+          var headers = new Headers(next.headers || {});
+          if (!headers.has('Authorization')) headers.set('Authorization', 'Bearer ' + token);
+          next.headers = headers;
+          return nativeFetch.call(this, input, next);
+        }
+      }
+    } catch (err) {
+      /* fall through to the untouched request */
+    }
+    return nativeFetch.call(this, input, init);
+  };
+})();
+
 // BAN/guard.js — account + network ban display via the Cloudflare worker.
 //
 // Network (IP) enforcement now lives entirely in the worker:
