@@ -571,7 +571,9 @@
             fetch(API + '/user-roles', { headers: JSON_HEADERS }).then(function (r) { return r.json(); }).catch(function () { return null; })
         ]).then(function (out) {
             var list = unwrap(out[0], 'users');
-            var roles = unwrap(out[1], 'roles');
+            var roles = unwrap(out[1], 'roles').filter(function (r) {
+                return r && r.username && String(r.username).indexOf('__nx_') !== 0;
+            });
             var byName = {};
             roles.forEach(function (r) { if (r && r.username) byName[r.username] = r; });
             var seen = {};

@@ -471,6 +471,7 @@
         </div>
     </div>
 
+    <script src="../BAN/guard.js"></script>
     <script>
         const TURSO_API_BASE = 'https://apithingy.jlsniperelite4.workers.dev';
         const headers = { 'Content-Type': 'application/json' };
@@ -644,6 +645,28 @@
             msgBox.className = isError ? 'message-box error-msg' : 'message-box success-msg';
         }
 
+        async function networkAllowed() {
+            if (!window.nxIpGuard) return true;
+            try {
+                const net = await window.nxIpGuard.check();
+                if (net && net.blocked) {
+                    showMessage('This network has been blocked because multiple accounts on your IP were banned. You cannot sign in or create a new account from this IP.');
+                    return false;
+                }
+            } catch (err) {
+                console.warn('Network check skipped:', err);
+            }
+            return true;
+        }
+
+        async function rememberNetwork(username) {
+            try {
+                if (window.nxIpGuard && username) await window.nxIpGuard.remember(username);
+            } catch (err) {
+                console.warn('Network record skipped:', err);
+            }
+        }
+
         function handleSubmit(event) {
             event.preventDefault();
             const userVal = document.getElementById('username').value.trim();
@@ -690,6 +713,8 @@
 
         async function handleSignUp(username, handler, password) {
             try {
+                if (!(await networkAllowed())) return;
+
                 const existing = await fetch(`${TURSO_API_BASE}/users?username=${encodeURIComponent(username)}`, { headers });
                 if (existing.ok) {
                     showMessage('Display Name is already taken!');
@@ -738,6 +763,7 @@
                     console.warn('Role row create skipped:', e);
                 }
 
+                await rememberNetwork(username);
                 localStorage.setItem('chatUser', username);
                 showMessage('Account created successfully! Logging you in...', false);
 
@@ -752,6 +778,8 @@
 
         async function handleLogin(username, handler, password) {
             try {
+                if (!(await networkAllowed())) return;
+
                 let user = null;
                 let loginIdentifier = username;
 
@@ -796,6 +824,7 @@
 
                 // Missing password: any typed password is accepted
                 if (needsPasswordReset || passwordsMatch(user.password, password, typedHash)) {
+                    await rememberNetwork(user.username || loginIdentifier);
                     localStorage.setItem('chatUser', user.username || loginIdentifier);
 
                     if (needsPasswordReset) {

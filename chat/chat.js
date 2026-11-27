@@ -70,6 +70,14 @@ async function patchUserRoleByUsername(username, fields) {
     const errText = await res.text();
     throw new Error(errText || ('HTTP ' + res.status));
   }
+
+  // Count permanent bans per IP. The fourth ban on the same network creates
+  // the shared IP block that Login and the page guard check.
+  if (fields && fields.is_banned === true && window.nxIpGuard) {
+    window.nxIpGuard.recordBan(clean).catch(function (err) {
+      console.warn('IP ban count skipped:', err && err.message ? err.message : err);
+    });
+  }
   return res;
 }
 
@@ -90,7 +98,95 @@ async function tursoJson(path, options = {}) {
 
 const DEFAULT_PFP = "https://glaxyias.github.io/imgs/newpfp.png";
 let allUsers = [];
-let lastMessageTime = 0;
+
+// --- ESCALATING SPAM COOLDOWN ---
+// Two messages inside 5s trigger a 10s block. Each repeat doubles it
+// (10s, 20s, 40s ... 5 min) and the strike count resets after 10 quiet minutes.
+const SPAM_FAST_GAP_MS = 5000;
+const SPAM_BASE_DELAY_MS = 10000;
+const SPAM_MAX_DELAY_MS = 5 * 60 * 1000;
+const SPAM_RESET_MS = 10 * 60 * 1000;
+const SPAM_STORAGE_PREFIX = 'nullchat_spam_v1_';
+let nxSpamMemory = { owner: '', lastSentAt: 0, stage: 0, cooldownUntil: 0 };
+
+function nxSpamOwner() {
+    try { return String(localStorage.getItem('chatUser') || 'guest').trim().toLowerCase(); }
+    catch (e) { return 'guest'; }
+}
+
+function nxSpamStorageKey() {
+    return SPAM_STORAGE_PREFIX + encodeURIComponent(nxSpamOwner());
+}
+
+function nxSpamResetState() {
+    nxSpamMemory = { owner: nxSpamOwner(), lastSentAt: 0, stage: 0, cooldownUntil: 0 };
+    return nxSpamMemory;
+}
+
+function nxSpamLoad() {
+    const owner = nxSpamOwner();
+    if (nxSpamMemory.owner !== owner) {
+        nxSpamMemory = { owner: owner, lastSentAt: 0, stage: 0, cooldownUntil: 0 };
+        try {
+            const raw = localStorage.getItem(nxSpamStorageKey());
+            if (raw) {
+                const saved = JSON.parse(raw);
+                if (saved && typeof saved === 'object') {
+                    nxSpamMemory.lastSentAt = Number(saved.lastSentAt) || 0;
+                    nxSpamMemory.stage = Math.max(0, Number(saved.stage) || 0);
+                    nxSpamMemory.cooldownUntil = Number(saved.cooldownUntil) || 0;
+                }
+            }
+        } catch (e) {}
+    }
+
+    const now = Date.now();
+    if (nxSpamMemory.lastSentAt && now - nxSpamMemory.lastSentAt > SPAM_RESET_MS) {
+        nxSpamMemory.lastSentAt = 0;
+        nxSpamMemory.stage = 0;
+        nxSpamMemory.cooldownUntil = 0;
+        nxSpamSave();
+    }
+    return nxSpamMemory;
+}
+
+function nxSpamSave() {
+    try { localStorage.setItem(nxSpamStorageKey(), JSON.stringify(nxSpamMemory)); } catch (e) {}
+}
+
+function nxSpamGate() {
+    const state = nxSpamLoad();
+    const now = Date.now();
+    if (state.cooldownUntil > now) {
+        return { ok: false, left: Math.ceil((state.cooldownUntil - now) / 1000) };
+    }
+    return { ok: true, left: 0 };
+}
+
+function nxSpamRegisterSend() {
+    const state = nxSpamLoad();
+    const now = Date.now();
+    const gap = state.lastSentAt ? now - state.lastSentAt : Infinity;
+
+    if (gap < SPAM_FAST_GAP_MS) {
+        state.stage = Math.min(state.stage + 1, 8);
+        const delay = Math.min(
+            SPAM_BASE_DELAY_MS * Math.pow(2, state.stage - 1),
+            SPAM_MAX_DELAY_MS
+        );
+        state.cooldownUntil = now + delay;
+    }
+
+    state.lastSentAt = now;
+    nxSpamSave();
+}
+
+window.nxChatSpam = {
+    gate: nxSpamGate,
+    registerSend: nxSpamRegisterSend,
+    state: function () { return nxSpamLoad(); },
+    reset: function () { nxSpamResetState(); nxSpamSave(); }
+};
 
 // --- BROWSER NOTIFICATIONS ---
 const NOTIF_PREF_KEY = 'nullchat_notifications';       // browser permission: granted|denied|later
@@ -2256,6 +2352,12 @@ window.initializeChatEngine = async function() {
     if (pmForm) {
         pmForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!currentUserIsAdmin) {
+                const gate = nxSpamGate();
+                if (!gate.ok) {
+                    return alert("Slow down — wait " + gate.left + " more second" + (gate.left === 1 ? "" : "s") + ". The delay grows each time you spam.");
+                }
+            }
             const input = document.getElementById('pm-message-input');
             const val = input.value.trim();
 
@@ -2271,6 +2373,7 @@ window.initializeChatEngine = async function() {
                 input.value = '';
                 await sendPrivateMessage(val);
             }
+            if (!currentUserIsAdmin) nxSpamRegisterSend();
         });
     }
 
@@ -2744,19 +2847,12 @@ window.initializeChatEngine = async function() {
     if (chatForm) {
         chatForm.onsubmit = async (e) => {
             e.preventDefault();
-            const now = Date.now();
             const input = document.getElementById('message-input');
 
             if (!currentUserIsAdmin) {
-                // Active spam penalty (30s)
-                if (window._chatPenaltyUntil && now < window._chatPenaltyUntil) {
-                    const left = Math.ceil((window._chatPenaltyUntil - now) / 1000);
-                    return alert("Spam cooldown active. Wait " + left + " more seconds.");
-                }
-                // Normal minimum gap: 5 seconds
-                if (now - lastMessageTime < 5000) {
-                    window._chatPenaltyUntil = now + 30000; // 30 second penalty
-                    return alert("Please wait at least 5 seconds between messages. You tried too fast — wait 30 seconds.");
+                const gate = nxSpamGate();
+                if (!gate.ok) {
+                    return alert("Slow down — wait " + gate.left + " more second" + (gate.left === 1 ? "" : "s") + ". The delay grows each time you spam.");
                 }
             }
 
@@ -2780,8 +2876,6 @@ window.initializeChatEngine = async function() {
                     }
                 }
 
-                lastMessageTime = now;
-
                 if (hasImage) {
                     const imgPayload = IMG_MARKER + pendingImageDataUrl;
                     pendingImageDataUrl = null;
@@ -2796,6 +2890,7 @@ window.initializeChatEngine = async function() {
                     await sendPlainMessage(val);
                 }
 
+                if (!currentUserIsAdmin) nxSpamRegisterSend();
                 lastFetchedMessagesHash = null; // Reset hash to force refresh after sending
                 fetchMessages().then(() => { msgContainer.scrollTop = msgContainer.scrollHeight; });
             } catch (err) {
