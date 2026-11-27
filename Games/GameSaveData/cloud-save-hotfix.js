@@ -311,7 +311,7 @@
     var count = Object.keys(saves).length;
 
     if (!count) {
-      setStatus(el, 'No local saves found in this browser', '#ffb020');
+      setStatus(el, 'Nothing to export: this browser has no save data. Your cloud save was not touched.', '#ffb020');
       return Promise.resolve({ ok: false, reason: 'empty', count: 0 });
     }
 
@@ -327,8 +327,16 @@
 
     return pushToCloud(payload).then(function (cloud) {
       if (cloud.ok) {
-        setStatus(el, '✓ ' + count + ' saves exported to cloud', '#00ff66');
-        return { ok: true, count: count, fileName: null, cloud: cloud };
+        // The worker merges, so report anything it kept that this browser did not have.
+        var kept = cloud.data && typeof cloud.data.recovered === 'number' ? cloud.data.recovered : 0;
+        var stored = cloud.data && typeof cloud.data.stored === 'number' ? cloud.data.stored : count;
+        setStatus(
+          el,
+          '✓ ' + count + ' saved here, ' + stored + ' total in cloud' +
+            (kept > 0 ? ' (' + kept + ' kept from other devices)' : ''),
+          '#00ff66'
+        );
+        return { ok: true, count: count, stored: stored, fileName: null, cloud: cloud };
       }
 
       // The cloud export failed, so hand over a file instead of losing the data.
