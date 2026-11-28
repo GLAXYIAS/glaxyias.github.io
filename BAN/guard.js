@@ -490,6 +490,11 @@
   var updateHashes = null;
   var updateTargetHashes = null;
   var UPDATE_CONFIRM_MS = 7000;
+  // Give the ten-minute browser cache time to stop serving the old build before
+  // interrupting anyone: the notice appears five minutes after the change is
+  // confirmed, then the usual countdown runs.
+  var UPDATE_DELAY_MS = 5 * 60 * 1000;
+  var updateTimer = null;
   // Navigating away leaves this window's timers alive, so every document gets
   // its own generation token and stale watchers stop themselves.
   var updateGen = {};
@@ -607,7 +612,7 @@
     if (legacy) legacy.remove();
     var popup = document.createElement('div');
     popup.id = 'nx-update-popup';
-    popup.style.cssText = 'position:fixed;right:20px;bottom:20px;z-index:2147483100;max-width:340px;padding:16px 18px;border:1px solid #8b00ff;border-radius:10px;background:#0d0d13;color:#fff;font-family:monospace;box-shadow:0 0 25px rgba(139,0,255,.45);';
+    popup.style.cssText = 'position:fixed;right:20px;bottom:20px;z-index:2147483100;max-width:340px;padding:16px 18px;border:1px solid #8b00ff;border-radius:10px;background:#0d0d13;color:#fff;font-family:monospace;box-shadow:0 0 25px rgba(139,0,0,.45);';
     popup.innerHTML =
       '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">' +
       '<span style="width:8px;height:8px;border-radius:50%;background:#27c93f;display:inline-block;"></span>' +
@@ -699,10 +704,19 @@
       updatePendingAt = 0;
       return build;
     }
+    // Once the notice is up (or the reload is underway) leave the cycle alone.
+    if (updateApplying || document.getElementById('nx-update-popup')) return build;
     // Headers moved. Check the bodies before believing it: a re-stamped file
     // has the same bytes, and adopting the new stamps keeps the page quiet.
     var hashes = await contentHashes(probes);
     if (hashes && updateHashes && sameHashes(hashes, updateHashes)) {
+      updateBaseline = build;
+      updatePendingAt = 0;
+      return build;
+    }
+    // Already armed for this content: only the stamps moved again, so keep the
+    // existing five-minute hold instead of restarting it on every edge flip.
+    if (hashes && updateTargetHashes && sameHashes(hashes, updateTargetHashes)) {
       updateBaseline = build;
       updatePendingAt = 0;
       return build;
@@ -721,9 +735,38 @@
     updateNotified = build;
     updateBaseline = build;
     if (hashes) updateTargetHashes = hashes;
-    showUpdatePopup(build);
-    updateWarming = warmAssetCaches(probes);
+    scheduleUpdate();
     return build;
+  }
+
+  function scheduleUpdate() {
+    if (updateTimer) clearTimeout(updateTimer);
+    updateTimer = setTimeout(function () {
+      updateTimer = null;
+      if (updateAlive()) beginUpdate();
+    }, UPDATE_DELAY_MS);
+  }
+
+  // Runs once the hold has passed. Re-reads the current content so the popup
+  // and the cache warm-up target what is on the server now, not what was there
+  // when the change was first seen five minutes ago.
+  async function beginUpdate() {
+    if (!updateAlive() || updateApplying || document.getElementById('nx-update-popup')) return;
+    var probes = await probeAssets();
+    if (!probes) return;
+    var hashes = await contentHashes(probes);
+    var build = hashOf(fingerprintOf(probes));
+    if (hashes && updateHashes && sameHashes(hashes, updateHashes)) {
+      // The change was rolled back during the hold; nothing to reload.
+      updateBaseline = build;
+      updateNotified = null;
+      return;
+    }
+    if (hashes) updateTargetHashes = hashes;
+    updateNotified = build;
+    updateBaseline = build;
+    updateWarming = warmAssetCaches(probes);
+    showUpdatePopup(build);
   }
 
   window.nxUpdateWatch = {
