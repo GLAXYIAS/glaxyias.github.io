@@ -485,6 +485,7 @@
   var updateBaseline = null;
   var updateNotified = null;
   var updateApplying = false;
+  var updateWarming = null;
   // Navigating away leaves this window's timers alive, so every document gets
   // its own generation token and stale watchers stop themselves.
   var updateGen = {};
@@ -518,19 +519,37 @@
     return list;
   }
 
-  async function pageFingerprint() {
-    var urls = pageAssets();
-    var parts = [];
-    for (var i = 0; i < urls.length; i++) {
-      try {
-        var res = await fetch(urls[i], { method: 'HEAD', cache: 'no-store' });
-        parts.push(urls[i] + '|' + (res.headers.get('etag') || '') + '|' +
-          (res.headers.get('last-modified') || '') + '|' + (res.headers.get('content-length') || ''));
-      } catch (err) {
-        return null;
-      }
+  async function probeAsset(url) {
+    try {
+      var res = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+      return {
+        url: url,
+        sig: (res.headers.get('etag') || '') + '|' +
+          (res.headers.get('last-modified') || '') + '|' + (res.headers.get('content-length') || '')
+      };
+    } catch (err) {
+      return null;
     }
-    return parts.join('\n');
+  }
+
+  async function probeAssets() {
+    var urls = pageAssets();
+    var list = [];
+    for (var i = 0; i < urls.length; i++) {
+      var probe = await probeAsset(urls[i]);
+      if (!probe) return null;
+      list.push(probe);
+    }
+    return list;
+  }
+
+  function fingerprintOf(probes) {
+    return probes.map(function (p) { return p.url + '|' + p.sig; }).join('\n');
+  }
+
+  async function pageFingerprint() {
+    var probes = await probeAssets();
+    return probes ? fingerprintOf(probes) : null;
   }
 
   function hashOf(text) {
@@ -570,23 +589,61 @@
     }, 1000);
   }
 
+  // A fresh page URL re-fetches the HTML, but GitHub Pages serves scripts and
+  // stylesheets with max-age=600, so chat.js / guard.js / chat.css would keep
+  // coming from the ten-minute browser cache. Before navigating, revalidate
+  // every same-origin asset: a 304 confirms the cached copy, a 200 replaces it,
+  // so the refreshed page resolves the same URLs to the code now on the server.
+  var UPDATE_WARM_RETRY_MS = 2500;
+
+  async function revalidateAsset(probe) {
+    try {
+      var res = await fetch(probe.url, { cache: 'no-cache', credentials: 'same-origin' });
+      // Drain the body so the HTTP cache entry is written completely.
+      await res.text();
+      var sig = (res.headers.get('etag') || '') + '|' +
+        (res.headers.get('last-modified') || '') + '|' + (res.headers.get('content-length') || '');
+      return sig === probe.sig;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  async function warmAssetCaches(probes) {
+    var assets = probes.slice(1); // the page itself is re-fetched by navigating
+    if (!assets.length) return true;
+    var deadline = Date.now() + (UPDATE_REFRESH_SECONDS - 2) * 1000;
+    for (;;) {
+      var done = await Promise.all(assets.map(revalidateAsset));
+      if (done.every(function (ok) { return ok; })) return true;
+      if (!updateAlive() || Date.now() >= deadline) return false;
+      await new Promise(function (resolve) { setTimeout(resolve, UPDATE_WARM_RETRY_MS); });
+    }
+  }
+
   async function applyUpdate(build) {
     if (!updateAlive() || updateApplying) return;
     updateApplying = true;
     var popup = document.getElementById('nx-update-popup');
     if (popup) popup.remove();
-    // Navigate to a fresh page URL instead of reloading or rewriting the DOM:
-    // the HTML is re-fetched, and the site's own ?v= asset versions then load
-    // the new bundle. The query also keeps normal DOMContentLoaded startup
-    // intact, so main.js / chat.js initialise exactly as on a normal visit.
+    // Let the cache warm-up finish (it starts the moment the change is seen),
+    // then navigate to a fresh page URL instead of reloading or rewriting the
+    // DOM: the HTML is re-fetched and every script/stylesheet resolves from a
+    // revalidated cache entry, so the new build is what actually runs. The
+    // query also keeps normal DOMContentLoaded startup intact, so main.js /
+    // chat.js initialise exactly as on a normal visit.
+    try {
+      if (updateWarming) await updateWarming;
+    } catch (err) { /* navigation is still the right move */ }
+    if (!updateAlive()) return;
     location.replace(location.pathname + '?v=' + build);
   }
 
   async function checkForUpdates() {
     if (!updateAlive() || !document.body) return null;
-    var fingerprint = await pageFingerprint();
-    if (!fingerprint) return null;
-    var build = hashOf(fingerprint);
+    var probes = await probeAssets();
+    if (!probes) return null;
+    var build = hashOf(fingerprintOf(probes));
     if (updateBaseline === null) {
       updateBaseline = build;
       return build;
@@ -594,6 +651,7 @@
     if (build === updateBaseline || build === updateNotified) return build;
     updateNotified = build;
     showUpdatePopup(build);
+    updateWarming = warmAssetCaches(probes);
     return build;
   }
 
