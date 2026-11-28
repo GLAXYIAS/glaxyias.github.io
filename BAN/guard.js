@@ -486,6 +486,8 @@
   var updateNotified = null;
   var updateApplying = false;
   var updateWarming = null;
+  var updatePendingBuild = null;
+  var UPDATE_CONFIRM_MS = 7000;
   // Navigating away leaves this window's timers alive, so every document gets
   // its own generation token and stale watchers stop themselves.
   var updateGen = {};
@@ -656,7 +658,22 @@
       updateBaseline = build;
       return build;
     }
-    if (build === updateBaseline || build === updateNotified) return build;
+    if (build === updateBaseline || build === updateNotified) {
+      updatePendingBuild = null;
+      return build;
+    }
+    // One sample is not enough: while a deploy is still propagating, CDN edges
+    // can answer with different generations within the same minute, which used
+    // to pop the notice again and again. Require the same new build on a second
+    // check before interrupting the page.
+    if (updatePendingBuild !== build) {
+      updatePendingBuild = build;
+      setTimeout(function () {
+        if (updateAlive() && !updateNotified) checkForUpdates();
+      }, UPDATE_CONFIRM_MS);
+      return build;
+    }
+    updatePendingBuild = null;
     updateNotified = build;
     showUpdatePopup(build);
     updateWarming = warmAssetCaches(probes);
