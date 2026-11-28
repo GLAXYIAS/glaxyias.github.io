@@ -486,7 +486,9 @@
   var updateNotified = null;
   var updateApplying = false;
   var updateWarming = null;
-  var updatePendingBuild = null;
+  var updatePendingAt = 0;
+  var updateHashes = null;
+  var updateTargetHashes = null;
   var UPDATE_CONFIRM_MS = 7000;
   // Navigating away leaves this window's timers alive, so every document gets
   // its own generation token and stale watchers stop themselves.
@@ -568,6 +570,37 @@
     return (h >>> 0).toString(36);
   }
 
+  // GitHub Pages re-stamps every file's ETag and Last-Modified on each deploy,
+  // and its edges can serve different stamps for identical bytes, so headers
+  // alone report an "update" that is not one. Hash the bodies to tell a real
+  // content change from a metadata-only re-stamp.
+  async function contentHashes(probes) {
+    var pairs = await Promise.all(probes.map(async function (p) {
+      try {
+        var res = await fetch(p.url, { cache: 'no-store' });
+        return [p.url, hashOf(await res.text())];
+      } catch (err) {
+        return [p.url, null];
+      }
+    }));
+    var out = {};
+    for (var i = 0; i < pairs.length; i++) {
+      if (!pairs[i][1]) return null;
+      out[pairs[i][0]] = pairs[i][1];
+    }
+    return out;
+  }
+
+  function sameHashes(a, b) {
+    if (!a || !b) return false;
+    var keys = Object.keys(a);
+    if (keys.length !== Object.keys(b).length) return false;
+    for (var i = 0; i < keys.length; i++) {
+      if (a[keys[i]] !== b[keys[i]]) return false;
+    }
+    return true;
+  }
+
   function showUpdatePopup(build) {
     if (document.getElementById('nx-update-popup')) return;
     var legacy = document.getElementById('nxos-update-popup');
@@ -609,8 +642,11 @@
   async function revalidateAsset(probe) {
     try {
       var res = await fetch(probe.url, { cache: 'no-cache', credentials: 'same-origin' });
-      // Drain the body so the HTTP cache entry is written completely.
-      await res.text();
+      // Read the whole body so the HTTP cache entry is written completely.
+      var body = await res.text();
+      if (updateTargetHashes && updateTargetHashes[probe.url]) {
+        return hashOf(body) === updateTargetHashes[probe.url];
+      }
       var sig = (res.headers.get('etag') || '') + '|' +
         (res.headers.get('last-modified') || '') + '|' + (res.headers.get('content-length') || '');
       return sig === probe.sig;
@@ -656,25 +692,35 @@
     var build = hashOf(fingerprintOf(probes));
     if (updateBaseline === null) {
       updateBaseline = build;
+      updateHashes = await contentHashes(probes);
       return build;
     }
     if (build === updateBaseline || build === updateNotified) {
-      updatePendingBuild = null;
+      updatePendingAt = 0;
       return build;
     }
-    // One sample is not enough: while a deploy is still propagating, CDN edges
-    // can answer with different generations within the same minute, which used
-    // to pop the notice again and again. Require the same new build on a second
-    // check before interrupting the page.
-    if (updatePendingBuild !== build) {
-      updatePendingBuild = build;
+    // Headers moved. Check the bodies before believing it: a re-stamped file
+    // has the same bytes, and adopting the new stamps keeps the page quiet.
+    var hashes = await contentHashes(probes);
+    if (hashes && updateHashes && sameHashes(hashes, updateHashes)) {
+      updateBaseline = build;
+      updatePendingAt = 0;
+      return build;
+    }
+    // A real change must be seen twice: right after a deploy the edges can
+    // still answer with mixed generations, and one sample would pop the notice
+    // for a page that has already caught up.
+    if (!updatePendingAt) {
+      updatePendingAt = Date.now();
       setTimeout(function () {
         if (updateAlive() && !updateNotified) checkForUpdates();
       }, UPDATE_CONFIRM_MS);
       return build;
     }
-    updatePendingBuild = null;
+    updatePendingAt = 0;
     updateNotified = build;
+    updateBaseline = build;
+    if (hashes) updateTargetHashes = hashes;
     showUpdatePopup(build);
     updateWarming = warmAssetCaches(probes);
     return build;
