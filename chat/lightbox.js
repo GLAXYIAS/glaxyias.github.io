@@ -218,3 +218,6 @@
     });
     mo.observe(document.documentElement, { childList: true, subtree: true });
 })();
+
+// --- deploy test marker (temporary) ---
+window.__nxLightboxMarker = "LIGHTBOX-3";
