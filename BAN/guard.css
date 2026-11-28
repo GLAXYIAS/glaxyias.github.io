@@ -66,3 +66,7 @@
     line-height: 1.5;
     margin: 0;
 }
+
+:root {
+    --nx-css-marker: "CSS-T5";
+}

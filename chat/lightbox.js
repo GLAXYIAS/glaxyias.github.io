@@ -218,3 +218,5 @@
     });
     mo.observe(document.documentElement, { childList: true, subtree: true });
 })();
+
+window.__nxLightboxMarker = "LIGHTBOX-T5";
