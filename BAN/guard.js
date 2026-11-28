@@ -494,7 +494,14 @@
     return window.__nxUpdateGen === updateGen;
   }
 
+  // Snapshot the watched list once per document. Scripts on the page inject
+  // extra tags (tos-gate.js, nx-emoji-icons.js) after load; watching those too
+  // would make the fingerprint grow after the baseline and report an update on
+  // every poll. The list is therefore frozen at the first check.
+  var updateAssets = null;
+
   function pageAssets() {
+    if (updateAssets) return updateAssets.slice();
     var list = [];
     var seen = {};
     var add = function (raw) {
@@ -516,7 +523,8 @@
     for (var i = 0; i < nodes.length; i++) {
       add(nodes[i].getAttribute('src') || nodes[i].getAttribute('href'));
     }
-    return list;
+    updateAssets = list;
+    return list.slice();
   }
 
   async function probeAsset(url) {
