@@ -66,8 +66,3 @@
     line-height: 1.5;
     margin: 0;
 }
-
-/* --- deploy test marker (temporary) --- */
-:root {
-    --nx-css-marker: "CSS-3";
-}
