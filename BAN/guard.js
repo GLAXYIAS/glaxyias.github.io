@@ -612,7 +612,7 @@
     if (legacy) legacy.remove();
     var popup = document.createElement('div');
     popup.id = 'nx-update-popup';
-    popup.style.cssText = 'position:fixed;right:20px;bottom:20px;z-index:2147483100;max-width:340px;padding:16px 18px;border:1px solid #8b00ff;border-radius:10px;background:#0d0d13;color:#fff;font-family:monospace;box-shadow:0 0 25px rgba(139,0,0,.45);';
+    popup.style.cssText = 'position:fixed;right:20px;bottom:20px;z-index:2147483100;max-width:340px;padding:16px 18px;border:1px solid #8b00ff;border-radius:10px;background:#0d0d13;color:#fff;font-family:monospace;box-shadow:0 0 25px rgba(139,0,255,.45);';
     popup.innerHTML =
       '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">' +
       '<span style="width:8px;height:8px;border-radius:50%;background:#27c93f;display:inline-block;"></span>' +
